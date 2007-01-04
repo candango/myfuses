@@ -29,7 +29,7 @@
  * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   controller
- * @package    myfuses.application
+ * @package    myfuses.core
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -45,13 +45,13 @@
  * PHP version 5
  *
  * @category   controller
- * @package    myfuses.application
+ * @package    myfuses.core
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision: 7 $
  * @since      Revision 3
- * @abstract
+ * 
  */
 class Application {
     
@@ -109,6 +109,13 @@ class Application {
      * @var integer
      */
     private $lastLoadTime = 0;
+    
+    /**
+     * Application circuits
+     *
+     * @var array
+     */
+    private $circuits = array();
     
     /**
      * Application constructor
@@ -248,6 +255,68 @@ class Application {
      */
     public function setLastLoadTime( $lastLoadTime ) {
         $this->lastLoadTime = $lastLoadTime;
+    }
+
+    /**
+     * Add a circuit to application
+     *
+     * @param Circuit $circuit
+     */
+    public function addCircuit( Circuit $circuit ) {
+        $this->circuits[ $circuit->getName() ] = $circuit;
+        
+        // updating all circuits parents
+        $this->updateCircuitsParents();
+        
+    }
+    
+    /**
+     * Update or link the circuits whith this parents
+     * 
+     * @access public
+     */
+    public function updateCircuitsParents() {
+        foreach( $this->circuits as $circuit ) {
+            
+            if( $circuit->getParentName() != "" ) {
+                if( !is_null( $this->getCircuit( 
+                    $circuit->getParentName() ) ) ) {
+                    $circuit->setParent( $this->getCircuit( 
+                        $circuit->getParentName() ) );
+                }
+            }
+            
+        }
+    }
+    
+    /**
+     * Return a circuit by a given name
+     *
+     * @param string $name
+     * @return Circuit
+     */
+    public function getCircuit( $name ) {
+        return $this->circuits[ $name ];    
+    }
+    
+    /**
+     * Return all application circuits
+     * 
+     * @return array
+     * @access public
+     */
+    public function getCircits() {
+        return $this->circuits;
+    }
+    
+    /**
+     * Set the applciation circuits
+     * 
+     * @param array $circuits
+     * @access public
+     */
+    public function setCircuits( $circuits ) {
+        $this->circuits = $circuits;
     }
     
 }
