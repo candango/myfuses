@@ -33,7 +33,7 @@
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 7 $
+ * @version    SVN: $Id: 7 $
  * @since      Revision 3
  */
 
