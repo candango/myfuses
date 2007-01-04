@@ -36,8 +36,8 @@
  * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 8 2006-08-10 20:44:32Z piraz $
- * @since      Revision 3
+ * @version    SVN: $Id$
+ * @since      Revision 17
  */
 
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
@@ -62,8 +62,8 @@ spl_autoload_register( "myfusesAutoLoad" );
  * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 8 $
- * @since      Revision 3
+ * @version    SVN: $Revision$
+ * @since      Revision 17
  * @abstract
  */
 class MyFuses {
@@ -94,28 +94,34 @@ class MyFuses {
      */
     private $applications = array();
     
-    private $appHandler;
+    /**
+     * MyFuses loader instance
+     * 
+     * @var MyFusesLoader
+     * @access private
+     */
+    private $loader;
     
     /**
      * MyFuses constructor
      *
+     * @param MyFusesLoader $loader
      * @param string $applicationName
      * @access protected
      */
-    protected function __construct( $appName = ""  ) {
-        
-        $this->appHandler = new ApplicationHandler();
+    protected function __construct( MyFusesLoader $loader, $appName = "" ) {
         
         if( $appName == "" ) {
             $appName = Application::DEFAULT_APPLICATION_NAME;
         }
         
-        $this->applications[ $appName ] = 
-            $this->appHandler->getApplicationInstance( $appName );
+        $this->loader = $loader;
+        
+        $this->applications[ $appName ] = new Application( $appName );
         
         if( Application::DEFAULT_APPLICATION_NAME != $appName ) {
             $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
-                &$this->applications[ $appName ];    
+                &$this->applications[ $appName ];
         }
         
     }
@@ -195,14 +201,9 @@ class MyFuses {
     private function loadApplications() {
          foreach( $this->applications as $application ) {
              if( !$application->isLoaded() ) {
-                 $this->loadApplication( $application );
+                 $this->loader->loadApplication( $application );
              }
          }
-    }
-    
-    private function loadApplication( Application $application ) {
-        $this->appHandler->loadApplication( $application );
-        $application->setLoaded( true );
     }
     
     /**
@@ -211,7 +212,7 @@ class MyFuses {
      * @access public
      */
     public function doProcess() {
-        try{
+        try {
             // initilizing application if necessary
             $this->loadApplications();
         }
@@ -245,8 +246,12 @@ class MyFuses {
      */
     public static function autoLoad( $className ) {
         $classIncludeMap = array(
-            'Application' => 'application/',
-            'ApplicationHandler' => 'application/',
+            'Application' => 'core/',
+            'Circuit' => 'core/',
+            'Action' => 'core/',
+            'MyFusesLoader' => 'engine/',
+            'AbstractMyFusesLoader' => 'engine/',
+            'XMLMyFusesLoader' => 'engine/loaders/',
             'IContextRegisterable' => 'context/'
             );
 

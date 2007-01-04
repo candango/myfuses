@@ -1,10 +1,13 @@
 <?php
+/**
+ * Abstract MyFuses loader.<br>
+ * 
+ *
+ */
 abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     public function loadApplication( Application $application ) {
     
-        
-        
         $this->doLoad( $application );
         
         //TODO complete application load

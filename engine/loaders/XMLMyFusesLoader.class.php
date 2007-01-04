@@ -2,7 +2,7 @@
 class XMLMyFusesLoader extends AbstractMyFusesLoader {
     
     /**
-     * MyFuses app file constat
+     * My Fuses application file constant
      * 
      * @var string
      * @access public
@@ -11,11 +11,19 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     const MYFUSES_APP_FILE = "myfuses.xml";
     
     /**
-     * Enter description here...
-     *
+     * My Fuses php application file constant
+     * 
+     * @var string
+     * @access public
+     * @static 
      */
     const MYFUSES_PHP_APP_FILE = "myfuses.xml.php";
     
+    /**
+     * Enter description here...
+     *
+     * @param Application $application
+     */
     public function doLoad( Application $application ) {
         
         $this->chooseApplicationFile( $application );
@@ -45,7 +53,15 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         return false;
     }
     
+    /**
+     * Load the application file
+     * 
+     * @param Application $application
+     * @access private
+     */
     private function loadApplicationFile( Application $application ) {
+        
+        $appMethods = array( "circuits" => "loadCircuits" );
         
         // TODO verify if all conditions is satisfied for a file load ocours
         if ( @!$fp = fopen( $application->getCompleteFile() ,"r" ) ){
@@ -62,53 +78,50 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $fileCode = fread( $fp, filesize( $application->getCompleteFile() ) );
         
-        $rootNode = $this->getRootNode( $fileCode );
+        $rootNode = new SimpleXMLElement( $fileCode );
         
-    }
-    
-    /**
-     * Return the root name using a XMLReader to do that
-     *
-     * @param string $fileCode
-     * @return string
-     */
-    private function getRootName( $fileCode ) {
-        $reader = new XMLReader();
-        
-        $reader->XML( $fileCode );
-        
-        $reader->read();
-        
-        $rootName = $reader->name;
-        
-        $reader->close();
-        
-        return $rootName;
-    }
-    
-    /**
-     * Return thea root node from a xml string
-     *
-     * @param string $fileCode
-     * @return DOMElement
-     */
-    private function getRootNode( $fileCode ) {
-        
-        $rootName = $this->getRootName( $fileCode );
-        
-        $document = new DOMDocument();
-        
-        $document->loadXML( $fileCode );
-        
-        $nodeList = $document->getElementsByTagName( $rootName );
-        
-        foreach ( $nodeList as $node ) {
-            return $node;
+        if( count( $rootNode > 0 ) ) {
+            foreach( $rootNode as $node ) {
+                if ( isset( $appMethods[ $node->getName() ] ) ) {
+                    $this->$appMethods[ $node->getName() ]( $application, 
+                        $node );
+                }                
+            }
         }
         
-        return null;
+    }
+
+    private function loadCircuits( Application $application, 
+        SimpleXMLElement $parentNode ) {
+        
+        $circuitMethods = array(
+            "name" => "setName",
+            "alias" => "setName",
+            "path" => "setPath",
+            "parent" => "setParentName"
+        );
+        
+        if( count( $parentNode > 0 ) ) {
+            foreach( $parentNode as $node ) {
+                $name = "";
+                $path = "";
+                $parent = "";
+                $circuit = new Circuit();
+                foreach( $node->attributes() as $attribute ) {
+	                if ( isset( $circuitMethods[ $attribute->getName() ] ) ) {
+	                    $circuit->$circuitMethods[ $attribute->getName() ]( 
+	                        "" . $attribute );
+	                }
+                }
+                
+                $application->addCircuit( $circuit );
+            }
+        }
+        
+        var_dump( $application->getCircuit( "user" )->getParent() );
         
     }
+    
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
