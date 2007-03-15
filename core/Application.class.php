@@ -33,8 +33,7 @@
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: Context.class.php 7 2006-08-10 14:03:05Z piraz $
- * @since      Revision 3
+ * @version    SVN: $Id:Application.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
 /**
@@ -49,16 +48,14 @@
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 7 $
- * @since      Revision 3
- * 
+ * @version    SVN: $Revision:23 $
+ * @since      Revision 19
  */
-class Application {
+class Application implements ICacheable {
     
     /**
      * Default applicatication name
      * 
-     * @access public
      * @var string
      * @static 
      * @final
@@ -102,7 +99,7 @@ class Application {
      * @var string
      */
     private $file;
-
+    
     /**
      * Last time that application was loaded
      *
@@ -116,6 +113,122 @@ class Application {
      * @var array
      */
     private $circuits = array();
+    
+    /**
+     * Default application flag
+     *
+     * @var boolean
+     * @access private
+     */
+    private $default = false;
+    
+    /**
+     * Fuseaction variable
+     * 
+     * @var string
+     */
+    private $fuseactionVariable = "fuseaction";
+
+    /**
+     * Default fuseaction
+     * 
+     * @var string
+     */
+    private $defaultFuseaction;
+    
+    /**
+     * Precedence form or url
+     * 
+     * @var string
+     * @deprecated 
+     */
+    private $precedenceFormOrUrl;
+    
+    /**
+     * Execution mode
+     * 
+     * @var string
+     */
+    private $mode;
+    
+    
+    /**
+     * Appliaction password
+     * 
+     * @var string
+     */
+    private $password;
+    
+    /**
+     * Flag that indicates that the application 
+     * must be parsed with comments
+     * 
+     * @var boolean
+     */
+    private $parsedWithComments;
+    
+    /**
+     * Flag that indicates that the application 
+     * must be parsed using conditional method
+     * 
+     * @var boolean
+     * @deprecated
+     */
+    private $conditionalParse;
+    
+    /**
+     * Flag that indicates that the application 
+     * has lexicon allowed
+     * 
+     * @var boolean
+     * @deprecated
+     */
+    private $lexiconAllowed;
+    
+    /**
+     * Flag that indicates that the application 
+     * has lexicon allowed
+     * 
+     * @var boolean
+     * @deprecated
+     */
+    private $badGrammarIgnored;
+    
+    /**
+     * Flag that indicates that the application 
+     * use assertions
+     * 
+     * @var boolean
+     */
+    private $assertionsUsed;
+    
+    /**
+     * Application script language
+     * 
+     * @var string
+     */
+    private $scriptLanguage = "php5";
+    
+    /**
+     * Application script file delimiter
+     * 
+     * @var string
+     */
+    private $scriptFileDelimiter = "php";
+    
+    /**
+     * Application masked file delimiters
+     * 
+     * @var array
+     */
+    private $maskedFileDelimiters;
+    
+    /**
+     * Application character encoding
+     * 
+     * @var string
+     */
+    private $characterEncoding;
     
     /**
      * Application constructor
@@ -227,6 +340,26 @@ class Application {
         return $this->path . $this->file;
     }
     
+	/**
+     * Return the application cache file name
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCacheFile() {
+        return $this->name . ".myfuses.php";
+    }
+    
+    /**
+     * Return the complete application file path
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCompleteCacheFile() {
+        return $this->parsedPath . $this->getCacheFile();
+    }
+    
     /**
      * Set the application file name
      * 
@@ -264,7 +397,7 @@ class Application {
      */
     public function addCircuit( Circuit $circuit ) {
         $this->circuits[ $circuit->getName() ] = $circuit;
-        
+        $circuit->setApplication( $this );
         // updating all circuits parents
         $this->updateCircuitsParents();
         
@@ -296,7 +429,10 @@ class Application {
      * @return Circuit
      */
     public function getCircuit( $name ) {
-        return $this->circuits[ $name ];    
+        if( isset( $this->circuits[ $name ] ) ) {
+            return $this->circuits[ $name ];    
+        }
+        return null;
     }
     
     /**
@@ -317,6 +453,335 @@ class Application {
      */
     public function setCircuits( $circuits ) {
         $this->circuits = $circuits;
+    }
+    
+    /**
+     * Returns if the application is default or not
+     * 
+     * @return boolean
+     * @access public
+     */
+    public function isDefault(){
+        return $this->default;
+    }
+    
+    /**
+     * Set if the application is default or not
+     * 
+     * @param boolean $value
+     * @access public
+     */
+    public function setDefault( $value ) {
+        $this->default = $value;
+    }
+    
+    /**
+     * Return the fuseaction variable
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getFuseactionVariable() {
+        return $this->fuseactionVariable;
+    }
+    
+    /**
+     * Set the fusaction variable
+     * 
+     * @param string $fuseactionVariable
+     * @access public
+     */
+    public function setFuseactionVariable( $fuseactionVariable ) {
+        $this->fuseactionVariable = $fuseactionVariable;
+    }
+    
+	/**
+     * Return the default fuseaction
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getDefaultFuseaction() {
+        return $this->defaultFuseaction;
+    }
+    
+    /**
+     * Set the defautl fuseaction
+     * 
+     * @param string $fuseactionVariable
+     * @access public
+     */
+    public function setDefaultFuseaction( $defaultFuseaction ) {
+        $this->defaultFuseaction = $defaultFuseaction;
+    }
+    
+	/**
+     * Return precedence form or url
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getPrecedenceFormOrUrl() {
+        return $this->precedenceFormOrUrl;
+    }
+    
+    /**
+     * Set precedence form or url
+     * 
+     * @param string $precedenceFormOrUrl
+     * @access public
+     */
+    public function setPrecedenceFormOrUrl( $precedenceFormOrUrl ) {
+        $this->precedenceFormOrUrl = $precedenceFormOrUrl;
+    }
+    
+	/**
+     * Return the application mode
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getMode() {
+        return $this->mode;
+    }
+    
+    /**
+     * Set the application mode
+     * 
+     * @param string $mode
+     * @access public
+     */
+    public function setMode( $mode ) {
+        $this->mode = $mode;
+    }
+    
+    /**
+     * Return application password
+     * 
+     * @return string
+     * @access public
+     */
+    public function getPassword() {
+        return $this->password;
+    }
+    
+    /**
+     * Set the application password
+     * 
+     * @param $password
+     * @access public
+     */
+    public function setPassword( $password ) {
+        $this->password = $password;
+    }
+    
+    /**
+     * Return if application must be parsed with comments
+     * 
+     * @return boolean
+     */
+    public function isParsedWithComments() {
+        return $this->parsedWithComments;
+    }
+    
+    /**
+     * Set if application must be parsed with comments
+     *
+     * @param boolean $parsedWithComments
+     */
+    public function setParsedWithComments( $parsedWithComments ) {
+        if( is_bool( $parsedWithComments ) ) {
+            $this->parsedWithComments = (boolean) $parsedWithComments;    
+        }
+        else {
+            if( $parsedWithComments == "true" ) {
+                $this->parsedWithComments = true;
+            }
+            else {
+                $this->parsedWithComments = false;
+            }
+        }
+    }
+    
+    /**
+     * Return if application is using conditional parse
+     * 
+     * @return boolean
+     */
+    public function isConditionalParse() {
+        return $this->conditionalParse;
+    }
+    
+    /**
+     * Set if application is using conditional parse
+     * 
+     * @param boolean $conditionalParse
+     */
+    public function setConditionalParse( $conditionalParse ) {
+        if( is_bool( $conditionalParse ) ) {
+            $this->conditionalParse = (boolean) $conditionalParse;    
+        }
+        else {
+            if( $conditionalParse == "true" ) {
+                $this->conditionalParse = true;
+            }
+            else {
+                $this->conditionalParse = false;
+            }
+        }
+    }
+    
+    public function isLexiconAllowed() {
+        return $this->lexiconAllowed;
+    }
+    
+    public function setLexiconAllowed( $lexiconAllowed ) {
+        if( is_bool( $lexiconAllowed ) ) {
+            $this->lexiconAllowed = (boolean) $lexiconAllowed;    
+        }
+        else {
+            if( $lexiconAllowed == "true" ) {
+                $this->lexiconAllowed = true;
+            }
+            else {
+                $this->lexiconAllowed = false;
+            }
+        }
+    }
+    
+    public function isBadGrammarIgnored() {
+        return $this->badGrammarIgnored;
+    }
+    
+    public function setBadGrammarIgnored( $badGrammarIgnored ) {
+        if( is_bool( $badGrammarIgnored ) ) {
+            $this->badGrammarIgnored = (boolean) $badGrammarIgnored;    
+        }
+        else {
+            if( $badGrammarIgnored == "true" ) {
+                $this->badGrammarIgnored = true;
+            }
+            else {
+                $this->badGrammarIgnored = false;
+            }
+        }
+    }
+
+    public function isAssertionsUsed() {
+        return $this->assertionsUsed;
+    }
+    
+    public function setAssertionsUsed( $assertionsUsed ) {
+        if( is_bool( $assertionsUsed ) ) {
+            $this->assertionsUsed = (boolean) $assertionsUsed;    
+        }
+        else {
+            if( $assertionsUsed == "true" ) {
+                $this->assertionsUsed = true;
+            }
+            else {
+                $this->assertionsUsed = false;
+            }
+        }
+    }
+    
+    public function getScriptLanguage() {
+        return $this->scriptLanguage;
+    }
+
+    public function setScriptLanguage( $scriptLanguage ) {
+        $this->scriptLanguage = $scriptLanguage;
+    }
+    
+    
+    public function getScriptFileDelimiter() {
+        return $this->scriptFileDelimiter;
+    }
+    
+    public function setScriptFileDelimiter( $scriptFileDelimiter ) {
+        $this->scriptFileDelimiter = $scriptFileDelimiter;
+    }
+    
+    public function getMaskedFileDelimiters() {
+        return $this->maskedFileDelimiters;
+    }
+    
+    public function setMaskedFileDelimiters( $maskedFileDelimiters ) {
+        return $this->maskedFileDelimiters = explode( ",", $maskedFileDelimiters );
+    }
+    
+    public function getCharacterEncoding() {
+        return $this->characterEncoding;
+    }
+    
+    public function setCharacterEncoding( $characterEncoding ) {
+        $this->characterEncoding = $characterEncoding;
+    }
+    
+    /**
+     * Return the application cache code
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCachedCode() {
+        $strOut = "\$application = new Application( \"" . $this->getName() . "\" );\n";
+        
+        $strOut .= "\$application->setPath( \"" . $this->getPath() . "\" );\n";
+        
+        $strOut .= "\$application->setParsedPath( \"" . $this->getParsedPath() . "\");\n";
+        
+        $strOut .= "\$application->setFile( \"" . $this->getFile() . "\" );\n";
+        
+        $strOut .= "\$application->setLastLoadTime( " . $this->getLastLoadTime() . " );\n";
+        
+        if( $this->isDefault() ) {
+            $strOut .= "\$application->setDefault( true );\n";
+        }
+        
+        // parameters
+        $strOut .= "\n\$application->setFuseactionVariable( \"" . $this->getFuseactionVariable() . "\" );\n";
+        $strOut .= "\$application->setDefaultFuseaction( \"" . $this->getDefaultFuseaction() . "\" );\n";
+        $strOut .= "\$application->setPrecedenceFormOrUrl( \"" . $this->getPrecedenceFormOrUrl() . "\" );\n";
+        $strOut .= "\$application->setMode( \"" . $this->getMode() . "\" );\n";
+        $strOut .= "\$application->setPassword( \"" . $this->getPassword() . "\" );\n";
+        $strOut .= "\$application->setParsedWithComments( " . ( $this->isParsedWithComments() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setConditionalParse( " . ( $this->isConditionalParse() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setLexiconAllowed( " . ( $this->isLexiconAllowed() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setBadGrammarIgnored( " . ( $this->isBadGrammarIgnored() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setAssertionsUsed( " . ( $this->isAssertionsUsed() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setScriptLanguage( \"" . $this->getScriptLanguage() . "\" );\n";
+        $strOut .= "\$application->setScriptFileDelimiter( \"" . $this->getScriptFileDelimiter() . "\" );\n";
+        $strOut .= "\$application->setMaskedFileDelimiters( \"" . implode( ",", $this->getMaskedFileDelimiters() ) . "\" );\n";
+        $strOut .= "\$application->setCharacterEncoding( \"" . $this->getCharacterEncoding() . "\" );\n";
+        // end paramenters
+        
+        $strOut .= $this->getCircuitsCachedCode();
+        
+        $strOut .= "MyFuses::getInstance()->addApplication( \$application );\n";
+        
+        return $strOut;
+    }
+    
+    /**
+     * Returns all application circuits cache code
+     * 
+     * @return string
+     * @access public
+     */
+    private function getCircuitsCachedCode() {
+        
+        $strOut = "\n\$circuits = array();\n\n";
+        
+        foreach( $this->circuits as $circuit ) {
+            $strOut .= $circuit->getCachedCode() . "\n";
+        }
+        
+        $strOut .= "\$application->setCircuits( \$circuits );\n";
+        
+        $strOut .= "\$application->updateCircuitsParents();\n";
+        
+        return $strOut;
     }
     
 }

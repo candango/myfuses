@@ -33,8 +33,7 @@
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: 7 $
- * @since      Revision 3
+ * @version    SVN: $Id:Circuit.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
 /**
@@ -49,11 +48,29 @@
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 7 $
- * @since      Revision 3
- * 
+ * @version    SVN: $Revision:23 $
+ * @since      Revision 19
  */
-class Circuit {
+class Circuit implements ICacheable {
+    
+    /**
+     * Enter description here...
+     *
+     */
+    const PUBLIC_ACCESS = 1;
+    
+    /**
+     * Enter description here...
+     *
+     */
+    const INTERNAL_ACCESS = 2;
+    
+    /**
+     * Circuit application reference
+     *
+     * @var Application
+     */
+    private $application;
     
     /**
      * Circuit name
@@ -81,7 +98,9 @@ class Circuit {
      *
      * @var array
      */
-    private $actions;
+    private $actions = array();
+    
+    private $file;
     
     /**
      * Application parent name
@@ -96,6 +115,14 @@ class Circuit {
      * @var Application
      */
     private $parent;
+    
+    public function &getApplication() {
+        return $this->application;
+    }
+    
+    public function setApplication( Application &$application ) {
+        $this->application = &$application;
+    }
     
     /**
      * Return the circuit name
@@ -151,13 +178,45 @@ class Circuit {
         $this->access;
     }
     
+	/**
+     * Set the circuit access using a string
+     *
+     * @param string $access
+     */
+    public function setAccessByString( $accessString ) {
+        $accessList = array(
+            "public" => self::PUBLIC_ACCESS,
+            "internal" => self::INTERNAL_ACCESS
+        );
+        
+        $this->setAccess( $accessList[ $accessString ] );
+    }
+    
     /**
      * Add one action to circuit
      * 
      * @param Action $action
      */
-    public function addAcction( Action $action ) {
+    public function addAction( Action $action ) {
          $this->actions[] = $action;
+    }
+    
+    /**
+     * Return the circuit file
+     *
+     * @return string
+     */
+    public function getFile() {
+        return $this->file;
+    }
+    
+    /**
+     * Set the circuit file
+     *
+     * @param string $file
+     */
+    public function setFile( $file ) {
+        $this->file = $file;
     }
     
 	/**
@@ -205,6 +264,32 @@ class Circuit {
     public function setParent( Circuit $parent ) {
         $this->parentName = $parent->getName();
         $this->parent = $parent;
+    }
+    
+    public function getCachedCode() {
+        $strOut = "\$circuit = new Circuit();\n";
+        $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
+        $strOut .= "\$circuit->setParentName( \"" . 
+            $this->getParentName() . "\" );\n";
+        $strOut .= $this->getActionsCachedCode();    
+        $strOut .= "\$circuits[ \"" . $this->getName() . "\" ] = \$circuit;\n";
+        return $strOut;
+    }
+    
+	/**
+     * Returns all circuit actions cache code
+     * 
+     * @return string
+     */
+    private function getActionsCachedCode() {
+        
+        $strOut = "\n";
+        
+        foreach( $this->actions as $action ) {
+            $strOut .= $action->getCachedCode() . "\n";
+        }
+        
+        return $strOut;
     }
     
 }
