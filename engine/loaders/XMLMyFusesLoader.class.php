@@ -1,11 +1,13 @@
 <?php
+/**
+ * 
+ */
 class XMLMyFusesLoader extends AbstractMyFusesLoader {
     
     /**
      * My Fuses application file constant
      * 
      * @var string
-     * @access public
      * @static
      */
     const MYFUSES_APP_FILE = "myfuses.xml";
@@ -14,10 +16,13 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      * My Fuses php application file constant
      * 
      * @var string
-     * @access public
      * @static 
      */
     const MYFUSES_PHP_APP_FILE = "myfuses.xml.php";
+    
+    const CIRCUIT_FILE = "circuit.xml";
+    
+    const CIRCUIT_PHP_FILE = "circuit.xml.php";
     
     /**
      * Enter description here...
@@ -34,10 +39,10 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     
 	/**
      * Find the file that the given application is using
+     * TODO Throw some exception here!!!
      *
      * @param Application $application
      * @return boolean
-     * @access private
      */
     private function chooseApplicationFile( Application $application ) {
         if ( is_file( $application->getPath() . self::MYFUSES_APP_FILE ) ) {
@@ -53,15 +58,36 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         return false;
     }
     
+    // TODO Throw some exception here!!!
+    private function chooseCircuitFile( Circuit $circuit ) {
+        
+        $circuitPath = $circuit->getApplication()->getPath() . $circuit->getPath();
+        
+        if ( is_file( $circuitPath . self::CIRCUIT_FILE ) ) {
+            $circuit->setFile( self::CIRCUIT_FILE );
+            return true;
+        }
+        
+        if ( is_file( $circuitPath . self::CIRCUIT_APP_FILE ) ) {
+            $circuit->setFile( self::CIRCUIT_APP_FILE );
+            return true;
+        }
+        
+        return false;
+    }
+    
     /**
      * Load the application file
      * 
      * @param Application $application
-     * @access private
      */
     private function loadApplicationFile( Application $application ) {
         
-        $appMethods = array( "circuits" => "loadCircuits" );
+        $appMethods = array( 
+            "circuits" => "loadCircuits", 
+            "classes" => "loadClasses",
+            "parameters" => "loadParameters"
+             );
         
         // TODO verify if all conditions is satisfied for a file load ocours
         if ( @!$fp = fopen( $application->getCompleteFile() ,"r" ) ){
@@ -113,15 +139,284 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
 	                        "" . $attribute );
 	                }
                 }
-                
                 $application->addCircuit( $circuit );
             }
         }
         
-        var_dump( $application->getCircuit( "user" )->getParent() );
+        foreach( $application->getCircits() as $circuit ) {
+            $this->loadCircuit( $circuit );
+        }
         
     }
     
+    /**
+     * Load all application classes
+     * 
+     * @param Application $application
+     * @param SimpleXMLElement $parentNode
+     */
+    private function loadClasses( Application $application, 
+        SimpleXMLElement $parentNode ) {
+        
+    }
+    
+    /**
+     * Load all application parameters
+     *
+     * @param Application $application
+     * @param SimpleXMLElement $parentNode
+     */
+    private function loadParameters( Application $application, 
+        SimpleXMLElement $parentNode ) {
+        
+        $parameterAttributes = array(
+            "name" => "name",
+            "value" => "value"
+        );
+
+        $applicationParameters = array(
+            "fuseactionVariable" => "setFuseactionVariable",
+            "defaultFuseaction" => "setDefaultFuseaction",
+            "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
+            "mode" => "setMode",
+            "password" => "setPassword",
+            "parseWithComments" => "setParsedWithComments",
+            "conditionalParse" => "setConditionalParse",
+			"allowLexicon" => "setLexiconAllowed",
+			"ignoreBadGrammar" => "setBadGrammarIgnored",
+			"useAssertions" => "setAssertionsUsed",
+			"scriptLanguage" => "setScriptLanguage",
+			"scriptFileDelimiter" => "setScriptFileDelimiter",
+			"maskedFileDelimiters" => "setMaskedFileDelimiters",
+			"characterEncoding" => "setCharacterEncoding"
+        );
+        
+        foreach( $parentNode as $node ) {    
+	        if( count( $parentNode > 0 ) ) {
+	            $name = "";
+	            $value = "";
+	            foreach( $node->attributes() as $attribute ) {
+	                if ( isset( $parameterAttributes[ $attribute->getName() ] ) ) {
+	                    // getting $name or $value
+	                    $$parameterAttributes[ $attribute->getName() ] = "" . $attribute; 
+	                }
+	            }
+	        }
+	        
+	        // putting into $application
+	        if( isset( $applicationParameters[ $name ] ) ) {
+	            $application->$applicationParameters[ $name ]( $value );
+	        }
+        }
+        
+    }
+    
+    /**
+     * Load one circuit
+     *
+     * @param Circuit $circuit
+     */
+    private function loadCircuit( Circuit $circuit ) {
+        
+        $this->chooseCircuitFile( $circuit );
+        
+        $this->loadCircuitFile( $circuit );
+        
+    }
+
+    /**
+     * Load a circuit file
+     * 
+     * @param Circuit $circuit
+     */
+    private function loadCircuitFile( Circuit $circuit ) {
+        
+        $circuitMethods = array( 
+            "fuseaction" => "loadAction",
+            "action" => "loadAction"
+        );
+        
+        $circuitParameterAttributes = array(
+            "access" => "access"
+        );
+        
+        $circuitPath = $circuit->getApplication()->getPath() . $circuit->getPath();
+        
+        $circuitFile = $circuitPath . $circuit->getFile();
+        
+        // TODO verify if all conditions is satisfied for a file load ocours
+        if ( @!$fp = fopen( $circuitFile ,"r" ) ){
+            throw new MyFusesFileOperationException( 
+                $circuitFile, MyFusesFileOperationException::OPEN_FILE );
+        }
+        
+        if ( !flock( $fp, LOCK_SH ) ) {
+            throw new MyFusesFileOperationException( 
+                $circuitFile, MyFusesFileOperationException::LOCK_FILE );
+        }
+        
+        $fileCode = fread( $fp, filesize( $circuitFile ) );
+        
+        $rootNode = new SimpleXMLElement( $fileCode );
+        
+        $access = "";
+	    
+        foreach( $rootNode->attributes() as $attribute ) {
+            if ( isset( $circuitParameterAttributes[ $attribute->getName() ] ) ) {
+                // getting $name
+                $$circuitParameterAttributes[ $attribute->getName() ] = "" . $attribute;
+            }
+        }
+        
+        $circuit->setAccessByString( $access );
+        
+        if( count( $rootNode > 0 ) ) {
+            foreach( $rootNode as $node ) {
+                if ( isset( $circuitMethods[ $node->getName() ] ) ) {
+                    $this->$circuitMethods[ $node->getName() ]( $circuit, 
+                        $node );
+                }               
+            }
+        }
+    }
+    
+    /**
+     * Load the action
+     * 
+     * @param Circuit $circuit
+     * @param SimpleXMLElement $parentNode
+     */
+    private function loadAction( Circuit $circuit, SimpleXMLElement $parentNode ) {
+        
+        $action = new FuseAction( $circuit );
+        
+        // TODO implement class and namespace options
+        $actionParameterAttributes = array(
+            "name" => "name",
+            "class" => "",
+            "namespace" => ""
+        );
+        
+        $parameterAttributes = array(
+            "name" => "name",
+            "value" => "value"
+        );
+        
+        $name = "";
+	    
+        foreach( $parentNode->attributes() as $attribute ) {
+            if ( isset( $actionParameterAttributes[ $attribute->getName() ] ) ) {
+                // getting $name
+                $$actionParameterAttributes[ $attribute->getName() ] = "" . $attribute;
+            }
+        }
+	    
+        $action->setName( $name );
+        
+        $circuit->addAction( $action );
+        
+        if( count( $parentNode > 0 ) ) {
+            foreach( $parentNode as $node ) {    
+	            $this->loadVerbXML( $action, $node );
+	        }
+	        
+        }
+        
+    }
+    
+    /**
+     * Load the verb xml
+     * 
+     * @param CircuitAction $action
+     * @param SimpleXMLElement $parentNode
+     */
+    public function loadVerbXML( CircuitAction $action, SimpleXMLElement $parentNode ) {
+        
+        $verbTypes = array(
+            "do" => array(
+                "class" => "DoVerb",
+                "method" => "getDoVerbParams"
+            ),
+            "include" => array(
+                "class" => "IncludeVerb",
+                "method" => "getIncludeVerbParams"
+            ),
+            "xfa" => array(
+                "class" => "XFAVerb",
+                "method" => "getXFAVerbParams"
+            )
+        );
+        
+        if( isset( $verbTypes[ $parentNode->getName() ] ) ) {
+            $params = $this->$verbTypes[ $parentNode->getName() ][ "method" ]( $parentNode->attributes() );
+            $verb = AbstractVerb::getInstance( $verbTypes[ $parentNode->getName() ][ "class" ], $params, $action );
+            $action->addVerb( $verb );
+        }
+        
+    }
+    
+    /**
+     * Load the attributes from an include verb
+     * 
+     * @param SimpleXMLElement $attributes
+     * @return array
+     */
+    private function getIncludeVerbParams( SimpleXMLElement $attributes ) {
+        $verbAttributes = array( "file" => "file", "template" => "file" );
+        $file = "";
+        
+        foreach( $attributes as $attribute ) {
+            if ( isset( $verbAttributes[ $attribute->getName() ] ) ) {
+                
+                // getting $file
+                $$verbAttributes[ $attribute->getName() ] = "" . $attribute;
+            }
+        }
+        
+        return array( "file" => $file );
+    }
+    
+	/**
+     * Load the attributes from an xfa verb
+     * 
+     * @param SimpleXMLElement $attributes
+     * @return array
+     */
+    private function getXFAVerbParams( SimpleXMLElement $attributes ) {
+        $verbAttributes = array( "name" => "name", "value" => "value" );
+        $file = "";
+        
+        foreach( $attributes as $attribute ) {
+            if ( isset( $verbAttributes[ $attribute->getName() ] ) ) {
+                
+                // getting $file
+                $$verbAttributes[ $attribute->getName() ] = "" . $attribute;
+            }
+        }
+        
+        return array( "name" => $name, "value" => $name );
+    }
+    
+	/**
+     * Load the attributes from a do verb
+     * 
+     * @param SimpleXMLElement $attributes
+     * @return array
+     */
+    private function getDoVerbParams( SimpleXMLElement $attributes ) {
+        $verbAttributes = array( "action" => "action" );
+        $file = "";
+        
+        foreach( $attributes as $attribute ) {
+            if ( isset( $verbAttributes[ $attribute->getName() ] ) ) {
+                
+                // getting $file
+                $$verbAttributes[ $attribute->getName() ] = "" . $attribute;
+            }
+        }
+        
+        return array( "action" => $action );
+    }
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
