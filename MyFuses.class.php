@@ -37,7 +37,6 @@
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
- * @since      Revision 17
  */
 
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
@@ -64,14 +63,12 @@ spl_autoload_register( "myfusesAutoLoad" );
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
  * @since      Revision 17
- * @abstract
  */
 class MyFuses {
     
     /**
      * The MyFuses root path constant
      * 
-     * @access public
      * @static
      * @final
      */
@@ -82,7 +79,6 @@ class MyFuses {
      * the singleton pattern.
      *
      * @var MyFuses
-     * @access private
      */
     private static $instance;
     
@@ -90,7 +86,6 @@ class MyFuses {
      * Array of registered applications
      * 
      * @var array
-     * @access private
      */
     private $applications = array();
     
@@ -98,7 +93,6 @@ class MyFuses {
      * MyFuses loader instance
      * 
      * @var MyFusesLoader
-     * @access private
      */
     private $loader;
     
@@ -107,17 +101,14 @@ class MyFuses {
      *
      * @param MyFusesLoader $loader
      * @param string $applicationName
-     * @access protected
      */
-    protected function __construct( MyFusesLoader $loader, $appName = "" ) {
-        
-        if( $appName == "" ) {
-            $appName = Application::DEFAULT_APPLICATION_NAME;
-        }
+    protected function __construct( MyFusesLoader $loader, $appName = Application::DEFAULT_APPLICATION_NAME ) {
         
         $this->loader = $loader;
         
         $this->applications[ $appName ] = new Application( $appName );
+        
+        $this->applications[ $appName ]->setDefault( true );
         
         if( Application::DEFAULT_APPLICATION_NAME != $appName ) {
             $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
@@ -132,11 +123,7 @@ class MyFuses {
      * @param string $name
      * @return Application
      */
-    public function getApplication( $name = "" ) {
-        if( $name == "" ) {
-            return $this->applications[ Application::DEFAULT_APPLICATION_NAME ];
-        }
-        
+    public function getApplication( $name = Application::DEFAULT_APPLICATION_NAME ) {
         return $this->applications[ $name ];
     }
     
@@ -144,59 +131,49 @@ class MyFuses {
      * Returns an array of registered applications
      *
      * @return array
-     * @access public
      */
     public function getApplications() {
         return $this->applications;
     }
     
-    /**
-     * Returns the application name
-     * 
-     * @return string The application name
-     * @access public
-     */
-    public function getApplicationName( $name = "default" ) {
-        return $this->applicationName;
+    public function addApplication( Application $application ) {
+        $this->applications[ $application->getName() ] = $application;
+        
+        if( $application->isDefault() ) {
+            $this->applications[ Application::DEFAULT_APPLICATION_NAME ] = $application; 
+        }
     }
     
     /**
-     * Sets the application name
+     * Sets the application $name
      * 
-     * @param string name The application name
-     * @access public
+     * @param string
      */
-    public function setApplicationName( $value, $name = "default" ) {
+    public function setApplicationName( $value, $name = Application::DEFAULT_APPLICATION_NAME ) {
         return $this->applications[ $name ]->setName( $value );
     }
     
     /**
-     * Returns the application path
+     * Returns the application $path
      * 
-     * @return string The application path
-     * @access public
+     * @return string
      */
-    public function getApplicationPath( $name = "default" ) {
+    public function getApplicationPath( $name = Application::DEFAULT_APPLICATION_NAME ) {
         $this->applications[ $name ]->getPath();
     }
     
     /**
      * Sets the application path
      * 
-     * @param string name The application path
-     * @access public
+     * @param string $name
      */
-    public function setApplicationPath( $value, $name = "default" ) {
+    public function setApplicationPath( $value, $name = Application::DEFAULT_APPLICATION_NAME ) {
         $this->applications[ $name ]->setPath( $value );
-        $this->applications[ $name ]->setParsedPath( 
-            $value . "fusebox/parsed/" );
     }
     
     
     /**
      * Loads all applications registered
-     * 
-     * @access private
      */
     private function loadApplications() {
          foreach( $this->applications as $application ) {
@@ -207,14 +184,47 @@ class MyFuses {
     }
     
     /**
+     * Sotore all myfuses applications
+     */
+    protected function storeApplications() {
+        
+        foreach( $this->applications as $index => $application ) {
+            $strStore = "";
+            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
+                
+                if( !file_exists( $application->getParsedPath() ) ) {
+                    mkdir( $application->getParsedPath() );
+                    chmod( $application->getParsedPath(), 0777 );
+                }
+                
+                $strStore = $application->getCachedCode();
+                $fileName = $application->getCompleteCacheFile();
+                                
+	            $fp = fopen( $fileName,"w" );
+	        
+		        if ( !flock($fp,LOCK_EX) ) {
+		            die("Could not get exclusive lock to Parsed File file");
+		        }
+		        
+		        if ( !fwrite($fp, "<?php\n" . $strStore) ) {
+		           var_dump( "deu pau 2!!!" );
+		        }
+		        flock($fp,LOCK_UN);
+		        fclose($fp);
+		        chmod( $fileName, 0777 );
+            }
+        }
+    }
+    
+    /**
      * Process the user request
-     * 
-     * @access public
      */
     public function doProcess() {
         try {
             // initilizing application if necessary
             $this->loadApplications();
+            // storing all applications if necessary
+            $this->storeApplications();
         }
         catch( MyFusesFileOperationException $mffoe ) {
             $mffoe->breakProcess();
@@ -228,12 +238,11 @@ class MyFuses {
      * MyFuses is implemmented using the singleton pattern.
      *
      * @return MyFuses
-     * @access public
      * @static 
      */
-    public static function getInstance( $name = "default" ) {
+    public static function getInstance( MyFusesLoader $loader = null, $name = Application::DEFAULT_APPLICATION_NAME ) {
         if( is_null( self::$instance ) ) {
-            self::$instance = new MyFuses( $name );
+            self::$instance = new MyFuses( $loader, $name );
         }
         return self::$instance;
     }
@@ -242,13 +251,19 @@ class MyFuses {
      * Auto loads class files when they aren't included 
      * 
      * @param string className The class name
-     * @access public
      */
     public static function autoLoad( $className ) {
         $classIncludeMap = array(
             'Application' => 'core/',
             'Circuit' => 'core/',
             'Action' => 'core/',
+            'AbstractAction' => 'core/',
+            'CircuitAction' => 'core/',
+            'FuseAction' => 'core/',
+            'Verb' => 'core/',
+            'AbstractVerb' => 'core/',
+            'ProcessAction' => 'core/',
+            'ICacheable' => 'core/',
             'MyFusesLoader' => 'engine/',
             'AbstractMyFusesLoader' => 'engine/',
             'XMLMyFusesLoader' => 'engine/loaders/',
@@ -270,8 +285,7 @@ class MyFuses {
      * In truth this method use require_once insted include_once.
      * Process must break if some core file doesn't exists.
      * 
-     * @param file File path
-     * @access public
+     * @param $file
      * @return void
      */
     public static function includeCoreFile( $file ) {
