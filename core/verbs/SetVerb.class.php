@@ -1,9 +1,9 @@
 <?php
 /**
- * XFA file
+ * Set verb
  *
  */
-class XFAVerb extends AbstractVerb {
+class SetVerb extends AbstractVerb {
     
     
     private $value;
@@ -15,9 +15,9 @@ class XFAVerb extends AbstractVerb {
     public function setValue( $value ) {
         $this->value = $value;
     }
-
+    
     public function getData() {
-        $data[ "name" ] = "xfa";
+        $data[ "name" ] = "set";
         $data[ "attributes" ][ "name" ] = $this->getName();
         $data[ "attributes" ][ "value" ] = $this->getValue();
         return $data;

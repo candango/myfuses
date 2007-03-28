@@ -33,25 +33,14 @@ class DoVerb extends AbstractVerb {
         
     }
     
-    public function getParms() {
-        $parms[ "action" ] = $this->circuitToBeExecutedName . "." . $this->actionToBeExecutedName;
-        return $parms;
+    public function getData() {
+        $data[ "name" ] = "do";
+        $data[ "attributes" ][ "action" ] = $this->circuitToBeExecutedName . "." . $this->actionToBeExecutedName;
+        return $data;
     }
     
-    public function getCachedCode() {
-	    $strOut = "\$verb = AbstractVerb::getInstance( \"DoVerb\", array( \"action\" => \"" . $this->circuitToBeExecutedName . "." . $this->actionToBeExecutedName . "\" ), \$action );\n";
-        return $strOut;
-	}
-    
-    /**
-     * Fill params
-     *
-     * @param array $params
-     */
-    public function setParams( $params ) {
-        
-        $this->setActionToBeExecuted( $params[ "action" ] );
-        
+    public function setData( $data ) {
+        $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );
     }
     
 }

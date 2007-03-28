@@ -30,26 +30,24 @@ class IncludeVerb extends AbstractVerb {
         $this->file = $file;
     }
     
-    public function getParms() {
-        $parms[ "file" ] = $this->getFile();
-        return $parms;
+    public function getData() {
+        $data[ "name" ] = "include";
+        $data[ "attributes" ][ "file" ] = $this->getFile();
+        return $data;
     }
     
-    public function getCachedCode() {
-	    $strOut = "\$verb = AbstractVerb::getInstance( \"IncludeVerb\", array( \"file\" => \"" . $this->getFile() . "\" ) );\n";
-        $strOut .= "\$verb->setFile( \"" . $this->getFile() . "\" );";
-        return $strOut;
-	}
-    
-    /**
-     * Fill params
-     *
-     * @param array $params
-     */
-    public function setParams( $params ) {
+    public function setData( $data ) {
+        $file = "";
         
-        $this->setFile( $params[ "file" ] );
+        if( isset( $data[ "attributes" ][ "file" ] ) ) {
+            $file = $data[ "attributes" ][ "file" ];
+        }
         
+        if( isset( $data[ "attributes" ][ "template" ] ) ) {
+            $file = $data[ "attributes" ][ "template" ];
+        }
+        
+        $this->setFile( $file );
     }
     
 }
