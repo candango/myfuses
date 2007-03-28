@@ -198,7 +198,15 @@ class Circuit implements ICacheable {
      * @param Action $action
      */
     public function addAction( Action $action ) {
-         $this->actions[] = $action;
+         $this->actions[ $action->getName() ] = $action;
+    }
+    
+    public function getAction( $name ) {
+        return $this->actions[ $name ];
+    }
+    
+    public function getActions() {
+        return $this->actions;
     }
     
     /**
@@ -272,7 +280,7 @@ class Circuit implements ICacheable {
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
         $strOut .= $this->getActionsCachedCode();    
-        $strOut .= "\$circuits[ \"" . $this->getName() . "\" ] = \$circuit;\n";
+        $strOut .= "\$application->addCircuit( \$circuit );\n";
         return $strOut;
     }
     

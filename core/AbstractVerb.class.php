@@ -5,6 +5,15 @@
  */
 abstract class AbstractVerb implements Verb {
     
+    private static $verbTypes = array(
+            "do" => "DoVerb",
+            "if" => "IfVerb",
+            "include" => "IncludeVerb",
+            "loop" => "LoopVerb",
+            "relocate" => "RelocateVerb",
+            "set" => "SetVerb",
+            "xfa" => "XFAVerb");
+    
     /**
      * Verb action
      *
@@ -18,6 +27,13 @@ abstract class AbstractVerb implements Verb {
      * @var string
      */
     private $name;
+    
+    /**
+     * Verb parent
+     * 
+     * @var Verb
+     */
+    private $parent;
     
     /**
      * Return the verb Action
@@ -56,6 +72,24 @@ abstract class AbstractVerb implements Verb {
     }
     
     /**
+     * Return the verb parent
+     *	
+     * @return Verb
+     */
+    public function getParent() {
+        return $this->parent;
+    }
+    
+    /**
+     * Set the verb parent
+     *
+     * @param Verb $parent
+     */
+    public function setParent( Verb $parent ) {
+        $this->parent = $parent;
+    }
+    
+    /**
      * Return a new string
      *
      * @param string $className
@@ -63,16 +97,37 @@ abstract class AbstractVerb implements Verb {
      * @param CircuitAction $action
      * @return Verb
      */
-    public static function getInstance( $className, $params, CircuitAction $action = null ) {
-        MyFuses::includeCoreFile( MyFuses::ROOT_PATH . "core" . 
+    public static function getInstance( $data, CircuitAction $action = null ) {
+        
+        $data = stripslashes( $data );
+        
+        $data = unserialize( $data );
+        
+        if ( isset( self::$verbTypes[ $data[ "name" ] ] ) ) {
+            MyFuses::includeCoreFile( MyFuses::ROOT_PATH . "core" . 
                 DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
-                $className . ".class.php" );
-        $verb = new $className();
-        if( !is_null( $action ) ) {
-            $verb->setAction( $action );
+                self::$verbTypes[ $data[ "name" ] ] . ".class.php" );
+        
+	        $verb = new self::$verbTypes[ $data[ "name" ] ]();
+	        
+	        if( !is_null( $action ) ) {
+	            $verb->setAction( $action );
+	        }
+	        
+	        $verb->setData( $data );
+
+	        return $verb;
         }
-        $verb->setParams( $params );
-        return $verb;
+        return null;
     }
+    
+    public function getCachedCode() {
+	    $data = $this->getData();
+	    $data = serialize( $data );
+	    $data = addslashes( $data );
+	    $data = str_replace( '$', '\$', $data );
+	    $strOut = "\$verb = AbstractVerb::getInstance( \"" . $data . "\"  , \$action );\n";
+        return $strOut;
+	}
     
 }

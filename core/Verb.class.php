@@ -86,12 +86,28 @@ interface Verb extends ICacheable {
     public function setName( $name );
     
     /**
-     * Fill params
+     * Return the verb parent
+     *	
+     * @return Verb
+     */
+    public function getParent();
+    
+    /**
+     * Set the verb parent
+     *
+     * @param Verb $verb
+     */
+    public function setParent( Verb $verb );
+    
+    /**
+     * Fill instance data
      *
      * @param array $params
      * @return Verb
      */
-    public function setParams( $params );
+    public function setData( $data );
+    
+    public function getData();
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

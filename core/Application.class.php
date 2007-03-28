@@ -770,16 +770,10 @@ class Application implements ICacheable {
      * @access public
      */
     private function getCircuitsCachedCode() {
-        
-        $strOut = "\n\$circuits = array();\n\n";
-        
+        $strOut = "";        
         foreach( $this->circuits as $circuit ) {
             $strOut .= $circuit->getCachedCode() . "\n";
         }
-        
-        $strOut .= "\$application->setCircuits( \$circuits );\n";
-        
-        $strOut .= "\$application->updateCircuitsParents();\n";
         
         return $strOut;
     }

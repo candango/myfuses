@@ -79,6 +79,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
 	    $strOut = "\$action = new FuseAction( \$circuit );\n";
         $strOut .= "\$action->setName( \"" . $this->getName() . "\" );";
         $strOut .= $this->getVerbsCachedCode();
+        $strOut .= "\$circuit->addAction( \$action );";
         return $strOut;
 	}
     
