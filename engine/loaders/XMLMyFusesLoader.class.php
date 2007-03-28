@@ -331,91 +331,27 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      * @param SimpleXMLElement $parentNode
      */
     public function loadVerbXML( CircuitAction $action, SimpleXMLElement $parentNode ) {
-        
-        $verbTypes = array(
-            "do" => array(
-                "class" => "DoVerb",
-                "method" => "getDoVerbParams"
-            ),
-            "include" => array(
-                "class" => "IncludeVerb",
-                "method" => "getIncludeVerbParams"
-            ),
-            "xfa" => array(
-                "class" => "XFAVerb",
-                "method" => "getXFAVerbParams"
-            )
-        );
-        
-        if( isset( $verbTypes[ $parentNode->getName() ] ) ) {
-            $params = $this->$verbTypes[ $parentNode->getName() ][ "method" ]( $parentNode->attributes() );
-            $verb = AbstractVerb::getInstance( $verbTypes[ $parentNode->getName() ][ "class" ], $params, $action );
-            $action->addVerb( $verb );
-        }
-        
+        $data = $this->getDataFromXML( $parentNode );
+		$verb = AbstractVerb::getInstance( serialize( $data ), $action );
+		if( !is_null( $verb ) ){
+		    $action->addVerb( $verb );    
+		}
     }
     
-    /**
-     * Load the attributes from an include verb
-     * 
-     * @param SimpleXMLElement $attributes
-     * @return array
-     */
-    private function getIncludeVerbParams( SimpleXMLElement $attributes ) {
-        $verbAttributes = array( "file" => "file", "template" => "file" );
-        $file = "";
+    private function getDataFromXML( SimpleXMLElement $node ) {
+        $data[ "name" ] = $node->getName(); 
         
-        foreach( $attributes as $attribute ) {
-            if ( isset( $verbAttributes[ $attribute->getName() ] ) ) {
-                
-                // getting $file
-                $$verbAttributes[ $attribute->getName() ] = "" . $attribute;
+        foreach( $node->attributes() as $attribute ) {
+            $data[ "attributes" ][ $attribute->getName() ] = "" . $attribute;
+        }
+        
+        if( count( $node->children() ) ) {
+            foreach( $node->children() as $child ) {
+                $data[ "children" ][] = $this->getDataFromXML( $child );    
             }
         }
         
-        return array( "file" => $file );
-    }
-    
-	/**
-     * Load the attributes from an xfa verb
-     * 
-     * @param SimpleXMLElement $attributes
-     * @return array
-     */
-    private function getXFAVerbParams( SimpleXMLElement $attributes ) {
-        $verbAttributes = array( "name" => "name", "value" => "value" );
-        $file = "";
-        
-        foreach( $attributes as $attribute ) {
-            if ( isset( $verbAttributes[ $attribute->getName() ] ) ) {
-                
-                // getting $file
-                $$verbAttributes[ $attribute->getName() ] = "" . $attribute;
-            }
-        }
-        
-        return array( "name" => $name, "value" => $name );
-    }
-    
-	/**
-     * Load the attributes from a do verb
-     * 
-     * @param SimpleXMLElement $attributes
-     * @return array
-     */
-    private function getDoVerbParams( SimpleXMLElement $attributes ) {
-        $verbAttributes = array( "action" => "action" );
-        $file = "";
-        
-        foreach( $attributes as $attribute ) {
-            if ( isset( $verbAttributes[ $attribute->getName() ] ) ) {
-                
-                // getting $file
-                $$verbAttributes[ $attribute->getName() ] = "" . $attribute;
-            }
-        }
-        
-        return array( "action" => $action );
+        return $data;
     }
     
 }
