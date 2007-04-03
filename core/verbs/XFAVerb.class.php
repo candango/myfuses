@@ -25,7 +25,15 @@ class XFAVerb extends AbstractVerb {
     
     public function setData( $data ) {
         $this->setName( $data[ "attributes" ][ "name" ] );
-        $this->setValue( $data[ "attributes" ][ "value" ] );
+        if( count( explode( ".", $data[ "attributes" ][ "value" ] ) ) < 2 ) {
+            $this->setValue(  $this->getAction()->getCircuit()->getName() . 
+                "." . $data[ "attributes" ][ "value" ] );
+        }
+        else {
+            $this->setValue( $data[ "attributes" ][ "value" ] );
+        }
+        
+        $this->getAction()->addXFA( $this );
     }
     
 }

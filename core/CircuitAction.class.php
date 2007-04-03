@@ -35,5 +35,18 @@ interface CircuitAction extends Action {
      */
     public function getVerbs();
     
+    /**
+     * Enter description here...
+     *
+     */
+    public function getXFAs();
+    
+    /**
+     * Enter description here...
+     *
+     * @param XFAVerb $xfa
+     */
+    public function addXFA( XFAVerb $xfa );
+
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -19,6 +19,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
      */
     private $verbs = array();
     
+    private $xfas = array();
+    
     public function __construct( Circuit $circuit ) {
         $this->setCircuit( $circuit );
     }
@@ -70,6 +72,14 @@ class FuseAction extends AbstractAction implements CircuitAction {
         return $this->verbs;
     }
     
+    public function getXFAs() {
+        return $this->xfas;
+    }
+    
+    public function addXFA( XFAVerb $xfa ) {
+        $this->xfas[ $xfa->getName() ] = $xfa->getValue();
+    }
+
     /**
      * Enter description here...
      *

@@ -96,6 +96,8 @@ class MyFuses {
      */
     private $loader;
     
+    private $request;
+    
     /**
      * MyFuses constructor
      *
@@ -183,6 +185,10 @@ class MyFuses {
          }
     }
     
+    protected function createRequest() {
+        $this->request = new FuseRequest();
+    }
+    
     /**
      * Sotore all myfuses applications
      */
@@ -199,7 +205,7 @@ class MyFuses {
                 
                 $strStore = $application->getCachedCode();
                 $fileName = $application->getCompleteCacheFile();
-                                
+                              
 	            $fp = fopen( $fileName,"w" );
 	        
 		        if ( !flock($fp,LOCK_EX) ) {
@@ -223,6 +229,11 @@ class MyFuses {
         try {
             // initilizing application if necessary
             $this->loadApplications();
+            
+            $this->createRequest();
+            
+            var_dump( $this->request->getXFAs() );
+            
             // storing all applications if necessary
             $this->storeApplications();
         }
@@ -267,6 +278,7 @@ class MyFuses {
             'MyFusesLoader' => 'engine/',
             'AbstractMyFusesLoader' => 'engine/',
             'XMLMyFusesLoader' => 'engine/loaders/',
+            'FuseRequest' => 'process/',
             'IContextRegisterable' => 'context/'
             );
 
