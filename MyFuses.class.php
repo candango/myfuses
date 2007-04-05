@@ -227,6 +227,10 @@ class MyFuses {
     
     public function parseRequest() {
         
+        $fuseQ = $this->request->getFuseQ();
+        
+        var_dump( $fuseQ );
+        
     }
     
     /**
@@ -287,6 +291,7 @@ class MyFuses {
             'AbstractMyFusesLoader' => 'engine/',
             'XMLMyFusesLoader' => 'engine/loaders/',
             'FuseRequest' => 'process/',
+            'FuseQ' => 'process/',
             'IContextRegisterable' => 'context/'
             );
 

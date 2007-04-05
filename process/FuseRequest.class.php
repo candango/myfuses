@@ -14,6 +14,8 @@ class FuseRequest {
     
     private $validFuseactionName;
     
+    private $fuseQ;
+    
     public function __construct( $applicationName = null ) {
         
         if( is_null( $applicationName ) ) {
@@ -54,6 +56,16 @@ class FuseRequest {
         return $this->application;
     }
     
+    /**
+     * Enter description here...
+     *
+     * @return FuseAction
+     */
+    public function getAction() {
+        return $this->application->getCircuit( 
+            $this->circuitName )->getAction( $this->actionName );
+    }
+    
     function getCircuitName() {
         return $this->circuitName;
     }
@@ -85,6 +97,17 @@ class FuseRequest {
     
     public function &retrieveSessionVars() {
         return $_SESSION;
+    }
+    
+    /**
+     * Enter description here...
+     *
+     */
+    public function &getFuseQ(){
+        if( is_null( $this->fuseQ ) ) {
+            $this->fuseQ = new FuseQ( $this );
+        }
+        return $this->fuseQ;
     }
     
 }
