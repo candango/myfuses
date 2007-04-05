@@ -8,8 +8,6 @@ class FuseRequest {
      */
     private $application;
     
-    private $xfas = array();
-    
     private $circuitName;
     
     private $actionName;
@@ -45,6 +43,15 @@ class FuseRequest {
         list( $this->circuitName, $this->actionName ) = 
         	explode( '.', $this->validFuseactionName );
         
+    }
+    
+    /**
+     * Enter description here...
+     *
+     * @return Application
+     */
+    function getApplication() {
+        return $this->application;
     }
     
     function getCircuitName() {

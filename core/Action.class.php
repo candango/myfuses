@@ -3,7 +3,7 @@
  * 
  *
  */
-interface Action extends ICacheable {
+interface Action extends ICacheable, IParseable {
    
     /**
      * Return the action name

@@ -96,6 +96,10 @@ class MyFuses {
      */
     private $loader;
     
+    /**
+     * 
+     * @var FuseRequest
+     */
     private $request;
     
     /**
@@ -197,7 +201,6 @@ class MyFuses {
         foreach( $this->applications as $index => $application ) {
             $strStore = "";
             if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                
                 if( !file_exists( $application->getParsedPath() ) ) {
                     mkdir( $application->getParsedPath() );
                     chmod( $application->getParsedPath(), 0777 );
@@ -222,6 +225,10 @@ class MyFuses {
         }
     }
     
+    public function parseRequest() {
+        
+    }
+    
     /**
      * Process the user request
      */
@@ -232,10 +239,10 @@ class MyFuses {
             
             $this->createRequest();
             
-            var_dump( $this->request->getXFAs() );
-            
             // storing all applications if necessary
             $this->storeApplications();
+            
+            $this->parseRequest();
         }
         catch( MyFusesFileOperationException $mffoe ) {
             $mffoe->breakProcess();
@@ -275,6 +282,7 @@ class MyFuses {
             'AbstractVerb' => 'core/',
             'ProcessAction' => 'core/',
             'ICacheable' => 'core/',
+            'IParseable' => 'core/',
             'MyFusesLoader' => 'engine/',
             'AbstractMyFusesLoader' => 'engine/',
             'XMLMyFusesLoader' => 'engine/loaders/',

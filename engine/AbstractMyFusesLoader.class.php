@@ -15,11 +15,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         // setting parsed path
         if ( is_null( $application->getParsedPath() ) ) {
-            $application->setParsedPath( $application->getPath() . $application->getParsedPath() . 
-                "fusebox" . DIRECTORY_SEPARATOR . "parsed" . DIRECTORY_SEPARATOR . 
+            $application->setParsedPath( MyFuses::ROOT_PATH . "store" . DIRECTORY_SEPARATOR . 
                 MyFuses::getInstance()->getApplication()->getName() . DIRECTORY_SEPARATOR ) ;
         }
-        
         // getting cache file
         if( is_file( $application->getCompleteCacheFile() ) ) {
             require_once( $application->getCompleteCacheFile() );

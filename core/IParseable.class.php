@@ -10,14 +10,14 @@ interface IParseable {
      * 
      * @return string
      */
-    public function getCode();
+    public function getParsedCode( $comented, $identLevel );
     
     /**
      * Return the parsed comments
      *
      * @return string
      */
-    public function getComments();
+    public function getComments( $identLevel );
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
