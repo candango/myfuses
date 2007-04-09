@@ -26,4 +26,25 @@ class RelocateVerb extends AbstractVerb {
         $this->setUrl( $data[ "attributes" ][ "url" ] );
     }
     
+
+    /**
+     * Return the parsed code
+     *
+     * @return string
+     */
+    public function getParsedCode( $comented, $identLevel ) {
+        $strOut = str_repeat( "\t", $identLevel );
+        $strOut .= "MyFuses::sendToUrl( \"" . $this->getUrl() . "\" );\n\n";
+        return $strOut;
+    }
+
+    /**
+     * Return the parsed comments
+     *
+     * @return string
+     */
+    public function getComments( $identLevel ) {
+
+    }
+
 }

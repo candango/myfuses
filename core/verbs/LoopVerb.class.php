@@ -101,4 +101,23 @@ class LoopVerb extends AbstractVerb {
        $verb->setParent( $this ); 
     }
     
+
+    /**
+     * Return the parsed code
+     *
+     * @return string
+     */
+    public function getParsedCode( $comented, $identLevel ) {
+
+    }
+
+    /**
+     * Return the parsed comments
+     *
+     * @return string
+     */
+    public function getComments( $identLevel ) {
+
+    }
+
 }

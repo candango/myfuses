@@ -43,4 +43,22 @@ class DoVerb extends AbstractVerb {
         $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );
     }
     
+    /**
+     * Return the parsed code
+     *
+     * @return string
+     */
+    public function getParsedCode( $comented, $identLevel ) {
+        
+    }
+
+    /**
+     * Return the parsed comments
+     *
+     * @return string
+     */
+    public function getComments( $identLevel ) {
+        
+    }
+    
 }

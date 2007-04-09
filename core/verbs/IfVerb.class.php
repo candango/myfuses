@@ -103,5 +103,23 @@ class IfVerb extends AbstractVerb {
        $this->falseVerbs[] = $verb;
        $verb->setParent( $this ); 
     }
-    
+	
+    /**
+	 * Return the parsed code
+	 *
+	 * @return string
+	 */
+	public function getParsedCode( $comented, $identLevel ) {
+	
+	}
+	
+	/**
+	 * Return the parsed comments
+	 *
+	 * @return string
+	 */
+	public function getComments( $identLevel ) {
+	
+	}
+
 }

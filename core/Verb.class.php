@@ -55,7 +55,7 @@
  * @version    SVN: $Revision: 24 $
  * @since      Revision 17
  */
-interface Verb extends ICacheable {
+interface Verb extends ICacheable, IParseable {
     
     /**
      * Return the verb Action
