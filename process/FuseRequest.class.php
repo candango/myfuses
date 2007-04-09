@@ -14,7 +14,7 @@ class FuseRequest {
     
     private $validFuseactionName;
     
-    private $fuseQ;
+    private $fuseQueue;
     
     public function __construct( $applicationName = null ) {
         
@@ -100,14 +100,15 @@ class FuseRequest {
     }
     
     /**
-     * Enter description here...
-     *
+     * Return the Request Fuse Queue
+     * 
+     * @return FuseQueue
      */
-    public function &getFuseQ(){
-        if( is_null( $this->fuseQ ) ) {
-            $this->fuseQ = new FuseQ( $this );
+    public function &getFuseQueue(){
+        if( is_null( $this->fuseQueue ) ) {
+            $this->fuseQueue = new FuseQueue( $this );
         }
-        return $this->fuseQ;
+        return $this->fuseQueue;
     }
     
 }

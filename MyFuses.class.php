@@ -227,9 +227,36 @@ class MyFuses {
     
     public function parseRequest() {
         
-        $fuseQ = $this->request->getFuseQ();
+        $fuseQueue = $this->request->getFuseQueue();
+        $strParse = "";
         
-        var_dump( $fuseQ );
+        foreach( $fuseQueue->getProcessQueue() as $verb ) {
+            $strParse .= $verb->getParsedCode( 
+                $this->request->getApplication()->isParsedWithComments(), 0 );    
+        }
+        
+        $path = $this->request->getApplication()->getParsedPath() .
+            $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
+        
+        $fileName = $path . $this->request->getActionName() . ".action.php" ;
+        
+        if( !file_exists( $path ) ) {
+            mkdir( $path );
+            chmod( $path, 0777 );
+        }
+        
+        $fp = fopen( $fileName,"w" );
+         
+        if ( !flock($fp,LOCK_EX) ) {
+            die("Could not get exclusive lock to Parsed File file");
+        }
+
+        if ( !fwrite($fp, "<?php\n" . $strParse) ) {
+            var_dump( "deu pau 2!!!" );
+        }
+        flock($fp,LOCK_UN);
+        fclose($fp);
+        chmod( $fileName, 0777 );
         
     }
     
@@ -291,7 +318,7 @@ class MyFuses {
             'AbstractMyFusesLoader' => 'engine/',
             'XMLMyFusesLoader' => 'engine/loaders/',
             'FuseRequest' => 'process/',
-            'FuseQ' => 'process/',
+            'FuseQueue' => 'process/',
             'IContextRegisterable' => 'context/'
             );
 
