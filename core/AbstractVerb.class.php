@@ -12,7 +12,7 @@ abstract class AbstractVerb implements Verb {
             "loop" => "LoopVerb",
             "relocate" => "RelocateVerb",
             "set" => "SetVerb",
-            "xfa" => "XFAVerb");
+            "xfa" => "XfaVerb");
     
     /**
      * Verb action
@@ -130,4 +130,30 @@ abstract class AbstractVerb implements Verb {
         return $strOut;
 	}
     
+	/**
+	 * Return the parsed code
+	 *
+	 * @return string
+	 */
+	public function getParsedCode( $commented, $identLevel ) {
+	    $strOut = "";
+	    if( $commented ) {
+	        $strOut = $this->getComments( $identLevel );
+	    }
+	    return $strOut;
+	}
+
+	/**
+	 * Return the parsed comments
+	 *
+	 * @return string
+	 */
+	public function getComments( $identLevel ) {
+	    $fuseactionName = $this->getAction()->getCompleteName();
+	    $strOut = str_repeat( "\t", $identLevel );
+	    $strOut = "/* " . $fuseactionName .
+	    ": <__COMMENT__> */\n";
+	    return $strOut;
+	}
+
 }
