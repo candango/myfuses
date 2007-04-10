@@ -25,6 +25,17 @@ class FuseAction extends AbstractAction implements CircuitAction {
         $this->setCircuit( $circuit );
     }
     
+    
+    /**
+     * Return Circuit Action complete name.<br>
+     * Complete name is circuit name plus dot plus action name.
+     *
+     * return string
+     */
+    public function getCompleteName() {
+        return $this->getCircuit()->getName() . "." . $this->getName();
+    }
+    
 	/**
      * Enter description here...
      *
@@ -76,8 +87,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
         return $this->xfas;
     }
     
-    public function addXFA( XFAVerb $xfa ) {
-        $this->xfas[ $xfa->getName() ] = $xfa->getValue();
+    public function addXFA( $name, $value ) {
+        $this->xfas[ $name ] = $value;
     }
 
     /**

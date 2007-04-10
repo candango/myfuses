@@ -16,6 +16,14 @@ interface CircuitAction extends Action {
     public function setCircuit( Circuit &$circuit );
     
     /**
+     * Return Circuit Action complete name.<br>
+     * Complete name is circuit name plus dot plus action name.
+     *
+     * return string
+     */
+    public function getCompleteName();
+    
+    /**
      * Enter description here...
      *
      * @param Verb $verb
@@ -44,9 +52,10 @@ interface CircuitAction extends Action {
     /**
      * Enter description here...
      *
-     * @param XFAVerb $xfa
+     * @param string $name
+     * @param string $value
      */
-    public function addXFA( XFAVerb $xfa );
+    public function addXFA( $name, $value );
 
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
