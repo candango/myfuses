@@ -32,8 +32,9 @@ class RelocateVerb extends AbstractVerb {
      *
      * @return string
      */
-    public function getParsedCode( $comented, $identLevel ) {
-        $strOut = str_repeat( "\t", $identLevel );
+    public function getParsedCode( $commented, $identLevel ) {
+        $strOut = parent::getParsedCode( $commented, $identLevel );
+        $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "MyFuses::sendToUrl( \"" . $this->getUrl() . "\" );\n\n";
         return $strOut;
     }
@@ -44,7 +45,11 @@ class RelocateVerb extends AbstractVerb {
      * @return string
      */
     public function getComments( $identLevel ) {
-
+        $strOut = parent::getComments( $identLevel );
+        $strOut = str_replace( "__COMMENT__",
+            "MyFuses:request:action:relocate url=\"" . 
+            $this->getUrl() . "\"", $strOut );
+        return $strOut;
     }
 
 }

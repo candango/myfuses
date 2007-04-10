@@ -33,8 +33,9 @@ class SetVerb extends AbstractVerb {
      *
      * @return string
      */
-    public function getParsedCode( $comented, $identLevel ) {
-        $strOut = str_repeat( "\t", $identLevel );
+    public function getParsedCode( $commented, $identLevel ) {
+        $strOut = parent::getParsedCode( $commented, $identLevel );
+        $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "\$" . $this->getName() . " = \"" . 
             $this->getValue() . "\";\n\n";
         return $strOut; 
@@ -46,6 +47,11 @@ class SetVerb extends AbstractVerb {
      * @return string
      */
     public function getComments( $identLevel ) {
-        
+        $strOut = parent::getComments( $identLevel );
+        $strOut = str_replace( "__COMMENT__",
+        "MyFuses:request:action:set name=\"" . $this->getName() .
+        "\" value=\"" . $this->getValue() . "\"", $strOut );
+        return $strOut;
     }
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
