@@ -194,6 +194,15 @@ class MyFuses {
     }
     
     /**
+     * Returns the current request
+     * 
+     * @return FuseRequest
+     */
+    public function &getRequest() {
+        return $this->request;
+    }
+    
+    /**
      * Sotore all myfuses applications
      */
     protected function storeApplications() {
