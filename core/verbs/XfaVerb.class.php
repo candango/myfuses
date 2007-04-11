@@ -132,7 +132,7 @@ class XfaVerb extends AbstractVerb {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "MyFuses::getInstance()->getRequest()->" .
-            "getAction()->\n    addXFA( \"" . $this->getName() . "\", \"" .
+            "getAction()->addXFA( \"" . $this->getName() . "\", \"" .
             $this->getValue() . "\" );\n";
         // for compatibility
         $strOut .= str_repeat( "\t", $identLevel );

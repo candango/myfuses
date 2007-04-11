@@ -56,13 +56,20 @@ class IncludeVerb extends AbstractVerb {
      * @return string
      */
     public function getParsedCode( $commented, $identLevel ) {
-        $file = $this->getAction()->getCircuit()->getCompletePath() . 
-            $this->file;
+        $appName = $this->getAction()->getCircuit()->
+            getApplication()->getName();
+        $circuitName = $this->getAction()->getCircuit()->getName();
+
+        $fileCall = "MyFuses::getApplication( \"" . $appName . 
+            "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
+            
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= "if ( file_exists( \"" . $file . "\" ) ) {\n";
+        $strOut .= "if ( file_exists( " . $fileCall . " . \"" . 
+            $this->getFile() . "\" ) ) {\n";
         $strOut .= str_repeat( "\t", $identLevel + 1 );
-        $strOut .= "include( \"" . $file . "\" );\n";
+        $strOut .= "include( " . $fileCall . " . \"" . 
+            $this->getFile() . "\" );\n";
         $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "}\n\n";
         return $strOut;

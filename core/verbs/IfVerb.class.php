@@ -59,7 +59,6 @@ class IfVerb extends AbstractVerb {
                     $this->setIfVerbs( $type, $child[ 'children' ] );    
                 }
                 
-                
             }
         }
     }
@@ -109,9 +108,50 @@ class IfVerb extends AbstractVerb {
 	 *
 	 * @return string
 	 */
-	public function getParsedCode( $comented, $identLevel ) {
-	
-	}
+    public function getParsedCode( $commented, $identLevel ) {
+	    $strOut = parent::getParsedCode( $commented, $identLevel );
+	    
+	    $trueOccour = false;
+	    
+	    if( count( $this->trueVerbs ) ) {
+	        $strOut .= str_repeat( "\t", $identLevel );
+	        
+	        $strOut .= "if( " . $this->getCondition() . " ) {\n";
+		    
+		    foreach(  $this->trueVerbs as $verb ) {
+		        $strOut .= $verb->getParsedCode( $commented, $identLevel + 1 );
+		    }
+		    
+		    $strOut .= str_repeat( "\t", $identLevel );
+		    
+		    $strOut .= "}\n";
+		    
+		    $trueOccour = false;
+	    }
+
+	    if( count( $this->falseVerbs ) ) {
+	        
+	        $strOut .= str_repeat( "\t", $identLevel );
+	        
+	        if( $trueOccour ) {
+	            $strOut .= "else {\n";
+	        }
+	        else {
+	            $strOut .= "if( !( " . $this->getCondition() . " ) ) {\n";
+	        }
+	        
+	        foreach(  $this->falseVerbs as $verb ) {
+	            $strOut .= $verb->getParsedCode( $commented, $identLevel + 1 );
+	        }
+
+	        $strOut .= str_repeat( "\t", $identLevel );
+
+	        $strOut .= "}\n";
+	        
+	    }
+	    
+	    return $strOut;
+    }
 	
 	/**
 	 * Return the parsed comments
@@ -119,7 +159,13 @@ class IfVerb extends AbstractVerb {
 	 * @return string
 	 */
 	public function getComments( $identLevel ) {
-	
+	    
+	    $strOut = parent::getComments( $identLevel );
+        $strCondition = "condition=\"" . $this->getCondition() . "\"";
+        $strOut = str_replace( "__COMMENT__",
+	        "MyFuses:request:action:if " . $strCondition , $strOut );
+	    return $strOut;
+	    
 	}
 
 }

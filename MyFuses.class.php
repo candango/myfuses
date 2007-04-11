@@ -34,7 +34,7 @@
  * @package    myfuses
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
- * @link http://www.candango.org/myfuses
+ * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
@@ -267,6 +267,7 @@ class MyFuses {
         fclose($fp);
         chmod( $fileName, 0777 );
         
+        include $fileName;
     }
     
     /**

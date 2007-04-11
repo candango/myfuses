@@ -151,7 +151,7 @@ abstract class AbstractVerb implements Verb {
 	public function getComments( $identLevel ) {
 	    $fuseactionName = $this->getAction()->getCompleteName();
 	    $strOut = str_repeat( "\t", $identLevel );
-	    $strOut = "/* " . $fuseactionName .
+	    $strOut .= "/* " . $fuseactionName .
 	    ": <__COMMENT__> */\n";
 	    return $strOut;
 	}
