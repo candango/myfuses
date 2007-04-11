@@ -233,7 +233,9 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $circuitMethods = array( 
             "fuseaction" => "loadAction",
-            "action" => "loadAction"
+            "action" => "loadAction",
+			"prefuseaction" => "loadGlobalAction",
+			"postfuseaction" => "loadGlobalAction"
         );
         
         $circuitParameterAttributes = array(
@@ -354,5 +356,34 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         return $data;
     }
     
+    /**
+     * Load global action
+     *
+     * @param Circuit $circuit
+     * @param SimpleXMLElement $parentNode
+     */
+    private function loadGlobalAction( Circuit &$circuit, 
+        SimpleXMLElement $parentNode ) {
+        
+        $globalActionMethods = array(
+            "prefuseaction" => "setPreFuseAction",
+            "postfuseaction" => "setPostFuseAction"
+        );   
+            
+        $action = new FuseAction( $circuit );
+        
+        $action->setName( $parentNode->getName() );
+        
+        if( count( $parentNode > 0 ) ) {
+            foreach( $parentNode as $node ) {
+                $this->loadVerbXML( $action, $node );
+            }
+             
+        }
+        if( isset( $globalActionMethods[ $action->getName() ] ) ) {
+            $circuit->$globalActionMethods[ $action->getName() ]( $action );
+        }
+        
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

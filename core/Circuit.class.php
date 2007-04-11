@@ -116,6 +116,10 @@ class Circuit implements ICacheable {
      */
     private $parent;
     
+    private $preFuseAction;
+    
+    private $postFuseAction;
+    
     /**
      * Return circuit application
      *
@@ -229,6 +233,42 @@ class Circuit implements ICacheable {
         return $this->actions;
     }
     
+    /**
+     * Enter description here...
+     *
+     * @return CircuitAction
+     */
+    public function getPreFuseAction() {
+        return $this->preFuseAction;
+    }
+    
+	/**
+	 * Enter description here...
+	 *
+	 * @param CircuitAction $action
+	 */
+	public function setPreFuseAction( CircuitAction $action ) {
+	    return $this->preFuseAction = $action;
+	}
+
+	/**
+	 * Enter description here...
+	 *
+	 * @return CircuitAction
+	 */
+	public function getPostFuseAction() {
+	    return $this->postFuseAction;
+	}
+    
+	/**
+	 * Enter description here...
+	 *
+	 * @param CircuitAction $action
+	 */
+	public function setPostFuseAction( CircuitAction $action ) {
+	    return $this->postFuseAction = $action;
+	}
+
     /**
      * Return the circuit file
      *

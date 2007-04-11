@@ -246,11 +246,21 @@ class MyFuses {
         $fuseQueue = $this->request->getFuseQueue();
         $strParse = "";
         
+        foreach( $fuseQueue->getPreFuseActionQueue() as $verb ) {
+            $strParse .= $verb->getParsedCode(
+            $this->request->getApplication()->isParsedWithComments(), 0 );
+        }
+
         foreach( $fuseQueue->getProcessQueue() as $verb ) {
             $strParse .= $verb->getParsedCode( 
                 $this->request->getApplication()->isParsedWithComments(), 0 );    
         }
         
+        foreach( $fuseQueue->getPostFuseActionQueue() as $verb ) {
+            $strParse .= $verb->getParsedCode(
+            $this->request->getApplication()->isParsedWithComments(), 0 );
+        }
+
         $path = $this->request->getApplication()->getParsedPath() .
             $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
         
@@ -313,6 +323,10 @@ class MyFuses {
             self::$instance = new MyFuses( $name, $loader );
         }
         return self::$instance;
+    }
+    
+    public static function getXfa( $name ) {
+        return self::getInstance()->getRequest()->getAction()->getXfa( $name );
     }
     
     /**

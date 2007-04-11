@@ -126,7 +126,7 @@ class IfVerb extends AbstractVerb {
 		    
 		    $strOut .= "}\n";
 		    
-		    $trueOccour = false;
+		    $trueOccour = true;
 	    }
 
 	    if( count( $this->falseVerbs ) ) {

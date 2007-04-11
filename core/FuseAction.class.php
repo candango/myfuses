@@ -90,7 +90,11 @@ class FuseAction extends AbstractAction implements CircuitAction {
     public function addXFA( $name, $value ) {
         $this->xfas[ $name ] = $value;
     }
-
+    
+    public function getXfa( $name ) {
+        return $this->xfas[ $name ];
+    }
+    
     /**
      * Enter description here...
      *
