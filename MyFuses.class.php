@@ -108,7 +108,14 @@ class MyFuses {
      * @param MyFusesLoader $loader
      * @param string $applicationName
      */
-    protected function __construct( MyFusesLoader $loader, $appName = Application::DEFAULT_APPLICATION_NAME ) {
+    protected function __construct( 
+        $appName = Application::DEFAULT_APPLICATION_NAME, 
+        MyFusesLoader $loader = null ) {
+        
+        if( is_null( $loader ) ) {
+            $loader = 
+                AbstractMyFusesLoader::getLoader( MyFusesLoader::XML_LOADER );
+        }
         
         $this->loader = $loader;
         
@@ -299,9 +306,11 @@ class MyFuses {
      * @return MyFuses
      * @static 
      */
-    public static function getInstance( MyFusesLoader $loader = null, $name = Application::DEFAULT_APPLICATION_NAME ) {
+    public static function getInstance( 
+        $name = Application::DEFAULT_APPLICATION_NAME, 
+        MyFusesLoader $loader = null ) {
         if( is_null( self::$instance ) ) {
-            self::$instance = new MyFuses( $loader, $name );
+            self::$instance = new MyFuses( $name, $loader );
         }
         return self::$instance;
     }
