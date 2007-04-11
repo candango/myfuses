@@ -116,10 +116,20 @@ class Circuit implements ICacheable {
      */
     private $parent;
     
+    /**
+     * Return circuit application
+     *
+     * @return Application
+     */
     public function &getApplication() {
         return $this->application;
     }
     
+    /**
+     * Set circuit application
+     * 
+     * @param Application $application
+     */
     public function setApplication( Application &$application ) {
         $this->application = &$application;
     }
@@ -150,6 +160,16 @@ class Circuit implements ICacheable {
     public function getPath() {
         return $this->path;
     }
+    
+    /**
+     * Return the circuit complete path
+     *
+     * @return string
+     */
+    public function getCompletePath() {
+        return $this->getApplication()->getPath() . $this->getPath();
+    }
+    
     
     /**
      * Set the circuit path
