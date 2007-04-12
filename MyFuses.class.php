@@ -329,6 +329,26 @@ class MyFuses {
         return self::getInstance()->getRequest()->getAction()->getXfa( $name );
     }
     
+    public static function getSelf() {
+        $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
+        $self .= str_replace( $_SERVER[ 'DOCUMENT_ROOT' ], 
+            "", $_SERVER[ 'SCRIPT_FILENAME' ] );    
+        return $self;
+    }
+    
+    public static function getMySelf() {
+        $mySelf = self::getSelf() . "?";
+        $mySelf .= self::getInstance()->getRequest()->
+            getApplication()->getFuseactionVariable();
+        $mySelf .= "=" ;
+        return $mySelf;
+    }
+    
+    public static function getMySelfXfa( $xfaName ) {
+        $link = self::getMySelf() . self::getXfa( $xfaName );
+        return $link;
+    }
+
     /**
      * Auto loads class files when they aren't included 
      * 
