@@ -9,6 +9,7 @@ abstract class AbstractVerb implements Verb {
             "do" => "DoVerb",
             "if" => "IfVerb",
             "include" => "IncludeVerb",
+            "instantiate" => "InstantiateVerb",
             "loop" => "LoopVerb",
             "relocate" => "RelocateVerb",
             "set" => "SetVerb",

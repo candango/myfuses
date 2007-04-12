@@ -334,6 +334,7 @@ class Circuit implements ICacheable {
         $this->parent = $parent;
     }
     
+    // TODO put prefuseaction and postfuseaction verbs in cache
     public function getCachedCode() {
         $strOut = "\$circuit = new Circuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";

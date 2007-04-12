@@ -231,6 +231,13 @@ class Application implements ICacheable {
     private $characterEncoding;
     
     /**
+     * All applications class definitions founded in application file
+     * 
+     * @var array
+     */
+    private $classes = array();
+    
+    /**
      * Application constructor
      * 
      * @param $name Application name
@@ -716,6 +723,26 @@ class Application implements ICacheable {
     
     public function setCharacterEncoding( $characterEncoding ) {
         $this->characterEncoding = $characterEncoding;
+    }
+    
+    public function addClass( ClassDefinition $class ) {
+        $class->setApplication( $this );
+        $this->classes[ $class->getName() ] = $class;
+    }
+    
+    // TODO handle non existent class exception
+    public function getClass( $name ) {
+        return $this->classes[ $name ];
+    }
+    
+    // TODO handle non existent class exception
+    public function deleteClass( $name ) {
+        $this->classes[ $name ]->setApplication( null );
+        unset( $this->classes[ $name ] );
+    }
+    
+    public function getClasses() {
+        return $this->classes;
     }
     
     /**

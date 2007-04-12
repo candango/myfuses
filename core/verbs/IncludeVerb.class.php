@@ -38,7 +38,6 @@ class IncludeVerb extends AbstractVerb {
     
     public function setData( $data ) {
         $file = "";
-        
         if( isset( $data[ "attributes" ][ "file" ] ) ) {
             $file = $data[ "attributes" ][ "file" ];
         }

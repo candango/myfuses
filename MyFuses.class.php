@@ -341,6 +341,7 @@ class MyFuses {
             'Action' => 'core/',
             'AbstractAction' => 'core/',
             'CircuitAction' => 'core/',
+            'ClassDefinition' => 'core/',
             'FuseAction' => 'core/',
             'Verb' => 'core/',
             'AbstractVerb' => 'core/',

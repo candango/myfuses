@@ -158,6 +158,49 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     private function loadClasses( Application $application, 
         SimpleXMLElement $parentNode ) {
         
+        $parameterAttributes = array(
+            "name" => "name",
+            "classPath" => "path"
+        );
+        if( count( $parentNode > 0 ) ) {
+	        foreach( $parentNode as $node ) {
+	          
+	            $this->loadClass(  $application, $node );
+	          
+	        }
+        }
+    }
+    
+    public function loadClass( Application $application,
+        SimpleXMLElement $parentNode ) {
+        
+        $parameterAttributes = array(
+            "name" => "name",
+            "alias" => "name",
+            "classpath" => "path"
+        );
+
+        
+        $name = "";
+        $path = "";
+        
+        foreach( $parentNode->attributes() as $attribute ) {
+            
+            if ( isset( $parameterAttributes[ $attribute->getName() ] ) ) {
+                // getting $name or $value
+                $$parameterAttributes[ $attribute->getName() ] = "" . $attribute;
+            }
+        }
+        
+        if( isset($name) ) {
+            if( $name != "" ) {
+                $class = new ClassDefinition();
+                $class->setName( $name );
+                $class->setPath( $path );
+                $application->addClass( $class );
+            }
+        }
+        
     }
     
     /**
