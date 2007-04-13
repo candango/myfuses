@@ -151,6 +151,12 @@ class Application implements ICacheable {
      */
     private $mode;
     
+    /**
+     * Fusebox strictMode
+     * 
+     * @var boolean
+     */
+    private $strictMode = false;
     
     /**
      * Appliaction password
@@ -428,7 +434,7 @@ class Application implements ICacheable {
             
         }
     }
-    
+
     /**
      * Return a circuit by a given name
      *
@@ -436,30 +442,30 @@ class Application implements ICacheable {
      * @return Circuit
      */
     public function getCircuit( $name ) {
-        if( isset( $this->circuits[ $name ] ) ) {
-            return $this->circuits[ $name ];    
-        }
-        return null;
+    	if( isset( $this->circuits[ $name ] ) ) {
+    		return $this->circuits[ $name ];
+    	}
+    	return null;
     }
-    
+
     /**
      * Return all application circuits
-     * 
+     *
      * @return array
      * @access public
      */
     public function getCircits() {
-        return $this->circuits;
+    	return $this->circuits;
     }
-    
+
     /**
      * Set the applciation circuits
-     * 
+     *
      * @param array $circuits
      * @access public
      */
     public function setCircuits( $circuits ) {
-        $this->circuits = $circuits;
+    	$this->circuits = $circuits;
     }
     
     /**
@@ -562,6 +568,37 @@ class Application implements ICacheable {
         $this->mode = $mode;
     }
     
+	/**
+     * Return the fusebox sctricMode
+     * 
+     * @return boolean
+     * @access public 
+     */
+    public function isStrictMode() {
+        return $this->strictMode;
+    }
+    
+    /**
+     * Set the fusebox strictMode
+     * 
+     * @param boolean $strictMode
+     * @access public
+     */
+    public function setStrictMode( $strictMode ) {
+    	if( is_bool( $strictMode ) ) {
+            $this->strictMode = $strictMode;    
+        }
+        else {
+            if( $strictMode == "true" ) {
+                $this->strictMode = true;
+            }
+            else {
+                $this->strictMode = false;
+            }
+        }    	
+        
+    }    
+    
     /**
      * Return application password
      * 
@@ -598,7 +635,7 @@ class Application implements ICacheable {
      */
     public function setParsedWithComments( $parsedWithComments ) {
         if( is_bool( $parsedWithComments ) ) {
-            $this->parsedWithComments = (boolean) $parsedWithComments;    
+            $this->parsedWithComments = $parsedWithComments;    
         }
         else {
             if( $parsedWithComments == "true" ) {
