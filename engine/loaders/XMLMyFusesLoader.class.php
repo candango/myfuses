@@ -213,8 +213,8 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         SimpleXMLElement $parentNode ) {
         
         $parameterAttributes = array(
-            "name" => "name",
-            "value" => "value"
+        "name" => "name",
+        "value" => "value"
         );
 
         $applicationParameters = array(
@@ -222,6 +222,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
             "defaultFuseaction" => "setDefaultFuseaction",
             "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
             "mode" => "setMode",
+            "strictMode" => "setStrictMode",
             "password" => "setPassword",
             "parseWithComments" => "setParsedWithComments",
             "conditionalParse" => "setConditionalParse",
