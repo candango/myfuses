@@ -42,6 +42,8 @@ class InvokeVerb extends AbstractVerb {
 
 	private $method;
 	
+	private $methodCall;
+	
 	private $arguments;
 
 	private $variable;
@@ -60,6 +62,14 @@ class InvokeVerb extends AbstractVerb {
 
 	public function setMethod( $method ) {
 		$this->method = $method;
+	}
+	
+    public function getMethodCall() {
+		return $this->methodCall;
+	}
+
+	public function setMethodCall( $methodCall ) {
+		$this->methodCall = $methodCall;
 	}
 	
 	public function getArguments() {
@@ -97,28 +107,40 @@ class InvokeVerb extends AbstractVerb {
 	public function getData() {
 		$data[ "name" ] = "invoke";
 		$data[ "attributes" ][ "object" ] = $this->getObject();
-		$data[ "attributes" ][ "method" ] = $this->getMethod();
-		if( !is_null( $this->getArguments() ) ) {
-			$data[ "attributes" ][ "argument" ] = $this->getArguments();
+		if( !is_null( $this->getMethod() ) ) {
+			$data[ "attributes" ][ "method" ] = $this->getMethod();
+			if( !is_null( $this->getArguments() ) ) {
+				$data[ "attributes" ][ "argument" ] = $this->getArguments();
+			}
 		}
-		if( !is_null( $this->getVariable() ) ) {
+		else {
+		    $data[ "attributes" ][ "methodcall" ] = $this->getMethodCall();
+		}
+		
+	    if( !is_null( $this->getVariable() ) ) {
 			$data[ "attributes" ][ "variable" ] = $this->getVariable();
 		}
 		return $data;
 	}
 
 	public function setData( $data ) {
-		$this->setObject( $data[ "attributes" ][ "object" ] );
-
-		$this->setMethod( $data[ "attributes" ][ "method" ] );
-
-		if( isset( $data[ "children" ] ) ) {
-			$this->setArguments( $data[ "children" ] );
-		}
 		
-		if( isset( $data[ "attributes" ][ "variable" ] ) ) {
-			$this->setVariable( $data[ "attributes" ][ "variable" ] );
-		}
+	    $this->setObject( $data[ "attributes" ][ "object" ] );
+        
+	    if( isset( $data[ "attributes" ][ "method" ] ) ) {
+		    $this->setMethod( $data[ "attributes" ][ "method" ] );
+	
+			if( isset( $data[ "children" ] ) ) {
+				$this->setArguments( $data[ "children" ] );
+			}    
+	    }
+	    else {
+	        $this->setMethodCall( $data[ "attributes" ][ "methodcall" ] );
+	    }
+	    
+	    if( isset( $data[ "attributes" ][ "variable" ] ) ) {
+		    $this->setVariable( $data[ "attributes" ][ "variable" ] );
+        }
 	}
 
 	/**
@@ -137,14 +159,20 @@ class InvokeVerb extends AbstractVerb {
 		if ( !is_null( $this->getVariable() ) ) {
 			$strOut .= "\$" . $this->getVariable() . " = ";
 		}
-		
-		//Initiate method call
-		$strOut .= "\$" . $this->getObject() . "->" . $this->getMethod() . "(";
-		//Verify arguments - Fusebox 5 (strictMode set to true)
-		if ( !is_null( $this->getArguments() ) )
-			$strOut .= $this->getArguments();
-	    //Close method
-		$strOut .= ");\n\n";
+		if( !is_null( $this->getMethod() ) ) {
+			//Initiate method call
+			$strOut .= "\$" . $this->getObject() . "->" . 
+			    $this->getMethod() . "(";
+			//Verify arguments - Fusebox 5 (strictMode set to true)
+			if ( !is_null( $this->getArguments() ) )
+				$strOut .= $this->getArguments();
+		    //Close method
+	        $strOut .= ");\n\n";
+		}
+		else {
+		    $strOut .= "\$" . $this->getObject() . "->" . 
+		        $this->getMethodCall() . ";\n\n";
+		}
 		
 		return $strOut;
 	}
@@ -156,14 +184,21 @@ class InvokeVerb extends AbstractVerb {
 	 */
 	public function getComments( $identLevel ) {
 		$strOut = parent::getComments( $identLevel );
-		
+		$strInst = "";
 		if( !is_null( $this->getVariable() ) ) {
 			$strInst = "variable=\"" . $this->getVariable() . "\"";
 		}
+		
 		$strInst .= " object=\"" . $this->getObject() . "\"";
-		$strInst .= " method=\"" . $this->getMethod() . "\"";
-		if( !is_null( $this->getArguments() ) ) {
-			$strInst .= " arguments=\"" . $this->getArguments() . "\"";
+		
+		if( !is_null( $this->getMethod() ) ) {
+			$strInst .= " method=\"" . $this->getMethod() . "\"";
+			if( !is_null( $this->getArguments() ) ) {
+				$strInst .= " arguments=\"" . $this->getArguments() . "\"";
+			}
+		}
+		else {
+		    $strInst .= " methodcall=\"" . $this->getMethodCall() . "\"";
 		}
 		
 		$strOut = str_replace( "__COMMENT__",
