@@ -369,6 +369,7 @@ class MyFuses {
             'ICacheable' => 'core/',
             'IParseable' => 'core/',
             'MyFusesLoader' => 'engine/',
+            'MyFusesSoapClient' => 'util/ws/',
             'AbstractMyFusesLoader' => 'engine/',
             'XMLMyFusesLoader' => 'engine/loaders/',
             'FuseRequest' => 'process/',
