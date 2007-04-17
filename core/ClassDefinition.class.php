@@ -1,5 +1,5 @@
 <?php
-class ClassDefinition {
+class ClassDefinition implements ICacheable {
     
     private $name;
     
@@ -44,5 +44,16 @@ class ClassDefinition {
     public function setApplication( Application $application ) {
         $this->application = $application;
     }
-
+    
+    public function getCachedCode() {
+        $strOut = "\$class = new ClassDefinition();\n";
+        
+        $strOut .= "\$application->setName( \"" . $this->getName() . "\" );\n";
+        
+        $strOut .= "\$application->setPath( \"" . $this->getPath() . "\");\n";
+        
+        $strOut = "\$application->addClass( \$class );\n";
+        
+    }
+    
 }
