@@ -36,11 +36,14 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      *
      * @param Application $application
      */
-    public function doLoad( Application $application ) {
+    public function getApplicationData( Application $application ) {
         
         $this->chooseApplicationFile( $application );
         
-        $this->loadApplicationFile( $application );
+        $rootNode = $this->loadApplicationFile( $application );
+        
+        
+        return $this->getDataFromXml( $rootNode );
         
     }
     
@@ -121,152 +124,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = new SimpleXMLElement( $fileCode );
         
-        if( count( $rootNode > 0 ) ) {
-            foreach( $rootNode as $node ) {
-                if ( isset( $appMethods[ $node->getName() ] ) ) {
-                    $this->$appMethods[ $node->getName() ]( $application, 
-                        $node );
-                }                
-            }
-        }
-        
-    }
-
-    private function loadCircuits( Application $application, 
-        SimpleXMLElement $parentNode ) {
-        
-        $circuitMethods = array(
-            "name" => "setName",
-            "alias" => "setName",
-            "path" => "setPath",
-            "parent" => "setParentName"
-        );
-        
-        if( count( $parentNode > 0 ) ) {
-            foreach( $parentNode as $node ) {
-                $name = "";
-                $path = "";
-                $parent = "";
-                $circuit = new Circuit();
-                foreach( $node->attributes() as $attribute ) {
-	                if ( isset( $circuitMethods[ $attribute->getName() ] ) ) {
-	                    $circuit->$circuitMethods[ $attribute->getName() ]( 
-	                        "" . $attribute );
-	                }
-                }
-                $application->addCircuit( $circuit );
-            }
-        }
-        
-        foreach( $application->getCircits() as $circuit ) {
-            $this->loadCircuit( $circuit );
-        }
-        
-    }
-    
-    /**
-     * Load all application classes
-     * 
-     * @param Application $application
-     * @param SimpleXMLElement $parentNode
-     */
-    private function loadClasses( Application $application, 
-        SimpleXMLElement $parentNode ) {
-        
-        $parameterAttributes = array(
-            "name" => "name",
-            "classPath" => "path"
-        );
-        if( count( $parentNode > 0 ) ) {
-	        foreach( $parentNode as $node ) {
-	          
-	            $this->loadClass(  $application, $node );
-	          
-	        }
-        }
-    }
-    
-    public function loadClass( Application $application,
-        SimpleXMLElement $parentNode ) {
-        
-        $parameterAttributes = array(
-            "name" => "name",
-            "alias" => "name",
-            "classpath" => "path"
-        );
-
-        
-        $name = "";
-        $path = "";
-        
-        foreach( $parentNode->attributes() as $attribute ) {
-            
-            if ( isset( $parameterAttributes[ $attribute->getName() ] ) ) {
-                // getting $name or $value
-                $$parameterAttributes[ $attribute->getName() ] = "" . $attribute;
-            }
-        }
-        
-        if( isset($name) ) {
-            if( $name != "" ) {
-                $class = new ClassDefinition();
-                $class->setName( $name );
-                $class->setPath( $path );
-                $application->addClass( $class );
-            }
-        }
-        
-    }
-    
-    /**
-     * Load all application parameters
-     *
-     * @param Application $application
-     * @param SimpleXMLElement $parentNode
-     */
-    private function loadParameters( Application $application, 
-        SimpleXMLElement $parentNode ) {
-        
-        $parameterAttributes = array(
-        "name" => "name",
-        "value" => "value"
-        );
-
-        $applicationParameters = array(
-            "fuseactionVariable" => "setFuseactionVariable",
-            "defaultFuseaction" => "setDefaultFuseaction",
-            "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
-            "mode" => "setMode",
-            "strictMode" => "setStrictMode",
-            "password" => "setPassword",
-            "parseWithComments" => "setParsedWithComments",
-            "conditionalParse" => "setConditionalParse",
-			"allowLexicon" => "setLexiconAllowed",
-			"ignoreBadGrammar" => "setBadGrammarIgnored",
-			"useAssertions" => "setAssertionsUsed",
-			"scriptLanguage" => "setScriptLanguage",
-			"scriptFileDelimiter" => "setScriptFileDelimiter",
-			"maskedFileDelimiters" => "setMaskedFileDelimiters",
-			"characterEncoding" => "setCharacterEncoding"
-        );
-        
-        foreach( $parentNode as $node ) {    
-	        if( count( $parentNode > 0 ) ) {
-	            $name = "";
-	            $value = "";
-	            foreach( $node->attributes() as $attribute ) {
-	                if ( isset( $parameterAttributes[ $attribute->getName() ] ) ) {
-	                    // getting $name or $value
-	                    $$parameterAttributes[ $attribute->getName() ] = "" . $attribute; 
-	                }
-	            }
-	        }
-	        
-	        // putting into $application
-	        if( isset( $applicationParameters[ $name ] ) ) {
-	            $application->$applicationParameters[ $name ]( $value );
-	        }
-        }
+        return $rootNode;
         
     }
     
@@ -275,7 +133,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      *
      * @param Circuit $circuit
      */
-    private function loadCircuit( Circuit $circuit ) {
+    public function loadCircuit( Circuit $circuit ) {
         
         $this->chooseCircuitFile( $circuit );
         
