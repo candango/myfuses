@@ -20,18 +20,29 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $application->setParsedPath( MyFuses::ROOT_PATH . "store" . DIRECTORY_SEPARATOR . 
                 MyFuses::getInstance()->getApplication()->getName() . DIRECTORY_SEPARATOR ) ;
         }
+        
         // getting cache file
+	    // TODO application load must be like fusebox official
         if( is_file( $application->getCompleteCacheFile() ) ) {
             require_once( $application->getCompleteCacheFile() );
+            if( $this->applicationWasModified( $application ) ) {
+                $this->doLoad( $application );
+                $application->setLastLoadTime( time() );
+            }
+            else{
+                if( $application->getMode() == "development" ) {
+	                $this->doLoad( $application );
+	                $application->setLastLoadTime( time() );
+	            }
+            }
+        }
+        else {
+            $this->doLoad( $application );
+            $application->setLastLoadTime( time() );
         }
         
-        // TODO control application load
-        $this->doLoad( $application );
-        
-        //TODO complete application load
-        $application->setLastLoadTime( time() );
-        
         $application->setLoaded( true );
+        
     }
     
     /**
@@ -48,6 +59,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         return new $loaderArray[ $whichLoader ]();
     }
+    
+    
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

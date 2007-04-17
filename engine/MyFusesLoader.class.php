@@ -22,5 +22,7 @@ interface MyFusesLoader {
      */
     public function loadApplication( Application $application );
     
+    public function applicationWasModified( Application $application );
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
