@@ -41,14 +41,21 @@
 
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
-require_once "myfuses/exception/MyFusesException.class.php";
+require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
 
-require_once "myfuses/core/Application.class.php";
-
-require_once "myfuses/engine/AbstractMyFusesLoader.class.php";
-require_once "myfuses/engine/loaders/XMLMyFusesLoader.class.php";
-
-require_once "myfuses/process/FuseRequest.class.php";
+try {
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "core/Application.class.php" );
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "engine/AbstractMyFusesLoader.class.php" );
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "engine/loaders/XMLMyFusesLoader.class.php" );
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "process/FuseRequest.class.php" );    
+}
+catch( MyFusesMissingCoreFileException $mfmcfe ) {
+    $mfmcfe->breakProcess();
+}
 
 /**
  * MyFuses  - MyFuses.class.php
@@ -140,7 +147,8 @@ class MyFuses {
      * @param string $name
      * @return Application
      */
-    public function getApplication( $name = Application::DEFAULT_APPLICATION_NAME ) {
+    public function getApplication( 
+        $name = Application::DEFAULT_APPLICATION_NAME ) {
         return $this->applications[ $name ];
     }
     
@@ -157,7 +165,8 @@ class MyFuses {
         $this->applications[ $application->getName() ] = $application;
         
         if( $application->isDefault() ) {
-            $this->applications[ Application::DEFAULT_APPLICATION_NAME ] = $application; 
+            $this->applications[ 
+                Application::DEFAULT_APPLICATION_NAME ] = $application; 
         }
     }
     
@@ -166,7 +175,8 @@ class MyFuses {
      * 
      * @param string
      */
-    public function setApplicationName( $value, $name = Application::DEFAULT_APPLICATION_NAME ) {
+    public function setApplicationName( $value, 
+        $name = Application::DEFAULT_APPLICATION_NAME ) {
         return $this->applications[ $name ]->setName( $value );
     }
     
@@ -175,7 +185,8 @@ class MyFuses {
      * 
      * @return string
      */
-    public function getApplicationPath( $name = Application::DEFAULT_APPLICATION_NAME ) {
+    public function getApplicationPath( 
+        $name = Application::DEFAULT_APPLICATION_NAME ) {
         $this->applications[ $name ]->getPath();
     }
     
@@ -184,7 +195,8 @@ class MyFuses {
      * 
      * @param string $name
      */
-    public function setApplicationPath( $value, $name = Application::DEFAULT_APPLICATION_NAME ) {
+    public function setApplicationPath( $value, 
+        $name = Application::DEFAULT_APPLICATION_NAME ) {
         $this->applications[ $name ]->setPath( $value );
     }
     
@@ -351,43 +363,6 @@ class MyFuses {
     public static function getMySelfXfa( $xfaName ) {
         $link = self::getMySelf() . self::getXfa( $xfaName );
         return $link;
-    }
-
-    /**
-     * Auto loads class files when they aren't included 
-     * 
-     * @param string className The class name
-     */
-    public static function autoLoad( $className ) {
-        $classIncludeMap = array(
-            'Application' => 'core/',
-            'Circuit' => 'core/',
-            'Action' => 'core/',
-            'AbstractAction' => 'core/',
-            'CircuitAction' => 'core/',
-            'ClassDefinition' => 'core/',
-            'FuseAction' => 'core/',
-            'Verb' => 'core/',
-            'AbstractVerb' => 'core/',
-            'ProcessAction' => 'core/',
-            'ICacheable' => 'core/',
-            'IParseable' => 'core/',
-            'MyFusesLoader' => 'engine/',
-            'MyFusesSoapClient' => 'util/ws/',
-            'AbstractMyFusesLoader' => 'engine/',
-            'XMLMyFusesLoader' => 'engine/loaders/',
-            'FuseRequest' => 'process/',
-            'FuseQueue' => 'process/',
-            'IContextRegisterable' => 'context/'
-            );
-
-            try {
-                self::includeCoreFile( MyFuses::ROOT_PATH .
-                $classIncludeMap[ $className ] . $className . ".class.php" );
-            }
-            catch( MyFusesMissingCoreFileException $mfmcfe ) {
-                $mfmcfe->breakProcess();
-            }
     }
     
     /**
