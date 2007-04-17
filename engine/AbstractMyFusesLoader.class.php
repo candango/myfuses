@@ -1,4 +1,6 @@
 <?php
+require_once "myfuses/engine/MyFusesLoader.class.php";
+
 /**
  * Abstract MyFuses loader.<br>
  * 

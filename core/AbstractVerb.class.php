@@ -1,4 +1,7 @@
 <?php
+require_once "myfuses/core/Verb.class.php";
+require_once "myfuses/core/CircuitAction.class.php";
+
 /**
  * Enter description here...
  *

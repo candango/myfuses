@@ -1,4 +1,6 @@
 <?php
+require_once "myfuses/core/Action.class.php";
+
 /**
  * Enter description here...
  *

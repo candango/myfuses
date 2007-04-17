@@ -41,10 +41,14 @@
 
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
-require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
+require_once "myfuses/exception/MyFusesException.class.php";
 
-// ifbox autoload function
-spl_autoload_register( "myfusesAutoLoad" );
+require_once "myfuses/core/Application.class.php";
+
+require_once "myfuses/engine/AbstractMyFusesLoader.class.php";
+require_once "myfuses/engine/loaders/XMLMyFusesLoader.class.php";
+
+require_once "myfuses/process/FuseRequest.class.php";
 
 /**
  * MyFuses  - MyFuses.class.php
@@ -404,15 +408,5 @@ class MyFuses {
         }
     }
     
-}
-
-/**
- * Fires MyFuses::autoLoad()
- * 
- * @param string className
- * @see MyFuses::autoLoad()
- */
-function myfusesAutoLoad( $className ){
-    MyFuses::autoLoad( $className );
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

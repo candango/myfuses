@@ -1,4 +1,8 @@
 <?php
+require_once "myfuses/core/Action.class.php";
+require_once "myfuses/core/Circuit.class.php";
+require_once "myfuses/core/Verb.class.php";
+
 interface CircuitAction extends Action {
     
     /**

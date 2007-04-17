@@ -1,4 +1,11 @@
 <?php
+require_once "myfuses/core/AbstractVerb.class.php";
+require_once "myfuses/core/Application.class.php";
+require_once "myfuses/core/ClassDefinition.class.php";
+require_once "myfuses/core/Circuit.class.php";
+require_once "myfuses/core/FuseAction.class.php";
+
+require_once "myfuses/engine/AbstractMyFusesLoader.class.php";
 /**
  * 
  */

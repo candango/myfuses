@@ -36,6 +36,11 @@
  * @version    SVN: $Id:Circuit.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
+require_once "myfuses/core/Application.class.php";
+require_once "myfuses/core/CircuitAction.class.php";
+require_once "myfuses/core/ICacheable.class.php";
+
+
 /**
  * Circuit - Circuit.class.php
  * 

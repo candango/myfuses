@@ -1,4 +1,7 @@
 <?php
+require_once "myfuses/core/ICacheable.class.php";
+require_once "myfuses/core/IParseable.class.php";
+
 /**
  * 
  *

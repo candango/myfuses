@@ -30,11 +30,11 @@ class MyFusesSoapClient {
        var_dump( $this->getTypes() );
        
        $param = array( "CountryName" => "Brazil" );
-       
+       /*
        $result = $this->soapClient->__call( "GetCitiesByCountry", array( 'parameters' => $param ) );
        
        var_dump( $result->GetCitiesByCountryResult );die();
-       
+       */
    }
    
    public function getTypes() {

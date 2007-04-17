@@ -38,6 +38,10 @@
  * @version    SVN: $Id: MyFuses.class.php 24 2007-01-04 13:33:00Z piraz $
  */
 
+require_once "myfuses/core/ICacheable.class.php";
+require_once "myfuses/core/IParseable.class.php";
+require_once "myfuses/core/CircuitAction.class.php";
+
 /**
  * Verb  - Verb.class.php
  * 

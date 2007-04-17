@@ -1,4 +1,6 @@
 <?php
+require_once "myfuses/process/FuseRequest.class.php";
+
 class FuseQueue {
 
     private $preFuseActionQueue = array();

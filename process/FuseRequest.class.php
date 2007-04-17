@@ -1,4 +1,6 @@
 <?php
+require_once "myfuses/process/FuseQueue.class.php";
+
 class FuseRequest {
     
     /**
