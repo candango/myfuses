@@ -343,9 +343,15 @@ class Circuit implements ICacheable {
     public function getCachedCode() {
         $strOut = "\$circuit = new Circuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
+        $strOut .= "\$circuit->setPath( \"" . $this->getPath() . "\" );\n";
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
-        $strOut .= $this->getActionsCachedCode();    
+        $strOut .= $this->getActionsCachedCode();
+        
+        $strOut .= $this->getPreFuseActionCachedCode();
+        
+        $strOut .= $this->getPostFuseActionCachedCode();
+        
         $strOut .= "\$application->addCircuit( \$circuit );\n";
         return $strOut;
     }
@@ -360,9 +366,41 @@ class Circuit implements ICacheable {
         $strOut = "\n";
         
         foreach( $this->actions as $action ) {
-            $strOut .= $action->getCachedCode() . "\n";
+            $strOut .= $action->getCachedCode();
+            $strOut .= "\$circuit->addAction( \$action );\n";
         }
         
+        return $strOut;
+    }
+    
+    /**
+     * Returns pre fuse action cache code
+     * 
+     * @return string
+     */
+    private function getPreFuseActionCachedCode() {
+        $strOut = "";
+        if( !( is_null( $this->preFuseAction ) ) ) {
+            $strOut = "\n" . $this->preFuseAction->getCachedCode();
+            $strOut .= "\$circuit->setPreFuseAction( \$action );\n";    
+        }
+         
+        return $strOut;
+    }
+    
+    /**
+     * Returns post fuse action cache code
+     * 
+     * @return string
+     */
+    private function getPostFuseActionCachedCode() {
+        $strOut = "";
+        
+        if( !( is_null( $this->postFuseAction ) ) ) {
+            $strOut = "\n" . $this->postFuseAction->getCachedCode();
+            $strOut .= "\$circuit->setPostFuseAction( \$action );\n";
+        }
+         
         return $strOut;
     }
     
