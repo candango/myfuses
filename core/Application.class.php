@@ -791,6 +791,7 @@ class Application implements ICacheable {
      * @access public
      */
     public function getCachedCode() {
+        
         $strOut = "\$application = new Application( \"" . $this->getName() . "\" );\n";
         
         $strOut .= "\$application->setPath( \"" . $this->getPath() . "\" );\n";
@@ -824,6 +825,8 @@ class Application implements ICacheable {
         
         $strOut .= $this->getCircuitsCachedCode();
         
+        $strOut .= $this->getClassesCacheCode();
+        
         $strOut .= "MyFuses::getInstance()->addApplication( \$application );\n";
         
         return $strOut;
@@ -839,6 +842,15 @@ class Application implements ICacheable {
         $strOut = "";        
         foreach( $this->circuits as $circuit ) {
             $strOut .= $circuit->getCachedCode() . "\n";
+        }
+        
+        return $strOut;
+    }
+    
+    private function getClassesCacheCode(){
+        $strOut = "";        
+        foreach( $this->classes as $class ) {
+            $strOut .= $class->getCachedCode() . "\n";
         }
         
         return $strOut;
