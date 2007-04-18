@@ -13,7 +13,7 @@ interface MyFusesLoader {
      *
      * @param Application $application
      */
-    public function doLoad( Application $application );
+    public function doLoadApplication( Application $application );
     
     /**
      * Load the aplication

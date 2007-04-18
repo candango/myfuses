@@ -128,18 +128,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
     }
     
-    /**
-     * Load one circuit
-     *
-     * @param Circuit $circuit
-     */
-    public function loadCircuit( Circuit $circuit ) {
-        
-        $this->chooseCircuitFile( $circuit );
-        
-        $this->loadCircuitFile( $circuit );
-        
-    }
+    
 
     /**
      * Load a circuit file

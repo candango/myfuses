@@ -26,19 +26,16 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         if( is_file( $application->getCompleteCacheFile() ) ) {
             require_once( $application->getCompleteCacheFile() );
             if( $this->applicationWasModified( $application ) ) {
-                $this->doLoad( $application );
-                $application->setLastLoadTime( time() );
+                $this->doLoadApplication( $application );
             }
             else{
                 if( $application->getMode() == "development" ) {
-	                $this->doLoad( $application );
-	                $application->setLastLoadTime( time() );
+	                $this->doLoadApplication( $application );
 	            }
             }
         }
         else {
-            $this->doLoad( $application );
-            $application->setLastLoadTime( time() );
+            $this->doLoadApplication( $application );
         }
         
         
@@ -52,7 +49,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     }
     
     
-    public function doLoad( Application $application  ) {
+    public function doLoadApplication( Application $application  ) {
         
         $appMethods = array( 
             "circuits" => "loadCircuits", 
@@ -72,6 +69,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
         
+        $application->setLastLoadTime( time() );
     }
     
     private function loadCircuits( Application $application, $data ) {
@@ -162,8 +160,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     private function loadParameters( Application $application, $data ) {
         
         $parameterAttributes = array(
-        "name" => "name",
-        "value" => "value"
+	        "name" => "name",
+	        "value" => "value"
         );
 
         $applicationParameters = array(
@@ -203,6 +201,39 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
 		        }
             }
         }
+        
+    }
+    
+    /**
+     * Load one circuit
+     *
+     * @param Circuit $circuit
+     */
+    public function loadCircuit( Circuit $circuit ) {
+        
+        if( is_file( $circuit->getApplication()->getCompleteCacheFile() ) ) {
+            if( $this->circuitWasModified( $application ) ) {
+                $this->doLoadApplication( $application );
+            }
+            else{
+                if( $application->getMode() == "development" ) {
+	                $this->doLoadApplication( $application );
+	            }
+            }
+        }
+        else {
+            $this->doLoadApplication( $application );
+        }
+        
+    }
+    
+    public function doLoadCircuit( Circuit $circuit ){
+        
+        $this->chooseCircuitFile( $circuit );
+        
+        $this->loadCircuitFile( $circuit );
+        
+        $circuit->setLastLoadTime( time() );
         
     }
     

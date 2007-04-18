@@ -121,6 +121,13 @@ class Circuit implements ICacheable {
      */
     private $parent;
     
+    /**
+     * Last time that circuit was loaded
+     *
+     * @var integer
+     */
+    private $lastLoadTime = 0;
+    
     private $preFuseAction;
     
     private $postFuseAction;
@@ -339,11 +346,33 @@ class Circuit implements ICacheable {
         $this->parent = $parent;
     }
     
+    /**
+     * Return the circuit last load time
+     *
+     * @return integer
+     * @access public
+     */
+    public function getLastLoadTime() {
+        return $this->lastLoadTime;
+    }
+    
+    /**
+     * Sets the circuit last load time
+     * 
+     * @param integer $lastLoadTime
+     * @access public
+     */
+    public function setLastLoadTime( $lastLoadTime ) {
+        $this->lastLoadTime = $lastLoadTime;
+    }
+    
     // TODO put prefuseaction and postfuseaction verbs in cache
     public function getCachedCode() {
         $strOut = "\$circuit = new Circuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
         $strOut .= "\$circuit->setPath( \"" . $this->getPath() . "\" );\n";
+        $strOut .= "\$circuit->setLastLoadTime( \"" . 
+            $this->getLastLoadTime() . "\" );\n";
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
         $strOut .= $this->getActionsCachedCode();
