@@ -129,6 +129,22 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     
+    /**
+     * Enter description here...
+     *
+     * @param Circuit $circuit
+     */
+    public function getCircuitData( Circuit $circuit ) {
+        
+        $this->chooseCircuitFile( $circuit );
+        
+        $rootNode = $this->loadCircuitFile( $circuit );
+        
+        
+        return $this->getDataFromXml( $rootNode );
+        
+    }
+    
 
     /**
      * Load a circuit file
@@ -136,17 +152,6 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      * @param Circuit $circuit
      */
     private function loadCircuitFile( Circuit $circuit ) {
-        
-        $circuitMethods = array( 
-            "fuseaction" => "loadAction",
-            "action" => "loadAction",
-			"prefuseaction" => "loadGlobalAction",
-			"postfuseaction" => "loadGlobalAction"
-        );
-        
-        $circuitParameterAttributes = array(
-            "access" => "access"
-        );
         
         $circuitPath = $circuit->getApplication()->getPath() . $circuit->getPath();
         
@@ -167,83 +172,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = new SimpleXMLElement( $fileCode );
         
-        $access = "";
-	    
-        foreach( $rootNode->attributes() as $attribute ) {
-            if ( isset( $circuitParameterAttributes[ $attribute->getName() ] ) ) {
-                // getting $name
-                $$circuitParameterAttributes[ $attribute->getName() ] = "" . $attribute;
-            }
-        }
-        
-        $circuit->setAccessByString( $access );
-        
-        if( count( $rootNode > 0 ) ) {
-            foreach( $rootNode as $node ) {
-                if ( isset( $circuitMethods[ $node->getName() ] ) ) {
-                    $this->$circuitMethods[ $node->getName() ]( $circuit, 
-                        $node );
-                }               
-            }
-        }
-    }
-    
-    /**
-     * Load the action
-     * 
-     * @param Circuit $circuit
-     * @param SimpleXMLElement $parentNode
-     */
-    private function loadAction( Circuit $circuit, SimpleXMLElement $parentNode ) {
-        
-        $action = new FuseAction( $circuit );
-        
-        // TODO implement class and namespace options
-        $actionParameterAttributes = array(
-            "name" => "name",
-            "class" => "",
-            "namespace" => ""
-        );
-        
-        $parameterAttributes = array(
-            "name" => "name",
-            "value" => "value"
-        );
-        
-        $name = "";
-	    
-        foreach( $parentNode->attributes() as $attribute ) {
-            if ( isset( $actionParameterAttributes[ $attribute->getName() ] ) ) {
-                // getting $name
-                $$actionParameterAttributes[ $attribute->getName() ] = "" . $attribute;
-            }
-        }
-	    
-        $action->setName( $name );
-        
-        $circuit->addAction( $action );
-        
-        if( count( $parentNode > 0 ) ) {
-            foreach( $parentNode as $node ) {    
-	            $this->loadVerbXML( $action, $node );
-	        }
-	        
-        }
-        
-    }
-    
-    /**
-     * Load the verb xml
-     * 
-     * @param CircuitAction $action
-     * @param SimpleXMLElement $parentNode
-     */
-    public function loadVerbXML( CircuitAction $action, SimpleXMLElement $parentNode ) {
-        $data = $this->getDataFromXML( $parentNode );
-		$verb = AbstractVerb::getInstance( serialize( $data ), $action );
-		if( !is_null( $verb ) ){
-		    $action->addVerb( $verb );    
-		}
+        return $rootNode;
     }
     
     private function getDataFromXML( SimpleXMLElement $node ) {
@@ -262,34 +191,5 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         return $data;
     }
     
-    /**
-     * Load global action
-     *
-     * @param Circuit $circuit
-     * @param SimpleXMLElement $parentNode
-     */
-    private function loadGlobalAction( Circuit &$circuit, 
-        SimpleXMLElement $parentNode ) {
-        
-        $globalActionMethods = array(
-            "prefuseaction" => "setPreFuseAction",
-            "postfuseaction" => "setPostFuseAction"
-        );   
-            
-        $action = new FuseAction( $circuit );
-        
-        $action->setName( $parentNode->getName() );
-        
-        if( count( $parentNode > 0 ) ) {
-            foreach( $parentNode as $node ) {
-                $this->loadVerbXML( $action, $node );
-            }
-             
-        }
-        if( isset( $globalActionMethods[ $action->getName() ] ) ) {
-            $circuit->$globalActionMethods[ $action->getName() ]( $action );
-        }
-        
-    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
