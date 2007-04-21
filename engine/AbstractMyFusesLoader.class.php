@@ -42,10 +42,17 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         // TODO put loadCircuit in this file
         foreach( $application->getCircits() as $circuit ) {
-            //if( is_file( $application->getCompleteCacheFile() ) ) {
-            //$circuit = new Circuit();
-                
-            $this->doLoadCircuit( $circuit );
+            
+            
+            //TODO handle missing file error
+            if( $this->circuitWasModified( $circuit ) ) {
+                $this->doLoadCircuit( $circuit );
+            }
+            else{
+                if( $application->getMode() == "development" ) {
+                    $this->doLoadCircuit( $circuit );
+	            }
+            }
         }
         
         $application->setLoaded( true );
@@ -54,7 +61,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     
     public function doLoadApplication( Application $application  ) {
-        
         $appMethods = array( 
             "circuits" => "loadCircuits", 
             "classes" => "loadClasses",
@@ -78,11 +84,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     public function loadCircuits( Application $application, $data ) {
         
-        $circuitMethods = array(
-            "name" => "setName",
-            "alias" => "setName",
-            "path" => "setPath",
-            "parent" => "setParentName"
+        $circuitAttributes = array(
+            "name" => "name",
+            "alias" => "name",
+            "path" => "path",
+            "parent" => "parent"
         );
         
         if( count( $data[ 'children' ] > 0 ) ) {
@@ -90,13 +96,24 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 $name = "";
                 $path = "";
                 $parent = "";
-                $circuit = new Circuit();
+                
                 foreach( $child[ 'attributes' ] as $attributeName => $attribute ) {
-	                if ( isset( $circuitMethods[ $attributeName ] ) ) {
-	                    $circuit->$circuitMethods[ $attributeName ]( 
-	                        "" . $attribute );
+	                if ( isset( $circuitAttributes[ $attributeName ] ) ) {
+	                    $$circuitAttributes[ $attributeName ] = $attribute;
 	                }
                 }
+                
+                $circuit = new Circuit();
+                
+                if( $application->hasCircuit( $name ) ) {
+                    $circuit = $application->getCircuit( $name );
+                }
+                
+                //TODO handle this parameters changes
+                $circuit->setName( $name );
+                $circuit->setPath( $path );
+                $circuit->setParentName( $parent );
+                
                 $application->addCircuit( $circuit );
             }
         }
@@ -110,7 +127,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param array $parentNode
      */
     public function loadClasses( Application $application, $data ) {
-        
         $parameterAttributes = array(
             "name" => "name",
             "classPath" => "path"
@@ -270,7 +286,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         $circuit->setLastLoadTime( time() );
-        
+        $circuit->setModified( true );
     }
     
     /**

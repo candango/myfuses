@@ -48,12 +48,13 @@ class ClassDefinition implements ICacheable {
     public function getCachedCode() {
         $strOut = "\$class = new ClassDefinition();\n";
         
-        $strOut .= "\$application->setName( \"" . $this->getName() . "\" );\n";
+        $strOut .= "\$class->setName( \"" . $this->getName() . "\" );\n";
         
-        $strOut .= "\$application->setPath( \"" . $this->getPath() . "\");\n";
+        $strOut .= "\$class->setPath( \"" . $this->getPath() . "\");\n";
         
-        $strOut = "\$application->addClass( \$class );\n";
+        $strOut .= "\$application->addClass( \$class );\n";
         
+        return $strOut;
     }
     
 }

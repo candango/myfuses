@@ -436,7 +436,20 @@ class Application implements ICacheable {
             
         }
     }
-
+    
+    /**
+     * Verifies if application has a circuit
+     * 
+     * @param string $name
+     * @return boolean
+     */
+    public function hasCircuit( $name ) {
+        if( isset( $this->circuits[ $name ] ) ) {
+           return true;
+        }
+        return false;
+    }
+    
     /**
      * Return a circuit by a given name
      *
@@ -852,7 +865,6 @@ class Application implements ICacheable {
         foreach( $this->classes as $class ) {
             $strOut .= $class->getCachedCode() . "\n";
         }
-        
         return $strOut;
     }
     

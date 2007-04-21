@@ -258,48 +258,52 @@ class MyFuses {
     }
     
     public function parseRequest() {
-        
         $fuseQueue = $this->request->getFuseQueue();
-        $strParse = "";
         
-        foreach( $fuseQueue->getPreFuseActionQueue() as $verb ) {
-            $strParse .= $verb->getParsedCode(
-            $this->request->getApplication()->isParsedWithComments(), 0 );
-        }
-
-        foreach( $fuseQueue->getProcessQueue() as $verb ) {
-            $strParse .= $verb->getParsedCode( 
-                $this->request->getApplication()->isParsedWithComments(), 0 );    
-        }
-        
-        foreach( $fuseQueue->getPostFuseActionQueue() as $verb ) {
-            $strParse .= $verb->getParsedCode(
-            $this->request->getApplication()->isParsedWithComments(), 0 );
-        }
-
         $path = $this->request->getApplication()->getParsedPath() .
-            $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
+	        $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
         
         $fileName = $path . $this->request->getActionName() . ".action.php" ;
         
-        if( !file_exists( $path ) ) {
-            mkdir( $path );
-            chmod( $path, 0777 );
-        }
+        $circuit = $this->request->getAction()->getCircuit();
+        // TODO handle file parse
+        if( !is_file( $fileName ) || $circuit->isModified() ) {
+            $strParse = "";
+	        
+	        foreach( $fuseQueue->getPreFuseActionQueue() as $verb ) {
+	            $strParse .= $verb->getParsedCode(
+	            $this->request->getApplication()->isParsedWithComments(), 0 );
+	        }
+	
+	        foreach( $fuseQueue->getProcessQueue() as $verb ) {
+	            $strParse .= $verb->getParsedCode( 
+	                $this->request->getApplication()->isParsedWithComments(), 0 );    
+	        }
+	        
+	        foreach( $fuseQueue->getPostFuseActionQueue() as $verb ) {
+	            $strParse .= $verb->getParsedCode(
+	            $this->request->getApplication()->isParsedWithComments(), 0 );
+	        }
+	
+            if( !file_exists( $path ) ) {
+	            mkdir( $path );
+	            chmod( $path, 0777 );
+	        }
+	        
+	        $fp = fopen( $fileName,"w" );
+	         
+	        if ( !flock($fp,LOCK_EX) ) {
+	            die("Could not get exclusive lock to Parsed File file");
+	        }
+	
+	        if ( !fwrite($fp, "<?php\n" . $strParse) ) {
+	            var_dump( "deu pau 2!!!" );
+	        }
+	        flock($fp,LOCK_UN);
+	        fclose($fp);
+	        chmod( $fileName, 0777 );
         
-        $fp = fopen( $fileName,"w" );
-         
-        if ( !flock($fp,LOCK_EX) ) {
-            die("Could not get exclusive lock to Parsed File file");
         }
-
-        if ( !fwrite($fp, "<?php\n" . $strParse) ) {
-            var_dump( "deu pau 2!!!" );
-        }
-        flock($fp,LOCK_UN);
-        fclose($fp);
-        chmod( $fileName, 0777 );
-        
         include $fileName;
     }
     

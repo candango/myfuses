@@ -132,6 +132,8 @@ class Circuit implements ICacheable {
     
     private $postFuseAction;
     
+    private $modified = false;
+    
     /**
      * Return circuit application
      *
@@ -280,7 +282,18 @@ class Circuit implements ICacheable {
 	public function setPostFuseAction( CircuitAction $action ) {
 	    return $this->postFuseAction = $action;
 	}
-
+    
+    /**
+     * Return the circuit complete file
+     * 
+     * complete path + file
+     *
+     * @return string
+     */
+    public function getCompleteFile() {
+        return $this->getCompletePath() . $this->getFile();
+    }
+	
     /**
      * Return the circuit file
      *
@@ -321,6 +334,9 @@ class Circuit implements ICacheable {
      * @access public
      */
     public function setParentName( $parentName ) {
+        if( $parentName == null ) {
+            $parentName = "";
+        }
         $this->parent = null;
         $this->parentName = $parentName;
     }
@@ -371,8 +387,9 @@ class Circuit implements ICacheable {
         $strOut = "\$circuit = new Circuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
         $strOut .= "\$circuit->setPath( \"" . $this->getPath() . "\" );\n";
-        $strOut .= "\$circuit->setLastLoadTime( \"" . 
-            $this->getLastLoadTime() . "\" );\n";
+        $strOut .= "\$circuit->setFile( \"" . $this->getFile() . "\" );\n";
+        $strOut .= "\$circuit->setLastLoadTime( " . 
+            $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
         $strOut .= $this->getActionsCachedCode();
@@ -382,6 +399,7 @@ class Circuit implements ICacheable {
         $strOut .= $this->getPostFuseActionCachedCode();
         
         $strOut .= "\$application->addCircuit( \$circuit );\n";
+        
         return $strOut;
     }
     
@@ -431,6 +449,14 @@ class Circuit implements ICacheable {
         }
          
         return $strOut;
+    }
+    
+    public function isModified() {
+        return $this->modified;
+    }
+    
+    public function setModified( $modified ) {
+        return $this->modified = $modified;
     }
     
 }
