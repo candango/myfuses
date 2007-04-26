@@ -42,15 +42,15 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         // TODO put loadCircuit in this file
         foreach( $application->getCircits() as $circuit ) {
-            
-            
-            //TODO handle missing file error
-            if( $this->circuitWasModified( $circuit ) ) {
-                $this->doLoadCircuit( $circuit );
-            }
-            else{
-                if( $application->getMode() == "development" ) {
-                    $this->doLoadCircuit( $circuit );
+            if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
+                //TODO handle missing file error
+	            if( $this->circuitWasModified( $circuit ) ) {
+	                $this->doLoadCircuit( $circuit );
+	            }
+	            else{
+	                if( $application->getMode() == "development" ) {
+	                    $this->doLoadCircuit( $circuit );
+		            }
 	            }
             }
         }
@@ -64,7 +64,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         $appMethods = array( 
             "circuits" => "loadCircuits", 
             "classes" => "loadClasses",
-            "parameters" => "loadParameters"
+            "parameters" => "loadParameters",
+            "globalfuseactions" => "loadGlobalFuseActions"
              );
         
         $data = $this->getApplicationData( $application );
@@ -82,7 +83,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         $application->setLastLoadTime( time() );
     }
     
-    public function loadCircuits( Application $application, $data ) {
+    protected function loadCircuits( Application $application, $data ) {
         
         $circuitAttributes = array(
             "name" => "name",
@@ -126,7 +127,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param Application $application
      * @param array $parentNode
      */
-    public function loadClasses( Application $application, $data ) {
+    protected function loadClasses( Application $application, $data ) {
         $parameterAttributes = array(
             "name" => "name",
             "classPath" => "path"
@@ -141,7 +142,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
     }
     
-    public function loadClass( Application $application, $data ) {
+    protected function loadClass( Application $application, $data ) {
         
         $parameterAttributes = array(
             "name" => "name",
@@ -177,7 +178,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param Application $application
      * @param SimpleXMLElement $parentNode
      */
-    public function loadParameters( Application $application, $data ) {
+    protected function loadParameters( Application $application, $data ) {
         
         $parameterAttributes = array(
 	        "name" => "name",
@@ -249,8 +250,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
     }
     
-    public function doLoadCircuit( Circuit $circuit ){
+    protected function doLoadCircuit( Circuit $circuit ){
         
+       
         $circuitMethods = array( 
             "fuseaction" => "loadAction",
             "action" => "loadAction",
@@ -287,6 +289,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         $circuit->setLastLoadTime( time() );
         $circuit->setModified( true );
+        
     }
     
     /**
@@ -295,7 +298,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    public function loadAction( Circuit $circuit, $data ) {
+    protected function loadAction( Circuit $circuit, $data ) {
         
         $action = new FuseAction( $circuit );
         
@@ -339,7 +342,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param CircuitAction $action
      * @param SimpleXMLElement $parentNode
      */
-    public function loadVerb( CircuitAction $action, $data ) {
+    protected function loadVerb( CircuitAction $action, $data ) {
         $verb = AbstractVerb::getInstance( serialize( $data ), $action );
 		if( !is_null( $verb ) ){
 		    $action->addVerb( $verb );    
@@ -352,7 +355,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    private function loadGlobalAction( Circuit &$circuit, $data ) {
+    protected function loadGlobalAction( Circuit &$circuit, $data ) {
         
         $globalActionMethods = array(
             "prefuseaction" => "setPreFuseAction",
@@ -371,6 +374,49 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         if( isset( $globalActionMethods[ $action->getName() ] ) ) {
             $circuit->$globalActionMethods[ $action->getName() ]( $action );
+        }
+        
+    }
+    
+    /**
+     * Load global fuseaction
+     *
+     * @param Circuit $circuit
+     * @param SimpleXMLElement $parentNode
+     */
+    protected function loadGlobalFuseActions( Application &$application, $data ) {
+        
+        $globalActionMethods = array(
+            "preprocess" => "getPreProcessFuseAction",
+            "postprocess" => "getPostProcessFuseAction"
+        );   
+        
+        $circuit = new Circuit();
+        
+        $circuit->setName( "MYFUSES_GLOBAL_CIRCUIT" );
+        
+        $circuit->setPath( $application->getPath() );
+        
+        $circuit->setAccessByString( "internal" );
+        
+        $application->addCircuit( $circuit );
+        
+        if( count( $data[ 'children' ] ) > 0 ) {
+            foreach( $data[ 'children' ] as $child ) {    
+                $action = new FuseAction( $circuit );
+                
+                $action->setName( str_replace( "get", "", $globalActionMethods[ $child[ 'name' ] ] ) );
+        
+                if( count( $child[ 'children' ] ) ) {
+	                foreach( $child[ 'children' ] as $actionChild ) {
+	                    $this->loadVerb( $action, $actionChild );
+	                }
+                }
+                $circuit->addAction( $action );
+            }
+        }
+        if( isset( $globalActionMethods[ $action->getName() ] ) ) {
+            $application->$globalActionMethods[ $action->getName() ]( $action );
         }
         
     }

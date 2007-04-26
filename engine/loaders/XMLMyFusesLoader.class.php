@@ -77,10 +77,12 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     public function circuitWasModified( Circuit $circuit ) {
+        
         if( filectime( $circuit->getCompleteFile() ) > 
             $circuit->getLastLoadTime() ) {
             return true;
         }
+        
         return false;
     }
     

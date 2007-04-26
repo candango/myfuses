@@ -245,6 +245,21 @@ class Application implements ICacheable {
      */
     private $classes = array();
     
+    
+    /**
+     * FuseAction to be executed before process
+     * 
+     * @var CircuitAction
+     */
+    private $preProcessFuseAction;
+    
+    /**
+     * FuseAction to be executed after process
+     * 
+     * @var CircuitAction
+     */
+    private $postProcessFuseAction;
+    
     /**
      * Application constructor
      * 
@@ -795,6 +810,42 @@ class Application implements ICacheable {
     
     public function getClasses() {
         return $this->classes;
+    }
+    
+    /**
+     * Return the pre process fuse action
+     * 
+     * @return CircuitAction
+     */
+    public function getPreProcessFuseAction() {
+        return $this->preProcessFuseAction;
+    }
+    
+    /**
+     * Set the pre process fuse action
+     * 
+     * @param CirctuitAction $action
+     */
+    public function setPreProcessFuseAction( CirctuitAction $action ) {
+        $this->preProcessFuseAction = $action;
+    }
+    
+    /**
+     * Return the post process fuse action
+     * 
+     * @return CircuitAction
+     */
+    public function getPostProcessFuseAction() {
+        return $this->postProcessFuseAction;
+    }
+    
+    /**
+     * Set the post process fuse action
+     * 
+     * @param CirctuitAction $action
+     */
+    public function postPreProcessFuseAction( CirctuitAction $action ) {
+        $this->postProcessFuseAction = $action;
     }
     
     /**

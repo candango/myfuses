@@ -270,6 +270,11 @@ class MyFuses {
         if( !is_file( $fileName ) || $circuit->isModified() ) {
             $strParse = "";
 	        
+            foreach( $fuseQueue->getPreProcessQueue() as $verb ) {
+	            $strParse .= $verb->getParsedCode(
+	            $this->request->getApplication()->isParsedWithComments(), 0 );
+	        }
+            
 	        foreach( $fuseQueue->getPreFuseActionQueue() as $verb ) {
 	            $strParse .= $verb->getParsedCode(
 	            $this->request->getApplication()->isParsedWithComments(), 0 );
@@ -284,7 +289,12 @@ class MyFuses {
 	            $strParse .= $verb->getParsedCode(
 	            $this->request->getApplication()->isParsedWithComments(), 0 );
 	        }
-	
+	        
+            foreach( $fuseQueue->getPostProcessQueue() as $verb ) {
+	            $strParse .= $verb->getParsedCode(
+	            $this->request->getApplication()->isParsedWithComments(), 0 );
+	        }
+	        
             if( !file_exists( $path ) ) {
 	            mkdir( $path );
 	            chmod( $path, 0777 );
