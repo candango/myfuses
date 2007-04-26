@@ -412,6 +412,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
 	                    $this->loadVerb( $action, $actionChild );
 	                }
                 }
+                
                 $circuit->addAction( $action );
             }
         }
