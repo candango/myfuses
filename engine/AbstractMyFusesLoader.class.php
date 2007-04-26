@@ -407,9 +407,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 
                 $action->setName( str_replace( "get", "", $globalActionMethods[ $child[ 'name' ] ] ) );
         
-                if( count( $child[ 'children' ] ) ) {
-	                foreach( $child[ 'children' ] as $actionChild ) {
-	                    $this->loadVerb( $action, $actionChild );
+                if( isset( $child[ 'children' ] ) ) {
+                    if( count( $child[ 'children' ] ) ) {
+		                foreach( $child[ 'children' ] as $actionChild ) {
+		                    $this->loadVerb( $action, $actionChild );
+		                }
 	                }
                 }
                 
