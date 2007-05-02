@@ -1,11 +1,24 @@
 <?php
-require_once "myfuses/core/AbstractVerb.class.php";
-require_once "myfuses/core/Application.class.php";
-require_once "myfuses/core/ClassDefinition.class.php";
-require_once "myfuses/core/Circuit.class.php";
-require_once "myfuses/core/FuseAction.class.php";
+try {
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "core/AbstractPlugin.class.php" );
+	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	    "core/AbstractVerb.class.php" );
+	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	    "core/Application.class.php" );
+	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	    "core/ClassDefinition.class.php" );
+	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . "core/Circuit.class.php" );
+	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	    "core/FuseAction.class.php" );
+	
+	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	    "engine/AbstractMyFusesLoader.class.php" );    
+}
+catch( MyFusesMissingCoreFileException $mfmcfe ) {
+    $mfmcfe->breakProcess();
+}
 
-require_once "myfuses/engine/AbstractMyFusesLoader.class.php";
 /**
  * 
  */
