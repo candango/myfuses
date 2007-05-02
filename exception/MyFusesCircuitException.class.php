@@ -1,0 +1,56 @@
+<?php
+/**
+ * Enter description here...
+ *
+ */
+class MyFusesCircuitException extends MyFusesException {
+    
+    /**
+     * Non-existent circuit contant <br>
+     * value 1
+     * 
+     * @var integer
+     */
+    const NON_EXISTENT_CIRCUIT = 1;
+    
+    
+    /**
+     * Exception constructor
+     *
+     * @param array $params
+     * @param integer $operation
+     */
+    public function __construct( $params, $operation ) {
+    	
+        $operationMessageMap = array(
+            self::NON_EXISTENT_CIRCUIT => "getNonExistentCircuitMessage"
+        );
+        
+        list( $msg, $detail ) = 
+            $this->$operationMessageMap[ $operation ]( $params );
+        
+        parent::__construct( $msg, $detail, 
+            MyFusesException::NON_EXISTENT_CIRCUIT );
+    }
+    
+    /**
+     * Return an array with message and datails of a non-existent 
+     * circuit exception
+     *
+     * @param array $params
+     * @return array
+     */
+    private function getNonExistentCircuitMessage( $params ) {
+        return array(
+	        0 => "Could not find the circuit \"" . $params[ "circuitName" ] .
+	            "\" in application \"" . $params[ "application" ]->getName() . 
+	            "\".",
+	        1 => "The circuit  \"" . $params[ "circuitName" ] . 
+	            "\" wasn't found in application \"" . 
+	            $params[ "application" ]->getName()  . "\". " .
+	            "You can check this in circuits session of the \"" . 
+	            $params[ "application" ]->getCompleteFile() . "\" file." );
+    }
+    
+}
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -47,11 +47,16 @@ try {
     MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
         "core/Application.class.php" );
     MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "core/ICacheable.class.php" );
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "core/IParseable.class.php" );
+    
+    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
         "engine/AbstractMyFusesLoader.class.php" );
     MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
         "engine/loaders/XMLMyFusesLoader.class.php" );
     MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
-        "process/FuseRequest.class.php" );    
+        "process/FuseRequest.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();

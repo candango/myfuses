@@ -5,6 +5,11 @@ require_once MYFUSES_ROOT_PATH .
 require_once MYFUSES_ROOT_PATH . 
     "exception/MyFusesFileOperationException.class.php";
 
+require_once MYFUSES_ROOT_PATH . 
+    "exception/MyFusesCircuitException.class.php";
+/**
+ * 
+ */
 abstract class MyFusesException extends Exception {
     
     const CIRCUIT_XML_ERROR = 1;
@@ -24,9 +29,9 @@ abstract class MyFusesException extends Exception {
     const UNDEFINED_CIRCUIT = 15;
     const UNDEFINED_FUSEACTION = 16;
     
-    
     const FILE_OPERATION = 101;
     const MISSING_CORE_FILE = 102;
+    const NON_EXISTENT_CIRCUIT = 103;
     
     private static $currentInstance;
     
@@ -34,9 +39,10 @@ abstract class MyFusesException extends Exception {
     
     private $type;
     
+    /**
+     * 
+     */
     function __construct( $message, $detail, $code ) {
-        
-        
         
         parent::__construct( $message, $code );
         
@@ -56,14 +62,23 @@ abstract class MyFusesException extends Exception {
         $this->detail .= "<br>$function<br>$location";
     }
     
+    /**
+     * 
+     */
     function getType(){
         return $this->type;
     }
     
+    /**
+     * 
+     */
     function getDetail(){
         return $this->detail;
     }
     
+    /**
+     * 
+     */
     function breakProcess() {
     	ob_clean ();
         include dirname(__FILE__) . DIRECTORY_SEPARATOR . 'exceptionMessage.php';
