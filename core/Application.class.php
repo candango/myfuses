@@ -442,11 +442,16 @@ class Application implements ICacheable {
         foreach( $this->circuits as $circuit ) {
             
             if( $circuit->getParentName() != "" ) {
-                if( !is_null( $this->getCircuit( 
-                    $circuit->getParentName() ) ) ) {
-                    $circuit->setParent( $this->getCircuit( 
-                        $circuit->getParentName() ) );
+                try {        
+	                if( !is_null( $this->getCircuit( 
+	                    $circuit->getParentName() ) ) ) {
+	                    $circuit->setParent( $this->getCircuit( 
+	                        $circuit->getParentName() ) );
+	                }
                 }
+	            catch ( MyFusesCircuitException $mfe ) {
+		            $mfe->breakProcess();
+		        }
             }
             
         }
@@ -475,7 +480,10 @@ class Application implements ICacheable {
     	if( isset( $this->circuits[ $name ] ) ) {
     		return $this->circuits[ $name ];
     	}
-    	return null;
+    	
+    	$params = array( "circuitName" => $name, "application" => &$this );
+    	throw new MyFusesCircuitException( $params, 
+    	    MyFusesCircuitException::NON_EXISTENT_CIRCUIT );
     }
 
     /**
