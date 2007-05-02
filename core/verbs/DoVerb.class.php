@@ -23,7 +23,12 @@ class DoVerb extends AbstractVerb {
     public function setActionToBeExecuted( $actionName ) {
         $actionNameX = explode( '.', $actionName );
         if ( count( $actionNameX ) < 2 ) {
-            $this->circuitToBeExecutedName = $this->getAction()->getCircuit()->getName();
+            try {
+                $this->circuitToBeExecutedName = $this->getAction()->getCircuit()->getName();    
+            }
+	        catch ( MyFusesCircuitException $mfe ) {
+	            $mfe->breakProcess();
+	        }
             $this->actionToBeExecutedName = $actionName;
         }
         else {
@@ -49,10 +54,16 @@ class DoVerb extends AbstractVerb {
      * @return string
      */
     public function getParsedCode( $commented, $identLevel ) {
-        $action = $this->getAction()->getCircuit()->
-            getApplication()->getCircuit( $this->circuitToBeExecutedName )->
-            getAction( $this->actionToBeExecutedName );
-        
+        try {
+	        $action = $this->getAction()->getCircuit()->
+	            getApplication()->getCircuit( 
+	            $this->circuitToBeExecutedName )->
+	            getAction( $this->actionToBeExecutedName );
+        }
+        catch ( MyFusesCircuitException $mfe ) {
+            $mfe->breakProcess();
+        }
+            
         $strOut = parent::getParsedCode( $commented, $identLevel );
         foreach(  $action->getVerbs() as $verb ) {
             $strOut .= $verb->getParsedCode( $commented, $identLevel + 1 );
