@@ -260,6 +260,8 @@ class Application implements ICacheable {
      */
     private $postProcessFuseAction;
     
+    private $plugins;
+    
     /**
      * Application constructor
      * 
@@ -268,6 +270,12 @@ class Application implements ICacheable {
      */
     public function __construct( $name = "default" ) {
         $this->setName( $name );
+        
+        $this->plugins[ Plugin::PRE_PROCESS_PHASE ] = array();
+        $this->plugins[ Plugin::PRE_FUSEACTION_PHASE ] = array();
+        $this->plugins[ Plugin::POST_FUSEACTION_PHASE ] = array();
+        $this->plugins[ Plugin::POST_PROCESS_PHASE ] = array();
+        $this->plugins[ Plugin::PROCESS_ERROR_PHASE ] = array();
     }
     
     /**
@@ -307,6 +315,9 @@ class Application implements ICacheable {
      * @access public
      */
     public function setPath( $path ) {
+        if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
+            $path .= DIRECTORY_SEPARATOR;
+        }
         $this->path = $path;
     }
     
@@ -857,6 +868,51 @@ class Application implements ICacheable {
     }
     
     /**
+     * Add one plugin in a ginven fase
+     * 
+     * @param Plugin $plugin
+     * @param string $fase
+     */
+    public function addPlugin( Plugin $plugin ) {
+        $this->plugins[ $plugin->getPhase() ][] = $plugin;
+        $plugin->setApplication( $this );
+    }
+    
+    /**
+     * Return all plugins of a given fase
+     * 
+     * @param string $fase
+     * @return array
+     */
+    public function getPlugins( $fase ) {
+        return $this->plugins[ $fase ];
+    }
+    
+    /**
+     * Clear the fase plugins array
+     * 
+     * @param string $fase
+     */
+    public function clearPlugins( $phase = null ) {
+        if( is_null( $phase ) ) {
+
+            foreach( $this->plugins as $phaseName => $phase ) {
+                foreach( $phase as $plugin ) {
+                    $plugin->clearApplication();
+                }
+                $this->plugins[ $phaseName ] = array();
+            }
+            
+        }
+        else {
+            foreach( $this->plugins[ $fase ] as $plugin ) {
+	            $plugin->clearApplication();
+	        }
+	        $this->plugins[ $fase ] = array();    
+        }
+    }
+    
+    /**
      * Return the application cache code
      * 
      * @return string
@@ -899,6 +955,8 @@ class Application implements ICacheable {
         
         $strOut .= $this->getClassesCacheCode();
         
+        $strOut .= $this->getPluginsCacheCode();
+        
         $strOut .= "MyFuses::getInstance()->addApplication( \$application );\n";
         
         return $strOut;
@@ -923,6 +981,16 @@ class Application implements ICacheable {
         $strOut = "";        
         foreach( $this->classes as $class ) {
             $strOut .= $class->getCachedCode() . "\n";
+        }
+        return $strOut;
+    }
+    
+    private function getPluginsCacheCode(){
+        $strOut = "";        
+        foreach( $this->plugins as $phase ) {
+            foreach( $phase as $plugin ) {
+                $strOut .= $plugin->getCachedCode() . "\n";    
+            }
         }
         return $strOut;
     }

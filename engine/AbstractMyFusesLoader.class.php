@@ -65,7 +65,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             "circuits" => "loadCircuits", 
             "classes" => "loadClasses",
             "parameters" => "loadParameters",
-            "globalfuseactions" => "loadGlobalFuseActions"
+            "globalfuseactions" => "loadGlobalFuseActions",
+            "plugins" => "loadPlugins"
              );
         
         $data = $this->getApplicationData( $application );
@@ -107,7 +108,12 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 $circuit = new Circuit();
                 
                 if( $application->hasCircuit( $name ) ) {
-                    $circuit = $application->getCircuit( $name );
+                    try { 
+                        $circuit = $application->getCircuit( $name );
+                    }
+	                catch ( MyFusesCircuitException $mfe ) {
+			            $mfe->breakProcess();
+			        }
                 }
                 
                 //TODO handle this parameters changes
@@ -171,6 +177,46 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
     }
     
+    protected function loadPlugins( Application $application, $data ) {
+        $application->clearPlugins();
+        if( count( $data[ 'children' ] ) ) {
+            foreach( $data[ 'children' ] as $child ) {
+                $this->loadFase( $application, $child );
+            }
+            
+        }
+    }
+    
+    
+    protected function loadFase( Application $application, $data ) {
+        
+        $faseParams = array(
+            'name' => 'name',
+            'path' => 'path',
+            'template' => 'file',
+            'file' => 'file'
+        );
+            
+        $phase = $data[ 'attributes' ][ 'name' ]; 
+        
+        if( count( $data[ 'children' ] ) ) {
+            foreach( $data[ 'children' ] as $child ) {
+                $name = "";
+                $path = "";
+                $file = "";
+                
+                foreach( $child[ 'attributes' ] as 
+                    $attributeName => $attribute ) {
+                    $$faseParams[ $attributeName ] = $attribute;
+                }
+                
+                AbstractPlugin::getInstance( $application, $phase, 
+                    $name, $path, $file );
+                
+            }
+        }
+        
+    }
     
     /**
      * Load all application parameters

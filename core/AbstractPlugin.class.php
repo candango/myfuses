@@ -81,12 +81,14 @@ abstract class AbstractPlugin implements Plugin{
     private $path;
     
     /**
-     * Plugin fase
+     * Plugin phase
      *
      * @var string
      * @TODO Maybe this attribute will be a class like MyFusesFase
      */
-    private $fase;
+    private $phase;
+    
+    private $application;
     
     /**
      * Return the plugin name
@@ -161,21 +163,94 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     /**
-     * Returns the plugin fase
+     * Returns the plugin phase
      *
      * @return string
      */
-    public function getFase() {
-        return $this->fase;
+    public function getPhase() {
+        return $this->phase;
     }
     
     /**
      * Set the application fase
      *
-     * @param string $fase
+     * @param string $phase
      */
-    public function setFase( $fase ) {
-        $this->fase = $fase;
+    public function setPhase( $phase ) {
+        $this->phase = $phase;
+    }
+    
+    /**
+     * Return plugin application
+     *
+     * @return Application
+     */
+    public function getApplication() {
+        return $this->application;
+    }
+    
+    /**
+     * Set plugin application
+     *
+     * @param Application $application
+     */
+    public function setApplication( Application $application ) {
+        $this->application = $application;
+    }
+    
+    /**
+     * Clear application plugin
+     */
+    public function clearApplication() {
+        $this->application = null;
+    }
+    
+    /**
+     * Return a new plugin instance
+     * 
+     * @param Application $application
+     * @param string $phase
+     * @param string $name
+     * @param string $path
+     * @param string $file
+     * 
+     * @return Plugin
+     */
+    public static function getInstance( Application $application, 
+        $phase, $name, $path, $file ) {
+        // FIXME handle missing file include exception
+        if( $path == "" ) {
+            $path = $application->getPath() . "plugins" . 
+                DIRECTORY_SEPARATOR;
+        }
+        
+        require_once $path . $file;
+        
+        $plugin = new $name();
+        
+        $plugin->setName( $name );
+        $plugin->setPath( $path );
+        $plugin->setFile( $file );
+        $plugin->setPhase( $phase );
+        
+        $application->addPlugin( $plugin );
+        
+        return $plugin;
+    }
+    
+    public function getCachedCode() {
+        $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
+            $this->getPhase() . "\", \"" . $this->getName() . "\", \"" . 
+            $this->getPath() . "\", \"" . $this->getFile() . "\" );\n";
+        return $strOut;
+    }
+    
+    public function getParsedCode( $comented, $identLevel ) {
+        
+    }
+    
+    public function getComments( $identLevel ) {
+        
     }
     
 }

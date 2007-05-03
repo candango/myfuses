@@ -61,7 +61,7 @@ interface Plugin extends ICacheable, IParseable {
      * 
      * @var string
      */
-    const PRE_PROCESS_FASE = "preProcess";
+    const PRE_PROCESS_PHASE = "preProcess";
     
     /**
      * Pre fuseaction fase constant<br>
@@ -69,7 +69,7 @@ interface Plugin extends ICacheable, IParseable {
      * 
      * @var string
      */
-    const PRE_FUSEACTION_FASE = "preFuseaction";
+    const PRE_FUSEACTION_PHASE = "preFuseaction";
     
     /**
      * Post fuseaction fase constant<br>
@@ -77,7 +77,7 @@ interface Plugin extends ICacheable, IParseable {
      * 
      * @var string
      */
-    const POST_FUSEACTION_FASE = "postFuseaction";
+    const POST_FUSEACTION_PHASE = "postFuseaction";
     
     /**
      * Post process fase constant<br>
@@ -85,7 +85,7 @@ interface Plugin extends ICacheable, IParseable {
      * 
      * @var string
      */
-    const POST_PROCESS_FASE = "postProcess";
+    const POST_PROCESS_PHASE = "postProcess";
     
     /**
      * Process error fase constant<br>
@@ -93,7 +93,7 @@ interface Plugin extends ICacheable, IParseable {
      * 
      * @var string
      */
-    const PROCESS_ERROR_FASE = "processError";
+    const PROCESS_ERROR_PHASE = "processError";
     
     /**
      * Return the plugin name
@@ -152,18 +152,37 @@ interface Plugin extends ICacheable, IParseable {
     public function setPath( $path );
     
     /**
-     * Returns the plugin fase
+     * Returns the plugin phase
      *
      * @return string
      */
-    public function getFase();
+    public function getPhase();
     
     /**
-     * Set the application fase
+     * Set the application phase
      *
-     * @param string $fase
+     * @param string $phase
      */
-    public function setFase( $fase );
+    public function setPhase( $phase );
+    
+    /**
+     * Return plugin application
+     *
+     * @return Application
+     */
+    public function getApplication();
+    
+    /**
+     * Set plugin application
+     *
+     * @param Application $application
+     */
+    public function setApplication( Application $application );
+    
+    /**
+     * Clear application plugin
+     */
+    public function clearApplication();
     
     /**
      * This is the method that runs plugin action.

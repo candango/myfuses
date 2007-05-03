@@ -139,6 +139,9 @@ class MyFuses {
         
         $this->applications[ $appName ]->setDefault( true );
         
+        $this->applications[ $appName ]->setPath( 
+            dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
+        
         if( Application::DEFAULT_APPLICATION_NAME != $appName ) {
             $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
                 &$this->applications[ $appName ];
@@ -271,6 +274,7 @@ class MyFuses {
         $fileName = $path . $this->request->getActionName() . ".action.php" ;
         
         $circuit = $this->request->getAction()->getCircuit();
+        // FIXME add plugins in this process
         // TODO handle file parse
         if( !is_file( $fileName ) || $circuit->isModified() ) {
             $strParse = "";
