@@ -166,6 +166,20 @@ interface Plugin extends ICacheable, IParseable {
     public function setPhase( $phase );
     
     /**
+     * Returns the plugin index
+     *
+     * @return integer
+     */
+    public function getIndex();
+    
+    /**
+     * Set the plugin index
+     *
+     * @param integer $index
+     */
+    public function setIndex( $index );
+    
+    /**
      * Return plugin application
      *
      * @return Application

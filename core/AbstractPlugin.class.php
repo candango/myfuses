@@ -88,6 +88,18 @@ abstract class AbstractPlugin implements Plugin{
      */
     private $phase;
     
+    /**
+     * Plugin index
+     * 
+     * @var integer
+     */
+    private $index;
+    
+    /**
+     * Plugin application
+     * 
+     * @var application
+     */
     private $application;
     
     /**
@@ -181,6 +193,24 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     /**
+     * Returns the plugin index
+     *
+     * @return integer
+     */
+    public function getIndex() {
+        return $this->index;
+    }
+    
+    /**
+     * Set the plugin index
+     *
+     * @param integer
+     */
+    public function setIndex( $index ) {
+        $this->index = $index;
+    }
+    
+    /**
      * Return plugin application
      *
      * @return Application
@@ -240,17 +270,21 @@ abstract class AbstractPlugin implements Plugin{
     
     public function getCachedCode() {
         $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
-            $this->getPhase() . "\", \"" . $this->getName() . "\", \"" . 
-            $this->getPath() . "\", \"" . $this->getFile() . "\" );\n";
-        return $strOut;
+			$this->phase . "\", \"" . $this->name . "\", \"" . $this->path . 
+			"\", \"" . $this->file . "\" );\n";
+		return $strOut;
     }
     
     public function getParsedCode( $comented, $identLevel ) {
-        
+        $strOut = "\$plugin = MyFuses::getApplication( \"" . 
+            $this->application->getName() . "\" )->getPlugin(" .
+                " \"" . $this->phase . "\", " . $this->index . "  );\n";
+        $strOut .= "\$plugin->run();\n\n";
+        return $strOut;
     }
     
     public function getComments( $identLevel ) {
-        
+            
     }
     
 }

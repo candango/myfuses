@@ -85,6 +85,10 @@ class FuseRequest {
         return $this->actionName;
     }
     
+    function getFuseActionName() {
+        return $this->getCircuitName() . "." . $this->getActionName();
+    }
+    
     function getValidFuseactionName(){
         return $this->validFuseactionName;
     }

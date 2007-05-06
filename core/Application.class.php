@@ -874,8 +874,10 @@ class Application implements ICacheable {
      * @param string $fase
      */
     public function addPlugin( Plugin $plugin ) {
-        $this->plugins[ $plugin->getPhase() ][] = $plugin;
+        $index = count( $this->plugins[ $plugin->getPhase() ] );
+        $this->plugins[ $plugin->getPhase() ][ $index ] = $plugin;
         $plugin->setApplication( $this );
+        $plugin->setIndex( $index );
     }
     
     /**
@@ -884,8 +886,20 @@ class Application implements ICacheable {
      * @param string $fase
      * @return array
      */
-    public function getPlugins( $fase ) {
-        return $this->plugins[ $fase ];
+    public function getPlugins( $phase ) {
+        return $this->plugins[ $phase ];
+    }
+    
+    /**
+     * Return one plugin of a given fase and index
+     * FIXME Handle non existent plugin error
+     * 
+     * @param string $phase
+     * @param integer $index
+     * @return Plugin
+     */
+    public function getPlugin( $phase, $index ) {
+        return $this->plugins[ $phase ][ $index ];
     }
     
     /**

@@ -13,6 +13,11 @@ class FuseQueue {
     
     private $postProcessQueue = array();
     
+    /**
+     * Queue request
+     * 
+     * @var FuseRequest
+     */
     private $request;
     
     public function __construct( FuseRequest &$request ) {
@@ -46,14 +51,27 @@ class FuseQueue {
         $action = $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PreProcessFuseAction" );
-        $this->preProcessQueue = $action->getVerbs();
+        
+        $plugins = $this->request->getApplication()->getPlugins( 
+            Plugin::PRE_PROCESS_PHASE );
+        
+        $verbs = $action->getVerbs();
+        
+        $actions = array_merge( $plugins, $verbs );
+        
+        $this->preProcessQueue = $actions;
     }
     
     private function buildPostProcessQueue() {
         $action = $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PostProcessFuseAction" );
-        $this->postProcessQueue = $action->getVerbs();
+
+       $verbs = $action->getVerbs();
+        
+        
+        
+        $this->postProcessQueue = $verbs;
     }
     
     public function getProcessQueue() {

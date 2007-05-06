@@ -128,6 +128,7 @@ class MyFuses {
         $appName = Application::DEFAULT_APPLICATION_NAME, 
         MyFusesLoader $loader = null ) {
         
+        // FIXME each application must have its own loader
         if( is_null( $loader ) ) {
             $loader = 
                 AbstractMyFusesLoader::getLoader( MyFusesLoader::XML_LOADER );
@@ -142,6 +143,7 @@ class MyFuses {
         $this->applications[ $appName ]->setPath( 
             dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
         
+        // FIXME this part isn't working fine
         if( Application::DEFAULT_APPLICATION_NAME != $appName ) {
             $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
                 &$this->applications[ $appName ];
@@ -351,16 +353,19 @@ class MyFuses {
     /**
      * Returns one instance of MyFuses. Only one instance is creted per process.
      * MyFuses is implemmented using the singleton pattern.
-     *
+     * // FIXME Tem que repensar esse método 
+     * 
      * @return MyFuses
      * @static 
      */
     public static function getInstance( 
         $name = Application::DEFAULT_APPLICATION_NAME, 
         MyFusesLoader $loader = null ) {
+        
         if( is_null( self::$instance ) ) {
             self::$instance = new MyFuses( $name, $loader );
         }
+        
         return self::$instance;
     }
     

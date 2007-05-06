@@ -25,6 +25,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         // getting cache file
 	    // TODO application load must be like fusebox official
         if( is_file( $application->getCompleteCacheFile() ) ) {
+            // FIXME xml mode must be priority
             require_once( $application->getCompleteCacheFile() );
             if( $this->applicationWasModified( $application ) ) {
                 $this->doLoadApplication( $application );
