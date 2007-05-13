@@ -55,8 +55,11 @@ try {
         "engine/AbstractMyFusesLoader.class.php" );
     MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
         "engine/loaders/XMLMyFusesLoader.class.php" );
+    
     MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
         "process/FuseRequest.class.php" );
+   MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+        "process/MyFusesLifecycle.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();
@@ -117,6 +120,13 @@ class MyFuses {
      * @var FuseRequest
      */
     private $request;
+    
+    /**
+     * Instance Lifecycle
+     * 
+     * @var MyFusesLifecycle
+     */
+    private $lifecycle;
     
     /**
      * MyFuses constructor
@@ -224,6 +234,26 @@ class MyFuses {
     
     protected function createRequest() {
         $this->request = new FuseRequest();
+    }
+    
+    public function getCurrentPhase() {
+        return $this->lifecycle->getPhase();
+    }
+    
+    public function setCurrentPhase( $phase ) {
+        $this->lifecycle->setPhase( $phase );
+    }
+    
+    public function getCurrentCircuit() {
+        return $this->lifecycle->getAction()->getCircuit();
+    }
+    
+    public function getCurrentAction() {
+        return $this->lifecycle->getAction();
+    }
+    
+    public function setCurrentAction( CircuitAction $action ) {
+        $this->lifecycle->setAction( $circuit );
     }
     
     /**

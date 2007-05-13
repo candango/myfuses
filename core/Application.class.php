@@ -886,7 +886,7 @@ class Application implements ICacheable {
      * @param string $fase
      * @return array
      */
-    public function getPlugins( $phase ) {
+    public function &getPlugins( $phase ) {
         return $this->plugins[ $phase ];
     }
     

@@ -10,7 +10,7 @@ interface CircuitAction extends Action {
      * 
      * @return Circuit
      */
-    public function getCircuit();
+    public function &getCircuit();
     
     /**
      * Set the action cicuit
@@ -45,7 +45,7 @@ interface CircuitAction extends Action {
      * Enter description here...
      *
      */
-    public function getVerbs();
+    public function &getVerbs();
     
     /**
      * Enter description here...
@@ -60,6 +60,16 @@ interface CircuitAction extends Action {
      * @param string $value
      */
     public function addXFA( $name, $value );
-
+    
+    /**
+     * 
+     */
+    public function wasCalledByDo();
+    
+    /**
+     * 
+     */
+    public function setCalledByDo( $calledByDo );
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

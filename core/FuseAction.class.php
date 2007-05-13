@@ -24,6 +24,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
     
     private $xfas = array();
     
+    private $calledByDo = false;
+    
     public function __construct( Circuit $circuit ) {
         $this->setCircuit( $circuit );
     }
@@ -44,7 +46,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
      *
      * @return Circuit
      */
-    public function getCircuit() {
+    public function &getCircuit() {
          return $this->circtuit;
     }
     
@@ -82,7 +84,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
      *
      * @return array
      */
-    public function getVerbs() {
+    public function &getVerbs() {
         return $this->verbs;
     }
     
@@ -129,6 +131,10 @@ class FuseAction extends AbstractAction implements CircuitAction {
 	
     public function getParsedCode(  $comented, $identLevel ) {
         
+        $application = $this->getCircuit()->getApplication();
+        
+        $myFusesString = "MyFuses::getInstance( \"" . $application->getName() . "\" )";
+        
         $strOut = "";
         
         $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::PRE_FUSEACTION_PHASE );
@@ -141,7 +147,9 @@ class FuseAction extends AbstractAction implements CircuitAction {
         $strOut .= "var_dump( \"Current action: " . $this->getName() . "\" );";
         
         if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
-            $action = $this->circtuit->getPreFuseAction();
+            if( !$this->wasCalledByDo() ) {
+                $action = $this->circtuit->getPreFuseAction();    
+            }
         }
         
         if( !is_null( $action ) ) {
@@ -151,13 +159,14 @@ class FuseAction extends AbstractAction implements CircuitAction {
         foreach( $this->verbs as $verb ) {
             $strOut .= $verb->getParsedCode( $comented, $identLevel );
         }
-        
-        $action = $this->circtuit->getPostFuseAction();
+        if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
+            if( !$this->wasCalledByDo() ) {
+                $action = $this->circtuit->getPostFuseAction();
+            }
+        }
         
         if( !is_null( $action ) ) {
-            if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
-                $strOut .= $action->getParsedCode( $comented, $identLevel );
-            }
+            $strOut .= $action->getParsedCode( $comented, $identLevel );
         }
         
         $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::POST_FUSEACTION_PHASE );
@@ -170,6 +179,20 @@ class FuseAction extends AbstractAction implements CircuitAction {
     
     public function getComments( $identLevel ) {
         return "";
+    }
+    
+    /**
+     * 
+     */
+    public function wasCalledByDo() {
+        return $this->calledByDo;
+    }
+    
+    /**
+     * 
+     */
+    public function setCalledByDo( $calledByDo ) {
+        $this->calledByDo = $calledByDo;
     }
     
 	public function doAction() {
