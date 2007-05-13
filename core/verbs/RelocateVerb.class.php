@@ -1,7 +1,7 @@
 <?php
 /**
  * Relocate file
- *
+ * FIXME Colocar o parametro xfa no relocate, se tiver os dois a url prevalece
  */
 class RelocateVerb extends AbstractVerb {
     

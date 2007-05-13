@@ -25,54 +25,51 @@ class FuseQueue {
 
         $this->buildPreProcessQueue();
         
-        $action = $this->request->getAction()->getCircuit()->getPreFuseAction();
-        
-        if( !is_null( $action ) ) {
-            $this->preFuseActionQueue = $action->getVerbs();
-        }
-        
         $this->buildProcessQueue();
-        
-        $action = $this->request->getAction()->getCircuit()->getPostFuseAction();
-        
-        if( !is_null( $action ) ) {
-            $this->postFuseactionQueue = $action->getVerbs();
-        }
         
         $this->buildPostProcessQueue();
         
     }
     
     private function buildProcessQueue() {
-        $this->processQueue = &$this->request->getAction()->getVerbs();
+        $this->processQueue[] = &$this->request->getAction();
     }
     
     private function buildPreProcessQueue() {
+        // FIXME Plugin::PRE_PROCESS_PHASE deve ser mudado para MyFusesLifecycle::PRE_PROCESS_PHASE
+        $plugins = $this->request->getApplication()->getPlugins( 
+            Plugin::PRE_PROCESS_PHASE );
+        
         $action = $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PreProcessFuseAction" );
         
-        $plugins = $this->request->getApplication()->getPlugins( 
-            Plugin::PRE_PROCESS_PHASE );
+        $actions = $plugins;
         
-        $verbs = $action->getVerbs();
-        
-        $actions = array_merge( $plugins, $verbs );
+        $actions[] = $action;
         
         $this->preProcessQueue = $actions;
     }
     
     private function buildPostProcessQueue() {
+        // FIXME Plugin::POST_PROCESS_PHASE deve ser mudado para MyFusesLifecycle::POST_PROCESS_PHASE
+        $plugins = $this->request->getApplication()->getPlugins( 
+            Plugin::POST_PROCESS_PHASE );
+        
         $action = $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PostProcessFuseAction" );
 
-       $verbs = $action->getVerbs();
+        $actions[] = $action;
         
-        
-        
-        $this->postProcessQueue = $verbs;
+        $actions = array_merge( $actions, $plugins );
+
+        $this->postProcessQueue = $actions;
     }
+    
+    
+    
+    
     
     public function getProcessQueue() {
         return $this->processQueue;

@@ -128,7 +128,44 @@ class FuseAction extends AbstractAction implements CircuitAction {
     }
 	
     public function getParsedCode(  $comented, $identLevel ) {
-        return "";
+        
+        $strOut = "";
+        
+        $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::PRE_FUSEACTION_PHASE );
+        
+        foreach( $plugins as $plugin ) {
+            $strOut .= $plugin->getParsedCode( $comented, $identLevel );
+        }
+        
+        
+        $strOut .= "var_dump( \"Current action: " . $this->getName() . "\" );";
+        
+        if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
+            $action = $this->circtuit->getPreFuseAction();
+        }
+        
+        if( !is_null( $action ) ) {
+            $strOut .= $action->getParsedCode( $comented, $identLevel );    
+        }
+        
+        foreach( $this->verbs as $verb ) {
+            $strOut .= $verb->getParsedCode( $comented, $identLevel );
+        }
+        
+        $action = $this->circtuit->getPostFuseAction();
+        
+        if( !is_null( $action ) ) {
+            if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
+                $strOut .= $action->getParsedCode( $comented, $identLevel );
+            }
+        }
+        
+        $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::POST_FUSEACTION_PHASE );
+        
+        foreach( $plugins as $plugin ) {
+            $strOut .= $plugin->getParsedCode( $comented, $identLevel );
+        }
+        return $strOut;
     }
     
     public function getComments( $identLevel ) {

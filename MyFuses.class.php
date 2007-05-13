@@ -277,6 +277,7 @@ class MyFuses {
         
         $circuit = $this->request->getAction()->getCircuit();
         // FIXME add plugins in this process
+	    // FIXME when the application is modified reparse circuit request
         // TODO handle file parse
         if( !is_file( $fileName ) || $circuit->isModified() ) {
             $strParse = "";
@@ -286,20 +287,12 @@ class MyFuses {
 	            $this->request->getApplication()->isParsedWithComments(), 0 );
 	        }
             
-	        foreach( $fuseQueue->getPreFuseActionQueue() as $verb ) {
-	            $strParse .= $verb->getParsedCode(
-	            $this->request->getApplication()->isParsedWithComments(), 0 );
-	        }
 	
 	        foreach( $fuseQueue->getProcessQueue() as $verb ) {
 	            $strParse .= $verb->getParsedCode( 
 	                $this->request->getApplication()->isParsedWithComments(), 0 );    
 	        }
 	        
-	        foreach( $fuseQueue->getPostFuseActionQueue() as $verb ) {
-	            $strParse .= $verb->getParsedCode(
-	            $this->request->getApplication()->isParsedWithComments(), 0 );
-	        }
 	        
             foreach( $fuseQueue->getPostProcessQueue() as $verb ) {
 	            $strParse .= $verb->getParsedCode(
@@ -353,7 +346,7 @@ class MyFuses {
     /**
      * Returns one instance of MyFuses. Only one instance is creted per process.
      * MyFuses is implemmented using the singleton pattern.
-     * // FIXME Tem que repensar esse método 
+     * // FIXME Tem que repensar esse método dica: tem tudo a ve com aquele problema de um loader por aplicação
      * 
      * @return MyFuses
      * @static 
@@ -409,6 +402,21 @@ class MyFuses {
         else {
             throw new MyFusesMissingCoreFileException( $file );
         }
+    }
+    
+    public static function sendToUrl( $url ) {
+        if( !headers_sent() ) {
+            header( "Location: " . $url );
+        }
+	    else {
+	        echo '<script type="text/javascript">';
+	        echo 'window.location.href="'.$url.'";';
+	        echo '</script>';
+	        echo '<noscript>';
+	        echo '<meta http-equiv="refresh" content="0;url='.$url.'" />';
+	        echo '</noscript>';
+	        die();
+	    }
     }
     
 }
