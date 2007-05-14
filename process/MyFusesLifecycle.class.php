@@ -22,6 +22,8 @@ class MyFusesLifecycle {
      */
     private $action;
     
+    const PROCESS_PHASE = "process";
+    
     /**
      * Pre process fase constant<br>
      * Value "preProcess"

@@ -253,7 +253,7 @@ class MyFuses {
     }
     
     public function setCurrentAction( CircuitAction $action ) {
-        $this->lifecycle->setAction( $circuit );
+        $this->lifecycle->setAction( $action );
     }
     
     /**
@@ -298,6 +298,8 @@ class MyFuses {
     }
     
     public function parseRequest() {
+        $this->lifecycle = new MyFusesLifecycle();
+        
         $fuseQueue = $this->request->getFuseQueue();
         
         $path = $this->request->getApplication()->getParsedPath() .
@@ -310,23 +312,60 @@ class MyFuses {
 	    // FIXME when the application is modified reparse circuit request
         // TODO handle file parse
         if( !is_file( $fileName ) || $circuit->isModified() ) {
+            
+        
+	        $myFusesString = "MyFuses::getInstance( \"" . 
+	            $this->request->getApplication()->getName() . "\" )";
+        
+	        $actionString = $myFusesString . "->getApplication( \"" . 
+	            $this->request->getApplication()->getName() . 
+	            "\" )->getCircuit( \"" . 
+	            $this->request->getCircuitName() . "\" )->getAction( \"" . 
+	            $this->request->getActionName() . "\" )";
+            
+            
             $strParse = "";
 	        
-            foreach( $fuseQueue->getPreProcessQueue() as $verb ) {
-	            $strParse .= $verb->getParsedCode(
-	            $this->request->getApplication()->isParsedWithComments(), 0 );
+            $strParse .= $myFusesString . "->setCurrentPhase( \"" . 
+		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\" );\n\n";
+	        
+            $strParse .= $myFusesString . "->setCurrentAction( "  . 
+                $actionString . " );\n\n";
+            
+            foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
+	            $strParse .= $parseable->getParsedCode(
+	                $this->request->getApplication()->isParsedWithComments(), 0 );
 	        }
             
 	
-	        foreach( $fuseQueue->getProcessQueue() as $verb ) {
-	            $strParse .= $verb->getParsedCode( 
+	        foreach( $fuseQueue->getProcessQueue() as $parseable ) {
+	            $strParse .= $parseable->getParsedCode( 
 	                $this->request->getApplication()->isParsedWithComments(), 0 );    
 	        }
 	        
+	        $strParse .= $myFusesString . "->setCurrentPhase( \"" . 
+		        MyFusesLifecycle::POST_PROCESS_PHASE . "\" );\n\n";
 	        
-            foreach( $fuseQueue->getPostProcessQueue() as $verb ) {
-	            $strParse .= $verb->getParsedCode(
-	            $this->request->getApplication()->isParsedWithComments(), 0 );
+            $strParse .= $myFusesString . "->setCurrentAction( "  . 
+                $actionString . " );\n\n";
+	        
+            $selector = true;
+                
+            foreach( $fuseQueue->getPostProcessQueue() as $parseable ) {
+	            if( !( $parseable instanceof CircuitAction ) && $selector ){
+
+	                $strParse .= $myFusesString . "->setCurrentPhase( \"" . 
+				        MyFusesLifecycle::POST_PROCESS_PHASE . "\" );\n\n";
+			        
+		            $strParse .= $myFusesString . "->setCurrentAction( "  . 
+		                $actionString . " );\n\n";
+		            
+		            $selector = false;
+	                
+	            }
+                
+                $strParse .= $parseable->getParsedCode(
+	                $this->request->getApplication()->isParsedWithComments(), 0 );
 	        }
 	        
             if( !file_exists( $path ) ) {

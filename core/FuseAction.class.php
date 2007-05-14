@@ -133,47 +133,89 @@ class FuseAction extends AbstractAction implements CircuitAction {
         
         $application = $this->getCircuit()->getApplication();
         
-        $myFusesString = "MyFuses::getInstance( \"" . $application->getName() . "\" )";
+        $myFusesString = "MyFuses::getInstance( \"" . 
+            $application->getName() . "\" )";
         
-        $strOut = "";
+        $actionString = $myFusesString . "->getApplication( \"" . 
+            $this->circtuit->getApplication()->getName() . 
+            "\" )->getCircuit( \"" . 
+            $this->circtuit->getName() . "\" )->getAction( \"" . 
+            $this->getName() . "\" )";
         
-        $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::PRE_FUSEACTION_PHASE );
-        
-        foreach( $plugins as $plugin ) {
-            $strOut .= $plugin->getParsedCode( $comented, $identLevel );
+        if( $this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
+            if( $this->getName() != "prefuseaction" && 
+	            $this->getName() != "postfuseaction" ) {
+	            $strOut = $myFusesString . "->setCurrentPhase( \"" . 
+		            MyFusesLifecycle::PRE_FUSEACTION_PHASE . "\" );\n\n";
+	        
+	            $strOut .= $myFusesString . "->setCurrentAction( "  . 
+	                $actionString . " );\n\n";
+		            
+		        $plugins = $this->getCircuit()->getApplication()->getPlugins( 
+		            Plugin::PRE_FUSEACTION_PHASE );
+		        
+		        foreach( $plugins as $plugin ) {
+		            $strOut .= $plugin->getParsedCode( $comented, $identLevel );
+		        }
+            }
         }
         
-        
-        $strOut .= "var_dump( \"Current action: " . $this->getName() . "\" );";
-        
-        if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
+        if( $this->getName() != "prefuseaction" && 
+            $this->getName() != "postfuseaction" ) {
             if( !$this->wasCalledByDo() ) {
                 $action = $this->circtuit->getPreFuseAction();    
             }
+            
         }
         
         if( !is_null( $action ) ) {
             $strOut .= $action->getParsedCode( $comented, $identLevel );    
         }
         
+        $request = MyFuses::getInstance( 
+            $application->getName() )->getRequest();
+        
+        if( ( $this->getCircuit()->getName() == $request->getCircuitName() ) &&  
+            ( $this->getName() == $request->getActionName() )  ) {
+            $strOut .= $myFusesString . "->setCurrentPhase( \"" . 
+		        MyFusesLifecycle::PROCESS_PHASE . "\" );\n\n";
+	        
+            $strOut .= $myFusesString . "->setCurrentAction( "  . 
+                $actionString . " );\n\n";
+        }
+        
         foreach( $this->verbs as $verb ) {
             $strOut .= $verb->getParsedCode( $comented, $identLevel );
         }
-        if( $this->getName() != "prefuseaction" && $this->getName() != "postfuseaction" ) {
+        
+        if( $this->getName() != "prefuseaction" && 
+            $this->getName() != "postfuseaction" ) {
             if( !$this->wasCalledByDo() ) {
                 $action = $this->circtuit->getPostFuseAction();
             }
         }
         
-        if( !is_null( $action ) ) {
-            $strOut .= $action->getParsedCode( $comented, $identLevel );
+        if( $this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
+            if( $this->getName() != "prefuseaction" && 
+	            $this->getName() != "postfuseaction" ) {
+	            $strOut .= $myFusesString . "->setCurrentPhase( \"" . 
+		            MyFusesLifecycle::POST_FUSEACTION_PHASE . "\" );\n\n";
+	            
+		        if( !is_null( $action ) ) {
+		            $strOut .= $action->getParsedCode( $comented, $identLevel );
+		        }
+		        
+		        $strOut .= $myFusesString . "->setCurrentAction( "  . 
+	                $actionString . " );\n\n";
+		        
+		        $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::POST_FUSEACTION_PHASE );
+		        
+		        foreach( $plugins as $plugin ) {
+		            $strOut .= $plugin->getParsedCode( $comented, $identLevel );
+		        }
+	        }
         }
         
-        $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::POST_FUSEACTION_PHASE );
-        
-        foreach( $plugins as $plugin ) {
-            $strOut .= $plugin->getParsedCode( $comented, $identLevel );
-        }
         return $strOut;
     }
     

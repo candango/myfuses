@@ -66,6 +66,7 @@ class DoVerb extends AbstractVerb {
             
         $strOut = parent::getParsedCode( $commented, $identLevel );
         // FIXME resolver plugins, persar direito isso
+        
         $action->setCalledByDo( true );
         
         $strOut .= $action->getParsedCode( $commented, $identLevel + 1 );
