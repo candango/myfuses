@@ -18,7 +18,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         // setting parsed path
         if ( is_null( $application->getParsedPath() ) ) {
             $application->setParsedPath( MyFuses::ROOT_PATH . 
-            "store" . DIRECTORY_SEPARATOR . MyFuses::getInstance()->
+            "parsed" . DIRECTORY_SEPARATOR . MyFuses::getInstance()->
             getApplication()->getName() . DIRECTORY_SEPARATOR ) ;
         }
         
