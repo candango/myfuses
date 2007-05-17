@@ -69,10 +69,12 @@ class FuseRequest {
             $action = $this->application->getCircuit( 
                 $this->circuitName )->getAction( $this->actionName );    
         }
-        catch ( MyFusesCircuitException $mfe ) {
-            $mfe->breakProcess();
+        catch ( MyFusesCircuitException $mfce ) {
+            $mfce->breakProcess();
         }
-        
+        catch ( MyFusesFuseActionException $mffae ) {
+            $mffae->breakProcess();
+        }
         
         return $action;
     }

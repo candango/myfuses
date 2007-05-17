@@ -240,7 +240,15 @@ class Circuit implements ICacheable {
     }
     
     public function getAction( $name ) {
-        return $this->actions[ $name ];
+        if( isset( $this->actions[ $name ] ) ) {
+    		return $this->actions[ $name ];
+    	}
+    	
+    	$params = array( "actionName" => $name, "circuit" => &$this , 
+    	    "application" => $this->getApplication() );
+    	throw new MyFusesFuseActionException( $params, 
+    	    MyFusesFuseActionException::NON_EXISTENT_FUSEACTION );
+        
     }
     
     public function getActions() {

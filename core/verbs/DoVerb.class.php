@@ -60,10 +60,13 @@ class DoVerb extends AbstractVerb {
 	            $this->circuitToBeExecutedName )->
 	            getAction( $this->actionToBeExecutedName );
         }
-        catch ( MyFusesCircuitException $mfe ) {
-            $mfe->breakProcess();
+        catch ( MyFusesCircuitException $mfce ) {
+            $mfce->breakProcess();
         }
-            
+        catch ( MyFusesFuseActionException $mffae ) {
+            $mffae->breakProcess();
+        }
+        
         $strOut = parent::getParsedCode( $commented, $identLevel );
         // FIXME resolver plugins, persar direito isso
         

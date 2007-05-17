@@ -167,7 +167,7 @@ class MyFuses {
      * @param string $name
      * @return Application
      */
-    public function getApplication( 
+    public function &getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) {
         return $this->applications[ $name ];
     }
@@ -177,7 +177,7 @@ class MyFuses {
      *
      * @return array
      */
-    public function getApplications() {
+    public function &getApplications() {
         return $this->applications;
     }
     
@@ -244,11 +244,11 @@ class MyFuses {
         $this->lifecycle->setPhase( $phase );
     }
     
-    public function getCurrentCircuit() {
+    public function &getCurrentCircuit() {
         return $this->lifecycle->getAction()->getCircuit();
     }
     
-    public function getCurrentAction() {
+    public function &getCurrentAction() {
         return $this->lifecycle->getAction();
     }
     
@@ -300,21 +300,21 @@ class MyFuses {
     public function parseRequest() {
         $this->lifecycle = new MyFusesLifecycle();
         
-        $fuseQueue = $this->request->getFuseQueue();
+        $circuit = $this->request->getAction()->getCircuit();
         
         $path = $this->request->getApplication()->getParsedPath() .
 	        $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
         
         $fileName = $path . $this->request->getActionName() . ".action.php" ;
         
-        $circuit = $this->request->getAction()->getCircuit();
-        // FIXME add plugins in this process
 	    // FIXME when the application is modified reparse circuit request
         // TODO handle file parse
-        if( !is_file( $fileName ) || $circuit->isModified() ) {
-            
         
-	        $myFusesString = "MyFuses::getInstance( \"" . 
+        if( !is_file( $fileName ) || $circuit->isModified() ) {
+        
+            $fuseQueue = $this->request->getFuseQueue();
+            
+            $myFusesString = "MyFuses::getInstance( \"" . 
 	            $this->request->getApplication()->getName() . "\" )";
         
 	        $actionString = $myFusesString . "->getApplication( \"" . 
@@ -420,7 +420,7 @@ class MyFuses {
      * @return MyFuses
      * @static 
      */
-    public static function getInstance( 
+    public static function &getInstance( 
         $name = Application::DEFAULT_APPLICATION_NAME, 
         MyFusesLoader $loader = null ) {
         
@@ -437,13 +437,20 @@ class MyFuses {
     
     public static function getSelf() {
         $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
+        
+        if( substr( $self, -1 ) != "/" ) {
+            $self .= "/";
+        }
+        
         $self .= str_replace( $_SERVER[ 'DOCUMENT_ROOT' ], 
-            "", $_SERVER[ 'SCRIPT_FILENAME' ] );    
+            "", $_SERVER[ 'SCRIPT_FILENAME' ] );
+        
         return $self;
     }
     
     public static function getMySelf() {
         $mySelf = self::getSelf() . "?";
+        
         $mySelf .= self::getInstance()->getRequest()->
             getApplication()->getFuseactionVariable();
         $mySelf .= "=" ;
