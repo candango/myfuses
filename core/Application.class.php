@@ -936,11 +936,11 @@ class Application implements ICacheable {
         
         $strOut = "\$application = new Application( \"" . $this->getName() . "\" );\n";
         
-        $strOut .= "\$application->setPath( \"" . $this->getPath() . "\" );\n";
+        $strOut .= "\$application->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
         
-        $strOut .= "\$application->setParsedPath( \"" . $this->getParsedPath() . "\");\n";
+        $strOut .= "\$application->setParsedPath( \"" . addslashes( $this->getParsedPath() ) . "\");\n";
         
-        $strOut .= "\$application->setFile( \"" . $this->getFile() . "\" );\n";
+        $strOut .= "\$application->setFile( \"" . addslashes( $this->getFile() ) . "\" );\n";
         
         $strOut .= "\$application->setLastLoadTime( " . $this->getLastLoadTime() . " );\n";
         

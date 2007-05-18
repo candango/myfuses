@@ -131,6 +131,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
 	
     public function getParsedCode(  $comented, $identLevel ) {
         
+        $strOut = "";
+        
         $application = $this->getCircuit()->getApplication();
         
         $myFusesString = "MyFuses::getInstance( \"" . 
@@ -159,6 +161,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
 		        }
             }
         }
+        
+        $action = null;
         
         if( $this->getName() != "prefuseaction" && 
             $this->getName() != "postfuseaction" ) {

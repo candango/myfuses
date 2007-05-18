@@ -394,8 +394,8 @@ class Circuit implements ICacheable {
     public function getCachedCode() {
         $strOut = "\$circuit = new Circuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
-        $strOut .= "\$circuit->setPath( \"" . $this->getPath() . "\" );\n";
-        $strOut .= "\$circuit->setFile( \"" . $this->getFile() . "\" );\n";
+        $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
+        $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . "\" );\n";
         $strOut .= "\$circuit->setLastLoadTime( " . 
             $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 

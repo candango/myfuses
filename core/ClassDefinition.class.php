@@ -50,7 +50,7 @@ class ClassDefinition implements ICacheable {
         
         $strOut .= "\$class->setName( \"" . $this->getName() . "\" );\n";
         
-        $strOut .= "\$class->setPath( \"" . $this->getPath() . "\");\n";
+        $strOut .= "\$class->setPath( \"" .  addslashes( $this->getPath() ) . "\");\n";
         
         $strOut .= "\$application->addClass( \$class );\n";
         

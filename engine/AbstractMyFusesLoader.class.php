@@ -205,21 +205,23 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             
         $phase = $data[ 'attributes' ][ 'name' ]; 
         
-        if( count( $data[ 'children' ] ) ) {
-            foreach( $data[ 'children' ] as $child ) {
-                $name = "";
-                $path = "";
-                $file = "";
-                
-                foreach( $child[ 'attributes' ] as 
-                    $attributeName => $attribute ) {
-                    $$faseParams[ $attributeName ] = $attribute;
-                }
-                
-                AbstractPlugin::getInstance( $application, $phase, 
-                    $name, $path, $file );
-                
-            }
+        if( isset( $data[ 'children' ] ) ) {
+	        if( count( $data[ 'children' ] ) ) {
+	            foreach( $data[ 'children' ] as $child ) {
+	                $name = "";
+	                $path = "";
+	                $file = "";
+	                
+	                foreach( $child[ 'attributes' ] as 
+	                    $attributeName => $attribute ) {
+	                    $$faseParams[ $attributeName ] = $attribute;
+	                }
+	                
+	                AbstractPlugin::getInstance( $application, $phase, 
+	                    $name, $path, $file );
+	                
+	            }
+	        }
         }
         
     }

@@ -270,7 +270,7 @@ abstract class AbstractPlugin implements Plugin{
     
     public function getCachedCode() {
         $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
-			$this->phase . "\", \"" . $this->name . "\", \"" . $this->path . 
+			$this->phase . "\", \"" . $this->name . "\", \"" . addslashes( $this->path ) . 
 			"\", \"" . $this->file . "\" );\n";
 		return $strOut;
     }
