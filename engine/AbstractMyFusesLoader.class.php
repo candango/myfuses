@@ -143,12 +143,14 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             "name" => "name",
             "classPath" => "path"
         );
-        if( count( $data[ 'children' ] > 0 ) && 
-            !is_null( $data[ 'children' ] ) ) {
-	        foreach( $data[ 'children' ] as $child ) {
-	          
-	            $this->loadClass(  $application, $child );
-	          
+        
+        if( isset( $data[ 'children' ] ) ) {
+            if( count( $data[ 'children' ] > 0 )  ) {
+		        foreach( $data[ 'children' ] as $child ) {
+		          
+		            $this->loadClass(  $application, $child );
+		          
+		        }
 	        }
         }
         
