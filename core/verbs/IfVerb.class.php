@@ -49,18 +49,21 @@ class IfVerb extends AbstractVerb {
     public function setData( $data ) {
         $this->setCondition( $data[ "attributes" ][ "condition" ] );
         
-        if( count( $data[ "children" ] ) ) {
-            
-            foreach( $data[ "children" ] as $child ) {
-                
-                $type = $child[ "name" ];
-                
-                if ( count( $child[ "children" ] ) ) {
-                    $this->setIfVerbs( $type, $child[ 'children' ] );    
-                }
-                
-            }
+        if( isset( $data[ "children" ] ) ) {
+	        if( count( $data[ "children" ] ) ) {
+	            
+	            foreach( $data[ "children" ] as $child ) {
+	                
+	                $type = $child[ "name" ];
+	                
+	                if ( count( $child[ "children" ] ) ) {
+	                    $this->setIfVerbs( $type, $child[ 'children' ] );    
+	                }
+	                
+	            }
+	        }    
         }
+        
     }
     
     private function setIfVerbs( $type, $children ) {
