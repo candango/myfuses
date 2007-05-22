@@ -193,7 +193,14 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $fileCode = fread( $fp, filesize( $circuitFile ) );
         
-        $rootNode = new SimpleXMLElement( $fileCode );
+        try {
+            $rootNode = new SimpleXMLElement( $fileCode );    
+        }
+        catch ( Exception $e ) {
+            // FIXME handle error
+            die( "Parse error" );    
+        }
+        
         
         return $rootNode;
     }
