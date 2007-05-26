@@ -276,7 +276,8 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     public function getParsedCode( $comented, $identLevel ) {
-        $strOut = "\$plugin = MyFuses::getApplication( \"" . 
+        $controllerClass = $this->getApplication()->getControllerClass();
+        $strOut = "\$plugin = " . $controllerClass . "::getApplication( \"" . 
             $this->application->getName() . "\" )->getPlugin(" .
                 " \"" . $this->phase . "\", " . $this->index . "  );\n";
         $strOut .= "\$plugin->run();\n\n";

@@ -60,8 +60,11 @@ class InstantiateVerb extends AbstractVerb {
 	public function getParsedCode( $commented, $identLevel ) {
 	    $appName = $this->getAction()->getCircuit()->
 	        getApplication()->getName();
-
-	    $fileCall = "MyFuses::getApplication( \"" . $appName .
+        
+	    $controllerClass = $this->getAction()->getCircuit()->
+	        getApplication()->getControllerClass();
+	        
+	    $fileCall = $controllerClass . "::getApplication( \"" . $appName .
 	        "\" )->getClass( \"" . $this->getClass() . 
 	        "\" )->getCompletePath()";
 

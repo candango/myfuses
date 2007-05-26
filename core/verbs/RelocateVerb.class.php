@@ -35,7 +35,10 @@ class RelocateVerb extends AbstractVerb {
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= "MyFuses::sendToUrl( \"" . $this->getUrl() . "\" );\n\n";
+        $controllerClass = $this->getAction()->getCircuit()->
+	        getApplication()->getControllerClass();
+        $strOut .=  $controllerClass . "::sendToUrl( \"" . 
+            $this->getUrl() . "\" );\n\n";
         return $strOut;
     }
 

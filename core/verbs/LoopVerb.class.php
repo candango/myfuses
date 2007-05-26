@@ -133,7 +133,8 @@ class LoopVerb extends AbstractVerb {
     private function setLoopVerbs( $children ) {
         
         foreach( $children as $child ){
-            $verb = AbstractVerb::getInstance( serialize( $child ), $this->getAction() );
+            $verb = AbstractVerb::getInstance( 
+                serialize( $child ), $this->getAction() );
             if( !is_null( $verb ) ) {
                 $this->addLoopVerb( $verb );
             }

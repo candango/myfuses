@@ -58,8 +58,11 @@ class IncludeVerb extends AbstractVerb {
         $appName = $this->getAction()->getCircuit()->
             getApplication()->getName();
         $circuitName = $this->getAction()->getCircuit()->getName();
-
-        $fileCall = "MyFuses::getApplication( \"" . $appName . 
+        
+        $controllerClass = $this->getAction()->getCircuit()->
+	        getApplication()->getControllerClass();
+        
+        $fileCall = $controllerClass . "::getApplication( \"" . $appName . 
             "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
             
         $strOut = parent::getParsedCode( $commented, $identLevel );

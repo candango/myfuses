@@ -31,13 +31,19 @@ class FuseRequest {
         
         $fuseactionVariable = $this->application->getFuseactionVariable();
         
-        
         if ( isset( $_GET[ $fuseactionVariable ] ) ) {
             $this->validFuseactionName = $_GET[ $fuseactionVariable ];
         }
         
         if ( isset( $_POST[ $fuseactionVariable ] ) ) {
             $this->validFuseactionName = $_POST[ $fuseactionVariable ];
+        }
+        
+        if( count( explode( ".", $this->validFuseactionName ) ) > 2 ) {
+            list( $appName, $circuitName, $actionName ) = 
+        	    explode( '.', $this->validFuseactionName );
+            $this->application = & MyFuses::getInstance()->getApplication( $appName );
+            $this->validFuseactionName = $circuitName . "." . $actionName;
         }
         
         if ( is_null( $this->validFuseactionName ) ) {

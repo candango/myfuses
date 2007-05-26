@@ -135,7 +135,10 @@ class FuseAction extends AbstractAction implements CircuitAction {
         
         $application = $this->getCircuit()->getApplication();
         
-        $myFusesString = "MyFuses::getInstance( \"" . 
+        $controllerClass = $this->getCircuit()->
+            getApplication()->getControllerClass();
+        
+        $myFusesString = $controllerClass . "::getInstance( \"" . 
             $application->getName() . "\" )";
         
         $actionString = $myFusesString . "->getApplication( \"" . 

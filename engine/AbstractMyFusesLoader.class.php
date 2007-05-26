@@ -15,13 +15,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      */
     public function loadApplication( Application $application ) {
         
-        // setting parsed path
-        if ( is_null( $application->getParsedPath() ) ) {
-            $application->setParsedPath( MyFuses::ROOT_PATH . 
-            "parsed" . DIRECTORY_SEPARATOR . MyFuses::getInstance()->
-            getApplication()->getName() . DIRECTORY_SEPARATOR ) ;
-        }
-        
         // getting cache file
 	    // TODO application load must be like fusebox official
         if( is_file( $application->getCompleteCacheFile() ) ) {

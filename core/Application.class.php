@@ -117,6 +117,13 @@ class Application implements ICacheable {
     private $circuits = array();
     
     /**
+     * Application controller
+     * 
+     * @var MyFuses
+     */
+    private $controller;
+    
+    /**
      * Default application flag
      *
      * @var boolean
@@ -515,6 +522,28 @@ class Application implements ICacheable {
      */
     public function setCircuits( $circuits ) {
     	$this->circuits = $circuits;
+    }
+    
+    public function getControllerClass() {
+        return get_class( $this->controller );
+    }
+    
+    /**
+     * Return the application controller
+     * 
+     * @return MyFuses
+     */
+    public function getController() {
+        return $this->controller;
+    }
+    
+    /**
+     * Set the application Controller
+     * 
+     * @param MyFuses $myfuses
+     */
+    public function setController( MyFuses &$myFuses ) {
+        $this->controller = &$myFuses;
     }
     
     /**
@@ -945,7 +974,7 @@ class Application implements ICacheable {
         $strOut .= "\$application->setLastLoadTime( " . $this->getLastLoadTime() . " );\n";
         
         if( $this->isDefault() ) {
-            $strOut .= "\$application->setDefault( true );\n";
+            //$strOut .= "\$application->setDefault( true );\n";
         }
         
         // parameters
@@ -971,7 +1000,9 @@ class Application implements ICacheable {
         
         $strOut .= $this->getPluginsCacheCode();
         
-        $strOut .= "MyFuses::getInstance()->addApplication( \$application );\n";
+        $controllerClass = $this->getControllerClass();
+        
+        $strOut .= $controllerClass . "::getInstance()->addApplication( \$application );\n";
         
         return $strOut;
     }

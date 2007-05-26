@@ -99,14 +99,14 @@ class MyFuses {
      *
      * @var MyFuses
      */
-    private static $instance;
+    protected static $instance;
     
     /**
      * Array of registered applications
      * 
      * @var array
      */
-    private $applications = array();
+    protected $applications = array();
     
     /**
      * MyFuses loader instance
@@ -146,17 +146,40 @@ class MyFuses {
         
         $this->loader = $loader;
         
+        $this->createApplication( $appName, true );
+        
+    }
+    
+    public function createApplication( $appName, $default = false ) {
+        
         $this->applications[ $appName ] = new Application( $appName );
         
-        $this->applications[ $appName ]->setDefault( true );
+        $this->applications[ $appName ]->setDefault( $default );
         
         $this->applications[ $appName ]->setPath( 
             dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
         
+        // setting parsed path
+        $this->applications[ $appName ]->setParsedPath( MyFuses::ROOT_PATH . 
+            "parsed" . DIRECTORY_SEPARATOR . 
+            $this->applications[ $appName ]->getName() . 
+            DIRECTORY_SEPARATOR ) ;
+        
+        $this->applications[ $appName ]->setController( $this );
+        
         // FIXME this part isn't working fine
         if( Application::DEFAULT_APPLICATION_NAME != $appName ) {
-            $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
-                &$this->applications[ $appName ];
+            if( $this->applications[ $appName ]->isDefault() ) {
+                if( isset( $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ] ) ) {
+                    $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ]->setDefault( 
+                        false );
+                }
+                $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
+                    &$this->applications[ $appName ];
+            }
+                
         }
         
     }
@@ -183,6 +206,8 @@ class MyFuses {
     
     public function addApplication( Application $application ) {
         $this->applications[ $application->getName() ] = $application;
+        
+        $application->setController( $this );
         
         if( $application->isDefault() ) {
             $this->applications[ 
@@ -302,19 +327,19 @@ class MyFuses {
         
         $circuit = $this->request->getAction()->getCircuit();
         
+        $controllerName = $circuit->getApplication()->getControllerClass();
+        
         $path = $this->request->getApplication()->getParsedPath() .
 	        $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
         
         $fileName = $path . $this->request->getActionName() . ".action.php" ;
         
-	    // FIXME when the application is modified reparse circuit request
         // TODO handle file parse
-        
         if( !is_file( $fileName ) || $circuit->isModified() ) {
         
             $fuseQueue = $this->request->getFuseQueue();
             
-            $myFusesString = "MyFuses::getInstance( \"" . 
+            $myFusesString = $controllerName . "::getInstance( \"" . 
 	            $this->request->getApplication()->getName() . "\" )";
         
 	        $actionString = $myFusesString . "->getApplication( \"" . 
@@ -415,7 +440,6 @@ class MyFuses {
     /**
      * Returns one instance of MyFuses. Only one instance is creted per process.
      * MyFuses is implemmented using the singleton pattern.
-     * // FIXME Tem que repensar esse método dica: tem tudo a ve com aquele problema de um loader por aplicação
      * 
      * @return MyFuses
      * @static 
@@ -425,6 +449,9 @@ class MyFuses {
         MyFusesLoader $loader = null ) {
         
         if( is_null( self::$instance ) ) {
+            // FIXME New MyFuses is limiting when I extends this class becouse
+	        // I will rewrite this method changing MyFuses by the class name
+	        // need some solution
             self::$instance = new MyFuses( $name, $loader );
         }
         
@@ -437,6 +464,11 @@ class MyFuses {
     
     public static function getSelf() {
         $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
+        
+        // FIXME this case never happen
+        if( substr( $self, -1 ) != "/" ) {
+            $self .= "/";
+        }
         
         $self1 = str_replace( $_SERVER[ 'DOCUMENT_ROOT' ], 
             "", $_SERVER[ 'SCRIPT_FILENAME' ] );
