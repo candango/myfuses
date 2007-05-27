@@ -72,8 +72,8 @@ class FuseRequest {
     public function getAction() {
         $action = null;
         try {
-            $action = $this->application->getCircuit( 
-                $this->circuitName )->getAction( $this->actionName );    
+            $action = $this->application->getCircuit( $this->circuitName )
+                ->getAction( $this->actionName );    
         }
         catch ( MyFusesCircuitException $mfce ) {
             $mfce->breakProcess();
@@ -132,6 +132,10 @@ class FuseRequest {
             $this->fuseQueue = new FuseQueue( $this );
         }
         return $this->fuseQueue;
+    }
+    
+    public function __toString(){
+        return get_class( $this ) . "( '" . $this->getFuseActionName() . "' )";
     }
     
 }

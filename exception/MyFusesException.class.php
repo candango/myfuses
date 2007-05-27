@@ -36,6 +36,7 @@ abstract class MyFusesException extends Exception {
     const MISSING_CORE_FILE = 102;
     const NON_EXISTENT_CIRCUIT = 103;
     const NON_EXISTENT_FUSEACTION = 104;
+    const USER_TRYING_ACCESS_INTERNAL_CIRCUIT = 105;
     
     private static $currentInstance;
     

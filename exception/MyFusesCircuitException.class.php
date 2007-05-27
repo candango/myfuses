@@ -23,7 +23,9 @@ class MyFusesCircuitException extends MyFusesException {
     public function __construct( $params, $operation ) {
     	
         $operationMessageMap = array(
-            self::NON_EXISTENT_CIRCUIT => "getNonExistentCircuitMessage"
+            self::NON_EXISTENT_CIRCUIT => "getNonExistentCircuitMessage",
+            self::USER_TRYING_ACCESS_INTERNAL_CIRCUIT => 
+                "getUserTryingAccessInternalCircuitMessage"
         );
         
         list( $msg, $detail ) = 
@@ -49,6 +51,17 @@ class MyFusesCircuitException extends MyFusesException {
 	            "\" wasn't found in application \"" . 
 	            $params[ "application" ]->getName()  . "\". " .
 	            "You can check this in circuits session of the \"" . 
+	            $params[ "application" ]->getCompleteFile() . "\" file." );
+    }
+    
+    private function getUserTryingAccessInternalCircuitMessage( $params ) {
+        return array(
+	        0 => "The Circuit \"" . $params[ "circuitName" ] .
+	            "\" in application \"" . $params[ "application" ]->getName() . 
+	            "\" is a <b>internal</b> Circuit.",
+	        1 => "You cannot access the circuit  \"" . 
+	            $params[ "circuitName" ] . " by a browser " . 
+	            "You can check this in circuit access parameter of the \"" . 
 	            $params[ "application" ]->getCompleteFile() . "\" file." );
     }
     

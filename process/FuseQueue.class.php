@@ -32,6 +32,21 @@ class FuseQueue {
     }
     
     private function buildProcessQueue() {
+        $action = &$this->request->getAction();
+        try{
+	        if( $action->getCircuit()->getAccess() == 
+	            Circuit::INTERNAL_ACCESS ) {
+	            $params = array( "circuitName" => $action->getCircuit()
+	                ->getName(), "application" => $action->getCircuit()
+	                ->getApplication() );
+	            throw new MyFusesCircuitException( $params, 
+	                MyFusesCircuitException::
+	                USER_TRYING_ACCESS_INTERNAL_CIRCUIT );
+	        }    
+        }
+        catch( MyFusesCircuitException $mfce ) {
+            $mfce->breakProcess();
+        }
         $this->processQueue[] = &$this->request->getAction();
     }
     
@@ -59,7 +74,7 @@ class FuseQueue {
         $action = $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PostProcessFuseAction" );
-
+                    
         $actions[] = $action;
         
         $actions = array_merge( $actions, $plugins );

@@ -324,6 +324,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
         
+        
+        
         $circuit->setAccessByString( $access );
         
         if( count( $data[ 'children' ] > 0 ) ) {

@@ -213,7 +213,7 @@ class Circuit implements ICacheable {
      * @param integer $access
      */
     public function setAccess( $access ) {
-        $this->access;
+        $this->access = $access;
     }
     
 	/**
@@ -226,7 +226,6 @@ class Circuit implements ICacheable {
             "public" => self::PUBLIC_ACCESS,
             "internal" => self::INTERNAL_ACCESS
         );
-        
         $this->setAccess( $accessList[ $accessString ] );
     }
     
@@ -239,6 +238,13 @@ class Circuit implements ICacheable {
          $this->actions[ $action->getName() ] = $action;
     }
     
+    /**
+     * Return one Circuit by name
+     *
+     * @param string $name
+     * @return FuseAction
+     * @throws MyFusesFuseActionException
+     */
     public function getAction( $name ) {
         if( isset( $this->actions[ $name ] ) ) {
     		return $this->actions[ $name ];
@@ -396,6 +402,7 @@ class Circuit implements ICacheable {
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
         $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
         $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . "\" );\n";
+        $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
         $strOut .= "\$circuit->setLastLoadTime( " . 
             $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 

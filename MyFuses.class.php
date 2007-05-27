@@ -38,7 +38,6 @@
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
-
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
 require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
@@ -134,9 +133,7 @@ class MyFuses {
      * @param MyFusesLoader $loader
      * @param string $applicationName
      */
-    protected function __construct( 
-        $appName = Application::DEFAULT_APPLICATION_NAME, 
-        MyFusesLoader $loader = null ) {
+    protected function __construct( MyFusesLoader $loader = null ) {
         
         // FIXME each application must have its own loader
         if( is_null( $loader ) ) {
@@ -146,11 +143,16 @@ class MyFuses {
         
         $this->loader = $loader;
         
-        $this->createApplication( $appName, true );
+        //$this->createApplication( $appName, true );
         
     }
     
-    public function createApplication( $appName, $default = false ) {
+    public function createApplication( 
+        $appName = Application::DEFAULT_APPLICATION_NAME, $default = false ) {
+        
+        if( count( $this->applications ) == 0 ) {
+            $default = true;
+        }
         
         $this->applications[ $appName ] = new Application( $appName );
         
@@ -339,8 +341,7 @@ class MyFuses {
         
             $fuseQueue = $this->request->getFuseQueue();
             
-            $myFusesString = $controllerName . "::getInstance( \"" . 
-	            $this->request->getApplication()->getName() . "\" )";
+            $myFusesString = $controllerName . "::getInstance()";
         
 	        $actionString = $myFusesString . "->getApplication( \"" . 
 	            $this->request->getApplication()->getName() . 
@@ -444,15 +445,13 @@ class MyFuses {
      * @return MyFuses
      * @static 
      */
-    public static function &getInstance( 
-        $name = Application::DEFAULT_APPLICATION_NAME, 
-        MyFusesLoader $loader = null ) {
+     public static function &getInstance( MyFusesLoader $loader = null ) {
         
         if( is_null( self::$instance ) ) {
             // FIXME New MyFuses is limiting when I extends this class becouse
 	        // I will rewrite this method changing MyFuses by the class name
 	        // need some solution
-            self::$instance = new MyFuses( $name, $loader );
+            self::$instance = new MyFuses( $loader );
         }
         
         return self::$instance;
