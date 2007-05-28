@@ -13,22 +13,35 @@ interface MyFusesLoader {
      *
      * @param Application $application
      */
-    public function doLoadApplication( Application $application );
+    public function doLoadApplication();
     
     /**
      * Load the aplication
      *
      * @param Application $application
      */
-    public function loadApplication( Application $application );
+    public function loadApplication();
     
-    public function applicationWasModified( Application $application );
+    public function applicationWasModified();
     
     public function loadCircuit( Circuit $circuit );
     
     public function circuitWasModified( Circuit $circuit );
     
-    public function getApplicationData( Application $application );
+    public function getApplicationData();
     
+    /**
+     * Return the application
+     *
+     * @return Application
+     */
+    public function &getApplication();
+    
+    /**
+     * Set the loader Application
+     *
+     * @param Application $application
+     */
+    public function setApplication( Application &$application );
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

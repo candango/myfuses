@@ -47,14 +47,13 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     /**
      * Enter description here...
      *
-     * @param Application $application
+     * @return array
      */
-    public function getApplicationData( Application $application ) {
+    public function getApplicationData() {
         
-        $this->chooseApplicationFile( $application );
+        $this->chooseApplicationFile();
         
-        $rootNode = $this->loadApplicationFile( $application );
-        
+        $rootNode = $this->loadApplicationFile();
         
         return $this->getDataFromXml( $rootNode );
         
@@ -67,23 +66,25 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      * @param Application $application
      * @return boolean
      */
-    private function chooseApplicationFile( Application $application ) {
-        if ( is_file( $application->getPath() . self::MYFUSES_APP_FILE ) ) {
-            $application->setFile( self::MYFUSES_APP_FILE );
+    private function chooseApplicationFile() {
+        if ( is_file( $this->getApplication()->getPath() . 
+            self::MYFUSES_APP_FILE ) ) {
+            $this->getApplication()->setFile( self::MYFUSES_APP_FILE );
             return true;
         }
         
-        if ( is_file( $application->getPath() . self::MYFUSES_PHP_APP_FILE ) ) {
-            $application->setFile( self::MYFUSES_PHP_APP_FILE );
+        if ( is_file( $this->getApplication()->getPath() . 
+            self::MYFUSES_PHP_APP_FILE ) ) {
+            $this->getApplication()->setFile( self::MYFUSES_PHP_APP_FILE );
             return true;
         }
         
         return false;
     }
     
-    public function applicationWasModified( Application $application ) {
-        if( filectime( $application->getCompleteFile() ) > 
-            $application->getLastLoadTime() ) {
+    public function applicationWasModified() {
+        if( filectime( $this->getApplication()->getCompleteFile() ) > 
+            $this->getApplication()->getLastLoadTime() ) {
             return true;
         }
         return false;
@@ -122,7 +123,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      * 
      * @param Application $application
      */
-    private function loadApplicationFile( Application $application ) {
+    private function loadApplicationFile() {
         
         $appMethods = array( 
             "circuits" => "loadCircuits", 
@@ -131,19 +132,21 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
              );
         
         // TODO verify if all conditions is satisfied for a file load ocours
-        if ( @!$fp = fopen( $application->getCompleteFile() ,"r" ) ){
+        if ( @!$fp = fopen( $this->getApplication()->
+            getCompleteFile() ,"r" ) ) {
             throw new MyFusesFileOperationException( 
-                $application->getCompleteFile(), 
+                $this->getApplication()->getCompleteFile(), 
                 MyFusesFileOperationException::OPEN_FILE );
         }
         
         if ( !flock( $fp, LOCK_SH ) ) {
             throw new MyFusesFileOperationException( 
-                $application->getCompleteFile(), 
+                $this->getApplication()->getCompleteFile(), 
                 MyFusesFileOperationException::LOCK_FILE );
         }
         
-        $fileCode = fread( $fp, filesize( $application->getCompleteFile() ) );
+        $fileCode = fread( $fp, filesize( $this->getApplication()->
+            getCompleteFile() ) );
         
         $rootNode = new SimpleXMLElement( $fileCode );
         

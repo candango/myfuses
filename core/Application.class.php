@@ -65,6 +65,13 @@ class Application implements ICacheable {
     const DEFAULT_APPLICATION_NAME = "default";
     
     /**
+     * Application loader
+     * 
+     * @var MyFusesLoader
+     */
+    private $loader;
+    
+    /**
      * Flag that indicates that this application was loaded
      *
      * @var boolean
@@ -275,8 +282,18 @@ class Application implements ICacheable {
      * @param $name Application name
      * @access public
      */
-    public function __construct( $name = "default" ) {
+    public function __construct( $name = Application::DEFAULT_APPLICATION_NAME,
+        $loader = null ) {
+        
         $this->setName( $name );
+        
+        // FIXME each application must have its own loader
+        if( is_null( $loader ) ) {
+            $loader = 
+                AbstractMyFusesLoader::getLoader( MyFusesLoader::XML_LOADER );
+        }
+        
+        $this->setLoader( $loader );
         
         $this->plugins[ Plugin::PRE_PROCESS_PHASE ] = array();
         $this->plugins[ Plugin::PRE_FUSEACTION_PHASE ] = array();
@@ -346,6 +363,27 @@ class Application implements ICacheable {
      */
     public function setParsedPath( $parsedPath ) {
         $this->parsedPath = $parsedPath;
+    }
+    
+    /**
+     * Return application loader
+     *
+     * @return MyFusesLoader
+     * @access public
+     */
+    public function getLoader() {
+        return $this->loader;
+    }
+    
+    /**
+     * Set the application loader
+     *
+     * @param MyFusesLoader $loader
+     * @access public
+     */
+    public function setLoader( MyFusesLoader &$loader ) {
+        $this->loader = &$loader;
+        $loader->setApplication( $this );
     }
     
     /**
@@ -962,7 +1000,6 @@ class Application implements ICacheable {
      * @access public
      */
     public function getCachedCode() {
-        
         $strOut = "\$application = new Application( \"" . $this->getName() . "\" );\n";
         
         $strOut .= "\$application->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";

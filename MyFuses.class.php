@@ -32,7 +32,7 @@
  *
  * @category   controller
  * @package    myfuses
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flávio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -108,13 +108,6 @@ class MyFuses {
     protected $applications = array();
     
     /**
-     * MyFuses loader instance
-     * 
-     * @var MyFusesLoader
-     */
-    private $loader;
-    
-    /**
      * 
      * @var FuseRequest
      */
@@ -148,41 +141,21 @@ class MyFuses {
     }
     
     public function createApplication( 
-        $appName = Application::DEFAULT_APPLICATION_NAME, $default = false ) {
+        $appName = Application::DEFAULT_APPLICATION_NAME, 
+        $default = false, MyFusesLoader $loader = null ) {
         
-        if( count( $this->applications ) == 0 ) {
-            $default = true;
-        }
+        $application = new Application( $appName );
         
-        $this->applications[ $appName ] = new Application( $appName );
+        $application->setDefault( $default );
         
-        $this->applications[ $appName ]->setDefault( $default );
-        
-        $this->applications[ $appName ]->setPath( 
-            dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
+        $application->setPath( dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
         
         // setting parsed path
-        $this->applications[ $appName ]->setParsedPath( MyFuses::ROOT_PATH . 
-            "parsed" . DIRECTORY_SEPARATOR . 
-            $this->applications[ $appName ]->getName() . 
+        $application->setParsedPath( MyFuses::ROOT_PATH . 
+            "parsed" . DIRECTORY_SEPARATOR . $application->getName() . 
             DIRECTORY_SEPARATOR ) ;
         
-        $this->applications[ $appName ]->setController( $this );
-        
-        // FIXME this part isn't working fine
-        if( Application::DEFAULT_APPLICATION_NAME != $appName ) {
-            if( $this->applications[ $appName ]->isDefault() ) {
-                if( isset( $this->applications[ 
-                    Application::DEFAULT_APPLICATION_NAME ] ) ) {
-                    $this->applications[ 
-                    Application::DEFAULT_APPLICATION_NAME ]->setDefault( 
-                        false );
-                }
-                $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
-                    &$this->applications[ $appName ];
-            }
-                
-        }
+        $this->addApplication( $application, $loader );
         
     }
     
@@ -206,14 +179,38 @@ class MyFuses {
         return $this->applications;
     }
     
-    public function addApplication( Application $application ) {
+    
+    
+    public function addApplication( Application $application, 
+        MyFusesLoader $loader = null ) {
+        
+        if( count( $this->applications ) == 0 ) {
+            $application->setDefault( true );
+        }
+
+        $application->setController( $this );
+        
         $this->applications[ $application->getName() ] = $application;
         
         $application->setController( $this );
         
-        if( $application->isDefault() ) {
-            $this->applications[ 
-                Application::DEFAULT_APPLICATION_NAME ] = $application; 
+        if( !is_null( $loader ) ) {
+            $application->setLoaded( $loader );
+        }
+        
+        // FIXME this part isn't working fine
+        if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
+            if( $application->isDefault() ) {
+                if( isset( $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ] ) ) {
+                    $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ]->setDefault( 
+                        false );
+                }
+                $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
+                    &$this->applications[ $application->getName() ];
+            }
+                
         }
     }
     
@@ -252,10 +249,11 @@ class MyFuses {
      * Loads all applications registered
      */
     private function loadApplications() {
-         foreach( $this->applications as $application ) {
-             if( !$application->isLoaded() ) {
-                 $this->loader->loadApplication( $application );
+         foreach( $this->applications as $key => $application ) {
+             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                 $application->getLoader()->loadApplication();
              }
+             
          }
     }
     
@@ -306,6 +304,7 @@ class MyFuses {
                 }
                 
                 $strStore = $application->getCachedCode();
+                
                 $fileName = $application->getCompleteCacheFile();
                               
 	            $fp = fopen( $fileName,"w" );
@@ -338,7 +337,6 @@ class MyFuses {
         
         // TODO handle file parse
         if( !is_file( $fileName ) || $circuit->isModified() ) {
-        
             $fuseQueue = $this->request->getFuseQueue();
             
             $myFusesString = $controllerName . "::getInstance()";
