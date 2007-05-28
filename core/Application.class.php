@@ -79,6 +79,8 @@ class Application implements ICacheable {
      */
     private $loaded = false;
     
+    private $parse = false;
+    
     /**
      * Application name
      * 
@@ -602,6 +604,26 @@ class Application implements ICacheable {
      */
     public function setDefault( $value ) {
         $this->default = $value;
+    }
+    
+    /**
+     * Returns if the application must be parsed or not
+     * 
+     * @return boolean
+     * @access public
+     */
+    public function mustParse(){
+        return $this->parse;
+    }
+    
+    /**
+     * Set if the application must be parsed or not
+     * 
+     * @param boolean $value
+     * @access public
+     */
+    public function setParse( $parse ) {
+        $this->parse = $parse;
     }
     
     /**

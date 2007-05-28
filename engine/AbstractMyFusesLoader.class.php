@@ -80,6 +80,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     
     public function doLoadApplication() {
+        $this->getApplication()->setParse( true );
+        
         $appMethods = array( 
             "circuits" => "loadCircuits", 
             "classes" => "loadClasses",

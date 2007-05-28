@@ -296,29 +296,31 @@ class MyFuses {
     protected function storeApplications() {
         
         foreach( $this->applications as $index => $application ) {
-            $strStore = "";
             if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                if( !file_exists( $application->getParsedPath() ) ) {
-                    mkdir( $application->getParsedPath() );
-                    chmod( $application->getParsedPath(), 0777 );
-                }
-                
-                $strStore = $application->getCachedCode();
-                
-                $fileName = $application->getCompleteCacheFile();
-                              
-	            $fp = fopen( $fileName,"w" );
-	        
-		        if ( !flock($fp,LOCK_EX) ) {
-		            die("Could not get exclusive lock to Parsed File file");
-		        }
+                $strStore = "";
+                if( $application->mustParse() ) {
+                    if( !file_exists( $application->getParsedPath() ) ) {
+	                    mkdir( $application->getParsedPath() );
+	                    chmod( $application->getParsedPath(), 0777 );
+	                }
+	                
+	                $strStore = $application->getCachedCode();
+	                
+	                $fileName = $application->getCompleteCacheFile();
+	                              
+		            $fp = fopen( $fileName,"w" );
 		        
-		        if ( !fwrite($fp, "<?php\n" . $strStore) ) {
-		           var_dump( "deu pau 2!!!" );
-		        }
-		        flock($fp,LOCK_UN);
-		        fclose($fp);
-		        chmod( $fileName, 0777 );
+			        if ( !flock($fp,LOCK_EX) ) {
+			            die("Could not get exclusive lock to Parsed File file");
+			        }
+			        
+			        if ( !fwrite($fp, "<?php\n" . $strStore) ) {
+			           var_dump( "deu pau 2!!!" );
+			        }
+			        flock($fp,LOCK_UN);
+			        fclose($fp);
+			        chmod( $fileName, 0777 );
+                }
             }
         }
     }
