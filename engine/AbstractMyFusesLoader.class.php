@@ -48,11 +48,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     $this->application->getName() ) );
             
             if( $this->applicationWasModified() ) {
-                // circuits must be loaded when application changes
-                foreach( $this->getApplication()->getCircits() as $circuit ) {
-                    $circuit->setLastLoadTime( 0 );
-                }
-                
                 $this->doLoadApplication();
             }
             else{
@@ -81,6 +76,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     public function doLoadApplication() {
         $this->getApplication()->setParse( true );
+        
+        // circuits must be loaded when application changes
+        foreach( $this->getApplication()->getCircits() as $circuit ) {
+            $circuit->setLastLoadTime( 0 );
+        }
         
         $appMethods = array( 
             "circuits" => "loadCircuits", 
@@ -321,7 +321,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     }
     
     protected function doLoadCircuit( Circuit $circuit ){
-        
+        $this->getApplication()->setParse( true );
        
         $circuitMethods = array( 
             "fuseaction" => "loadAction",

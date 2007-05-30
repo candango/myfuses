@@ -339,6 +339,7 @@ class MyFuses {
         
         // TODO handle file parse
         if( !is_file( $fileName ) || $circuit->isModified() ) {
+            var_dump( "buuu" );
             $fuseQueue = $this->request->getFuseQueue();
             
             $myFusesString = $controllerName . "::getInstance()";
