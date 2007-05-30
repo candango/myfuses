@@ -221,7 +221,11 @@ class Circuit implements ICacheable {
      *
      * @param string $access
      */
-    public function setAccessByString( $accessString ) {
+    public function setAccessByString( $accessString = "public" ) {
+        if( $accessString == "" ){
+            $accessString = "public";
+        }
+            
         $accessList = array(
             "public" => self::PUBLIC_ACCESS,
             "internal" => self::INTERNAL_ACCESS

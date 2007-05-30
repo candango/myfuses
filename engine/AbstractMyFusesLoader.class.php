@@ -338,13 +338,14 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         $access = "";
 	    
-        foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
-            if ( isset( $circuitParameterAttributes[ $attributeName ] ) ) {
-                // getting $name
-                $$circuitParameterAttributes[ $attributeName ] = "" . $attribute;
-            }
+        if( isset( $data[ 'attributes' ] ) ) {
+	        foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
+	            if ( isset( $circuitParameterAttributes[ $attributeName ] ) ) {
+	                // getting $name
+	                $$circuitParameterAttributes[ $attributeName ] = "" . $attribute;
+	            }
+	        }
         }
-        
         
         
         $circuit->setAccessByString( $access );
