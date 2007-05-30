@@ -212,8 +212,8 @@ class Circuit implements ICacheable {
      *
      * @param integer $access
      */
-    public function setAccess( $access ) {
-        $this->access = $access;
+    public function setAccess( $access = Circuit::PUBLIC_ACCESS ) {
+        $this->access = $access; 
     }
     
 	/**
