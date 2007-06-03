@@ -38,7 +38,8 @@
  * @version    SVN: $Id: MyFuses.class.php 79 2007-04-26 14:32:40Z piraz $
  */
 
-MyFuses::includeCoreFile( MyFuses::ROOT_PATH . "core/Plugin.class.php" );  
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/Plugin.class.php" );  
 
 /**
  * Plugin  - Plugin.class.php

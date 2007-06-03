@@ -91,6 +91,8 @@ class Circuit implements ICacheable {
      */
     private $path;
     
+    private $verbPaths = array();
+    
     /**
      * Circuit access type
      *
@@ -196,6 +198,53 @@ class Circuit implements ICacheable {
      */
     public function setPath( $path ) {
         $this->path = $path;
+    }
+    
+    /**
+     * Return circuit verb paths
+     *
+     * @return array
+     */
+    public function getVerbPaths() {
+        return $this->verbPaths;
+    }
+    
+    /**
+     * Return one verb path
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getVerbPath( $name ) {
+        if( MyFusesFileHandler::isAbsolutePath( $this->verbPaths[ $name ] ) ) {
+            return $this->verbPaths[ $name ];
+        }
+        return $this->getApplication()->getPath() . $this->verbPaths[ $name ];
+    }
+    
+    /**
+     * Set circui verb paths
+     *
+     * @param array $verbPaths
+     */
+    public function setVerbPaths( $verbPaths ) {
+        $verbPaths = unserialize( $verbPaths );
+        foreach( $verbPaths as $key => $path ) {
+            $verbPaths[ $key ] = preg_replace_callback( 
+                '@{([\$?\w+][\:\:\w+\(\)]*[->\w+\(\)]*)}@', 
+                array( $this, 'evalExpression' ), $path );
+        }
+        $this->verbPaths = $verbPaths;
+    }
+    
+    /**
+     * Return if a given verbPath exists
+     * 
+     * @param string $verbPath
+     * @return boolean
+     */
+    public function verbPathExists( $verbPath ) {
+        return isset( $this->verbPaths[ $verbPath ] );
     }
     
     /**
@@ -404,8 +453,13 @@ class Circuit implements ICacheable {
     public function getCachedCode() {
         $strOut = "\$circuit = new Circuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
-        $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
-        $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . "\" );\n";
+        $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . 
+            "\" );\n";
+        $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . 
+            "\" );\n";
+        $strOut .= "\$application->addCircuit( \$circuit );\n";
+        $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
+            serialize( $this->getVerbPaths() ) ) . "\" );\n";
         $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
         $strOut .= "\$circuit->setLastLoadTime( " . 
             $this->getLastLoadTime() . " );\n";
@@ -416,8 +470,6 @@ class Circuit implements ICacheable {
         $strOut .= $this->getPreFuseActionCachedCode();
         
         $strOut .= $this->getPostFuseActionCachedCode();
-        
-        $strOut .= "\$application->addCircuit( \$circuit );\n";
         
         return $strOut;
     }
@@ -476,6 +528,10 @@ class Circuit implements ICacheable {
     
     public function setModified( $modified ) {
         return $this->modified = $modified;
+    }
+    
+    private function evalExpression( $matches ){
+	    return eval( "return " . $matches[ 1 ] . ";" );
     }
     
 }

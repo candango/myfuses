@@ -322,7 +322,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     protected function doLoadCircuit( Circuit $circuit ){
         $this->getApplication()->setParse( true );
-       
+        
         $circuitMethods = array( 
             "fuseaction" => "loadAction",
             "action" => "loadAction",
@@ -349,6 +349,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         
         $circuit->setAccessByString( $access );
+        
+        if( isset( $data['docNamespaces'] ) ) {
+            $circuit->setVerbPaths( serialize( $data['docNamespaces'] ) );
+        }
+        
         
         if( count( $data[ 'children' ] > 0 ) ) {
             

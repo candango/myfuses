@@ -1,18 +1,19 @@
 <?php
 try {
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/AbstractPlugin.class.php" );
-	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
 	    "core/AbstractVerb.class.php" );
-	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
 	    "core/Application.class.php" );
-	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
 	    "core/ClassDefinition.class.php" );
-	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . "core/Circuit.class.php" );
-	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+	    "core/Circuit.class.php" );
+	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
 	    "core/FuseAction.class.php" );
 	
-	MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
 	    "engine/AbstractMyFusesLoader.class.php" );    
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
@@ -166,7 +167,6 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = $this->loadCircuitFile( $circuit );
         
-        
         return $this->getDataFromXml( $rootNode );
         
     }
@@ -176,6 +176,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
      * Load a circuit file
      * 
      * @param Circuit $circuit
+     * @return SimpleXMLElement
      */
     private function loadCircuitFile( Circuit $circuit ) {
         
@@ -197,19 +198,24 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         $fileCode = fread( $fp, filesize( $circuitFile ) );
         
         try {
-            $rootNode = new SimpleXMLElement( $fileCode );    
+            // FIXME put no warning modifier in SimpleXMLElement call 
+            @$rootNode = new SimpleXMLElement( $fileCode );    
         }
         catch ( Exception $e ) {
             // FIXME handle error
             die( "Parse error" );    
         }
         
-        
         return $rootNode;
     }
     
     private function getDataFromXML( SimpleXMLElement $node ) {
-        $data[ "name" ] = $node->getName(); 
+        
+        $data[ "name" ] = str_replace( "_ns_", ":", $node->getName() ); 
+        
+        if( count( $node->getDocNamespaces( true ) ) ) {
+            $data[ "docNamespaces" ] = $node->getDocNamespaces( true );
+        }
         
         foreach( $node->attributes() as $attribute ) {
             $data[ "attributes" ][ $attribute->getName() ] = "" . $attribute;
@@ -217,6 +223,10 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         if( count( $node->children() ) ) {
             foreach( $node->children() as $child ) {
+                // PoG StYlEzZz
+                $child = new SimpleXMLElement( preg_replace( 
+                    "@(<)(\w+|\d+):(\w+|\d+)( )@", "$1$2_ns_$3$4", 
+                    $child->asXML() ) );
                 $data[ "children" ][] = $this->getDataFromXML( $child );    
             }
         }

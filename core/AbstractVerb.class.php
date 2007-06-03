@@ -108,8 +108,10 @@ abstract class AbstractVerb implements Verb {
         
         $data = unserialize( $data );
         
+        $data[ "name" ] = str_replace( "_ns_", ":", $data[ "name" ] );
+        
         if ( isset( self::$verbTypes[ $data[ "name" ] ] ) ) {
-            MyFuses::includeCoreFile( MyFuses::ROOT_PATH . "core" . 
+            MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . "core" . 
                 DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
                 self::$verbTypes[ $data[ "name" ] ] . ".class.php" );
         
@@ -123,11 +125,37 @@ abstract class AbstractVerb implements Verb {
 
 	        return $verb;
         }
+        else {
+            $dataNameX = explode( ":", $data[ "name" ] );
+            if( $action->getCircuit()->verbPathExists( $dataNameX[ 0 ] ) ) {
+                
+                $path = $action->getCircuit()->getVerbPath( $dataNameX[ 0 ] ); 
+                
+                MyFuses::includeCoreFile( $path. ucfirst( $dataNameX[ 1 ] ) . 
+                    "Verb.class.php" );
+                
+                $className = $dataNameX[ 1 ] . "Verb";
+                    
+                $verb = new $className();
+	        
+		        if( !is_null( $action ) ) {
+		            $verb->setAction( $action );
+		        }
+		        
+		        $verb->setData( $data );
+		        
+		        return $verb;
+            }
+            else {
+                die( "Non existent verb path" );
+            }
+        }
         return null;
     }
     
     public function getCachedCode() {
 	    $data = $this->getData();
+	    $data[ "name" ] = str_replace( ":", "_ns_", $data[ "name" ] );
 	    $data = serialize( $data );
 	    $data = addslashes( $data );
 	    $data = str_replace( '$', '\$', $data );

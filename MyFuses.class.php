@@ -43,22 +43,25 @@ define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
 
 try {
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/Application.class.php" );
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/ICacheable.class.php" );
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/IParseable.class.php" );
     
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/AbstractMyFusesLoader.class.php" );
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/loaders/XMLMyFusesLoader.class.php" );
     
-    MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/FuseRequest.class.php" );
-   MyFuses::includeCoreFile( MyFuses::ROOT_PATH . 
+   MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/MyFusesLifecycle.class.php" );
+   
+   MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/file/MyFusesFileHandler.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();
@@ -90,7 +93,7 @@ class MyFuses {
      * @static
      * @final
      */
-    const ROOT_PATH = MYFUSES_ROOT_PATH;
+    const MYFUSES_ROOT_PATH = MYFUSES_ROOT_PATH;
     
     /**
      * Unique instance to be created in process. MyFuses is implemmented using
@@ -126,17 +129,7 @@ class MyFuses {
      * @param MyFusesLoader $loader
      * @param string $applicationName
      */
-    protected function __construct( MyFusesLoader $loader = null ) {
-        
-        // FIXME each application must have its own loader
-        if( is_null( $loader ) ) {
-            $loader = 
-                AbstractMyFusesLoader::getLoader( MyFusesLoader::XML_LOADER );
-        }
-        
-        $this->loader = $loader;
-        
-        //$this->createApplication( $appName, true );
+    protected function __construct() {
         
     }
     
@@ -151,7 +144,7 @@ class MyFuses {
         $application->setPath( dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
         
         // setting parsed path
-        $application->setParsedPath( MyFuses::ROOT_PATH . 
+        $application->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . 
             "parsed" . DIRECTORY_SEPARATOR . $application->getName() . 
             DIRECTORY_SEPARATOR ) ;
         
@@ -339,7 +332,6 @@ class MyFuses {
         
         // TODO handle file parse
         if( !is_file( $fileName ) || $circuit->isModified() ) {
-            var_dump( "buuu" );
             $fuseQueue = $this->request->getFuseQueue();
             
             $myFusesString = $controllerName . "::getInstance()";
@@ -446,13 +438,13 @@ class MyFuses {
      * @return MyFuses
      * @static 
      */
-     public static function &getInstance( MyFusesLoader $loader = null ) {
+     public static function &getInstance() {
         
         if( is_null( self::$instance ) ) {
             // FIXME New MyFuses is limiting when I extends this class becouse
 	        // I will rewrite this method changing MyFuses by the class name
 	        // need some solution
-            self::$instance = new MyFuses( $loader );
+            self::$instance = new MyFuses();
         }
         
         return self::$instance;
