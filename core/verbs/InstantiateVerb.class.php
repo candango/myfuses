@@ -72,7 +72,7 @@ class InstantiateVerb extends AbstractVerb {
 	    $strOut .= str_repeat( "\t", $identLevel );
 	    $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
 	    $strOut .= str_repeat( "\t", $identLevel + 1 );
-	    $strOut .= "include( " . $fileCall . " );\n";
+	    $strOut .= "require_once( " . $fileCall . " );\n";
 	    $strOut .= str_repeat( "\t", $identLevel );
 	    $strOut .= "}\n";
 	    $strOut .= str_repeat( "\t", $identLevel );
