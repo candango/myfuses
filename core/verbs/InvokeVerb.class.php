@@ -37,7 +37,11 @@
  */
 
 class InvokeVerb extends AbstractVerb {
-
+    
+    private $class;
+    
+    private static $classCall = array();
+    
 	private $object;
 
 	private $method;
@@ -47,6 +51,14 @@ class InvokeVerb extends AbstractVerb {
 	private $arguments;
 
 	private $variable;
+	
+	public function getClass() {
+	    return $this->class;
+	}
+	
+	public function setClass( $class ) {
+	    $this->class = $class;
+	}
 	
 	public function getObject() {
 		return $this->object;
@@ -106,7 +118,14 @@ class InvokeVerb extends AbstractVerb {
 	
 	public function getData() {
 		$data[ "name" ] = "invoke";
-		$data[ "attributes" ][ "object" ] = $this->getObject();
+		
+		if( !is_null( $this->getClass() ) ) {
+		    $data[ "attributes" ][ "class" ] = $this->getClass();
+		}
+		else {
+		    $data[ "attributes" ][ "object" ] = $this->getObject();    
+		}
+		
 		if( !is_null( $this->getMethod() ) ) {
 			$data[ "attributes" ][ "method" ] = $this->getMethod();
 			if( !is_null( $this->getArguments() ) ) {
@@ -125,8 +144,13 @@ class InvokeVerb extends AbstractVerb {
 
 	public function setData( $data ) {
 		
-	    $this->setObject( $data[ "attributes" ][ "object" ] );
-        
+	    if( isset( $data[ "attributes" ][ "class" ] ) ) {
+		    $this->setClass( $data[ "attributes" ][ "class" ] );
+		}
+		else {
+		    $this->setObject( $data[ "attributes" ][ "object" ] );    
+		}
+	    
 	    if( isset( $data[ "attributes" ][ "method" ] ) ) {
 		    $this->setMethod( $data[ "attributes" ][ "method" ] );
 	
@@ -150,23 +174,60 @@ class InvokeVerb extends AbstractVerb {
 	 */
 	public function getParsedCode( $commented, $identLevel ) {
 		$appName = $this->getAction()->getCircuit()->
-		getApplication()->getName();
+		    getApplication()->getName();
 		
 		$strOut = parent::getParsedCode( $commented, $identLevel );
-		//Make identation
+		// Make identation
 		$strOut .= str_repeat( "\t", $identLevel );
-		//Verify if it has a variable (Method returns a value)
-		if ( !is_null( $this->getVariable() ) ) {
-			$strOut .= "\$" . $this->getVariable() . " = ";
-		}
+		
+		// Begin method call
 		if( !is_null( $this->getMethod() ) ) {
-			//Initiate method call
-			$strOut .= "\$" . $this->getObject() . "->" . 
-			    $this->getMethod() . "(";
-			//Verify arguments - Fusebox 5 (strictMode set to true)
+			
+			if( !is_null( $this->getClass() ) ) {
+			    
+			    if( !isset( self::$classCall[ $this->getClass() ] ) ) {
+
+			        $appName = $this->getAction()->getCircuit()->
+				        getApplication()->getName();
+			        
+				    $controllerClass = $this->getAction()->getCircuit()->
+				        getApplication()->getControllerClass();
+				        
+				    $fileCall = $controllerClass . "::getApplication( \"" . $appName .
+				        "\" )->getClass( \"" . $this->getClass() . 
+				        "\" )->getCompletePath()";
+				    
+				    $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
+				    $strOut .= str_repeat( "\t", $identLevel + 1 );
+				    $strOut .= "require_once( " . $fileCall . " );\n";
+				    $strOut .= str_repeat( "\t", $identLevel );
+				    $strOut .= "}\n";
+				    $strOut .= str_repeat( "\t", $identLevel );
+			        
+				    self::$classCall[ $this->getClass() ] = "called";
+				    
+			    }
+			    
+			    // Verify if it has a variable (Method returns a value)
+				if ( !is_null( $this->getVariable() ) ) {
+					$strOut .= "\$" . $this->getVariable() . " = ";
+				}
+			    $strOut .= $this->getClass() . "::" . 
+			        $this->getMethod() . "(";    
+			}
+			else {
+			    // Verify if it has a variable (Method returns a value)
+				if ( !is_null( $this->getVariable() ) ) {
+					$strOut .= "\$" . $this->getVariable() . " = ";
+				}
+			    $strOut .= "\$" . $this->getObject() . "->" . 
+			        $this->getMethod() . "(";    
+			}
+			
+			// Verify arguments - Fusebox 5 (strictMode set to true)
 			if ( !is_null( $this->getArguments() ) )
 				$strOut .= $this->getArguments();
-		    //Close method
+		    // Close method
 	        $strOut .= ");\n\n";
 		}
 		else {
@@ -185,11 +246,17 @@ class InvokeVerb extends AbstractVerb {
 	public function getComments( $identLevel ) {
 		$strOut = parent::getComments( $identLevel );
 		$strInst = "";
+		
 		if( !is_null( $this->getVariable() ) ) {
 			$strInst = "variable=\"" . $this->getVariable() . "\"";
 		}
 		
-		$strInst .= " object=\"" . $this->getObject() . "\"";
+	    if( !is_null( $this->getClass() ) ) {
+			$strInst = "class=\"" . $this->getClass() . "\"";
+		}
+		else {
+		    $strInst .= " object=\"" . $this->getObject() . "\"";    
+		}
 		
 		if( !is_null( $this->getMethod() ) ) {
 			$strInst .= " method=\"" . $this->getMethod() . "\"";
