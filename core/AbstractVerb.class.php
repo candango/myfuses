@@ -131,13 +131,16 @@ abstract class AbstractVerb implements Verb {
                 
                 $path = $action->getCircuit()->getVerbPath( $dataNameX[ 0 ] ); 
                 
-                MyFuses::includeCoreFile( $path. ucfirst( $dataNameX[ 1 ] ) . 
-                    "Verb.class.php" );
+                $className = strtoupper( substr( $dataNameX[ 0 ], 0, 1 ) ) . 
+                    substr( $dataNameX[ 0 ], 1, strlen( $dataNameX[ 0 ] ) - 1 )
+                    . strtoupper( substr( $dataNameX[ 1 ], 0, 1 ) ) . 
+                    substr( $dataNameX[ 1 ], 1, strlen( $dataNameX[ 1 ] ) - 1 )
+                    . "Verb";
                 
-                $className = $dataNameX[ 1 ] . "Verb";
-                    
+                MyFuses::includeCoreFile( $path. $className . ".class.php" );
+                
                 $verb = new $className();
-	        
+                
 		        if( !is_null( $action ) ) {
 		            $verb->setAction( $action );
 		        }
