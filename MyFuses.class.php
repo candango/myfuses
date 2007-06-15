@@ -457,14 +457,12 @@ class MyFuses {
     public static function getSelf() {
         $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
         
-        // FIXME this case never happen
         if( substr( $self, -1 ) != "/" ) {
             $self .= "/";
         }
         
-        $self1 = str_replace( $_SERVER[ 'DOCUMENT_ROOT' ], 
-            "", $_SERVER[ 'SCRIPT_FILENAME' ] );
-        
+        $self1 = $_SERVER[ 'SCRIPT_NAME' ];
+            
         if( substr( $self1, 0, 1 ) == "/" ) {
             $self1 = substr( $self1, 1, strlen( $self1 ) );
         }
