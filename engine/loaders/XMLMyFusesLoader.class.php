@@ -210,8 +210,16 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     private function getDataFromXML( $name, SimpleXMLElement $node ) {
+        $nameX = explode( "_ns_", $name );
         
-        $data[ "name" ] = str_replace( "_ns_", ":", $name ); 
+        if( count( $nameX ) > 1 ) {
+            $data[ "name" ] = $nameX[ 1 ];
+            $data[ "namespace" ] = $nameX[ 0 ];
+        }
+        else {
+            $data[ "name" ] = $name;
+            $data[ "namespace" ] = "myfuses";
+        }
         
         if( count( $node->getDocNamespaces( true ) ) ) {
             $data[ "docNamespaces" ] = $node->getDocNamespaces( true );
@@ -225,7 +233,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
             foreach( $node->children() as $key => $child ) {
                 // PoG StYlEzZz
                 $child = new SimpleXMLElement( preg_replace( 
-                    "@(<)(\w+|\d+):(\w+|\d+)( )@", "$1$2_ns_$3$4", 
+                    "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
                     $child->asXML() ) );
                 $data[ "children" ][] = $this->getDataFromXML( $key, $child );    
             }
