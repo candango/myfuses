@@ -5,8 +5,17 @@
  */
 class SetVerb extends AbstractVerb {
     
+    private $variableName;
     
     private $value;
+    
+    public function getVariableName() {
+        return $this->variableName;
+    }
+    
+    public function setVariableName( $variableName ) {
+        $this->variableName = $variableName;
+    }
     
     public function getValue() {
         return $this->value;
@@ -17,14 +26,15 @@ class SetVerb extends AbstractVerb {
     }
     
     public function getData() {
-        $data[ "name" ] = "set";
-        $data[ "attributes" ][ "name" ] = $this->getName();
+        $data = parent::getData();
+        $data[ "attributes" ][ "name" ] = $this->getVariableName();
         $data[ "attributes" ][ "value" ] = $this->getValue();
         return $data;
     }
     
     public function setData( $data ) {
-        $this->setName( $data[ "attributes" ][ "name" ] );
+        parent::setData( $data );
+        $this->setVariableName( $data[ "attributes" ][ "name" ] );
         $this->setValue( $data[ "attributes" ][ "value" ] );
     }
 
@@ -36,7 +46,7 @@ class SetVerb extends AbstractVerb {
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= "\$" . $this->getName() . " = " . 
+        $strOut .= "\$" . $this->getVariableName() . " = " . 
             $this->getValue() . ";\n\n";
         return $strOut; 
     }
@@ -49,7 +59,7 @@ class SetVerb extends AbstractVerb {
     public function getComments( $identLevel ) {
         $strOut = parent::getComments( $identLevel );
         $strOut = str_replace( "__COMMENT__",
-        "MyFuses:request:action:set name=\"" . $this->getName() .
+        "MyFuses:request:action:set name=\"" . $this->getVariableName() .
         "\" value=\"" . $this->getValue() . "\"", $strOut );
         return $strOut;
     }

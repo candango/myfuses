@@ -31,12 +31,13 @@ class IncludeVerb extends AbstractVerb {
     }
     
     public function getData() {
-        $data[ "name" ] = "include";
+        $data = parent::getData();
         $data[ "attributes" ][ "file" ] = $this->getFile();
         return $data;
     }
     
     public function setData( $data ) {
+        parent::setData( $data );
         $file = "";
         if( isset( $data[ "attributes" ][ "file" ] ) ) {
             $file = $data[ "attributes" ][ "file" ];

@@ -21,7 +21,7 @@ class IfVerb extends AbstractVerb {
     }
 
     public function getData() {
-        $data[ "name" ] = "if";
+        $data = parent::getData();
         
         $data[ "attributes" ][ "condition" ] =  $this->getCondition();
         
@@ -47,6 +47,8 @@ class IfVerb extends AbstractVerb {
     }
     
     public function setData( $data ) {
+        parent::setData( $data );
+        
         $this->setCondition( $data[ "attributes" ][ "condition" ] );
         
         if( isset( $data[ "children" ] ) ) {

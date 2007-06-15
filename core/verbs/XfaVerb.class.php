@@ -76,6 +76,8 @@ class XfaVerb extends AbstractVerb {
      */
     private $value;
     
+    private $xfaName;
+    
     /**
      * Return the XFA Value
      * 
@@ -93,7 +95,25 @@ class XfaVerb extends AbstractVerb {
     public function setValue( $value ) {
         $this->value = $value;
     }
-
+    
+    /**
+     * Return the XFA name
+     * 
+     * @return string
+     */
+    public function getXfaName() {
+        return $this->xfaName;
+    }
+    
+    /**
+     * Set the XFA name
+     *
+     * @param string $xfaName
+     */
+    public function setXfaName( $xfaName ) {
+        $this->xfaName = $xfaName;
+    }
+    
     
     /**
      * Return the XFA data array
@@ -101,9 +121,13 @@ class XfaVerb extends AbstractVerb {
      * @return array
      */
     public function getData() {
-        $data[ "name" ] = "xfa";
-        $data[ "attributes" ][ "name" ] = $this->getName();
+        
+        $data = parent::getData();
+        
+        $data[ "attributes" ][ "name" ] = $this->getXfaName();
+        
         $data[ "attributes" ][ "value" ] = $this->getValue();
+        
         return $data;
     }
     
@@ -113,7 +137,10 @@ class XfaVerb extends AbstractVerb {
      * @param array $data
      */
     public function setData( $data ) {
-        $this->setName( $data[ "attributes" ][ "name" ] );
+        parent::setData( $data );
+        
+        $this->setXfaName( $data[ "attributes" ][ "name" ] );
+        
         if( count( explode( ".", $data[ "attributes" ][ "value" ] ) ) < 2 ) {
             $this->setValue(  $this->getAction()->getCircuit()->getName() . 
                 "." . $data[ "attributes" ][ "value" ] );
@@ -134,11 +161,11 @@ class XfaVerb extends AbstractVerb {
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         $strOut .= $controllerClass . "::getInstance()->getRequest()->" .
-            "getAction()->addXFA( \"" . $this->getName() . "\", \"" .
+            "getAction()->addXFA( \"" . $this->getXfaName() . "\", \"" .
             $this->getValue() . "\" );\n";
         // for compatibility
         $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= "\$XFA[ \"" . $this->getName() . "\" ] = \"" .
+        $strOut .= "\$XFA[ \"" . $this->getXfaName() . "\" ] = \"" .
             $this->getValue() . "\";\n\n";
         return $strOut;
     }
@@ -151,7 +178,7 @@ class XfaVerb extends AbstractVerb {
     public function getComments( $identLevel ) {
         $strOut = parent::getComments( $identLevel );
         $strOut = str_replace( "__COMMENT__", 
-            "MyFuses:request:action:xfa name=\"" . $this->getName() .
+            "MyFuses:request:action:xfa name=\"" . $this->getXfaName() .
             "\" value=\"" . $this->getValue() . "\"", $strOut );
         return $strOut;
     }

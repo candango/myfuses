@@ -9,15 +9,15 @@ require_once "myfuses/core/CircuitAction.class.php";
 abstract class AbstractVerb implements Verb {
     
     private static $verbTypes = array(
-            "do" => "DoVerb",
-            "if" => "IfVerb",
-            "include" => "IncludeVerb",
-            "instantiate" => "InstantiateVerb",
-            "invoke" => "InvokeVerb",
-            "loop" => "LoopVerb",
-            "relocate" => "RelocateVerb",
-            "set" => "SetVerb",
-            "xfa" => "XfaVerb");
+            "myfuses:do" => "DoVerb",
+            "myfuses:if" => "IfVerb",
+            "myfuses:include" => "IncludeVerb",
+            "myfuses:instantiate" => "InstantiateVerb",
+            "myfuses:invoke" => "InvokeVerb",
+            "myfuses:loop" => "LoopVerb",
+            "myfuses:relocate" => "RelocateVerb",
+            "myfuses:set" => "SetVerb",
+            "myfuses:xfa" => "XfaVerb");
     
     /**
      * Verb action
@@ -32,6 +32,13 @@ abstract class AbstractVerb implements Verb {
      * @var string
      */
     private $name;
+    
+    /**
+     * Verb namespace
+     *
+     * @var string
+     */
+    private $namespace;
     
     /**
      * Verb parent
@@ -77,6 +84,24 @@ abstract class AbstractVerb implements Verb {
     }
     
     /**
+     * Return the veb namespace
+     *
+     * @return string
+     */
+    public function getNamespace() {
+        return $this->namespace;
+    }
+    
+    /**
+     * Set the verb namespace
+     *
+     * @param string $namespace
+     */
+    public function setNamespace( $namespace ) {
+        $this->namespace = $namespace;
+    }
+    
+    /**
      * Return the verb parent
      *	
      * @return Verb
@@ -108,14 +133,16 @@ abstract class AbstractVerb implements Verb {
         
         $data = unserialize( $data );
         
-        $data[ "name" ] = str_replace( "_ns_", ":", $data[ "name" ] );
-        
-        if ( isset( self::$verbTypes[ $data[ "name" ] ] ) ) {
+        if ( isset( self::$verbTypes[ $data[ "namespace" ] . ":" . 
+            $data[ "name" ] ] ) ) {
+            
             MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . "core" . 
                 DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
-                self::$verbTypes[ $data[ "name" ] ] . ".class.php" );
-        
-	        $verb = new self::$verbTypes[ $data[ "name" ] ]();
+                self::$verbTypes[ $data[ "namespace" ] . ":" . 
+                    $data[ "name" ] ] . ".class.php" );
+            
+	        $verb = new self::$verbTypes[ $data[ "namespace" ] . ":" . 
+                    $data[ "name" ] ]();
 	        
 	        if( !is_null( $action ) ) {
 	            $verb->setAction( $action );
@@ -126,15 +153,15 @@ abstract class AbstractVerb implements Verb {
 	        return $verb;
         }
         else {
-            $dataNameX = explode( ":", $data[ "name" ] );
-            if( $action->getCircuit()->verbPathExists( $dataNameX[ 0 ] ) ) {
+            
+            if( $action->getCircuit()->verbPathExists( $data[ "namespace" ] ) ) {
                 
-                $path = $action->getCircuit()->getVerbPath( $dataNameX[ 0 ] ); 
+                $path = $action->getCircuit()->getVerbPath( $data[ "namespace" ] ); 
                 
-                $className = strtoupper( substr( $dataNameX[ 0 ], 0, 1 ) ) . 
-                    substr( $dataNameX[ 0 ], 1, strlen( $dataNameX[ 0 ] ) - 1 )
-                    . strtoupper( substr( $dataNameX[ 1 ], 0, 1 ) ) . 
-                    substr( $dataNameX[ 1 ], 1, strlen( $dataNameX[ 1 ] ) - 1 )
+                $className = strtoupper( substr( $data[ "namespace" ], 0, 1 ) ) . 
+                    substr( $data[ "namespace" ], 1, strlen( $data[ "namespace" ] ) - 1 )
+                    . strtoupper( substr( $data[ "name" ], 0, 1 ) ) . 
+                    substr( $data[ "name" ], 1, strlen( $data[ "name" ] ) - 1 )
                     . "Verb";
                 
                 MyFuses::includeCoreFile( $path. $className . ".class.php" );
@@ -158,7 +185,7 @@ abstract class AbstractVerb implements Verb {
     
     public function getCachedCode() {
 	    $data = $this->getData();
-	    $data[ "name" ] = str_replace( ":", "_ns_", $data[ "name" ] );
+	    //$data[ "name" ] = str_replace( ":", "_ns_", $data[ "name" ] );
 	    $data = serialize( $data );
 	    $data = addslashes( $data );
 	    $data = str_replace( '$', '\$', $data );
@@ -166,6 +193,22 @@ abstract class AbstractVerb implements Verb {
         return $strOut;
 	}
     
+	public function getData() {
+	    if( $this->getNamespace() != "myfuses" ) {
+	        $data[ "name" ] = $this->getName();
+	    }
+	    else {
+	        $data[ "name" ] = $this->getName();    
+	    }
+	    $data[ "namespace" ] = $this->getNamespace();
+	    return $data;
+	}
+	
+	public function setData( $data ) {
+	    $this->setName( $data[ "name" ] );
+	    $this->setNamespace( $data[ "namespace" ] );
+	}
+	
 	/**
 	 * Return the parsed code
 	 *

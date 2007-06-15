@@ -39,12 +39,13 @@ class DoVerb extends AbstractVerb {
     }
     
     public function getData() {
-        $data[ "name" ] = "do";
+        $data = parent::getData();
         $data[ "attributes" ][ "action" ] = $this->circuitToBeExecutedName . "." . $this->actionToBeExecutedName;
         return $data;
     }
     
     public function setData( $data ) {
+        parent::setData( $data );
         $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );
     }
     

@@ -117,7 +117,8 @@ class InvokeVerb extends AbstractVerb {
 	}
 	
 	public function getData() {
-		$data[ "name" ] = "invoke";
+		
+	    $data = parent::getData();
 		
 		if( !is_null( $this->getClass() ) ) {
 		    $data[ "attributes" ][ "class" ] = $this->getClass();
@@ -144,6 +145,8 @@ class InvokeVerb extends AbstractVerb {
 
 	public function setData( $data ) {
 		
+	    parent::setData( $data );
+	    
 	    if( isset( $data[ "attributes" ][ "class" ] ) ) {
 		    $this->setClass( $data[ "attributes" ][ "class" ] );
 		}

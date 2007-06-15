@@ -78,7 +78,7 @@ class LoopVerb extends AbstractVerb {
     }
 
     public function getData() {
-        $data[ "name" ] = "loop";
+        $data = parent::getData();
         
         if( !is_null( $this->getCondition() ) ) {
             $data[ "condition" ] = $this->getCondition();
@@ -106,6 +106,7 @@ class LoopVerb extends AbstractVerb {
     }
     
     public function setData( $data ) {
+        parent::setData( $data );
         
         if( isset( $data[ "attributes" ][ "condition" ] ) ) {
             $this->setCondition( $data[ "attributes" ][ "condition" ] );

@@ -17,12 +17,13 @@ class RelocateVerb extends AbstractVerb {
     }
 
     public function getData() {
-        $data[ "name" ] = "relocate";
+        $data = parent::getData();
         $data[ "attributes" ][ "url" ] = $this->getUrl();
         return $data;
     }
     
     public function setData( $data ) {
+        parent::setData( $data );
         $this->setUrl( $data[ "attributes" ][ "url" ] );
     }
     

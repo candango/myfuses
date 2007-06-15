@@ -32,6 +32,7 @@ class InstantiateVerb extends AbstractVerb {
     }
     
     public function getData() {
+        $data = parent::getData();
         $data[ "name" ] = "instantiate";
         $data[ "attributes" ][ "class" ] = $this->getClass();
         $data[ "attributes" ][ "object" ] = $this->getObject();
@@ -42,6 +43,7 @@ class InstantiateVerb extends AbstractVerb {
     }
 
     public function setData( $data ) {
+        parent::setData( $data );
         $this->setClass( $data[ "attributes" ][ "class" ] );
         
         $this->setObject( $data[ "attributes" ][ "object" ] );
