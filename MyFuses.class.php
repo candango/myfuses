@@ -123,6 +123,8 @@ class MyFuses {
      */
     private $lifecycle;
     
+    private $parsedPath;
+    
     /**
      * MyFuses constructor
      *
@@ -130,8 +132,19 @@ class MyFuses {
      * @param string $applicationName
      */
     protected function __construct() {
-        
+        $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
+            DIRECTORY_SEPARATOR );
     }
+    
+    public function getParsedPath() {
+        return $this->parsedPath;
+    }
+    
+    protected function setParsedPath( $parsedPath ) {
+        $this->parsedPath = $parsedPath;
+    }
+    
+    
     
     public function createApplication( 
         $appName = Application::DEFAULT_APPLICATION_NAME, 
@@ -144,9 +157,8 @@ class MyFuses {
         $application->setPath( dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
         
         // setting parsed path
-        $application->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . 
-            "parsed" . DIRECTORY_SEPARATOR . $application->getName() . 
-            DIRECTORY_SEPARATOR ) ;
+        $application->setParsedPath( $this->getParsedPath() . 
+            $application->getName() . DIRECTORY_SEPARATOR ) ;
         
         $this->addApplication( $application, $loader );
         
@@ -292,9 +304,20 @@ class MyFuses {
             if( $index != Application::DEFAULT_APPLICATION_NAME ) {
                 $strStore = "";
                 if( $application->mustParse() ) {
+                    
                     if( !file_exists( $application->getParsedPath() ) ) {
-	                    mkdir( $application->getParsedPath() );
-	                    chmod( $application->getParsedPath(), 0777 );
+	                    mkdir( $application->getParsedPath(), 0777, true );
+	                    
+	                    $path = explode( DIRECTORY_SEPARATOR, 
+	                        substr( $application->getParsedPath(), 0, 
+	                        strlen( $application->getParsedPath() ) - 1 ) );
+	                    
+	                    while( $this->getParsedPath() != ( implode( DIRECTORY_SEPARATOR, $path ) . DIRECTORY_SEPARATOR ) ) {
+	                        chmod( implode( DIRECTORY_SEPARATOR, $path ), 0777 );
+	                        $path = array_slice( $path, 0, count( $path ) - 1 );
+	                    }
+	                    
+	                    
 	                }
 	                
 	                $strStore = $application->getCachedCode();
@@ -461,8 +484,16 @@ class MyFuses {
             $self .= "/";
         }
         
-        $self1 = $_SERVER[ 'SCRIPT_NAME' ];
-            
+        if( $_SERVER[ 'REDIRECT_STATUS' ] ) {
+            $self1 = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
+            if( substr( $self1, -1 ) != "/" ) {
+                $self1 .= "/";
+            }
+        }
+        else {
+            $self1 = $_SERVER[ 'SCRIPT_NAME' ];
+        }
+        
         if( substr( $self1, 0, 1 ) == "/" ) {
             $self1 = substr( $self1, 1, strlen( $self1 ) );
         }
@@ -473,16 +504,36 @@ class MyFuses {
     }
     
     public static function getMySelf() {
-        $mySelf = self::getSelf() . "?";
+        if( $_SERVER[ 'REDIRECT_STATUS' ] ) {
+            $mySelf = self::getSelf();
+            $mySelf .= self::getInstance()->getRequest()->
+	            getApplication()->getFuseactionVariable() . "/";
+        }
+        else {
+            $mySelf = self::getSelf() . "?";
         
-        $mySelf .= self::getInstance()->getRequest()->
-            getApplication()->getFuseactionVariable();
-        $mySelf .= "=" ;
+	        $mySelf .= self::getInstance()->getRequest()->
+	            getApplication()->getFuseactionVariable();
+	        $mySelf .= "=" ;    
+        }
+        
         return $mySelf;
     }
     
-    public static function getMySelfXfa( $xfaName ) {
-        $link = self::getMySelf() . self::getXfa( $xfaName );
+    public static function getMySelfXfa( $xfaName, $initQuery = false ) {
+        if( $_SERVER[ 'REDIRECT_STATUS' ] ) {
+            $link = self::getMySelf() . 
+                implode( "/", explode( ".", self::getXfa( $xfaName ) ) );
+            if( $initQuery ) {
+                $link .= "?";
+            }
+        }
+        else {
+            $link = self::getMySelf() . self::getXfa( $xfaName );
+            if( $initQuery ) {
+                $link .= "&";
+            }    
+        }
         return $link;
     }
     

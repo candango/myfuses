@@ -31,13 +31,40 @@ class FuseRequest {
         
         $fuseactionVariable = $this->application->getFuseactionVariable();
         
-        if ( isset( $_GET[ $fuseactionVariable ] ) ) {
-            $this->validFuseactionName = $_GET[ $fuseactionVariable ];
+        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
+            
+            $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
+            
+            $path = str_replace( $root, "", $_SERVER[ 'REDIRECT_URL' ] );
+            
+            if( substr( $path, -1 ) == "/" ) {
+                $path = substr( $path, 0, strlen( $path ) - 1 );
+            }
+            
+            $path = substr( $path, 1, strlen( $path ) );
+            
+            $pathX = explode( "/", $path );
+            
+            if( $pathX[ 0 ] == $fuseactionVariable ) {
+                if( count( $pathX ) != 1 ) {
+                    $this->validFuseactionName = implode( ".", array_slice( 
+                        $pathX, 1, count( $pathX ) ) );    
+                }                
+            }
+        }
+        else {
+            if ( isset( $_GET[ $fuseactionVariable ] ) ) {
+	            $this->validFuseactionName = $_GET[ $fuseactionVariable ];
+	        }
+	        
+	        if ( isset( $_POST[ $fuseactionVariable ] ) ) {
+	            $this->validFuseactionName = $_POST[ $fuseactionVariable ];
+	        }
         }
         
-        if ( isset( $_POST[ $fuseactionVariable ] ) ) {
-            $this->validFuseactionName = $_POST[ $fuseactionVariable ];
-        }
+        
+        
+        
         
         if( count( explode( ".", $this->validFuseactionName ) ) > 2 ) {
             list( $appName, $circuitName, $actionName ) = 
