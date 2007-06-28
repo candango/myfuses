@@ -163,7 +163,7 @@ abstract class AbstractVerb implements Verb {
                     . strtoupper( substr( $data[ "name" ], 0, 1 ) ) . 
                     substr( $data[ "name" ], 1, strlen( $data[ "name" ] ) - 1 )
                     . "Verb";
-                
+                    
                 MyFuses::includeCoreFile( $path. $className . ".class.php" );
                 
                 $verb = new $className();

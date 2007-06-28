@@ -46,8 +46,8 @@ class SetVerb extends AbstractVerb {
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= "\$" . $this->getVariableName() . " = " . 
-            $this->getValue() . ";\n\n";
+        $strOut .= "\$" . $this->getVariableName() . " = \"" . 
+            $this->getValue() . "\";\n\n";
         return $strOut; 
     }
 
