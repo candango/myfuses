@@ -310,6 +310,13 @@ class Circuit implements ICacheable {
         
     }
     
+    /**
+     * 
+     */
+    public function hasAction( $name ) {
+       return isset( $this->actions[ $name ] ); 
+    }
+    
     public function getActions() {
         return $this->actions;
     }
@@ -411,7 +418,7 @@ class Circuit implements ICacheable {
     /**
      * Return the application parent
      * 
-     * @return Application
+     * @return Circuit
      * @access public
      */
     public function getParent() {
