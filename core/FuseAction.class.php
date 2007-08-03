@@ -149,6 +149,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
         if( $this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
             if( $this->getName() != "prefuseaction" && 
 	            $this->getName() != "postfuseaction" ) {
+	            
 	            $strOut = $myFusesString . "->setCurrentPhase( \"" . 
 		            MyFusesLifecycle::PRE_FUSEACTION_PHASE . "\" );\n\n";
 	        
@@ -169,6 +170,14 @@ class FuseAction extends AbstractAction implements CircuitAction {
         if( $this->getName() != "prefuseaction" && 
             $this->getName() != "postfuseaction" ) {
             if( !$this->wasCalledByDo() ) {
+                if( $this->circtuit->getParent() != null ) {
+                    if( $this->circtuit->getParent()->getPreFuseAction() != 
+                        null ) {
+                         $strOut.= $this->circtuit->getParent()->
+                             getPreFuseAction()->getParsedCode( 
+                             $comented, $identLevel );   
+                    }    
+                }
                 $action = $this->circtuit->getPreFuseAction();    
             }
             
