@@ -484,7 +484,7 @@ class MyFuses {
             $self .= "/";
         }
         
-        if( $_SERVER[ 'REDIRECT_STATUS' ] ) {
+        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
             $self1 = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
             if( substr( $self1, -1 ) != "/" ) {
                 $self1 .= "/";
@@ -504,7 +504,7 @@ class MyFuses {
     }
     
     public static function getMySelf() {
-        if( $_SERVER[ 'REDIRECT_STATUS' ] ) {
+        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
             $mySelf = self::getSelf();
             $mySelf .= self::getInstance()->getRequest()->
 	            getApplication()->getFuseactionVariable() . "/";
@@ -521,7 +521,7 @@ class MyFuses {
     }
     
     public static function getMySelfXfa( $xfaName, $initQuery = false ) {
-        if( $_SERVER[ 'REDIRECT_STATUS' ] ) {
+        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
             $link = self::getMySelf() . 
                 implode( "/", explode( ".", self::getXfa( $xfaName ) ) );
             if( $initQuery ) {
