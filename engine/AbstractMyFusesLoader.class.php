@@ -141,6 +141,10 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 $circuit->setParentName( $parent );
                 
                 $this->getApplication()->addCircuit( $circuit );
+                
+                $circuit->unsetPreFuseAction();
+                $circuit->unsetPostFuseAction();
+                
             }
         }
         
@@ -433,7 +437,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    protected function loadGlobalAction( Circuit &$circuit, $data ) {
+    protected function loadGlobalAction( Circuit $circuit, $data ) {
         
         $globalActionMethods = array(
             "prefuseaction" => "setPreFuseAction",
@@ -453,7 +457,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         if( isset( $globalActionMethods[ $action->getName() ] ) ) {
             $circuit->$globalActionMethods[ $action->getName() ]( $action );
         }
-        
     }
     
     /**
@@ -495,6 +498,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 $circuit->addAction( $action );
             }
         }
+        
         if( isset( $globalActionMethods[ $action->getName() ] ) ) {
             $circuit->getApplication()->$globalActionMethods[ $action->getName() ]( $action );
         }

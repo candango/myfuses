@@ -338,7 +338,11 @@ class Circuit implements ICacheable {
 	public function setPreFuseAction( CircuitAction $action ) {
 	    return $this->preFuseAction = $action;
 	}
-
+    
+	public function unsetPreFuseAction() {
+	    $this->preFuseAction = null;
+	}
+	
 	/**
 	 * Enter description here...
 	 *
@@ -357,6 +361,10 @@ class Circuit implements ICacheable {
 	    return $this->postFuseAction = $action;
 	}
     
+    public function unsetPostFuseAction() {
+	    $this->postFuseAction = null;
+	}
+	
     /**
      * Return the circuit complete file
      * 
