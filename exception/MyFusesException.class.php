@@ -10,6 +10,9 @@ require_once MYFUSES_ROOT_PATH .
     
 require_once MYFUSES_ROOT_PATH . 
     "exception/MyFusesFuseActionException.class.php";
+
+require_once MYFUSES_ROOT_PATH . 
+    "exception/MyFusesVerbException.class.php";
 /**
  * 
  */
@@ -150,10 +153,14 @@ abstract class MyFusesException extends Exception {
         if ( count( $trace[ 'args' ] ) ) {
             foreach( $trace[ 'args' ] as $key => $value ) {
                 if ( is_object( $value ) ) {
-                    $traceX[ $key ] = "<b>" . get_class( $value ) . 
-                        "</b> => '" . $value . "'";
+                    @$traceX[ $key ] = "<b>" . get_class( $value ) . 
+                        "</b> => '" . get_class( $value )  . "'";
                 }
                 else {
+                    if( is_string( $value ) ) {
+                        $value = ( strlen( $value ) < 20 ? $value : 
+                            substr( $value, 0, 20 ) . "..." );
+                    }
                     $traceX[ $key ] = "<b>" . gettype( $value ) . 
                         "</b> => '" . $value . "'"  ;
                 }
