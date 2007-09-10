@@ -112,6 +112,7 @@ class MyFuses {
     
     /**
      * 
+     * 
      * @var FuseRequest
      */
     private $request;
@@ -447,8 +448,8 @@ class MyFuses {
             
             $this->parseRequest();
         }
-        catch( MyFusesFileOperationException $mffoe ) {
-            $mffoe->breakProcess();
+        catch( MyFusesException $mfe ) {
+            $mfe->breakProcess();
         }
         
     }
