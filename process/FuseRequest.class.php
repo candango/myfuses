@@ -98,16 +98,9 @@ class FuseRequest {
      */
     public function getAction() {
         $action = null;
-        try {
-            $action = $this->application->getCircuit( $this->circuitName )
-                ->getAction( $this->actionName );    
-        }
-        catch ( MyFusesCircuitException $mfce ) {
-            $mfce->breakProcess();
-        }
-        catch ( MyFusesFuseActionException $mffae ) {
-            $mffae->breakProcess();
-        }
+        
+        $action = $this->application->getCircuit( $this->circuitName )
+            ->getAction( $this->actionName );    
         
         return $action;
     }

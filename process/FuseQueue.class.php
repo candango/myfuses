@@ -33,20 +33,17 @@ class FuseQueue {
     
     private function buildProcessQueue() {
         $action = &$this->request->getAction();
-        try{
-	        if( $action->getCircuit()->getAccess() == 
-	            Circuit::INTERNAL_ACCESS ) {
-	            $params = array( "circuitName" => $action->getCircuit()
-	                ->getName(), "application" => $action->getCircuit()
-	                ->getApplication() );
-	            throw new MyFusesCircuitException( $params, 
-	                MyFusesCircuitException::
-	                USER_TRYING_ACCESS_INTERNAL_CIRCUIT );
-	        }    
-        }
-        catch( MyFusesCircuitException $mfce ) {
-            $mfce->breakProcess();
-        }
+        
+	    if( $action->getCircuit()->getAccess() == 
+            Circuit::INTERNAL_ACCESS ) {
+            $params = array( "circuitName" => $action->getCircuit()
+                ->getName(), "application" => $action->getCircuit()
+                ->getApplication() );
+            throw new MyFusesCircuitException( $params, 
+                MyFusesCircuitException::
+                USER_TRYING_ACCESS_INTERNAL_CIRCUIT );
+	    }    
+        
         $this->processQueue[] = &$this->request->getAction();
     }
     
@@ -81,10 +78,6 @@ class FuseQueue {
 
         $this->postProcessQueue = $actions;
     }
-    
-    
-    
-    
     
     public function getProcessQueue() {
         return $this->processQueue;

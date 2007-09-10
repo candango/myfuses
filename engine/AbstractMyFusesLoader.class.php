@@ -127,12 +127,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 $circuit = new Circuit();
                 
                 if( $this->getApplication()->hasCircuit( $name ) ) {
-                    try { 
-                        $circuit = $this->getApplication()->getCircuit( $name );
-                    }
-	                catch ( MyFusesCircuitException $mfe ) {
-			            $mfe->breakProcess();
-			        }
+                    $circuit = $this->getApplication()->getCircuit( $name );
                 }
                 
                 //TODO handle this parameters changes
