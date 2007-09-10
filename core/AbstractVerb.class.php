@@ -153,7 +153,6 @@ abstract class AbstractVerb implements Verb {
 	        return $verb;
         }
         else {
-            
             if( $action->getCircuit()->verbPathExists( $data[ "namespace" ] ) ) {
                 
                 $path = $action->getCircuit()->getVerbPath( $data[ "namespace" ] ); 
@@ -234,5 +233,11 @@ abstract class AbstractVerb implements Verb {
 	    ": <__COMMENT__> */\n";
 	    return $strOut;
 	}
-
+    
+	public function getErrorParams() {
+	    $params = $this->getAction()->getErrorParams();
+	    $params[ 'verbName' ] = $this->getName();
+	    return $params;
+	}
+	
 }

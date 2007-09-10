@@ -251,6 +251,13 @@ class FuseAction extends AbstractAction implements CircuitAction {
         $this->calledByDo = $calledByDo;
     }
     
+    public function getErrorParams() {
+        $params = $this->getCircuit()->getErrorParams();
+        // FIXME CircuitAction must have a name
+        $params[ 'actionName' ] = $this->getName();
+        return $params;
+    }
+    
 	public function doAction() {
 	    
 	}

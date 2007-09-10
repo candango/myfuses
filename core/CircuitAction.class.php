@@ -71,5 +71,7 @@ interface CircuitAction extends Action {
      */
     public function setCalledByDo( $calledByDo );
     
+    
+    public function getErrorParams();
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

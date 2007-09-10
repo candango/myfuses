@@ -957,6 +957,7 @@ class Application implements ICacheable {
     }
     
     /**
+     * TODO add index parameter
      * Add one plugin in a ginven fase
      * 
      * @param Plugin $plugin

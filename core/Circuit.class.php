@@ -549,5 +549,14 @@ class Circuit implements ICacheable {
 	    return eval( "return " . $matches[ 1 ] . ";" );
     }
     
+    public function getErrorParams() {
+        $params = array(
+            "appName" => $this->getApplication()->getName(),
+            "circuitName" => $this->getName(),
+            "circuitFile" => $this->getCompleteFile()
+        );
+        return $params;
+    }
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

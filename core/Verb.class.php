@@ -113,5 +113,6 @@ interface Verb extends ICacheable, IParseable {
     
     public function getData();
     
+    public function getErrorParams();
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
