@@ -133,7 +133,7 @@ abstract class AbstractVerb implements Verb {
         
         $data = unserialize( $data );
         
-        if ( isset( self::$verbTypes[ $data[ "namespace" ] . ":" . 
+        if ( isset( self::$verbTypes[ @$data[ "namespace" ] . ":" . 
             $data[ "name" ] ] ) ) {
             
             MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . "core" . 
@@ -153,7 +153,7 @@ abstract class AbstractVerb implements Verb {
 	        return $verb;
         }
         else {
-            if( $action->getCircuit()->verbPathExists( $data[ "namespace" ] ) ) {
+            if( $action->getCircuit()->verbPathExists( @$data[ "namespace" ] ) ) {
                 
                 $path = $action->getCircuit()->getVerbPath( $data[ "namespace" ] ); 
                 
@@ -176,6 +176,12 @@ abstract class AbstractVerb implements Verb {
 		        return $verb;
             }
             else {
+                if( !isset( $data[ "namespace" ] ) ) {
+                    $params = $action->getErrorParams();
+                    $params[ "verbName" ] = $data[ "name" ]; 
+                    throw new MyFusesVerbException( $params, 
+                        MyFusesVerbException::MISSING_NAMESPACE );
+                }
                 die( "Non existent verb path" );
             }
         }
