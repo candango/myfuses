@@ -1,10 +1,64 @@
 <?php
+/**
+ * AbstractVerb - AbstractVerb.class.php
+ * 
+ * AbstractVerb implements various methods defined in Verb interface.
+ * All Custom verbs must extend AbstractVerb to be in compliance with the 
+ * framework. 
+ * 
+ * PHP version 5
+ * 
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *  
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * This product includes software developed by the Fusebox Corporation 
+ * (http://www.fusebox.org/).
+ * 
+ * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
+ * Fusebox" part .
+ * 
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2007.
+ * All Rights Reserved.
+ * 
+ * Contributor(s): Flavio Goncalves Garcia.
+ *
+ * @category   verb
+ * @package    myfuses.core
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
+ * @link       http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Id$
+ */
+
 require_once "myfuses/core/Verb.class.php";
 require_once "myfuses/core/CircuitAction.class.php";
 
 /**
- * Enter description here...
+ * AbstractVerb - AbstractVerb.class.php
+ * 
+ * AbstractVerb implements various methods defined in Verb interface.
+ * All Custom verbs must extend AbstractVerb to be in compliance with the 
+ * framework. 
+ * 
+ * PHP version 5
  *
+ * @category   verb
+ * @package    myfuses.core
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
+ * @link http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Revision$
+ * @since      Revision 17
  */
 abstract class AbstractVerb implements Verb {
     
@@ -153,17 +207,28 @@ abstract class AbstractVerb implements Verb {
 	        return $verb;
         }
         else {
-            if( $action->getCircuit()->verbPathExists( @$data[ "namespace" ] ) ) {
+            if( $action->getCircuit()->verbPathExists( 
+                @$data[ "namespace" ] ) ) {
                 
-                $path = $action->getCircuit()->getVerbPath( $data[ "namespace" ] ); 
+                $path = $action->getCircuit()->getVerbPath( 
+                    $data[ "namespace" ] ); 
                 
-                $className = strtoupper( substr( $data[ "namespace" ], 0, 1 ) ) . 
-                    substr( $data[ "namespace" ], 1, strlen( $data[ "namespace" ] ) - 1 )
+                $className = strtoupper( substr( 
+                    $data[ "namespace" ], 0, 1 ) ) . 
+                    substr( $data[ "namespace" ], 1, 
+                    strlen( $data[ "namespace" ] ) - 1 )
                     . strtoupper( substr( $data[ "name" ], 0, 1 ) ) . 
                     substr( $data[ "name" ], 1, strlen( $data[ "name" ] ) - 1 )
                     . "Verb";
-                    
-                MyFuses::includeCoreFile( $path. $className . ".class.php" );
+                
+                if( !is_file( $path. $className . ".class.php" ) ) {
+                    $params = $action->getErrorParams();
+	                $params[ "verbName" ] = $data[ "name" ]; 
+	                    throw new MyFusesVerbException( $params, 
+	                        MyFusesVerbException::NON_EXISTENT_VERB );
+                }
+                
+                require_once( $path. $className . ".class.php" );
                 
                 $verb = new $className();
                 
@@ -176,13 +241,10 @@ abstract class AbstractVerb implements Verb {
 		        return $verb;
             }
             else {
-                if( !isset( $data[ "namespace" ] ) ) {
                     $params = $action->getErrorParams();
                     $params[ "verbName" ] = $data[ "name" ]; 
                     throw new MyFusesVerbException( $params, 
                         MyFusesVerbException::MISSING_NAMESPACE );
-                }
-                die( "Non existent verb path" );
             }
         }
         return null;

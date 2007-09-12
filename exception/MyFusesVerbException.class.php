@@ -34,7 +34,7 @@
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 148 2007-09-10 19:45:02Z piraz $
+ * @version    SVN: $Id$
  */
 
 /**
@@ -50,7 +50,7 @@
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 148 $
+ * @version    SVN: $Revision$
  * @since      Revision 17
  */
 class MyFusesVerbException extends MyFusesException {
@@ -137,13 +137,14 @@ class MyFusesVerbException extends MyFusesException {
     
     private function getNonExistentVerbMessage( $params ) {
         return array(
-	        0 => "The Circuit \"" . $params[ "circuitName" ] .
-	            "\" in application \"" . $params[ "application" ]->getName() . 
-	            "\" is a <b>internal</b> Circuit.",
-	        1 => "You cannot access the circuit  \"" . 
-	            $params[ "circuitName" ] . " by a browser " . 
-	            "You can check this in circuit access parameter of the \"" . 
-	            $params[ "application" ]->getCompleteFile() . "\" file." );
+	        0 => "You have a non existent \"" . $params[ "verbName" ] . 
+	            "\" verb with in fuseaction \"" . $params[ "actionName" ] . 
+	            "\" in circuit \"" . $params[ "circuitName" ] .
+	            "\" in application \"" . $params[ "appName" ] . 
+	            "\".",
+	        1 => "Check the  \"" . $params[ "circuitFile" ] . 
+	            "\" file in fuseaction \"" . $params[ "actionName" ] . 
+	            "\" and fix this error." );
     }
     
 }
