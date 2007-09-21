@@ -80,11 +80,11 @@ class RelocateVerb extends AbstractVerb {
     
     public function getData() {
         $data = parent::getData();
-        if( isset( $this->getUrl() ) ) {
+        if( !is_null( $this->getUrl() ) ) {
             $data[ "attributes" ][ "url" ] = $this->getUrl();
         }
         
-        if( isset( $this->getXfa() ) ) {
+        if( !is_null( $this->getXfa() ) ) {
             $data[ "attributes" ][ "xfa" ] = $this->getXfa();
         }
         return $data;
@@ -109,9 +109,6 @@ class RelocateVerb extends AbstractVerb {
      * @return string
      */
     public function getParsedCode( $commented, $identLevel ) {
-        $url = ( is_null( $this->getUrl() ) ? "MyFuses::getMySelfXfa( \"" . 
-            $this->getXfa() . "\" )" : $this->getUrl() );
-        
         $strOut = parent::getParsedCode( $commented, $identLevel );
         
         $strOut .= str_repeat( "\t", $identLevel );
@@ -119,7 +116,11 @@ class RelocateVerb extends AbstractVerb {
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         
-	    $strOut .=  $controllerClass . "::sendToUrl( \"" . $url . "\" );\n\n";
+	    $url = ( is_null( $this->getUrl() ) ? $controllerClass . 
+	        "::getMySelfXfa( \"" . $this->getXfa() . "\" )" : "\"" . 
+	        $this->getUrl() . "\"" );    
+	        
+	    $strOut .=  $controllerClass . "::sendToUrl( " . $url . " );\n\n";
         
         return $strOut;
     }
