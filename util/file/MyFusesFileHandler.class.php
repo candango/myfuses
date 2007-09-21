@@ -98,12 +98,23 @@ class MyFusesFileHandler {
     }
     
     // TODO finish writeFile
-    public static function writeFile( $file, $string ) {
-    	
+    public static function writeFile( $fileName, $string ) {
+    	$fp = fopen( $fileName,"w" );
+		        
+        if ( !flock($fp,LOCK_EX) ) {
+            die("Could not get exclusive lock to Parsed File file");
+        }
+        
+        if ( !fwrite($fp, $string) ) {
+            var_dump( "deu pau 2!!!" );
+        }
+        flock($fp,LOCK_UN);
+        fclose($fp);
+        chmod( $fileName, 0777 );
     }
     
     // TODO finish readFile
-    public static function readFile( $file ) {
+    public static function readFile( $fileName ) {
         
     }
     

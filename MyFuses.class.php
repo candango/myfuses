@@ -204,7 +204,6 @@ class MyFuses {
             $application->setLoaded( $loader );
         }
         
-        // FIXME this part isn't working fine
         if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
             if( $application->isDefault() ) {
                 if( isset( $this->applications[ 
@@ -313,8 +312,11 @@ class MyFuses {
 	                        substr( $application->getParsedPath(), 0, 
 	                        strlen( $application->getParsedPath() ) - 1 ) );
 	                    
-	                    while( $this->getParsedPath() != ( implode( DIRECTORY_SEPARATOR, $path ) . DIRECTORY_SEPARATOR ) ) {
-	                        chmod( implode( DIRECTORY_SEPARATOR, $path ), 0777 );
+	                    while( $this->getParsedPath() != ( 
+	                        implode( DIRECTORY_SEPARATOR, $path ) . 
+	                        DIRECTORY_SEPARATOR ) ) {
+	                        chmod( implode( DIRECTORY_SEPARATOR, $path ), 
+	                        0777 );
 	                        $path = array_slice( $path, 0, count( $path ) - 1 );
 	                    }
 	                    
@@ -324,24 +326,17 @@ class MyFuses {
 	                $strStore = $application->getCachedCode();
 	                
 	                $fileName = $application->getCompleteCacheFile();
-	                              
-		            $fp = fopen( $fileName,"w" );
-		        
-			        if ( !flock($fp,LOCK_EX) ) {
-			            die("Could not get exclusive lock to Parsed File file");
-			        }
-			        
-			        if ( !fwrite($fp, "<?php\n" . $strStore) ) {
-			           var_dump( "deu pau 2!!!" );
-			        }
-			        flock($fp,LOCK_UN);
-			        fclose($fp);
-			        chmod( $fileName, 0777 );
+
+	                MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
+	                    $strStore );
                 }
             }
         }
     }
-    
+    /**
+     * This method parse the request and write the genereted 
+     * string in one file
+     */
     public function parseRequest() {
         $this->lifecycle = new MyFusesLifecycle();
         
@@ -465,9 +460,6 @@ class MyFuses {
      public static function &getInstance() {
         
         if( is_null( self::$instance ) ) {
-            // FIXME New MyFuses is limiting when I extends this class becouse
-	        // I will rewrite this method changing MyFuses by the class name
-	        // need some solution
             self::$instance = new MyFuses();
         }
         
