@@ -295,6 +295,10 @@ class MyFuses {
         return $this->request;
     }
     
+    protected function storeApplication( Application $application ) {
+        return $application->getCachedCode();
+    }
+    
     /**
      * Sotore all myfuses applications
      */
@@ -323,7 +327,7 @@ class MyFuses {
 	                    
 	                }
 	                
-	                $strStore = $application->getCachedCode();
+	                $strStore = $this->storeApplication( $application );
 	                
 	                $fileName = $application->getCompleteCacheFile();
 
@@ -333,6 +337,7 @@ class MyFuses {
             }
         }
     }
+    
     /**
      * This method parse the request and write the genereted 
      * string in one file
