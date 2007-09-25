@@ -296,44 +296,41 @@ class MyFuses {
     }
     
     protected function storeApplication( Application $application ) {
-        return $application->getCachedCode();
+        $strStore = "";
+        if( $application->mustParse() ) {
+            if( !file_exists( $application->getParsedPath() ) ) {
+                mkdir( $application->getParsedPath(), 0777, true );
+             
+                $path = explode( DIRECTORY_SEPARATOR, 
+                    substr( $application->getParsedPath(), 0, 
+                    strlen( $application->getParsedPath() ) - 1 ) );
+             
+                while( $this->getParsedPath() != ( 
+                    implode( DIRECTORY_SEPARATOR, $path ) . 
+                    DIRECTORY_SEPARATOR ) ) {
+                    chmod( implode( DIRECTORY_SEPARATOR, $path ), 
+                        0777 );
+                    $path = array_slice( $path, 0, count( $path ) - 1 );
+                }
+            } 
+            $strStore = $application->getCachedCode();
+         
+            $fileName = $application->getCompleteCacheFile();
+        
+            MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
+	            $strStore );
+        }
+         
+        
     }
     
     /**
      * Sotore all myfuses applications
      */
     protected function storeApplications() {
-        
         foreach( $this->applications as $index => $application ) {
             if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                $strStore = "";
-                if( $application->mustParse() ) {
-                    
-                    if( !file_exists( $application->getParsedPath() ) ) {
-	                    mkdir( $application->getParsedPath(), 0777, true );
-	                    
-	                    $path = explode( DIRECTORY_SEPARATOR, 
-	                        substr( $application->getParsedPath(), 0, 
-	                        strlen( $application->getParsedPath() ) - 1 ) );
-	                    
-	                    while( $this->getParsedPath() != ( 
-	                        implode( DIRECTORY_SEPARATOR, $path ) . 
-	                        DIRECTORY_SEPARATOR ) ) {
-	                        chmod( implode( DIRECTORY_SEPARATOR, $path ), 
-	                        0777 );
-	                        $path = array_slice( $path, 0, count( $path ) - 1 );
-	                    }
-	                    
-	                    
-	                }
-	                
-	                $strStore = $this->storeApplication( $application );
-	                
-	                $fileName = $application->getCompleteCacheFile();
-
-	                MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
-	                    $strStore );
-                }
+                $this->storeApplication( $application );
             }
         }
     }
