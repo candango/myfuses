@@ -56,7 +56,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = $this->loadApplicationFile();
         
-        return $this->getDataFromXml( "myfuses", $rootNode );
+        return self::getDataFromXml( "myfuses", $rootNode );
         
     }
     
@@ -167,7 +167,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = $this->loadCircuitFile( $circuit );
         
-        return $this->getDataFromXml( "circuit", $rootNode );
+        return self::getDataFromXml( "circuit", $rootNode );
         
     }
     
@@ -209,7 +209,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
         return $rootNode;
     }
     
-    private function getDataFromXML( $name, SimpleXMLElement $node ) {
+    public static function getDataFromXML( $name, SimpleXMLElement $node ) {
         $nameX = explode( "_ns_", $name );
         
         if( count( $nameX ) > 1 ) {
@@ -235,7 +235,7 @@ class XMLMyFusesLoader extends AbstractMyFusesLoader {
                 $child = new SimpleXMLElement( preg_replace( 
                     "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
                     $child->asXML() ) );
-                $data[ "children" ][] = $this->getDataFromXML( $key, $child );    
+                $data[ "children" ][] = self::getDataFromXML( $key, $child );    
             }
         }
         
