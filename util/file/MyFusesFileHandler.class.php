@@ -102,10 +102,12 @@ class MyFusesFileHandler {
     	$fp = fopen( $fileName,"w" );
 		        
         if ( !flock($fp,LOCK_EX) ) {
+            // FIXME throw some exception here
             die("Could not get exclusive lock to Parsed File file");
         }
         
         if ( !fwrite($fp, $string) ) {
+            // FIXME throw some exception here too
             var_dump( "deu pau 2!!!" );
         }
         flock($fp,LOCK_UN);
@@ -115,7 +117,22 @@ class MyFusesFileHandler {
     
     // TODO finish readFile
     public static function readFile( $fileName ) {
+        if ( @!$fp = fopen( $fileName ,"r" ) ) {
+            throw new MyFusesFileOperationException( $fileName, 
+                MyFusesFileOperationException::OPEN_FILE );
+        }
         
+        if ( !flock( $fp, LOCK_SH ) ) {
+            throw new MyFusesFileOperationException( $fileName, 
+                MyFusesFileOperationException::LOCK_FILE );
+        }
+        
+        $fileCode = fread( $fp, filesize( $fileName ) );
+        
+        flock($fp,LOCK_UN);
+        fclose($fp);
+        
+        return $fileCode;
     }
     
 }
