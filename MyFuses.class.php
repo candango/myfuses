@@ -256,10 +256,14 @@ class MyFuses {
     private function loadApplications() {
          foreach( $this->applications as $key => $application ) {
              if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                 $application->getLoader()->loadApplication();
+                 $this->loadApplication( $application );
              }
              
          }
+    }
+    
+    protected function loadApplication( Application $application ) {
+        $application->getLoader()->loadApplication();
     }
     
     protected function createRequest() {
