@@ -509,7 +509,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     public static function getLoader( $whichLoader ) {
         
         $loaderArray = array(
-            MyFusesLoader::XML_LOADER => "XMLMyFusesLoader"
+            MyFusesLoader::XML_LOADER => "XmlMyFusesLoader"
         );
         
         return new $loaderArray[ $whichLoader ]();

@@ -23,7 +23,7 @@ catch( MyFusesMissingCoreFileException $mfmcfe ) {
 /**
  * 
  */
-class XMLMyFusesLoader extends AbstractMyFusesLoader {
+class XmlMyFusesLoader extends AbstractMyFusesLoader {
     
     /**
      * My Fuses application file constant

@@ -53,7 +53,7 @@ try {
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/AbstractMyFusesLoader.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "engine/loaders/XMLMyFusesLoader.class.php" );
+        "engine/loaders/XmlMyFusesLoader.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/FuseRequest.class.php" );
@@ -159,7 +159,9 @@ class MyFuses {
         $appName = Application::DEFAULT_APPLICATION_NAME, 
         $default = false, MyFusesLoader $loader = null ) {
         
-        $application = new $this->applicationClass( $appName );
+        $appClass = $this->getApplicationClass();
+            
+        $application = new $appClass( $appName );
         
         $application->setDefault( $default );
         
@@ -209,7 +211,7 @@ class MyFuses {
         $application->setController( $this );
         
         if( !is_null( $loader ) ) {
-            $application->setLoaded( $loader );
+            $application->setLoader( $loader );
         }
         
         if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
@@ -309,6 +311,7 @@ class MyFuses {
     
     protected function storeApplication( Application $application ) {
         $strStore = "";
+        
         if( $application->mustParse() ) {
             if( !file_exists( $application->getParsedPath() ) ) {
                 mkdir( $application->getParsedPath(), 0777, true );
