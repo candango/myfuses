@@ -1023,7 +1023,7 @@ class Application implements ICacheable {
      * @access public
      */
     public function getCachedCode() {
-        $strOut = "\$application = new Application( \"" . $this->getName() . "\" );\n";
+        $strOut = "\$application = new " . get_class( $this ) . "( \"" . $this->getName() . "\" );\n";
         
         $strOut .= "\$application->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
         
