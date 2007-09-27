@@ -126,6 +126,8 @@ class MyFuses {
     
     private $parsedPath;
     
+    private $applicationClass = "Application";
+    
     /**
      * MyFuses constructor
      *
@@ -145,13 +147,19 @@ class MyFuses {
         $this->parsedPath = $parsedPath;
     }
     
+    protected function getApplicationClass() {
+        return $this->applicationClass;
+    }
     
+    protected function setApplicationClass( $appClass ) {
+        $this->applicationClass = $appClass;
+    }
     
     public function createApplication( 
         $appName = Application::DEFAULT_APPLICATION_NAME, 
         $default = false, MyFusesLoader $loader = null ) {
         
-        $application = new Application( $appName );
+        $application = new $this->applicationClass( $appName );
         
         $application->setDefault( $default );
         
