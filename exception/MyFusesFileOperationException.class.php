@@ -72,13 +72,13 @@ class MyFusesFileOperationException extends MyFusesException {
             self::LOCK_EX_FILE => array(
                 'msg' => 'Could not get exclusive lock to __FILE__ file.',
                 'detail' => '"Could not get exclusive lock to' . 
-                '` <b>"__FILE__"</b> file' . 'founded in directory ' . 
+                ' <b>"__FILE__"</b> file' . ' founded in directory ' . 
                 '<b>__DIR__</b>. Check permission.'
             ),
             self::WRITE_FILE => array(
                 'msg' => 'Could not write in file __FILE__.',
                 'detail' => '"Could not wirite in file <b>"__FILE__"</b> ' .
-                    'founded in directory <b>__DIR__</b>. Check permission.'
+                    ' founded in directory <b>__DIR__</b>. Check permission.'
             )
         );
         
