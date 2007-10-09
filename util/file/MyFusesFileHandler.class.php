@@ -23,15 +23,12 @@
  * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   file
- * @package    myfuses.util
- * @author     Flávio Gonçalves Garcia <flavio.garcia@candango.com>
- * @copyright  Copyright (c) 2005 - 2007 Candango Group <http://www.candango.org/>
+ * @package    myfuses.util.file
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.com>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
+ * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    CVS: $Id: FuseboxException.class.php,v 1.1 2006/02/03 11:17:37 piraz Exp $
- * @link       *
- * @see        *
- * @since      File available since Release 0.0.1
- * @deprecated *
+ * @version    SVN: $Id$
  */
  
 /**
@@ -40,15 +37,13 @@
  * Utility to handle usual file operations.
  *
  * @category   file
- * @package    myfuses.util
- * @author     Flávio Gonçalves Garcia <flavio.garcia@candango.com>
- * @copyright  Copyright (c) 2005 - 2007 Candango Group <http://www.candango.org/>
+ * @package    myfuses.util.file
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.com>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
+ * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    CVS: $Id: FuseboxException.class.php,v 1.1 2006/02/03 11:17:37 piraz Exp $
- * @link       *
- * @see        *
- * @since      File available since Release 0.0.1
- * @deprecated *
+ * @version    SVN: $Revision$
+ * @since      Revision 125
  */
 class MyFusesFileHandler {
     
@@ -97,37 +92,47 @@ class MyFusesFileHandler {
         return false;
     }
     
-    // TODO finish writeFile
-    public static function writeFile( $fileName, $string ) {
-    	$fp = fopen( $fileName,"w" );
+    /**
+     * Write a string in a given file
+     * 
+     * @param string $file The file name
+     * @param string $string The string to be writed
+     */
+    public static function writeFile( $file, $string ) {
+    	$fp = fopen( $file,"w" );
 		        
         if ( !flock($fp,LOCK_EX) ) {
-            // FIXME throw some exception here
-            die("Could not get exclusive lock to Parsed File file");
+            throw new MyFusesFileOperationException( $file, 
+                MyFusesFileOperationException::LOCK_EX_FILE );
         }
         
         if ( !fwrite($fp, $string) ) {
-            // FIXME throw some exception here too
-            var_dump( "deu pau 2!!!" );
+            throw new MyFusesFileOperationException( $file, 
+                MyFusesFileOperationException::WRITE_FILE );
         }
         flock($fp,LOCK_UN);
         fclose($fp);
-        chmod( $fileName, 0777 );
+        chmod( $file, 0777 );
     }
     
-    // TODO finish readFile
-    public static function readFile( $fileName ) {
-        if ( @!$fp = fopen( $fileName ,"r" ) ) {
-            throw new MyFusesFileOperationException( $fileName, 
+    /**
+     * Reads the content of given file
+     * 
+     * @param string $file The file name
+     * @return string The file content
+     */
+    public static function readFile( $file ) {
+        if ( @!$fp = fopen( $file ,"r" ) ) {
+            throw new MyFusesFileOperationException( $file, 
                 MyFusesFileOperationException::OPEN_FILE );
         }
         
         if ( !flock( $fp, LOCK_SH ) ) {
-            throw new MyFusesFileOperationException( $fileName, 
+            throw new MyFusesFileOperationException( $file, 
                 MyFusesFileOperationException::LOCK_FILE );
         }
         
-        $fileCode = fread( $fp, filesize( $fileName ) );
+        $fileCode = fread( $fp, filesize( $file ) );
         
         flock($fp,LOCK_UN);
         fclose($fp);
