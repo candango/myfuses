@@ -252,7 +252,7 @@ class Application implements ICacheable {
      * 
      * @var string
      */
-    private $characterEncoding;
+    private $characterEncoding = "UTF-8";
     
     /**
      * All applications class definitions founded in application file
@@ -897,7 +897,7 @@ class Application implements ICacheable {
     }
     
     public function setCharacterEncoding( $characterEncoding ) {
-        $this->characterEncoding = $characterEncoding;
+        $this->characterEncoding = strtoupper( $characterEncoding );
     }
     
     public function addClass( ClassDefinition $class ) {
