@@ -154,7 +154,7 @@ class IfVerb extends AbstractVerb {
 	        $strOut .= "}\n";
 	        
 	    }
-	    
+	    InvokeVerb::clearClassCall();
 	    return $strOut;
     }
 	

@@ -276,5 +276,9 @@ class InvokeVerb extends AbstractVerb {
 	  
 		return $strOut;
 	}
-
+    
+	public static function clearClassCall() {
+	    self::$classCall = array();
+	}
+	
 }
