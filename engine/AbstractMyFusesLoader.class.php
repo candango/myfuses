@@ -353,6 +353,13 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $circuit->setVerbPaths( serialize( $data['docNamespaces'] ) );
         }
         
+        if( isset( $data[ 'namespaceattributes' ] ) ) {
+            foreach( $data[ 'namespaceattributes' ] as $namespace => $attributes ) {
+                foreach( $attributes as $name => $value )  {
+                    $circuit->setCustomAttribute( $namespace, $name, $value );
+                }
+            }
+        }
         
         if( count( $data[ 'children' ] > 0 ) ) {
             
@@ -397,6 +404,12 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             if ( isset( $actionParameterAttributes[ $attributeName ] ) ) {
                 // getting $name
                 $$actionParameterAttributes[ $attributeName ] = "" . $attribute;
+            }
+            if( strpos( $attributeName, "_ns_"  ) !== false ) {
+                list( $namespace, $attrName ) = explode( "_ns_", 
+                    $attributeName );
+                $action->setCustomAttribute( $namespace, 
+                    $attrName, $attribute );
             }
         }
 	    
