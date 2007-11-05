@@ -221,8 +221,6 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
             $data[ "namespace" ] = "myfuses";
         }
         
-        $data[ "namespaceattributes" ] = array();
-        
         if( count( $node->getDocNamespaces( true ) ) ) {
             $data[ "docNamespaces" ] = $node->getDocNamespaces( true );
             
@@ -242,9 +240,14 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         if( count( $node->children() ) ) {
             foreach( $node->children() as $key => $child ) {
                 // PoG StYlEzZz
+                $xml = preg_replace( 
+                    "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
+                    $child->asXML() );
+                $xml = preg_replace( 
+                    "@(\w+|\d+):(\w+|\d+)([=])@", "$1_ns_$2$3", $xml );
                 $child = new SimpleXMLElement( preg_replace( 
                     "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
-                    $child->asXML() ) );
+                    $xml ) );
                 $data[ "children" ][] = self::getDataFromXML( $key, $child );    
             }
         }
