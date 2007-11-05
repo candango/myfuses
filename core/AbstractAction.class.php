@@ -15,6 +15,13 @@ abstract class AbstractAction implements Action {
     private $name;
     
     /**
+     * Custom attributes defined by develloper
+     * 
+     * @var array 
+     */
+    protected $customAttributes = array();
+    
+    /**
      * Enter description here...
      *
      * @return unknown
@@ -30,6 +37,21 @@ abstract class AbstractAction implements Action {
      */
     public function setName( $name ) {
         $this->name = $name;
+    }
+    
+    public function setCustomAttribute( $namespace, $name, $value ) {
+        $this->customAttributes[ $namespace ][ $name ] = $value;
+    }
+    
+    public function getCustomAttribute( $namespace, $name ) {
+        if( isset( $this->customAttributes[ $namespace ][ $name ] ) ) {
+            return $this->customAttributes[ $namespace ][ $name ];
+        }
+        return null;
+    }
+    
+    public function getCustomAttributes( $namespace ) {
+        return $this->customAttributes[ $namespace ];
     }
     
 }
