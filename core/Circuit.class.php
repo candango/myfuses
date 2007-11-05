@@ -137,6 +137,13 @@ class Circuit implements ICacheable {
     private $modified = false;
     
     /**
+     * Custom attributes defined by develloper
+     * 
+     * @var array 
+     */
+    private $customAttributes = array();
+    
+    /**
      * Return circuit application
      *
      * @return Application
@@ -472,6 +479,14 @@ class Circuit implements ICacheable {
             "\" );\n";
         $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . 
             "\" );\n";
+        
+        foreach( $this->customAttributes as $namespace => $attributes ) {
+            foreach( $attributes as $name => $value ) {
+                $strOut .= "\$circuit->setCustomAttribute( \"" . $namespace . 
+                    "\", \"" . $name . "\", \"" . $value . "\" );\n";
+            }
+        }
+            
         $strOut .= "\$application->addCircuit( \$circuit );\n";
         $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
             serialize( $this->getVerbPaths() ) ) . "\" );\n";
@@ -547,6 +562,19 @@ class Circuit implements ICacheable {
     
     private function evalExpression( $matches ){
 	    return eval( "return " . $matches[ 1 ] . ";" );
+    }
+    
+    
+    public function setCustomAttribute( $namespace, $name, $value ) {
+        $this->customAttributes[ $namespace ][ $name ] = $value;
+    }
+    
+    public function getCustomAttribute( $namespace, $name ) {
+        return $this->customAttributes[ $namespace ][ $name ];
+    }
+    
+    public function getCustomAttributes( $namespace ) {
+        return $this->customAttributes[ $namespace ];
     }
     
     public function getErrorParams() {
