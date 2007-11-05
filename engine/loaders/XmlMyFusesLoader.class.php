@@ -221,8 +221,18 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
             $data[ "namespace" ] = "myfuses";
         }
         
+        $data[ "namespaceattributes" ] = array();
+        
         if( count( $node->getDocNamespaces( true ) ) ) {
             $data[ "docNamespaces" ] = $node->getDocNamespaces( true );
+            
+            foreach( $data[ "docNamespaces" ] as $namespace => $value ) {
+                foreach( $node->attributes( $namespace, true ) as 
+                    $name => $attribute ) {
+                    $data[ "namespaceattributes" ][ $namespace ][ $name ] = 
+                        "" . $attribute;
+                }
+            }
         }
         
         foreach( $node->attributes() as $key => $attribute ) {
