@@ -157,20 +157,5 @@ class IfVerb extends AbstractVerb {
 	    InvokeVerb::clearClassCall();
 	    return $strOut;
     }
-	
-	/**
-	 * Return the parsed comments
-	 *
-	 * @return string
-	 */
-	public function getComments( $identLevel ) {
-	    
-	    $strOut = parent::getComments( $identLevel );
-        $strCondition = "condition=\"" . $this->getCondition() . "\"";
-        $strOut = str_replace( "__COMMENT__",
-	        "MyFuses:request:action:if " . $strCondition , $strOut );
-	    return $strOut;
-	    
-	}
-
+    
 }

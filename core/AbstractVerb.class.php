@@ -289,6 +289,18 @@ abstract class AbstractVerb implements Verb {
 	    return $strOut;
 	}
 
+	public function getTrace( $toHtml = false ) {
+	    $data = $this->getData();
+	    $strTrace = "<" . $data[ "namespace" ] . ":" . $data[ "name" ];
+	    if( isset( $data[ "attributes" ] ) ) {
+	        foreach( $data[ "attributes" ] as $key => $value ) {
+	            $strTrace .= " " . $key . "=\"" . $value . "\"";
+	        }
+	    }
+	    $strTrace .= ">";
+	    return $strTrace;
+	}
+	
 	/**
 	 * Return the parsed comments
 	 *
@@ -298,7 +310,7 @@ abstract class AbstractVerb implements Verb {
 	    $fuseactionName = $this->getAction()->getCompleteName();
 	    $strOut = str_repeat( "\t", $identLevel );
 	    $strOut .= "/* " . $fuseactionName .
-	    ": <__COMMENT__> */\n";
+	    ": " . $this->getTrace() . " */\n";
 	    return $strOut;
 	}
     

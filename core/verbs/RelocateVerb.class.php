@@ -125,18 +125,4 @@ class RelocateVerb extends AbstractVerb {
         return $strOut;
     }
 
-    /**
-     * Return the parsed comments
-     *
-     * @return string
-     */
-    public function getComments( $identLevel ) {
-        $param = ( is_null( $this->getUrl() ) ? "xfa=\"" . $this->getXfa() . 
-            "\"" : "url=\"" . $this->getUrl() . "\"" );
-        $strOut = parent::getComments( $identLevel );
-        $strOut = str_replace( "__COMMENT__",
-            "MyFuses:relocate " . $param , $strOut );
-        return $strOut;
-    }
-
 }

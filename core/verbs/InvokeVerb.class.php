@@ -240,42 +240,6 @@ class InvokeVerb extends AbstractVerb {
 		
 		return $strOut;
 	}
-
-	/**
-	 * Return the parsed comments
-	 *
-	 * @return string
-	 */
-	public function getComments( $identLevel ) {
-		$strOut = parent::getComments( $identLevel );
-		$strInst = "";
-		
-		if( !is_null( $this->getVariable() ) ) {
-			$strInst = "variable=\"" . $this->getVariable() . "\"";
-		}
-		
-	    if( !is_null( $this->getClass() ) ) {
-			$strInst = "class=\"" . $this->getClass() . "\"";
-		}
-		else {
-		    $strInst .= " object=\"" . $this->getObject() . "\"";    
-		}
-		
-		if( !is_null( $this->getMethod() ) ) {
-			$strInst .= " method=\"" . $this->getMethod() . "\"";
-			if( !is_null( $this->getArguments() ) ) {
-				$strInst .= " arguments=\"" . $this->getArguments() . "\"";
-			}
-		}
-		else {
-		    $strInst .= " methodcall=\"" . $this->getMethodCall() . "\"";
-		}
-		
-		$strOut = str_replace( "__COMMENT__",
-		"MyFuses:request:action:invoke " . $strInst, $strOut );
-	  
-		return $strOut;
-	}
     
 	public static function clearClassCall() {
 	    self::$classCall = array();

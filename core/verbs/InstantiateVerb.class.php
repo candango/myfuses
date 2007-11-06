@@ -202,25 +202,5 @@ class InstantiateVerb extends AbstractVerb {
 	    
 	    return $strOut;
 	}
-	
-	/**
-	 * Return the parsed comments
-	 *
-	 * @return string
-	 */
-	public function getComments( $identLevel ) {
-	    $strOut = parent::getComments( $identLevel );
-	
-	    $strInst = "class=\"" . $this->getClass() . "\"";
-	    $strInst .= " object=\"" . $this->getObject() . "\"";
-	    if( !is_null( $this->getArguments() ) ) {
-	        $strInst .= " arguments=\"" . $this->getArguments() . "\"";
-	    }
-	    
-	    $strOut = str_replace( "__COMMENT__",
-	        "MyFuses:request:action:instantiate " . $strInst, $strOut );
-	    
-	    return $strOut;
-	}
 
 }

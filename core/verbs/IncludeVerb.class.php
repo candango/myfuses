@@ -78,17 +78,4 @@ class IncludeVerb extends AbstractVerb {
         return $strOut;
     }
 
-    /**
-     * Return the parsed comments
-     *
-     * @return string
-     */
-    public function getComments( $identLevel ) {
-        $strOut = parent::getComments( $identLevel );
-        $strOut = str_replace( "__COMMENT__",
-            "MyFuses:request:action:include file=\"" . 
-            $this->getFile() . "\"", $strOut );
-        return $strOut;
-    }
-
 }

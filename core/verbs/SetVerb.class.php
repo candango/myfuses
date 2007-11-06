@@ -51,17 +51,5 @@ class SetVerb extends AbstractVerb {
         return $strOut; 
     }
 
-    /**
-     * Return the parsed comments
-     *
-     * @return string
-     */
-    public function getComments( $identLevel ) {
-        $strOut = parent::getComments( $identLevel );
-        $strOut = str_replace( "__COMMENT__",
-        "MyFuses:request:action:set name=\"" . $this->getVariableName() .
-        "\" value=\"" . $this->getValue() . "\"", $strOut );
-        return $strOut;
-    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -201,33 +201,4 @@ class LoopVerb extends AbstractVerb {
         return $strOut;
     }
 
-    /**
-     * Return the parsed comments
-     *
-     * @return string
-     */
-    public function getComments( $identLevel ) {
-        $strOut = parent::getComments( $identLevel );
-        
-        if( !is_null( $this->getCondition() ) ) {
-            $strCondition = "condition=\"" . $this->getCondition() . "\"";
-        }
-        elseif( !is_null( $this->getFrom() ) ) {
-            $strCondition = "from=\"" . $this->getFrom() . "\"";
-            $strCondition .= " to=\"" . $this->getTo() . "\"";
-            $strCondition .= " index=\"" . $this->getIndex() . "\"";
-            if( !is_null( $this->getStep() ) ) {
-                $strCondition .= " step=\"" . $this->getStep() . "\"";
-            }
-        }
-        elseif( !is_null( $this->getList() ) ) {
-            $strCondition = "list=\"" . $this->getList() . "\"";
-            $strCondition .= " item=\"" . $this->getItem() . "\"";
-        }
-
-        $strOut = str_replace( "__COMMENT__",
-	        "MyFuses:request:action:loop " . $strCondition , $strOut );
-        return $strOut;
-    }
-
 }
