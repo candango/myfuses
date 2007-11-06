@@ -389,8 +389,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         // TODO implement class and namespace options
         $actionParameterAttributes = array(
             "name" => "name",
-            "class" => "",
-            "namespace" => ""
+            "class" => "class",
+            "path" => "path"
         );
         
         $parameterAttributes = array(
@@ -400,6 +400,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         $name = "";
 	    
+        $class = null;
+        $path = null;
+        
         foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
             if ( isset( $actionParameterAttributes[ $attributeName ] ) ) {
                 // getting $name
@@ -413,17 +416,33 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
 	    
+        if( !is_null( $path ) ){
+	        require_once $path;    
+	    }
+        
+        if( is_null( $class ) ){
+	        $action = new FuseAction( $circuit );    
+	    }
+	    else {
+	        $action = new $class( $circuit );
+	    }
+        
+        if( !is_null( $path ) ){
+	        $action->setPath( $path );    
+	    }
+        
         $action->setName( $name );
         
         $circuit->addAction( $action );
         
-        if( count( $data[ 'children' ] ) > 0 ) {
-            foreach( $data[ 'children' ] as $child ) {    
-	            $this->loadVerb( $action, $child );
+        if( isset( $data[ 'children' ] ) ) {
+            if( count( $data[ 'children' ] ) > 0 ) {
+	            foreach( $data[ 'children' ] as $child ) {    
+		            $this->loadVerb( $action, $child );
+		        }
+		        
 	        }
-	        
         }
-        
     }
     
     /**

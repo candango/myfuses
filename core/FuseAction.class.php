@@ -26,6 +26,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
     
     private $calledByDo = false;
     
+    private $path;
+    
     public function __construct( Circuit $circuit ) {
         $this->setCircuit( $circuit );
     }
@@ -100,13 +102,28 @@ class FuseAction extends AbstractAction implements CircuitAction {
         return $this->xfas[ $name ];
     }
     
+    public function getPath() {
+        return $this->path;
+    }
+    
+    public function setPath( $path ) {
+        $this->path = $path;
+    }
+    
     /**
      * Enter description here...
      *
      * @return string
      */
 	public function getCachedCode() {
-	    $strOut = "\$action = new FuseAction( \$circuit );\n";
+	    $strOut = "";
+	    if( !is_null( $this->getPath() ) ) {
+	        $strOut .= "require_once \"" . $this->getPath() . "\";\n";
+	    }
+	    $strOut .= "\$action = new " . get_class( $this ) . "( \$circuit );\n";
+	    if( !is_null( $this->getPath() ) ) {
+	        $strOut .= "\$action->setPath( \"" . $this->getPath() . "\" );\n";    
+	    }
         $strOut .= "\$action->setName( \"" . $this->getName() . "\" );\n";
 	    foreach( $this->customAttributes as $namespace => $attributes ) {
             foreach( $attributes as $name => $value ) {
@@ -198,11 +215,16 @@ class FuseAction extends AbstractAction implements CircuitAction {
         
         if( ( $this->getCircuit()->getName() == $request->getCircuitName() ) &&  
             ( $this->getName() == $request->getActionName() )  ) {
-            $strOut .= $myFusesString . "->setCurrentPhase( \"" . 
+                
+           $strOut .= $myFusesString . "->setCurrentPhase( \"" . 
 		        MyFusesLifecycle::PROCESS_PHASE . "\" );\n\n";
 	        
             $strOut .= $myFusesString . "->setCurrentAction( "  . 
                 $actionString . " );\n\n";
+        }
+        
+        if( get_class( $this ) != "FuseAction" ) {
+            $strOut .= $actionString . "->doAction();\n";    
         }
         
         foreach( $this->verbs as $verb ) {
