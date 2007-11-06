@@ -298,6 +298,9 @@ abstract class AbstractVerb implements Verb {
 	        }
 	    }
 	    $strTrace .= ">";
+	    if( $toHtml ) {
+	        return htmlentities( $strTrace );
+	    }
 	    return $strTrace;
 	}
 	
