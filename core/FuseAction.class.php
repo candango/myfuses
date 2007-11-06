@@ -164,11 +164,9 @@ class FuseAction extends AbstractAction implements CircuitAction {
         
         $myFusesString = $controllerClass . "::getInstance()";
         
-        $actionString = $myFusesString . "->getApplication( \"" . 
-            $this->circtuit->getApplication()->getName() . 
-            "\" )->getCircuit( \"" . 
-            $this->circtuit->getName() . "\" )->getAction( \"" . 
-            $this->getName() . "\" )";
+        $actionString = "\"" . $this->circtuit->getApplication()->getName() .
+            "." . $this->circtuit->getName() . 
+            "." . $this->getName() . "\"";
         
         if( $this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
             if( $this->getName() != "prefuseaction" && 
@@ -176,7 +174,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
 	            
 	            $strOut = $myFusesString . "->setCurrentPhase( \"" . 
 		            MyFusesLifecycle::PRE_FUSEACTION_PHASE . "\" );\n\n";
-	        
+	            
 	            $strOut .= $myFusesString . "->setCurrentAction( "  . 
 	                $actionString . " );\n\n";
 		            
@@ -251,7 +249,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
 		        $strOut .= $myFusesString . "->setCurrentAction( "  . 
 	                $actionString . " );\n\n";
 		        
-		        $plugins = $this->getCircuit()->getApplication()->getPlugins( Plugin::POST_FUSEACTION_PHASE );
+		        $plugins = $this->getCircuit()->getApplication()->getPlugins( 
+		            Plugin::POST_FUSEACTION_PHASE );
 		        
 		        foreach( $plugins as $plugin ) {
 		            $strOut .= $plugin->getParsedCode( $comented, $identLevel );

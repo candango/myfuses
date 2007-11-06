@@ -57,10 +57,12 @@ try {
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/FuseRequest.class.php" );
-   MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/MyFusesLifecycle.class.php" );
-   
-   MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "process/MyFusesDebugger.class.php" );
+    
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/file/MyFusesFileHandler.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
@@ -124,6 +126,13 @@ class MyFuses {
      */
     private $lifecycle;
     
+    /**
+     * Default debugger
+     * 
+     * @var MyFusesDebugger
+     */
+    private $debugger;
+    
     private $parsedPath;
     
     private $applicationClass = "Application";
@@ -135,6 +144,7 @@ class MyFuses {
      * @param string $applicationName
      */
     protected function __construct() {
+        $this->debugger = new MyFusesDebugger();
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
             DIRECTORY_SEPARATOR );
     }
@@ -158,7 +168,8 @@ class MyFuses {
     public function createApplication( 
         $appName = Application::DEFAULT_APPLICATION_NAME, 
         $default = false, MyFusesLoader $loader = null ) {
-        
+        $this->debugger->registerEvent( new MyFusesDebugEvent( 
+            MyFusesDebugger::MYFUSES_CATEGORY, "Criando aplicação" ) );
         $appClass = $this->getApplicationClass();
             
         $application = new $appClass( $appName );
@@ -296,8 +307,10 @@ class MyFuses {
         return $this->lifecycle->getAction();
     }
     
-    public function setCurrentAction( CircuitAction $action ) {
-        $this->lifecycle->setAction( $action );
+    public function setCurrentAction( $fuseaction ) {
+        list( $appName, $cName, $aName ) = explode( ".", $fuseaction );
+        $this->lifecycle->setAction( $this->getApplication( $appName )->
+            getCircuit( $cName )->getAction( $aName ) );
     }
     
     /**
@@ -372,11 +385,9 @@ class MyFuses {
             
             $myFusesString = $controllerName . "::getInstance()";
         
-	        $actionString = $myFusesString . "->getApplication( \"" . 
-	            $this->request->getApplication()->getName() . 
-	            "\" )->getCircuit( \"" . 
-	            $this->request->getCircuitName() . "\" )->getAction( \"" . 
-	            $this->request->getActionName() . "\" )";
+	        $actionString = "\"" . $this->request->getApplication()->getName() . 
+	            "." . $this->request->getCircuitName() . 
+	            "." . $this->request->getActionName() . "\"";
             
             
             $strParse = "";
@@ -459,6 +470,7 @@ class MyFuses {
             $this->storeApplications();
             
             $this->parseRequest();
+            echo $this->debugger;
         }
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
