@@ -153,7 +153,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
         return $strOut;
     }
 	
-    public function getParsedCode(  $comented, $identLevel ) {
+    public function getParsedCode( $comented, $identLevel ) {
         
         $strOut = "";
         

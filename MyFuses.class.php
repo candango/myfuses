@@ -168,8 +168,7 @@ class MyFuses {
     public function createApplication( 
         $appName = Application::DEFAULT_APPLICATION_NAME, 
         $default = false, MyFusesLoader $loader = null ) {
-        $this->debugger->registerEvent( new MyFusesDebugEvent( 
-            MyFusesDebugger::MYFUSES_CATEGORY, "Criando aplicação" ) );
+        
         $appClass = $this->getApplicationClass();
             
         $application = new $appClass( $appName );
@@ -313,6 +312,11 @@ class MyFuses {
             getCircuit( $cName )->getAction( $aName ) );
     }
     
+    public function setCurrentProperties( $phase, $fuseaction ) {
+        $this->setCurrentPhase( $phase );
+        $this->setCurrentAction( $fuseaction );
+    }
+    
     /**
      * Returns the current request
      * 
@@ -392,12 +396,10 @@ class MyFuses {
             
             $strParse = "";
 	        
-            $strParse .= $myFusesString . "->setCurrentPhase( \"" . 
-		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\" );\n\n";
-	        
-            $strParse .= $myFusesString . "->setCurrentAction( "  . 
+            $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
+		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  . 
                 $actionString . " );\n\n";
-            
+	        
             foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
 	            $strParse .= $parseable->getParsedCode(
 	                $this->request->getApplication()->isParsedWithComments(), 0 );
@@ -409,10 +411,8 @@ class MyFuses {
 	                $this->request->getApplication()->isParsedWithComments(), 0 );    
 	        }
 	        
-	        $strParse .= $myFusesString . "->setCurrentPhase( \"" . 
-		        MyFusesLifecycle::POST_PROCESS_PHASE . "\" );\n\n";
-	        
-            $strParse .= $myFusesString . "->setCurrentAction( "  . 
+	        $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
+		        MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
                 $actionString . " );\n\n";
 	        
             $selector = true;
@@ -420,12 +420,10 @@ class MyFuses {
             foreach( $fuseQueue->getPostProcessQueue() as $parseable ) {
 	            if( !( $parseable instanceof CircuitAction ) && $selector ){
 
-	                $strParse .= $myFusesString . "->setCurrentPhase( \"" . 
-				        MyFusesLifecycle::POST_PROCESS_PHASE . "\" );\n\n";
-			        
-		            $strParse .= $myFusesString . "->setCurrentAction( "  . 
+	                $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
+				        MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
 		                $actionString . " );\n\n";
-		            
+	                
 		            $selector = false;
 	                
 	            }
@@ -470,7 +468,7 @@ class MyFuses {
             $this->storeApplications();
             
             $this->parseRequest();
-            echo $this->debugger;
+            
         }
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();

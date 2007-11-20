@@ -1,24 +1,18 @@
 <?php
-try {
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/AbstractPlugin.class.php" );
-	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-	    "core/AbstractVerb.class.php" );
-	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-	    "core/Application.class.php" );
-	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-	    "core/ClassDefinition.class.php" );
-	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-	    "core/Circuit.class.php" );
-	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-	    "core/FuseAction.class.php" );
-	
-	MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-	    "engine/AbstractMyFusesLoader.class.php" );    
-}
-catch( MyFusesMissingCoreFileException $mfmcfe ) {
-    $mfmcfe->breakProcess();
-}
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/AbstractPlugin.class.php" );
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/AbstractVerb.class.php" );
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/Application.class.php" );
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/ClassDefinition.class.php" );
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/Circuit.class.php" );
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "core/FuseAction.class.php" );
+MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+    "engine/AbstractMyFusesLoader.class.php" );
 
 /**
  * 
@@ -111,8 +105,8 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
             return true;
         }
         
-        if ( is_file( $circuitPath . self::CIRCUIT_APP_FILE ) ) {
-            $circuit->setFile( self::CIRCUIT_APP_FILE );
+        if ( is_file( $circuitPath . self::CIRCUIT_PHP_FILE ) ) {
+            $circuit->setFile( self::CIRCUIT_PHP_FILE );
             return true;
         }
         
@@ -180,7 +174,8 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
      */
     private function loadCircuitFile( Circuit $circuit ) {
         
-        $circuitPath = $circuit->getApplication()->getPath() . $circuit->getPath();
+        $circuitPath = $circuit->getApplication()->getPath() . 
+            $circuit->getPath();
         
         $circuitFile = $circuitPath . $circuit->getFile();
         

@@ -54,7 +54,11 @@
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @since      Revision 17
  */
-class FuseDebugger {
+class MyFusesDebugger {
+    
+    const MYFUSES_CATEGORY = "MyFuses";
+    
+    private $initTime = 0;
     
     /**
      * Events registered in Debugger
@@ -63,12 +67,17 @@ class FuseDebugger {
      */
     private $events;
     
+    public function __construct() {
+        $this->initTime = $this->getMicrotime();
+    }
+    
     /**
      * Register one event in debugger
      *
      * @param FuseDebugEvent $event
      */
-    public function registerEvent( FuseDebugEvent $event ) {
+    public function registerEvent( MyFusesDebugEvent $event ) {
+        $event->setTime( $this->getMicrotime() - $this->initTime );
         $this->events[] = $event;
     }
     
@@ -92,15 +101,26 @@ class FuseDebugger {
     
     public function __toString() {
         $strOut = "<br />";
-        $strOut .= "<h1>MyFuses debugging:</h1>";
+		$strOut .= "<div style=\"clear:both;padding-top:10px;border-bottom:1px Solid #CCC;font-family:verdana;font-size:16px;font-weight:bold\">MyFuses debugging:</div>";
         $strOut .= "<br />";
-        $strOut .= "<table><th>";
-        $strOut .= "<td>Time</td>";
-        $strOut .= "<td>Category</td>";
+        $strOut .= "<table cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" style=\"border:1px Solid #CCC;font-family:verdana;font-size:11pt;\">";
+        $strOut .= "<tr style=\"background:#EAEAEA\">";
+        $strOut .= "<td style=\"border-bottom:1px Solid #CCC;font-family:verdana;font-size:11pt;\"><strong>Time</strong></td>";
+        $strOut .= "<td style=\"border-bottom:1px Solid #CCC;font-family:verdana;font-size:11pt;\"><strong>Category</strong></td>";
+        $strOut .= "<td style=\"border-bottom:1px Solid #CCC;font-family:verdana;font-size:11pt;\"><strong>Message</strong></td>";
+        $strOut .= "<td style=\"border-bottom:1px Solid #CCC;font-family:verdana;font-size:11pt;\"><strong>Count</strong></td>";
+        $strOut .= "</tr>";
         foreach( $this->events as $event ) {
             $strOut .= $event;
         }
+        $strOut .= "</table>";
+        return $strOut;
     }
+    
+	public function getMicrotime() {
+	    list($usec, $sec) = explode( " ", microtime() );
+	    return ( (float) $usec + (float) $sec );
+	}
     
 }
 
@@ -119,7 +139,7 @@ class FuseDebugger {
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @since      Revision 17
  */
-class FuseDebugEvent {
+class MyFusesDebugEvent {
 
     /**
      * Time when this debug Debug Event occours
@@ -148,6 +168,11 @@ class FuseDebugEvent {
      * @var integer
      */
     private $count = 0;
+    
+    public function __construct( $category, $message ) {
+        $this->category = $category;
+        $this->message = $message;
+    }
     
     /**
      * Return the Debug Event time
@@ -222,11 +247,11 @@ class FuseDebugEvent {
     }
     
     public function __toString() {
-        return "<tr><td>" . $this->getTime() . 
-            "</td><td>" . $this->getCategory() . 
-            "</td><td>" . $this->getCategory() . 
-            "</td><td>" . $this->getCount() . "</td></tr>";
+        return "<tr style=\"background:#F9F9F9\"><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getTime() . 
+            "</td><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getCategory() . 
+            "</td><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getMessage() . 
+            "</td><td valign=\"top\" align=\"center\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getCount() . "</td></tr>";
     }
-    
+        
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

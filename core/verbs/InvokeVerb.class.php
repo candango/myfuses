@@ -215,6 +215,7 @@ class InvokeVerb extends AbstractVerb {
 				if ( !is_null( $this->getVariable() ) ) {
 					$strOut .= "\$" . $this->getVariable() . " = ";
 				}
+			     
 			    $strOut .= $this->getClass() . "::" . 
 			        $this->getMethod() . "(";    
 			}
