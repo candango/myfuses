@@ -93,6 +93,21 @@ class MyFusesFileHandler {
     }
     
     /**
+     * Sanitize any path to avoid process breaks
+     * 
+     * @param string $path
+     * @return string
+     */
+    public static function sanitizePath( $path ) {
+        if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
+            $path .= DIRECTORY_SEPARATOR;
+        }
+        return $path;
+    }
+    
+    
+    
+    /**
      * Write a string in a given file
      * 
      * @param string $file The file name
