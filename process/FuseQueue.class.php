@@ -49,8 +49,6 @@ class FuseQueue {
     
     private function buildPreProcessQueue() {
         // FIXME Plugin::PRE_PROCESS_PHASE deve ser mudado para MyFusesLifecycle::PRE_PROCESS_PHASE
-        $plugins = $this->request->getApplication()->getPlugins( 
-            Plugin::PRE_PROCESS_PHASE );
         
         $action = $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->

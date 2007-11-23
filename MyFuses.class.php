@@ -378,6 +378,8 @@ class MyFuses {
         
         $controllerName = $circuit->getApplication()->getControllerClass();
         
+        $application = $circuit->getApplication();
+        
         $path = $this->request->getApplication()->getParsedPath() .
 	        $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
         
@@ -393,18 +395,24 @@ class MyFuses {
 	            "." . $this->request->getCircuitName() . 
 	            "." . $this->request->getActionName() . "\"";
             
-            
             $strParse = "";
 	        
             $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
 		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  . 
                 $actionString . " );\n\n";
 	        
+            if( count( $application->getPlugins( Plugin::PRE_PROCESS_PHASE ) ) ) {
+                $pluginsStr = $controllerName . "::getApplication( \"" . 
+                    $application->getName() . "\" )->getPlugins(" .
+                    " \"" . Plugin::PRE_PROCESS_PHASE . "\" )";
+                $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
+                $strParse .= "\t\$plugin->run();\n}\n\n";
+            }
+            
             foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
-	            $strParse .= $parseable->getParsedCode(
+                $strParse .= $parseable->getParsedCode(
 	                $this->request->getApplication()->isParsedWithComments(), 0 );
 	        }
-            
 	
 	        foreach( $fuseQueue->getProcessQueue() as $parseable ) {
 	            $strParse .= $parseable->getParsedCode( 

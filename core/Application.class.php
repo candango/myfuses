@@ -981,6 +981,16 @@ class Application implements ICacheable {
     }
     
     /**
+     * Set all plugins of a given fase
+     * 
+     * @param string $fase
+     * @param array $plugins
+     */
+    public function &setPlugins( $phase, $plugins ) {
+        $this->plugins[ $phase ] = $plugins;
+    }
+    
+    /**
      * Return one plugin of a given fase and index
      * FIXME Handle non existent plugin error
      * 
@@ -1091,7 +1101,8 @@ class Application implements ICacheable {
     }
     
     private function getPluginsCacheCode(){
-        $strOut = "";        
+        $strOut = "";
+        
         foreach( $this->plugins as $phase ) {
             foreach( $phase as $plugin ) {
                 $strOut .= $plugin->getCachedCode() . "\n";    
