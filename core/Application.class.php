@@ -986,7 +986,7 @@ class Application implements ICacheable {
      * @param string $fase
      * @param array $plugins
      */
-    public function &setPlugins( $phase, $plugins ) {
+    public function setPlugins( $phase, $plugins ) {
         $this->plugins[ $phase ] = $plugins;
     }
     
