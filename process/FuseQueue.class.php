@@ -54,8 +54,6 @@ class FuseQueue {
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PreProcessFuseAction" );
         
-        $actions = $plugins;
-        
         $actions[] = $action;
         
         $this->preProcessQueue = $actions;
