@@ -137,6 +137,10 @@ class MyFuses {
     
     private $applicationClass = "Application";
     
+    
+    const MODE_DEVELOPMENT = "development";
+    const MODE_PRODUCTION = "production";
+    
     /**
      * MyFuses constructor
      *
