@@ -53,11 +53,11 @@ class FuseRequest {
             }
         }
         else {
-            if ( isset( $_GET[ $fuseactionVariable ] ) ) {
+            if ( isset( $_GET[ $fuseactionVariable ] ) && $_GET[ $fuseactionVariable ] != '' ) {
 	            $this->validFuseactionName = $_GET[ $fuseactionVariable ];
 	        }
 	        
-	        if ( isset( $_POST[ $fuseactionVariable ] ) ) {
+	        if ( isset( $_POST[ $fuseactionVariable ] ) && $_POST[ $fuseactionVariable ] != '' ) {
 	            $this->validFuseactionName = $_POST[ $fuseactionVariable ];
 	        }
         }
