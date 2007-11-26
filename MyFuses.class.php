@@ -442,7 +442,9 @@ class MyFuses {
 	            
 	            $strParse = preg_replace( 
                     "@([#])([$]*)(\w+|\d+)([#])@", "\" . $2$3 . \"", 
-                    $strParse );    
+                    $strParse );
+                $strParse = str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
+                 
 	        }
 	        
             if( !file_exists( $path ) ) {
