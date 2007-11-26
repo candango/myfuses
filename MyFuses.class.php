@@ -437,7 +437,12 @@ class MyFuses {
 	            }
                 
                 $strParse .= $parseable->getParsedCode(
-	                $this->request->getApplication()->isParsedWithComments(), 0 );
+	                $this->request->getApplication()->isParsedWithComments(), 
+	                0 );
+	            
+	            $strParse = preg_replace( 
+                    "@([#])([$]*)(\w+|\d+)([#])@", "\" . $2$3 . \"", 
+                    $strParse );    
 	        }
 	        
             if( !file_exists( $path ) ) {
