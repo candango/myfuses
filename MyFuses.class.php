@@ -516,6 +516,25 @@ class MyFuses {
         return self::getInstance()->getRequest()->getAction()->getXfa( $name );
     }
     
+    public static function getSelfPath() {
+        
+        $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
+        
+        $self .= "/";
+        
+        if( substr( $self, -1 ) == "/" ) {
+            $self = substr( $self, 0, strlen( $self ) - 1 );
+        }
+        
+        $self .= dirname( $_SERVER[ 'PHP_SELF' ] );
+        
+        if( substr( $self, -1 ) != "/" ) {
+            $self .= "/";
+        }
+        
+        return $self;
+    }
+    
     public static function getSelf() {
         $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
         
