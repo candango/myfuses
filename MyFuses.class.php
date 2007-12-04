@@ -561,11 +561,13 @@ class MyFuses {
         return $self;
     }
     
-    public static function getMySelf() {
+    public static function getMySelf( $showFuseactionVariable=true ) {
         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
             $mySelf = self::getSelf();
-            $mySelf .= self::getInstance()->getRequest()->
-	            getApplication()->getFuseactionVariable() . "/";
+            if( $showFuseactionVariable ) {
+                $mySelf .= self::getInstance()->getRequest()->
+                    getApplication()->getFuseactionVariable() . "/";    
+            }
         }
         else {
             $mySelf = self::getSelf() . "?";
@@ -578,9 +580,10 @@ class MyFuses {
         return $mySelf;
     }
     
-    public static function getMySelfXfa( $xfaName, $initQuery = false ) {
+    public static function getMySelfXfa( $xfaName, $initQuery = false, 
+        $showFuseactionVariable=true ) {
         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
-            $link = self::getMySelf() . 
+            $link = self::getMySelf( $showFuseactionVariable ) . 
                 implode( "/", explode( ".", self::getXfa( $xfaName ) ) );
             if( $initQuery ) {
                 $link .= "?";
