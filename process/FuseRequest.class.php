@@ -51,6 +51,12 @@ class FuseRequest {
                         $pathX, 1, count( $pathX ) ) );    
                 }                
             }
+            else {
+                if( count( $pathX ) != 1 ) {
+                    $this->validFuseactionName = implode( ".", array_slice( 
+                        $pathX, 0, count( $pathX ) ) );    
+                }
+            }
         }
         else {
             if ( isset( $_GET[ $fuseactionVariable ] ) && $_GET[ $fuseactionVariable ] != '' ) {
