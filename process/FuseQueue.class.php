@@ -49,30 +49,59 @@ class FuseQueue {
     
     private function buildPreProcessQueue() {
         // FIXME Plugin::PRE_PROCESS_PHASE deve ser mudado para MyFusesLifecycle::PRE_PROCESS_PHASE
+        $queue = array();
         
-        $action = $this->request->getApplication()->
+        // gettin all circuit prefuseactions possible
+        $circuit = $this->request->getAction()->getCircuit();
+        
+        while( !is_null( $circuit ) ) {
+            if( !is_null( $circuit->getPreFuseAction() ) ) {
+                array_unshift( $queue, $circuit->getPreFuseAction() );
+            }
+            $circuit = $circuit->getParent();
+        }
+        
+        // getting THE pre fuseaction
+        array_unshift( $queue, $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
-            getAction( "PreProcessFuseAction" );
+            getAction( "PreProcessFuseAction" ) );
         
-        $actions[] = $action;
+        // getting the pre process plugins
+        $plugins = $this->request->getApplication()->getPlugins( 
+            Plugin::PRE_PROCESS_PHASE );
         
-        $this->preProcessQueue = $actions;
+        $queue = array_merge( $plugins, $queue );    
+        
+        $this->preProcessQueue = $queue;
     }
     
     private function buildPostProcessQueue() {
+        $queue = array();
+        
+        // getting THE post fuseaction
+        $queue[] =$this->request->getApplication()->
+            getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
+            getAction( "PostProcessFuseAction" );
+        
+        // gettin all circuit prefuseactions possible
+        $circuit = $this->request->getAction()->getCircuit();
+            
+        while( !is_null( $circuit ) ) {
+            if( !is_null( $circuit->getPostFuseAction() ) ) {
+                $queue[] = $circuit->getPostFuseAction();
+            }
+            $circuit = $circuit->getParent();
+        }    
+            
         // FIXME Plugin::POST_PROCESS_PHASE deve ser mudado para MyFusesLifecycle::POST_PROCESS_PHASE
         $plugins = $this->request->getApplication()->getPlugins( 
             Plugin::POST_PROCESS_PHASE );
         
-        $action = $this->request->getApplication()->
-            getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
-            getAction( "PostProcessFuseAction" );
-                    
-        $actions[] = $action;
+        $circuit = $this->request->getAction()->getCircuit();
         
-        $actions = array_merge( $actions, $plugins );
+        $queue = array_merge( $queue, $plugins );
 
-        $this->postProcessQueue = $actions;
+        $this->postProcessQueue = $queue;
     }
     
     public function getProcessQueue() {
