@@ -977,10 +977,7 @@ class Application implements ICacheable {
      * @return array
      */
     public function &getPlugins( $phase ) {
-        if( count( $this->plugins[ $phase ] ) ) {
-            return $this->plugins[ $phase ];    
-        }
-        return array();
+        return $this->plugins[ $phase ];
     }
     
     /**
