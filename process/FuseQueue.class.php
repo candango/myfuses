@@ -73,11 +73,6 @@ class FuseQueue {
     private function buildPostProcessQueue() {
         $queue = array();
         
-        // getting THE post fuseaction
-        $queue[] =$this->request->getApplication()->
-            getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
-            getAction( "PostProcessFuseAction" );
-        
         // gettin all circuit prefuseactions possible
         $circuit = $this->request->getAction()->getCircuit();
             
@@ -87,6 +82,11 @@ class FuseQueue {
             }
             $circuit = $circuit->getParent();
         }    
+        
+        // getting THE post fuseaction
+        $queue[] =$this->request->getApplication()->
+            getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
+            getAction( "PostProcessFuseAction" );
         
         $this->postProcessQueue = $queue;
     }
