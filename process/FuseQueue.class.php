@@ -2,7 +2,7 @@
 require_once "myfuses/process/FuseRequest.class.php";
 
 class FuseQueue {
-
+    
     private $preFuseActionQueue = array();
     
     private $processQueue = array();
@@ -65,12 +65,7 @@ class FuseQueue {
         array_unshift( $queue, $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PreProcessFuseAction" ) );
-        
-        // getting the pre process plugins
-        $plugins = $this->request->getApplication()->getPlugins( 
-            Plugin::PRE_PROCESS_PHASE );
-        
-        $queue = array_merge( $plugins, $queue );    
+          
         
         $this->preProcessQueue = $queue;
     }
@@ -92,15 +87,7 @@ class FuseQueue {
             }
             $circuit = $circuit->getParent();
         }    
-            
-        // FIXME Plugin::POST_PROCESS_PHASE deve ser mudado para MyFusesLifecycle::POST_PROCESS_PHASE
-        $plugins = $this->request->getApplication()->getPlugins( 
-            Plugin::POST_PROCESS_PHASE );
         
-        $circuit = $this->request->getAction()->getCircuit();
-        
-        $queue = array_merge( $queue, $plugins );
-
         $this->postProcessQueue = $queue;
     }
     

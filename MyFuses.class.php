@@ -405,22 +405,27 @@ class MyFuses {
 		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  . 
                 $actionString . " );\n\n";
 	        
-            if( count( $application->getPlugins( Plugin::PRE_PROCESS_PHASE ) ) ) {
+            // parsing pre process plugins
+            if( count( $application->getPlugins( 
+                Plugin::PRE_PROCESS_PHASE ) ) ) {
                 $pluginsStr = $controllerName . "::getApplication( \"" . 
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::PRE_PROCESS_PHASE . "\" )";
                 $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
                 $strParse .= "\t\$plugin->run();\n}\n\n";
             }
+            //end parsing pre process plugins
             
             foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
-                $strParse .= $parseable->getParsedCode(
-	                $this->request->getApplication()->isParsedWithComments(), 0 );
+                $strParse .= $parseable->getParsedCode( 
+                    $this->request->getApplication()->isParsedWithComments(), 
+	                0 );
 	        }
 	
 	        foreach( $fuseQueue->getProcessQueue() as $parseable ) {
 	            $strParse .= $parseable->getParsedCode( 
-	                $this->request->getApplication()->isParsedWithComments(), 0 );    
+                    $this->request->getApplication()->isParsedWithComments(),
+                    0 );
 	        }
 	        
 	        $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
@@ -430,26 +435,34 @@ class MyFuses {
             $selector = true;
                 
             foreach( $fuseQueue->getPostProcessQueue() as $parseable ) {
-	            if( !( $parseable instanceof CircuitAction ) && $selector ){
-
-	                $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
-				        MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
-		                $actionString . " );\n\n";
-	                
-		            $selector = false;
-	                
-	            }
-                
-                $strParse .= $parseable->getParsedCode(
-	                $this->request->getApplication()->isParsedWithComments(), 
-	                0 );
 	            
-	            $strParse = preg_replace( 
-                    "@([#])([$]*)(\w+|\d+)([#])@", "\" . $2$3 . \"", 
-                    $strParse );
-                $strParse = str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
-                 
+                
+	            $strParse .= $parseable->getParsedCode( 
+                    $this->request->getApplication()->isParsedWithComments(), 
+                    0 );
 	        }
+	        
+	        // parsing post process plugins
+            if( count( $application->getPlugins( 
+                Plugin::POST_PROCESS_PHASE ) ) ) {
+                $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
+                        MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
+                        $actionString . " );\n\n";
+                $pluginsStr = $controllerName . "::getApplication( \"" . 
+                    $application->getName() . "\" )->getPlugins(" .
+                    " \"" . Plugin::POST_PROCESS_PHASE . "\" )";
+                $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
+                $strParse .= "\t\$plugin->run();\n}\n\n";
+            }
+            //end parsing post process plugins
+	        
+	        // resolving #<valriable#'s 
+	        $strParse = preg_replace( 
+                "@([#])([$]*)(\w+|\d+)([#])@", "\" . $2$3 . \"", 
+                $strParse );
+            // sanitizing " "'s    
+            $strParse = 
+                str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
 	        
             if( !file_exists( $path ) ) {
 	            mkdir( $path );
