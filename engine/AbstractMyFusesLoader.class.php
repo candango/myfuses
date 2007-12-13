@@ -40,7 +40,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     public function loadApplication() {
         // getting cache file
 	    // TODO application load must be like fusebox official
-        if( is_file( $this->getApplication()->getCompleteCacheFile() ) ) {
+        if( is_file( $this->getApplication()->getCompleteCacheFile() ) 
+            && ( $this->getApplication()->getMode() != "development" ) ) {
             require_once( $this->getApplication()->getCompleteCacheFile() );
             // correcting cached application reference
             $this->setApplication( 
@@ -49,11 +50,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             
             if( $this->applicationWasModified() ) {
                 $this->doLoadApplication();
-            }
-            else{
-                if( $this->getApplication()->getMode() == "development" ) {
-	                $this->doLoadApplication();
-	            }
             }
         }
         else {
