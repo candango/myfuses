@@ -22,20 +22,40 @@
  * The Original Code is MyFuses "a Candango implementation of Fusebox
  * Corporation Fusebox" part .
  *
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+ * The Initial Developer of the Original Code is Michael Alves Lins.
+ * Portions created by Michael Alves Linsa are Copyright (C) 2006 - 2007.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  *
  * Contributor(s): Michael Alves Lins
+ *                 Flavio Goncalves Garcia
  *
  * @category   verb
  * @package    myfuses.core.verbs
  * @author     Michael Alves Lins <malvins@gmail.com>
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id:InvokeVerb.class.php 00 2007-04-13 11:31:31Z malvins $
  */
 
+/**
+ * InstantiateVerb - InstantiateVerb.class.php
+ * 
+ * This verb instantiate one object by a given class or wsdl.
+ * 
+ * PHP version 5
+ *
+ * @category   verb
+ * @package    myfuses.core.verbs
+ * @author     Michael Alves Lins <malvins@gmail.com>
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
+ * @link http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Revision$
+ * @since      Revision 125
+ */
 class InvokeVerb extends AbstractVerb {
     
     private $class;

@@ -41,7 +41,7 @@
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 35 2007-04-09 19:53:11Z piraz $
+ * @version    SVN: $Id$
  */
 
 /**
@@ -64,8 +64,8 @@
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 35 $
- * @since      Revision 17
+ * @version    SVN: $Revision$
+ * @since      Revision 125
  */
 class XfaVerb extends AbstractVerb {
     
