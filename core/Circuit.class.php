@@ -23,14 +23,14 @@
  * Corporation Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+ * Portions created by Flavio Gonçalves Garcia are Copyright (C) 2006 - 2006.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id:Circuit.class.php 23 2007-01-04 13:26:33Z piraz $
@@ -39,7 +39,6 @@
 require_once "myfuses/core/Application.class.php";
 require_once "myfuses/core/CircuitAction.class.php";
 require_once "myfuses/core/ICacheable.class.php";
-
 
 /**
  * Circuit - Circuit.class.php
@@ -50,23 +49,27 @@ require_once "myfuses/core/ICacheable.class.php";
  * 
  * @category   controller
  * @package    myfuses.core
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
- * @since      Revision 19
+ * @since      Revision 48
  */
 class Circuit implements ICacheable {
     
     /**
-     * Enter description here...
-     *
+     * Public Access Constant.<br>
+     * Value 1
+     * 
+     * @var int
      */
     const PUBLIC_ACCESS = 1;
     
     /**
-     * Enter description here...
-     *
+     * Internal Access Constant.<br>
+     * Value 2
+     * 
+     * @var int
      */
     const INTERNAL_ACCESS = 2;
     

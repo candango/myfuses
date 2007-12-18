@@ -34,7 +34,7 @@
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 79 2007-04-26 14:32:40Z piraz $
+ * @version    SVN: $Id$
  */
 
 /**
@@ -50,8 +50,8 @@
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 79 $
- * @since      Revision 17
+ * @version    SVN: $Revision$
+ * @since      Revision 88
  */
 interface Plugin extends ICacheable, IParseable {
     

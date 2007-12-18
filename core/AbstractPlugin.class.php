@@ -31,18 +31,18 @@
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 79 2007-04-26 14:32:40Z piraz $
+ * @version    SVN: $Id$
  */
 
 MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
     "core/Plugin.class.php" );  
 
 /**
- * Plugin  - Plugin.class.php
+ * AbstractPlugin  - AbstractPlugin.class.php
  * 
  * This is a functional abstract MyFuses plugin implementation. One concrete
  * Plugin must extends this class.
@@ -51,11 +51,11 @@ MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH .
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 79 $
+ * @version    SVN: $Revision$
  * @since      Revision 17
  */
 abstract class AbstractPlugin implements Plugin{
@@ -271,7 +271,8 @@ abstract class AbstractPlugin implements Plugin{
     
     public function getCachedCode() {
         $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
-			$this->phase . "\", \"" . $this->name . "\", \"" . addslashes( $this->path ) . 
+			$this->phase . "\", \"" . $this->name . "\", \"" . 
+			addslashes( $this->path ) . 
 			"\", \"" . $this->file . "\" );\n";
 		return $strOut;
     }
@@ -290,3 +291,4 @@ abstract class AbstractPlugin implements Plugin{
     }
     
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

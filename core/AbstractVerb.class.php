@@ -32,7 +32,7 @@
  *
  * @category   verb
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -53,12 +53,12 @@ require_once "myfuses/core/CircuitAction.class.php";
  *
  * @category   verb
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
- * @since      Revision 17
+ * @since      Revision 25
  */
 abstract class AbstractVerb implements Verb {
     
@@ -324,3 +324,4 @@ abstract class AbstractVerb implements Verb {
 	}
 	
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

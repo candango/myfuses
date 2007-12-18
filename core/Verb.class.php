@@ -24,7 +24,7 @@
  * Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  * 
  * Contributor(s): Flávio Gonçalves Garcia.
@@ -32,10 +32,10 @@
  * @category   controller
  * @package    myfuses.core
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
- * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 24 2007-01-04 13:33:00Z piraz $
+ * @version    SVN: $Id$
  */
 
 require_once "myfuses/core/ICacheable.class.php";
@@ -56,8 +56,8 @@ require_once "myfuses/core/CircuitAction.class.php";
  * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 24 $
- * @since      Revision 17
+ * @version    SVN: $Revision$
+ * @since      Revision 25
  */
 interface Verb extends ICacheable, IParseable {
     

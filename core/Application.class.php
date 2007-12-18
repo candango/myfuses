@@ -26,11 +26,11 @@
  * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id:Application.class.php 23 2007-01-04 13:26:33Z piraz $
@@ -47,11 +47,11 @@ require_once "myfuses/core/ICacheable.class.php";
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
  * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
- * @since      Revision 19
+ * @since      Revision 23
  */
 class Application implements ICacheable {
     
