@@ -411,9 +411,12 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     $attrName, $attribute );
             }
         }
-	    
-        if( !is_null( $path ) ){
-	        require_once $path;    
+        
+        if( !is_null( $path ) ) {
+	        if( !MyFusesFileHandler::isAbsolutePath( $path ) ) {
+	            $path = $this->getApplication()->getPath() . $path;
+	        }
+            require_once $path;    
 	    }
         
         if( is_null( $class ) ){
