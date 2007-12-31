@@ -344,7 +344,12 @@ class Application implements ICacheable {
         if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
             $path .= DIRECTORY_SEPARATOR;
         }
-        $this->path = $path;
+        if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
+            $this->path = $path;    
+        }
+        else {
+            $this->path = MyFusesFileHandler::sanitizePath( getcwd() ) . $path;
+        }
     }
     
     /**
