@@ -171,22 +171,32 @@ class MyFuses {
     
     public function createApplication( 
         $appName = Application::DEFAULT_APPLICATION_NAME, 
-        $default = false, MyFusesLoader $loader = null ) {
-        
+        $appReference = null ) {
+            
         $appClass = $this->getApplicationClass();
             
         $application = new $appClass( $appName );
         
-        $application->setDefault( $default );
-        
-        $application->setPath( dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
+        if( !is_null( $appReference ) ) {
+            if( isset( $appReference[ 'path' ] ) ) {
+                $application->setPath( $appReference[ 'path' ] );
+            }
+            if( isset( $appReference[ 'file' ] ) ) {
+                $application->setFile( $appReference[ 'file' ] );
+            }
+            
+        }
+        else {
+            $application->setPath( dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );    
+        }
         
         // setting parsed path
         $application->setParsedPath( $this->getParsedPath() . 
             $application->getName() . DIRECTORY_SEPARATOR ) ;
         
-        $this->addApplication( $application, $loader );
+        $this->addApplication( $application );
         
+        return $application;
     }
     
     /**
@@ -209,10 +219,7 @@ class MyFuses {
         return $this->applications;
     }
     
-    
-    
-    public function addApplication( Application $application, 
-        MyFusesLoader $loader = null ) {
+    public function addApplication( Application $application ) {
         
         if( count( $this->applications ) == 0 ) {
             $application->setDefault( true );
@@ -223,10 +230,6 @@ class MyFuses {
         $this->applications[ $application->getName() ] = $application;
         
         $application->setController( $this );
-        
-        if( !is_null( $loader ) ) {
-            $application->setLoader( $loader );
-        }
         
         if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
             if( $application->isDefault() ) {
