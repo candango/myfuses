@@ -64,6 +64,7 @@ class DoVerb extends AbstractVerb {
      */
     private $circuitToBeExecutedName;
     
+    private $appName;
     
     /**
      * Action name to be executed
@@ -74,9 +75,20 @@ class DoVerb extends AbstractVerb {
     
     public function setActionToBeExecuted( $actionName ) {
         $actionNameX = explode( '.', $actionName );
+        
+        $app = $this->getAction()->getCircuit()->getApplication()->getName();
+        
+        if( count( $actionNameX ) > 2 ) {
+            list( $app, $circuit, $action ) = $actionNameX;
+            $actionNameX = array( $circuit, $action );
+        }
+        
+        $this->appName = $app;
+        
         if ( count( $actionNameX ) < 2 ) {
             try {
-                $this->circuitToBeExecutedName = $this->getAction()->getCircuit()->getName();    
+                $this->circuitToBeExecutedName = 
+                    $this->getAction()->getCircuit()->getName();    
             }
 	        catch ( MyFusesCircuitException $mfe ) {
 	            $mfe->breakProcess();
@@ -92,7 +104,10 @@ class DoVerb extends AbstractVerb {
     
     public function getData() {
         $data = parent::getData();
-        $data[ "attributes" ][ "action" ] = $this->circuitToBeExecutedName . "." . $this->actionToBeExecutedName;
+        $app = $this->getAction()->getCircuit()->getApplication()->getName();
+        $data[ "attributes" ][ "action" ] = ( $this->appName != $app ? 
+            $this->appName . "." : "" ) .  $this->circuitToBeExecutedName . 
+            "." . $this->actionToBeExecutedName;
         return $data;
     }
     
@@ -108,8 +123,7 @@ class DoVerb extends AbstractVerb {
      */
     public function getParsedCode( $commented, $identLevel ) {
         try {
-	        $action = $this->getAction()->getCircuit()->
-	            getApplication()->getCircuit( 
+	        $action =  MyFuses::getInstance()->getApplication( $this->appName )->getCircuit( 
 	            $this->circuitToBeExecutedName )->
 	            getAction( $this->actionToBeExecutedName );
         }
