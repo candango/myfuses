@@ -185,7 +185,7 @@ class IfVerb extends AbstractVerb {
 		    
 		    $trueOccour = true;
 	    }
-
+        InvokeVerb::clearClassCall();
 	    if( count( $this->falseVerbs ) ) {
 	        
 	        $strOut .= str_repeat( "\t", $identLevel );
