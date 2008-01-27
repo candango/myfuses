@@ -71,6 +71,7 @@ abstract class AbstractVerb implements Verb {
             "myfuses:loop" => "LoopVerb",
             "myfuses:relocate" => "RelocateVerb",
             "myfuses:set" => "SetVerb",
+            "myfuses:switch" => "SwitchVerb",
             "myfuses:xfa" => "XfaVerb");
     
     /**
