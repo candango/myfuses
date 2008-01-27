@@ -74,6 +74,8 @@ class DoVerb extends AbstractVerb {
     private $actionToBeExecutedName;
     
     public function setActionToBeExecuted( $actionName ) {
+        
+        
         $actionNameX = explode( '.', $actionName );
         
         $app = $this->getAction()->getCircuit()->getApplication()->getName();
@@ -123,7 +125,8 @@ class DoVerb extends AbstractVerb {
      */
     public function getParsedCode( $commented, $identLevel ) {
         try {
-	        $action =  MyFuses::getInstance()->getApplication( $this->appName )->getCircuit( 
+            $action =  MyFuses::getInstance()->getApplication( 
+                $this->appName )->getCircuit( 
 	            $this->circuitToBeExecutedName )->
 	            getAction( $this->actionToBeExecutedName );
         }
