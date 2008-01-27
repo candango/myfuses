@@ -73,10 +73,11 @@ class DebugDumpVerb extends AbstractVerb {
      */
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
-        
+        $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "var_dump( " . $this->getVariable() . " );\n";
         
         if( $this->isDie() ) {
+            $strOut .= str_repeat( "\t", $identLevel );
             $strOut .= "die();\n";
         }
         
