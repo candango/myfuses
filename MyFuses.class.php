@@ -461,8 +461,8 @@ class MyFuses {
 	        
 	        // resolving #valriable#'s 
 	        $strParse = preg_replace( 
-                "@([#])([\$?\w+][\:\:\w+\(\)]*([\-\>\w+\(?\)?]|[\[\'\w+\'\]])*)" .
-                "([#])@", "\" . $2 . \"" , $strParse );
+                "@([#])([\$?\w+][\:\:\w+\(\)]*([\-\>\w+\(?\)?]|" .
+                "[\[\'\w+\'\]])*)([#])@", "\" . $2 . \"" , $strParse );
             
 	        // sanitizing " "'s    
             $strParse = 
