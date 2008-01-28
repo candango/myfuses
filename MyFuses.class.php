@@ -466,7 +466,8 @@ class MyFuses {
             // sanitizing " "'s    
             $strParse = 
                 str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
-	        
+	        $strParse = 
+                str_replace( array( ". \"\";" ), ";", $strParse );
             if( !file_exists( $path ) ) {
 	            mkdir( $path );
 	            chmod( $path, 0777 );
