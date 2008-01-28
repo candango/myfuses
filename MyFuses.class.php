@@ -459,11 +459,12 @@ class MyFuses {
             }
             //end parsing post process plugins
 	        
-	        // resolving #<valriable#'s 
+	        // resolving #valriable#'s 
 	        $strParse = preg_replace( 
-                "@([#])([$]*)(\w+|\d+)([#])@", "\" . $2$3 . \"", 
-                $strParse );
-            // sanitizing " "'s    
+                "@([#])([\$?\w+][\:\:\w+\(\)]*([\-\>\w+\(?\)?]|[\[\'\w+\'\]])*)" .
+                "([#])@", "\" . $2 . \"" , $strParse );
+            
+	        // sanitizing " "'s    
             $strParse = 
                 str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
 	        $strParse = 
