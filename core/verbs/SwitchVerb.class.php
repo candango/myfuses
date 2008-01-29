@@ -58,11 +58,11 @@
 class SwitchVerb extends AbstractVerb {
     
     /**
-     * Variable to be switched
+     * Condition to be switched
      *
      * @var string
      */
-    private $variable;
+    private $condition;
     
 	/**
      * Case verbs collection
@@ -79,27 +79,27 @@ class SwitchVerb extends AbstractVerb {
     private $defaultVerbs = array();
     
     /**
-     * Return the switch variable
+     * Return the switch condition
      *
      * @return string
      */
-    public function getVariable() {
-        return $this->variable;
+    public function getCondition() {
+        return $this->condition;
     }
     
     /**
-     * Set the switch variable
+     * Set the switch condition
      *
-     * @param string $variable
+     * @param string $condition
      */
-    public function setVariable( $variable ) {
-        $this->variable = $variable;
+    public function setCondition( $condition ) {
+        $this->condition = $condition;
     }
 
     public function getData() {
         $data = parent::getData();
         
-        $data[ "attributes" ][ "variable" ] =  $this->getVariable();
+        $data[ "attributes" ][ "condition" ] =  $this->getCondition();
         
         if( count( $this->caseVerbs ) ) {
             
@@ -133,12 +133,12 @@ class SwitchVerb extends AbstractVerb {
         
         parent::setData( $data );
         
-        if( isset( $data[ "attributes" ][ "variable" ] ) ) {
-            $this->setVariable( $data[ "attributes" ][ "variable" ] );
+        if( isset( $data[ "attributes" ][ "condition" ] ) ) {
+            $this->setCondition( $data[ "attributes" ][ "condition" ] );
         }
         else  {
             $params = $this->getErrorParams();
-            $params[ 'attrName' ] = "variable";
+            $params[ 'attrName' ] = "condition";
             throw new MyFusesVerbException( $params, 
                 MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE );
         }
@@ -190,7 +190,7 @@ class SwitchVerb extends AbstractVerb {
         else  {
             $params = $this->getErrorParams();
             $params[ 'verbName' ] = 'case';
-            $params[ 'attrName' ] = "variable";
+            $params[ 'attrName' ] = "condition";
             throw new MyFusesVerbException( $params, 
                 MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE );
         }
@@ -236,7 +236,7 @@ class SwitchVerb extends AbstractVerb {
 	    
 	    if( $switchOccour ) {
 	        $strOut .= str_repeat( "\t", $identLevel );
-	        $strOut .= "switch( " . $this->getVariable() . " ) {\n";
+	        $strOut .= "switch( " . $this->getCondition() . " ) {\n";
 	    }
 	    
         foreach( $this->caseVerbs as $key => $caseVerbs ) {
