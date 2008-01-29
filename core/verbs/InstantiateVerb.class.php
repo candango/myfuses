@@ -103,33 +103,77 @@ class InstantiateVerb extends AbstractVerb {
         $this->class = $class;
     }
     
+    /**
+     * Return verb object
+     *
+     * @return string
+     */
     public function getObject() {
         return $this->object;
     }
 
+    /**
+     * Set verb object
+     *
+     * @param string $object
+     */
     public function setObject( $object ) {
         $this->object = $object;
     }
     
+    /**
+     * Return verb wsdl link
+     *
+     * @return string
+     */
     public function getWsdl() {
         return $this->wsdl;
     }
     
+    /**
+     * Set verb wsdl link
+     *
+     * @param string $wsdl
+     */
     public function setWsdl( $wsdl ) {
         $this->wsdl = $wsdl;
     }
     
+    /**
+     * Return all verb arguments
+     *
+     * @return array
+     */
     public function getArguments() {
         return $this->arguments;
     }
-
+    
+    /**
+     * Set an array of arguments in this verb
+     *
+     * @param array $arguments
+     */
     public function setArguments( $arguments ) {
         $this->arguments = $arguments;
+    }
+     
+    /**
+     * Return o new strin with all arguments separated by a ','
+     *
+     * @return string
+     */
+    private function getArgumentString() {
+        $strOut = "";
+        if( count( $this->getArguments() ) ) {
+            foreach( $this->getArguments() as $key => $argument ){
+                $strOut .= ($key == 0 ? "": ", ") . "\"" . $argument .  "\"";
+            }
+        }
+        return $strOut;
     }
     
     public function getData() {
         $data = parent::getData();
-        $data[ "name" ] = "instantiate";
         
         if( !is_null( $this->getClass() ) ) {
             $data[ "attributes" ][ "class" ] = $this->getClass();    
@@ -142,15 +186,19 @@ class InstantiateVerb extends AbstractVerb {
         }
         
         if( !is_null( $this->getArguments() ) ) {
-            $data[ "attributes" ][ "arguments" ] = $this->getArguments();
+            foreach( $this->getArguments() as $argument ) {
+                $child = array();
+                $child[ 'name' ] = 'argument';
+                $child[ 'namespace' ] = 'myfuses';
+                $child[ 'attributes' ][ 'value' ] = $argument;
+                $data[ 'children' ][] = $child; 
+            }
         }
         return $data;
     }
 
     public function setData( $data ) {
-        
         parent::setData( $data );
-        
         if( isset( $data[ "attributes" ][ "wsdl" ] ) ) {
             $this->setWsdl( $data[ "attributes" ][ "wsdl" ] );
         }
@@ -159,10 +207,32 @@ class InstantiateVerb extends AbstractVerb {
             $this->setClass( $data[ "attributes" ][ "class" ] );
         }
         
-        $this->setObject( $data[ "attributes" ][ "object" ] );
+        if( isset( $data[ "attributes" ][ "object" ] ) ) {
+            $this->setObject( $data[ "attributes" ][ "object" ] );
+        }
+        else  {
+            $params = $this->getErrorParams();
+            $params[ 'attrName' ] = "object";
+            throw new MyFusesVerbException( $params, 
+                MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE );
+        }
         
-        if( isset( $data[ "attributes" ][ "arguments" ] ) ) {
-            $this->setArguments( $data[ "attributes" ][ "arguments" ] );
+        
+        if( isset( $data[ "children" ] ) ) {
+            foreach( $data[ "children" ] as $child ) {
+                if( $child[ 'name' ] == 'argument' ) {
+                    if( isset( $child[ 'attributes' ][ 'value' ] ) ) {
+                        $this->arguments[] = $child[ 'attributes' ][ 'value' ];
+                    }
+                    else  {
+                        $params = $this->getErrorParams();
+                        $params[ 'verbName' ] = "argument";
+                        $params[ 'attrName' ] = "value";
+                        throw new MyFusesVerbException( $params, 
+                            MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE );
+                    }
+                }
+            }
         }
 
     }
@@ -184,6 +254,7 @@ class InstantiateVerb extends AbstractVerb {
 	        "\" )->getCompletePath()";
 
 	    $strOut = parent::getParsedCode( $commented, $identLevel );
+	    
 	    $strOut .= str_repeat( "\t", $identLevel );
 	    if( is_null( $this->getWsdl() ) ) {
 	        $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
@@ -193,13 +264,12 @@ class InstantiateVerb extends AbstractVerb {
 		    $strOut .= "}\n";
 		    $strOut .= str_repeat( "\t", $identLevel );
 		    $strOut .= "\$" . $this->getObject() . " = new " . 
-		        $this->getClass() . "( " . $this->getArguments() . " );\n\n";    
+		        $this->getClass() . "( " . $this->getArgumentString() . " );\n\n";    
 	    }
 	    else {
 	        $strOut .= "\$" . $this->getObject() . " = new SoapClient" . 
 		        "( \"" . $this->getWsdl() . "\" );\n\n";
 	    }
-	    
 	    return $strOut;
 	}
 
