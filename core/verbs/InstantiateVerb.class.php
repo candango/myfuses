@@ -40,7 +40,7 @@
 /**
  * InstantiateVerb - InstantiateVerb.class.php
  * 
- * This verb instantiate one object by a given class or wsdl.
+ * This verb instantiate one object by a given class or webservice.
  * 
  * PHP version 5
  *
@@ -76,7 +76,7 @@ class InstantiateVerb extends AbstractVerb {
      * 
      * @var string
      */
-    private $wsdl;
+    private $webservice;
     
     /**
      * Arguments used at object construction
@@ -122,21 +122,21 @@ class InstantiateVerb extends AbstractVerb {
     }
     
     /**
-     * Return verb wsdl link
+     * Return verb webservice link
      *
      * @return string
      */
-    public function getWsdl() {
-        return $this->wsdl;
+    public function getWebservice() {
+        return $this->webservice;
     }
     
     /**
-     * Set verb wsdl link
+     * Set verb webservice link
      *
-     * @param string $wsdl
+     * @param string $webservice
      */
-    public function setWsdl( $wsdl ) {
-        $this->wsdl = $wsdl;
+    public function setWebservice( $webservice ) {
+        $this->webservice = $webservice;
     }
     
     /**
@@ -181,8 +181,8 @@ class InstantiateVerb extends AbstractVerb {
         
         $data[ "attributes" ][ "object" ] = $this->getObject();
         
-        if( !is_null( $this->getWsdl() ) ) {
-            $data[ "attributes" ][ "wsdl" ] = $this->getWsdl();
+        if( !is_null( $this->getWebservice() ) ) {
+            $data[ "attributes" ][ "webservice" ] = $this->getWebservice();
         }
         
         if( !is_null( $this->getArguments() ) ) {
@@ -199,8 +199,8 @@ class InstantiateVerb extends AbstractVerb {
 
     public function setData( $data ) {
         parent::setData( $data );
-        if( isset( $data[ "attributes" ][ "wsdl" ] ) ) {
-            $this->setWsdl( $data[ "attributes" ][ "wsdl" ] );
+        if( isset( $data[ "attributes" ][ "webservice" ] ) ) {
+            $this->setWebservice( $data[ "attributes" ][ "webservice" ] );
         }
         
         if( isset( $data[ "attributes" ][ "class" ] ) ) {
@@ -210,13 +210,6 @@ class InstantiateVerb extends AbstractVerb {
         if( isset( $data[ "attributes" ][ "object" ] ) ) {
             $this->setObject( $data[ "attributes" ][ "object" ] );
         }
-        else  {
-            $params = $this->getErrorParams();
-            $params[ 'attrName' ] = "object";
-            throw new MyFusesVerbException( $params, 
-                MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE );
-        }
-        
         
         if( isset( $data[ "children" ] ) ) {
             foreach( $data[ "children" ] as $child ) {
@@ -256,7 +249,7 @@ class InstantiateVerb extends AbstractVerb {
 	    $strOut = parent::getParsedCode( $commented, $identLevel );
 	    
 	    $strOut .= str_repeat( "\t", $identLevel );
-	    if( is_null( $this->getWsdl() ) ) {
+	    if( is_null( $this->getWebservice() ) ) {
 	        $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
 		    $strOut .= str_repeat( "\t", $identLevel + 1 );
 		    $strOut .= "require_once( " . $fileCall . " );\n";
@@ -268,7 +261,7 @@ class InstantiateVerb extends AbstractVerb {
 	    }
 	    else {
 	        $strOut .= "\$" . $this->getObject() . " = new SoapClient" . 
-		        "( \"" . $this->getWsdl() . "\" );\n\n";
+		        "( \"" . $this->getWebservice() . "\" );\n\n";
 	    }
 	    return $strOut;
 	}
