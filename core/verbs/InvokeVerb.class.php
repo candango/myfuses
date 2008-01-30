@@ -136,30 +136,55 @@ class InvokeVerb extends AbstractVerb {
 		$this->variable = $variable;
 	}
 	
+	/**
+     * Return o new strin with all arguments separated by a ','
+     *
+     * @return string
+     */
+    private function getArgumentString() {
+        $strOut = "";
+        if( count( $this->getArguments() ) ) {
+            foreach( $this->getArguments() as $key => $argument ){
+                $strOut .= ($key == 0 ? "": ", ") . "\"" . $argument .  "\"";
+            }
+        }
+        return $strOut;
+    }
+	
 	public function getData() {
 		
 	    $data = parent::getData();
 		
-		if( !is_null( $this->getClass() ) ) {
-		    $data[ "attributes" ][ "class" ] = $this->getClass();
-		}
-		else {
-		    $data[ "attributes" ][ "object" ] = $this->getObject();    
-		}
-		
-		if( !is_null( $this->getMethod() ) ) {
-			$data[ "attributes" ][ "method" ] = $this->getMethod();
-			if( !is_null( $this->getArguments() ) ) {
-				$data[ "attributes" ][ "argument" ] = $this->getArguments();
-			}
-		}
-		else {
-		    $data[ "attributes" ][ "methodcall" ] = $this->getMethodCall();
-		}
+	    if( !is_null( $this->getClass() ) ) {
+	        $data[ "attributes" ][ "class" ] = $this->getClass();
+	    }
+	    
+	    if( !is_null( $this->getObject() ) ) {
+	        $data[ "attributes" ][ "object" ] = $this->getObject();
+	    }
+	    
+	    if( !is_null( $this->getMethod() ) ) {
+	        $data[ "attributes" ][ "method" ] = $this->getMethod();
+	    }
+	    
+	    if( !is_null( $this->getArguments() ) ) {
+            foreach( $this->getArguments() as $argument ) {
+                $child = array();
+                $child[ 'name' ] = 'argument';
+                $child[ 'namespace' ] = 'myfuses';
+                $child[ 'attributes' ][ 'value' ] = $argument;
+                $data[ 'children' ][] = $child; 
+            }
+        }
+	    
+	    if(!is_null( $this->getMethodCall() ) ){
+	        $data[ "attributes" ][ "methodcall" ] = $this->getMethodCall();
+	    }
 		
 	    if( !is_null( $this->getVariable() ) ) {
-			$data[ "attributes" ][ "variable" ] = $this->getVariable();
+			$data[ "attributes" ][ "returnvariable" ] = $this->getVariable();
 		}
+		
 		return $data;
 	}
 
@@ -175,18 +200,33 @@ class InvokeVerb extends AbstractVerb {
 		}
 	    
 	    if( isset( $data[ "attributes" ][ "method" ] ) ) {
-		    $this->setMethod( $data[ "attributes" ][ "method" ] );
-	
-			if( isset( $data[ "children" ] ) ) {
-				$this->setArguments( $data[ "children" ] );
-			}    
+		    $this->setMethod( $data[ "attributes" ][ "method" ] );    
 	    }
-	    else {
+	    
+	    if( isset( $data[ "children" ] ) ) {
+            foreach( $data[ "children" ] as $child ) {
+                if( $child[ 'name' ] == 'argument' ) {
+                    if( isset( $child[ 'attributes' ][ 'value' ] ) ) {
+                        $this->arguments[] = $child[ 'attributes' ][ 'value' ];
+                    }
+                    else  {
+                        $params = $this->getErrorParams();
+                        $params[ 'verbName' ] = "argument";
+                        $params[ 'attrName' ] = "value";
+                        throw new MyFusesVerbException( $params, 
+                            MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE );
+                    }
+                }
+            }
+        }
+	    
+	    
+	    if( isset( $data[ "attributes" ][ "methodcall" ] ) ) {
 	        $this->setMethodCall( $data[ "attributes" ][ "methodcall" ] );
 	    }
 	    
-	    if( isset( $data[ "attributes" ][ "variable" ] ) ) {
-		    $this->setVariable( $data[ "attributes" ][ "variable" ] );
+	    if( isset( $data[ "attributes" ][ "returnvariable" ] ) ) {
+		    $this->setVariable( $data[ "attributes" ][ "returnvariable" ] );
         }
 	}
 
@@ -250,7 +290,7 @@ class InvokeVerb extends AbstractVerb {
 			
 			// Verify arguments - Fusebox 5 (strictMode set to true)
 			if ( !is_null( $this->getArguments() ) )
-				$strOut .= $this->getArguments();
+				$strOut .= $this->getArgumentString();
 		    // Close method
 	        $strOut .= ");\n\n";
 		}
