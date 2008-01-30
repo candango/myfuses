@@ -41,10 +41,12 @@
 <!ATTLIST phase
 	name (fuseactionException | postFuseaction | postProcess | preFuseaction | preProcess | processError) #REQUIRED
 >
+
 <!ELEMENT plugin (parameter*)>
 <!ATTLIST plugin
 	name CDATA #REQUIRED
-	template CDATA #REQUIRED
+	file CDATA #IMPLIED
+	template CDATA #IMPLIED
 	path CDATA #IMPLIED
 >
 
