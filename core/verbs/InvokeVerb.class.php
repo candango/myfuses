@@ -145,7 +145,7 @@ class InvokeVerb extends AbstractVerb {
         $strOut = "";
         if( count( $this->getArguments() ) ) {
             foreach( $this->getArguments() as $key => $argument ){
-                $strOut .= ($key == 0 ? "": ", ") . "\"" . $argument .  "\"";
+                $strOut .= ($key == 0 ? "": " , ") . "\"" . $argument .  "\"";
             }
         }
         return $strOut;
