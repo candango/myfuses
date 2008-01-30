@@ -277,7 +277,7 @@ class InvokeVerb extends AbstractVerb {
 				}
 			     
 			    $strOut .= $this->getClass() . "::" . 
-			        $this->getMethod() . "(";    
+			        $this->getMethod() . "( ";    
 			}
 			else {
 			    // Verify if it has a variable (Method returns a value)
@@ -285,14 +285,14 @@ class InvokeVerb extends AbstractVerb {
 					$strOut .= "\$" . $this->getVariable() . " = ";
 				}
 			    $strOut .= "\$" . $this->getObject() . "->" . 
-			        $this->getMethod() . "(";    
+			        $this->getMethod() . "( ";    
 			}
 			
 			// Verify arguments - Fusebox 5 (strictMode set to true)
 			if ( !is_null( $this->getArguments() ) )
 				$strOut .= $this->getArgumentString();
 		    // Close method
-	        $strOut .= ");\n\n";
+	        $strOut .= " );\n\n";
 		}
 		else {
 		    $strOut .= "\$" . $this->getObject() . "->" . 
