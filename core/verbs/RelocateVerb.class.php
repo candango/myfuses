@@ -62,6 +62,8 @@ class RelocateVerb extends AbstractVerb {
     
     private $xfa;
     
+    private $querystring;
+    
     public function getUrl() {
         return $this->url;
     }
@@ -78,6 +80,14 @@ class RelocateVerb extends AbstractVerb {
         $this->xfa = $xfa;
     }
     
+    public function getQuerystring() {
+        return $querystring;
+    }
+    
+    public function setQuerystring( $querystring ) {
+        $this->querystring = $querystring;
+    }
+    
     public function getData() {
         $data = parent::getData();
         if( !is_null( $this->getUrl() ) ) {
@@ -87,6 +97,11 @@ class RelocateVerb extends AbstractVerb {
         if( !is_null( $this->getXfa() ) ) {
             $data[ "attributes" ][ "xfa" ] = $this->getXfa();
         }
+        
+        if( !is_null( $this->getQuerystring() ) ) {
+            $data[ "attributes" ][ "querystring" ] = $this->getQuerystring();
+        }
+        
         return $data;
     }
     
@@ -100,6 +115,11 @@ class RelocateVerb extends AbstractVerb {
         if( isset( $data[ "attributes" ][ "xfa" ] ) ) {
             $this->setXfa( $data[ "attributes" ][ "xfa" ] );    
         }
+        
+        if( isset( $data[ "querystring" ][ "xfa" ] ) ) {
+            $this->setQuerystring( $data[ "querystring" ][ "xfa" ] );    
+        }
+        
     }
     
 
@@ -116,9 +136,22 @@ class RelocateVerb extends AbstractVerb {
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         
-	    $url = ( is_null( $this->getUrl() ) ? $controllerClass . 
-	        "::getMySelfXfa( \"" . $this->getXfa() . "\" )" : "\"" . 
-	        $this->getUrl() . "\"" );    
+	    $url = "";
+	        
+	    if( is_null( $this->getXfa() ) ) {
+	        $url = "\"" . $this->getUrl() . $this->getQuerystring() . "\"";
+	    }
+	    else {
+	        if( is_null( $this->getQuerystring() ) ) {
+	           $url = $controllerClass . "::getMySelfXfa( \"" . 
+	               $this->getXfa() . "\" )";
+	        }
+	        else {
+	            $url = $controllerClass . "::getMySelfXfa( \"" . 
+                   $this->getXfa() . "\", true ) . \"" . 
+                   $this->getQuerystring() . "\"";
+	        }
+	    }
 	        
 	    $strOut .=  $controllerClass . "::sendToUrl( " . $url . " );\n\n";
         
