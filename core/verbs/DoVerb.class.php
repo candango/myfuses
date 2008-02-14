@@ -55,7 +55,9 @@
  * @version    SVN: $Revision$
  * @since      Revision 125
  */
-class DoVerb extends AbstractVerb {
+include "myfuses/core/verbs/ParameterizedVerb.class.php";
+
+class DoVerb extends ParameterizedVerb {
     
     /**
      * Circuit name to be executed
@@ -123,7 +125,7 @@ class DoVerb extends AbstractVerb {
      *
      * @return string
      */
-    public function getParsedCode( $commented, $identLevel ) {
+    public function getRealParsedCode( $commented, $identLevel ) {
         try {
             $action =  MyFuses::getInstance()->getApplication( 
                 $this->appName )->getCircuit( 
@@ -137,8 +139,7 @@ class DoVerb extends AbstractVerb {
             $mffae->breakProcess();
         }
         
-        $strOut = parent::getParsedCode( $commented, $identLevel );
-        // FIXME resolver plugins, persar direito isso
+        $strOut .= str_repeat( "\t", $identLevel );
         
         $action->setCalledByDo( true );
         
