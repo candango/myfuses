@@ -38,6 +38,8 @@
  * @version    SVN: $Id$
  */
 
+require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
+
 /**
  * RelocateVerb  - RelocateVerb.class.php
  * 
@@ -55,7 +57,7 @@
  * @version    SVN: $Revision$
  * @since      Revision 17
  */
-class RelocateVerb extends AbstractVerb {
+class RelocateVerb extends ParameterizedVerb {
     
     
     private $url;
@@ -128,10 +130,9 @@ class RelocateVerb extends AbstractVerb {
      *
      * @return string
      */
-    public function getParsedCode( $commented, $identLevel ) {
-        $strOut = parent::getParsedCode( $commented, $identLevel );
+    public function getRealParsedCode( $commented, $identLevel ) {
         
-        $strOut .= str_repeat( "\t", $identLevel );
+        $strOut = str_repeat( "\t", $identLevel );
         
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
