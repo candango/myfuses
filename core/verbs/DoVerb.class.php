@@ -55,7 +55,7 @@
  * @version    SVN: $Revision$
  * @since      Revision 125
  */
-include "myfuses/core/verbs/ParameterizedVerb.class.php";
+require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
 
 class DoVerb extends ParameterizedVerb {
     
