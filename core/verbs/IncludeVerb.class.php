@@ -37,6 +37,8 @@
  * @version    SVN: $Id$
  */
 
+require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
+
 /**
  * IncludeVerb  - IncludeVerb.class.php
  * 
@@ -53,8 +55,6 @@
  * @version    SVN: $Revision$
  * @since      Revision 125
  */
-require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
-
 class IncludeVerb extends ParameterizedVerb {
     
     /**
