@@ -38,6 +38,8 @@
  * @version    SVN: $Id$
  */
 
+require_once "myfuses/core/verbs/IncludeVerb.class.php";
+
 /**
  * IfVerb  - IfVerb.class.php
  * 
