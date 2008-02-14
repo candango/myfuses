@@ -64,8 +64,6 @@ class RelocateVerb extends ParameterizedVerb {
     
     private $xfa;
     
-    private $querystring;
-    
     public function getUrl() {
         return $this->url;
     }
@@ -82,14 +80,6 @@ class RelocateVerb extends ParameterizedVerb {
         $this->xfa = $xfa;
     }
     
-    public function getQuerystring() {
-        return $querystring;
-    }
-    
-    public function setQuerystring( $querystring ) {
-        $this->querystring = $querystring;
-    }
-    
     public function getData() {
         $data = parent::getData();
         if( !is_null( $this->getUrl() ) ) {
@@ -98,10 +88,6 @@ class RelocateVerb extends ParameterizedVerb {
         
         if( !is_null( $this->getXfa() ) ) {
             $data[ "attributes" ][ "xfa" ] = $this->getXfa();
-        }
-        
-        if( !is_null( $this->getQuerystring() ) ) {
-            $data[ "attributes" ][ "querystring" ] = $this->getQuerystring();
         }
         
         return $data;
@@ -116,10 +102,6 @@ class RelocateVerb extends ParameterizedVerb {
         
         if( isset( $data[ "attributes" ][ "xfa" ] ) ) {
             $this->setXfa( $data[ "attributes" ][ "xfa" ] );    
-        }
-        
-        if( isset( $data[ "querystring" ][ "xfa" ] ) ) {
-            $this->setQuerystring( $data[ "querystring" ][ "xfa" ] );    
         }
         
     }
@@ -143,15 +125,8 @@ class RelocateVerb extends ParameterizedVerb {
 	        $url = "\"" . $this->getUrl() . $this->getQuerystring() . "\"";
 	    }
 	    else {
-	        if( is_null( $this->getQuerystring() ) ) {
-	           $url = $controllerClass . "::getMySelfXfa( \"" . 
-	               $this->getXfa() . "\" )";
-	        }
-	        else {
-	            $url = $controllerClass . "::getMySelfXfa( \"" . 
-                   $this->getXfa() . "\", true ) . \"" . 
-                   $this->getQuerystring() . "\"";
-	        }
+	        $url = $controllerClass . "::getMySelfXfa( \"" . 
+	           $this->getXfa() . "\" )";
 	    }
 	        
 	    $strOut .=  $controllerClass . "::sendToUrl( " . $url . " );\n\n";
