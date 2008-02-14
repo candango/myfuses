@@ -38,7 +38,7 @@
  * @version    SVN: $Id$
  */
 
-require_once "myfuses/core/verbs/IncludeVerb.class.php";
+require_once "myfuses/core/verbs/InvokeVerb.class.php";
 
 /**
  * IfVerb  - IfVerb.class.php
