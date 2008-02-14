@@ -53,7 +53,9 @@
  * @version    SVN: $Revision$
  * @since      Revision 125
  */
-class IncludeVerb extends AbstractVerb {
+require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
+
+class IncludeVerb extends ParameterizedVerb {
     
     /**
      * Verb file
@@ -101,11 +103,11 @@ class IncludeVerb extends AbstractVerb {
     }
     
 	/**
-     * Return the parsed code
+     * Return the real parsed code
      *
      * @return string
      */
-    public function getParsedCode( $commented, $identLevel ) {
+    public function getRealParsedCode( $commented, $identLevel ) {
         $appName = $this->getAction()->getCircuit()->
             getApplication()->getName();
         $circuitName = $this->getAction()->getCircuit()->getName();
@@ -115,8 +117,7 @@ class IncludeVerb extends AbstractVerb {
         
         $fileCall = $controllerClass . "::getApplication( \"" . $appName . 
             "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
-            
-        $strOut = parent::getParsedCode( $commented, $identLevel );
+        
         $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "if ( file_exists( " . $fileCall . " . \"" . 
             $this->getFile() . "\" ) ) {\n";
