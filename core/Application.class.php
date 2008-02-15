@@ -82,6 +82,13 @@ class Application implements ICacheable {
     private $parse = false;
     
     /**
+     * Flag that alows automatic rewrite for action resolution
+     *
+     * @var boolean
+     */
+    private $rewrite = true;
+    
+    /**
      * Application name
      * 
      * @access private
@@ -995,6 +1002,14 @@ class Application implements ICacheable {
         $this->plugins[ $phase ] = $plugins;
     }
     
+    public function setRewrite( $rewrite ) {
+        $this->rewrite = $rewrite;
+    }
+    
+    public function allowRewrite(){
+        return $this->rewrite;
+    }
+    
     /**
      * Return one plugin of a given fase and index
      * FIXME Handle non existent plugin error
@@ -1041,6 +1056,8 @@ class Application implements ICacheable {
         $strOut = "\$application = new " . get_class( $this ) . "( \"" . $this->getName() . "\" );\n";
         
         $strOut .= "\$application->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
+        
+        $strOut .= "\$application->setRewrite( " . ( $this->allowRewrite() ? "true" : "false" ) . " );\n";
         
         $strOut .= "\$application->setParsedPath( \"" . addslashes( $this->getParsedPath() ) . "\");\n";
         
