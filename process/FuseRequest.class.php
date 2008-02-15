@@ -31,7 +31,8 @@ class FuseRequest {
         
         $fuseactionVariable = $this->application->getFuseactionVariable();
         
-        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
+        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
+            $this->getApplication()->allowRewrite() ) {
             
             $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
             
@@ -67,10 +68,6 @@ class FuseRequest {
 	            $this->validFuseactionName = $_POST[ $fuseactionVariable ];
 	        }
         }
-        
-        
-        
-        
         
         if( count( explode( ".", $this->validFuseactionName ) ) > 2 ) {
             list( $appName, $circuitName, $actionName ) = 
