@@ -40,6 +40,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     public function loadApplication() {
         // getting cache file
 	    // TODO application load must be like fusebox official
+        
+        $allowRewite = $this->getApplication()->allowRewrite();
+        
         if( is_file( $this->getApplication()->getCompleteCacheFile() ) 
             && ( $this->getApplication()->getMode() != "development" ) ) {
             require_once( $this->getApplication()->getCompleteCacheFile() );
@@ -56,6 +59,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $this->doLoadApplication();
         }
         
+        if( $this->getApplication()->allowRewrite() != $allowRewite ) {
+            $this->getApplication()->setRewrite( $allowRewite );
+        }
         
         // TODO put loadCircuit in this file
         foreach( $this->getApplication()->getCircits() as $circuit ) {
