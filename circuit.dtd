@@ -99,7 +99,7 @@
 	returnvariable CDATA #IMPLIED
 >
 
-<!ELEMENT relocate EMPTY>
+<!ELEMENT relocate (argument*)>
 <!ATTLIST relocate
 	url CDATA #IMPLIED
 	xfa CDATA #IMPLIED
