@@ -325,6 +325,15 @@ class MyFuses {
     }
     
     /**
+     * Return controller debugger
+     *
+     * @return MyFusesDebugger
+     */
+    public function getDebugger() {
+        $this->debugger;
+    }
+    
+    /**
      * Returns the current request
      * 
      * @return FuseRequest
