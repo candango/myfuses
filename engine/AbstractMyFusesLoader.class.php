@@ -39,19 +39,17 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      */
     public function loadApplication() {
         // getting cache file
-	    // TODO application load must be like fusebox official
-        
         $allowRewite = $this->getApplication()->allowRewrite();
         
-        if( is_file( $this->getApplication()->getCompleteCacheFile() ) 
-            && ( $this->getApplication()->getMode() != "development" ) ) {
+        if( is_file( $this->getApplication()->getCompleteCacheFile() ) ) {
             require_once( $this->getApplication()->getCompleteCacheFile() );
             // correcting cached application reference
             $this->setApplication( 
                 $this->getApplication()->getController()->getApplication( 
                     $this->application->getName() ) );
-            
-            if( $this->applicationWasModified() ) {
+            if( $this->applicationWasModified() || 
+                $this->getApplication()->getMode() == "development" ) {
+                // TODO add Appliations constants
                 $this->doLoadApplication();
             }
         }
