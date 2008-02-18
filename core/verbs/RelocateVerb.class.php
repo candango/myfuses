@@ -120,15 +120,27 @@ class RelocateVerb extends ParameterizedVerb {
 	        getApplication()->getControllerClass();
         
 	    $url = "";
-	        
+	    
+        $arguments = "";
+        $queryString = "";
+        
+        if( count( $this->getParameters() ) ) {
+           $arguments = ", true";
+            foreach( $this->getParameters() as $key => $value ) {
+                $queryString .=  ( ( $queryString == "" ) ? "" : "&" ) . 
+                    $key . "=" . $value;
+            }
+            $queryString = "\"" . $queryString . "\"";
+        }
+	    
 	    if( is_null( $this->getXfa() ) ) {
-	        $url = "\"" . $this->getUrl() . $this->getQuerystring() . "\"";
+	        $url = "\"" . $this->getUrl() . $queryString . "\"";
 	    }
 	    else {
 	        $url = $controllerClass . "::getMySelfXfa( \"" . 
-	           $this->getXfa() . "\" )";
+	           $this->getXfa() . "\"" . $arguments . " ) . " . $queryString;
 	    }
-	        
+	    
 	    $strOut .=  $controllerClass . "::sendToUrl( " . $url . " );\n\n";
         
         return $strOut;
