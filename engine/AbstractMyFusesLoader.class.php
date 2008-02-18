@@ -40,8 +40,13 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     public function loadApplication() {
         // getting cache file
         $allowRewite = $this->getApplication()->allowRewrite();
-        
         if( is_file( $this->getApplication()->getCompleteCacheFile() ) ) {
+            
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Restoring Application " . 
+                    $this->getApplication()->getName() ) );
+            
             require_once( $this->getApplication()->getCompleteCacheFile() );
             // correcting cached application reference
             $this->setApplication( 
@@ -54,9 +59,15 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
         else {
+            
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Creating Application " . 
+                    $this->getApplication()->getName() ) );
+            
             $this->doLoadApplication();
         }
-        
+        // restoring changed parameters
         if( $this->getApplication()->allowRewrite() != $allowRewite ) {
             $this->getApplication()->setRewrite( $allowRewite );
         }

@@ -65,12 +65,20 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         if ( is_file( $this->getApplication()->getPath() . 
             self::MYFUSES_APP_FILE ) ) {
             $this->getApplication()->setFile( self::MYFUSES_APP_FILE );
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Getting Application file \"" . 
+                    $this->getApplication()->getCompleteFile() . "\"" ) );
             return true;
         }
         
         if ( is_file( $this->getApplication()->getPath() . 
             self::MYFUSES_PHP_APP_FILE ) ) {
             $this->getApplication()->setFile( self::MYFUSES_PHP_APP_FILE );
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Getting Application file \"" .
+                    $this->getApplication()->getCompleteFile() . "\"" ) );
             return true;
         }
         
