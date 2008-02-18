@@ -78,6 +78,7 @@ class MyFusesDebugger {
      */
     public function registerEvent( MyFusesDebugEvent $event ) {
         $event->setTime( $this->getMicrotime() - $this->initTime );
+        $event->setCount( count( $this->events ) + 1 );
         $this->events[] = $event;
     }
     
