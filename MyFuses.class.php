@@ -330,7 +330,7 @@ class MyFuses {
      * @return MyFusesDebugger
      */
     public function getDebugger() {
-        $this->debugger;
+        return $this->debugger;
     }
     
     /**
@@ -518,7 +518,7 @@ class MyFuses {
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
         }
-        
+        //echo $this->getDebugger();
     }
     
     
