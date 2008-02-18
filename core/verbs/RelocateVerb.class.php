@@ -134,11 +134,11 @@ class RelocateVerb extends ParameterizedVerb {
         }
 	    
 	    if( is_null( $this->getXfa() ) ) {
-	        $url = "\"" . $this->getUrl() . $queryString . "\"";
+	        $url = "\"" . $this->getUrl() . "\" " .  ( ( $queryString == "" ) ? "" : "." ) . $queryString;
 	    }
 	    else {
 	        $url = $controllerClass . "::getMySelfXfa( \"" . 
-	           $this->getXfa() . "\"" . $arguments . " ) . " . $queryString;
+	           $this->getXfa() . "\"" . $arguments . " ) "  .  ( ( $queryString == "" ) ? "" : "." ) .  $queryString;
 	    }
 	    
 	    $strOut .=  $controllerClass . "::sendToUrl( " . $url . " );\n\n";
