@@ -139,7 +139,7 @@ class DoVerb extends ParameterizedVerb {
             $mffae->breakProcess();
         }
         
-        $strOut .= str_repeat( "\t", $identLevel );
+        $strOut = str_repeat( "\t", $identLevel );
         
         $action->setCalledByDo( true );
         
