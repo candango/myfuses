@@ -56,7 +56,7 @@
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter
 	name CDATA #REQUIRED
-	value CDATA #IMPLIED
+	value CDATA #REQUIRED
 >
 
 <!ELEMENT include (parameter*)>
