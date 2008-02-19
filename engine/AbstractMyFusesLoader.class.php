@@ -561,7 +561,17 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         return new $loaderArray[ $whichLoader ]();
     }
     
-    
+    /**
+     * Clean all hashed strings ex:#<string>#
+     *
+     * @param string $hstring
+     * @return string
+     */
+    private function sanitizeHashedString( $hstring ) {
+        // resolving #valriable#'s 
+        return  preg_replace( 
+            "@([#])(.*)([#])@", "\" . $2 . \"" , $hstring );
+    }
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
