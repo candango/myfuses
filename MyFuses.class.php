@@ -468,10 +468,6 @@ class MyFuses {
             }
             //end parsing post process plugins
 	        
-	        // resolving #valriable#'s 
-            $strParse = preg_replace( 
-                "@([#])(.*)([#])@", "\" . $2 . \"" , $strParse );
-            
 	        // sanitizing " "'s    
             $strParse = 
                 str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
