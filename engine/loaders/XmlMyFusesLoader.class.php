@@ -237,7 +237,8 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         }
         
         foreach( $node->attributes() as $key => $attribute ) {
-            $data[ "attributes" ][ $key ] = "" . $attribute;
+            $data[ "attributes" ][ $key ] = $this->sanitizeHashedString( "" . 
+                $attribute );
         }
         
         if( count( $node->children() ) ) {
