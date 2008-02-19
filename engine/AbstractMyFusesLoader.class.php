@@ -570,7 +570,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     public static function sanitizeHashedString( $hstring ) {
         // resolving #valriable#'s 
         return  preg_replace( 
-            "@([#])(.*)([#])@", "\" . $2 . \"" , $hstring );
+            "@([#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#])@", 
+            "\" . $2 . \"" , $hstring );
     }
     
 }
