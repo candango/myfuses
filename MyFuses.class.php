@@ -97,6 +97,8 @@ class MyFuses {
      */
     const MYFUSES_ROOT_PATH = MYFUSES_ROOT_PATH;
     
+    private $pluginPaths = array();
+    
     /**
      * Unique instance to be created in process. MyFuses is implemmented using
      * the singleton pattern.
@@ -151,6 +153,29 @@ class MyFuses {
         $this->debugger = new MyFusesDebugger();
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
             DIRECTORY_SEPARATOR );
+            
+        // adding pluguins paths
+        $this->addPluginPath( "plugins/" );
+        $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins/" );
+    }
+    
+    /**
+     * Add one plugin path. MyFuses will be search plugins in this paths if
+     * the no path was informed. 
+     *
+     * @param string $path
+     */
+    protected function addPluginPath( $path ) {
+        $this->pluginPaths[] = $path;
+    }
+    
+    /**
+     * Return all plugin paths
+     *
+     * @return array
+     */
+    public function getPluginPaths() {
+        return $this->pluginPaths;
     }
     
     public function getParsedPath() {
