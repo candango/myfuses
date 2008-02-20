@@ -249,15 +249,45 @@ abstract class AbstractPlugin implements Plugin{
      */
     public static function getInstance( Application $application, 
         $phase, $name, $path, $file ) {
+        
+        $class = $name;
+            
+        if( substr( $name, -6 ) != "Plugin" ) {
+            $class .= "Plugin";   
+        }
+            
+        if( $file == "" ) {
+            if( substr( $name, -6 ) == "Plugin" ) {
+                $file = $name . ".class.php";   
+            }
+            else {
+                $file = $name . "Plugin.class.php";    
+            }
+        }
+        
         // FIXME handle missing file include exception
         if( $path == "" ) {
-            $path = $application->getPath() . "plugins" . 
-                DIRECTORY_SEPARATOR;
+            foreach( $application->getController()->getPluginPaths() as 
+                $path ) {
+                
+                $tmpPath = "";
+                
+                if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
+                    $tmpPath = $path;
+                }
+                else {
+                    $tmpPath = $application->getPath() . $path;
+                }
+                
+                if( is_file( $tmpPath . $file ) ) {
+                    $path = $tmpPath; break;
+                }
+            }
         }
         
         require_once $path . $file;
         
-        $plugin = new $name();
+        $plugin = new $class();
         
         $plugin->setName( $name );
         $plugin->setPath( $path );
