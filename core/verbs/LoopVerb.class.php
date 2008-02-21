@@ -67,7 +67,7 @@ class LoopVerb extends AbstractVerb {
     
     private $step;
     
-    private $list;
+    private $collection;
     
     private $item;
     
@@ -111,12 +111,12 @@ class LoopVerb extends AbstractVerb {
         $this->step = $step;
     }
     
-    public function getList() {
-        return $this->list;
+    public function getCollection() {
+        return $this->collection;
     }
 
-    public function setList( $list ) {
-        $this->list = $list;
+    public function setCollection( $collection ) {
+        $this->collection = $collection;
     }
     
     public function getItem() {
@@ -141,9 +141,12 @@ class LoopVerb extends AbstractVerb {
 	            $data[ "attributes" ][ "step" ] = $this->getStep();
 	        }
         }
-        elseif( !is_null( $this->getList() ) ) {
-            $data[ "attributes" ][ "list" ] = $this->getList();
+        elseif( !is_null( $this->getCollection() ) ) {
+            $data[ "attributes" ][ "collection" ] = $this->getCollection();
             $data[ "attributes" ][ "item" ] = $this->getItem();
+            if( !is_null( $this->getIndex() ) ) {
+                $data[ "attributes" ][ "index" ] = $this->getIndex();
+            }
         }
 
         if( count( $this->loopVerbs ) ) {
@@ -170,9 +173,12 @@ class LoopVerb extends AbstractVerb {
                 $this->setStep( $data[ "attributes" ][ "step" ] );
             }
         }
-        elseif( isset( $data[ "attributes" ][ "list" ] ) ) {
-            $this->setList( $data[ "attributes" ][ "list" ] );
+        elseif( isset( $data[ "attributes" ][ "collection" ] ) ) {
+            $this->setCollection( $data[ "attributes" ][ "collection" ] );
             $this->setItem( $data[ "attributes" ][ "item" ] );
+            if( isset( $data[ "attributes" ][ "index" ] ) ) {
+                $this->setIndex( $data[ "attributes" ][ "index" ] );
+            }
         }
         
         if( count( $data[ "children" ] ) ) {
@@ -234,10 +240,17 @@ class LoopVerb extends AbstractVerb {
                 $index . " " . $signal . " " . $to . "; " . 
                 $index . " = " . $index . " " . $signal1 . " " . $step . " ) {\n";
         }
-        elseif( !is_null( $this->getList() ) ) {
-            $list = $this->getList();
+        elseif( !is_null( $this->getCollection() ) ) {
+            $collection = $this->getCollection();
             $item = $this->getItem();
-            $strOut .= "foreach( " . $list . " as " . $item . " ) {\n";
+            
+            $strIndex = "";
+            
+            if( !is_null( $this->getIndex() ) ) {
+                $strIndex = $this->getIndex() . " => " ;
+            }
+            $strOut .= "foreach( " . $collection . " as " . $strIndex . 
+                $item . " ) {\n";
         }
 
         foreach(  $this->loopVerbs as $verb ) {
