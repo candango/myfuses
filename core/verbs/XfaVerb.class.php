@@ -158,15 +158,23 @@ class XfaVerb extends AbstractVerb {
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
+        $value = $this->getValue();
+        if( count( explode( ".", $value ) ) < 3 ) {
+            if( !$this->getAction()->getCircuit()->getApplication()->isDefault() ) {
+                $value = $this->getAction()->getCircuit()->
+                    getApplication()->getName() . "." . $value;
+            }
+        }
+        
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         $strOut .= $controllerClass . "::getInstance()->getRequest()->" .
             "getAction()->addXFA( \"" . $this->getXfaName() . "\", \"" .
-            $this->getValue() . "\" );\n";
+            $value . "\" );\n";
         // for compatibility
         $strOut .= str_repeat( "\t", $identLevel );
         $strOut .= "\$XFA[ \"" . $this->getXfaName() . "\" ] = \"" .
-            $this->getValue() . "\";\n\n";
+            $value . "\";\n\n";
         return $strOut;
     }
 
