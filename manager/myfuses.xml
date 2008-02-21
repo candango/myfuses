@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE myfuses PUBLIC "-//MYFUSES//DTD MYFUSES 1.0 Strict//EN"
+    "http://www.candango.org/myfuses/dtd/myfuses.dtd">
+<!-- $Id: fusebox.xml,v 1.6 2006/03/15 19:46:42 piraz Exp $ -->
+<!--
+    All circuits, classes, lexicons, parameters, globalfuseactions and plugins 
+    used in Fusebox Application are configured in here.
+    We are using the ifbox PHP 5 style.
+    More information about Fuse Box: 
+        http://www.fusebox.org
+        http://sourceforge.net/projects/phpfb4/
+    @author: Flavio Garcia flavio@viacerrado.com
+-->
+<myfuses>
+    <circuits>
+        <circuit alias="main" path="main/" parent="" />
+    </circuits>
+    
+    
+    <classes>
+    </classes>
+    
+    <parameters>
+        <parameter name="fuseactionVariable" value="fuseaction" />
+        <parameter name="defaultFuseaction" value="main.menu" />
+        <parameter name="precedenceFormOrUrl" value="form"/>
+        <parameter name="mode" value="development"/>
+        <parameter name="password" value=""/>
+        <parameter name="parseWithComments" value="true" />
+        <parameter name="conditionalParse" value="true" />
+        <parameter name="allowLexicon" value="true" />
+        <parameter name="ignoreBadGrammar" value="true"/>
+        <parameter name="useAssertions" value="true" />
+        <parameter name="scriptLanguage" value="php5" />
+        <parameter name="scriptFileDelimiter" value="php"/>
+        <parameter name="maskedFileDelimiters" value="htm,cfm,cfml,php,php4,asp,aspx,class,inc"/>
+        <parameter name="characterEncoding" value="iso-8859-1"/>
+    </parameters> 
+
+    <globalfuseactions>
+        <preprocess>
+        </preprocess>
+        <postprocess>
+        </postprocess>
+    </globalfuseactions>
+    
+    <plugins>
+        <phase name="preProcess">
+        </phase>
+        <phase name="preFuseaction">
+        </phase>
+        <phase name="postFuseaction">
+        </phase>
+        <phase name="fuseactionException">
+        </phase>        
+        <phase name="postProcess">
+        </phase>
+        <phase name="processError">
+            
+        </phase>
+    </plugins>
+
+</myfuses>

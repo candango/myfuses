@@ -152,11 +152,12 @@ class MyFuses {
     protected function __construct() {
         $this->debugger = new MyFusesDebugger();
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
-            DIRECTORY_SEPARATOR );
+            DIRECTORY_SEPARATOR );        
             
         // adding pluguins paths
         $this->addPluginPath( "plugins/" );
         $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins/" );
+        
     }
     
     /**
@@ -245,11 +246,10 @@ class MyFuses {
     }
     
     public function addApplication( Application $application ) {
-        
         if( count( $this->applications ) == 0 ) {
             $application->setDefault( true );
         }
-
+        
         $application->setController( $this );
         
         $this->applications[ $application->getName() ] = $application;
@@ -306,7 +306,11 @@ class MyFuses {
      * Loads all applications registered
      */
     private function loadApplications() {
-         foreach( $this->applications as $key => $application ) {
+        $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . "manager/";
+        
+        $this->createApplication( "manager", $appReference );
+         
+        foreach( $this->applications as $key => $application ) {
              if( $key != Application::DEFAULT_APPLICATION_NAME ) {
                  $this->loadApplication( $application );
              }
