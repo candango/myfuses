@@ -40,6 +40,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     public function loadApplication() {
         // getting cache file
         $allowRewite = $this->getApplication()->allowRewrite();
+        $default = $this->getApplication()->isDefault();
+        
         if( is_file( $this->getApplication()->getCompleteCacheFile() ) ) {
             
             MyFuses::getInstance()->getDebugger()->registerEvent( 
@@ -71,6 +73,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         if( $this->getApplication()->allowRewrite() != $allowRewite ) {
             $this->getApplication()->setRewrite( $allowRewite );
         }
+        
+        $this->getApplication()->setDefault( $default );
         
         // TODO put loadCircuit in this file
         foreach( $this->getApplication()->getCircits() as $circuit ) {
