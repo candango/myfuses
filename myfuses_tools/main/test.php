@@ -1,0 +1,1 @@
+<a href=""><?=$application->getName()?></a><br>
