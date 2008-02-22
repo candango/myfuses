@@ -279,7 +279,7 @@ abstract class AbstractPlugin implements Plugin{
                     $tmpPath = $application->getPath() . $path;
                 }
                 
-                if( is_file( $tmpPath . $file ) ) {
+                if( file_exists( $tmpPath . $file ) ) {
                     $path = $tmpPath; break;
                 }
             }

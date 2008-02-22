@@ -118,7 +118,7 @@ class IncludeVerb extends ParameterizedVerb {
         $fileCall = $controllerClass . "::getApplication( \"" . $appName . 
             "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
         
-        $strOut .= str_repeat( "\t", $identLevel );
+        $strOut = str_repeat( "\t", $identLevel );
         $strOut .= "if ( file_exists( " . $fileCall . " . \"" . 
             $this->getFile() . "\" ) ) {\n";
         $strOut .= str_repeat( "\t", $identLevel + 1 );

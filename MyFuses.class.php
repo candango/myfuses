@@ -306,9 +306,10 @@ class MyFuses {
      * Loads all applications registered
      */
     private function loadApplications() {
-        $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . "manager/";
+        $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
+            "myfuses_tools/";
         
-        $this->createApplication( "manager", $appReference );
+        $this->createApplication( "myfuses", $appReference );
          
         foreach( $this->applications as $key => $application ) {
              if( $key != Application::DEFAULT_APPLICATION_NAME ) {
