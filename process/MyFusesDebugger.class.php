@@ -120,7 +120,8 @@ class MyFusesDebugger {
     
 	public function getMicrotime() {
 	    list($usec, $sec) = explode( " ", microtime() );
-	    return ( (float) $usec + (float) $sec );
+	    
+	    return ( ( (float)$usec + (float)$sec) ) * 1000;
 	}
     
 }
@@ -248,8 +249,8 @@ class MyFusesDebugEvent {
     }
     
     public function __toString() {
-        return "<tr style=\"background:#F9F9F9\"><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getTime() . 
-            "</td><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getCategory() . 
+        return "<tr style=\"background:#F9F9F9\"><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . round( $this->getTime() )  . 
+            "ms</td><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getCategory() . 
             "</td><td valign=\"top\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getMessage() . 
             "</td><td valign=\"top\" align=\"center\" style=\"font-size:10pt;border-bottom:1px Solid #CCC;font-family:verdana;\">" . $this->getCount() . "</td></tr>";
     }
