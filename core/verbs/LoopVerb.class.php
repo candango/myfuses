@@ -191,7 +191,7 @@ class LoopVerb extends AbstractVerb {
         
         foreach( $children as $child ){
             $verb = AbstractVerb::getInstance( 
-                serialize( $child ), $this->getAction() );
+                $child, $this->getAction() );
             if( !is_null( $verb ) ) {
                 $this->addLoopVerb( $verb );
             }

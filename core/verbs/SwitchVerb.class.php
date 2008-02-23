@@ -174,7 +174,7 @@ class SwitchVerb extends AbstractVerb {
             if( isset( $caseChild[ "children" ] ) ) {
     	        if( count( $caseChild[ "children" ] ) ) {
         	        foreach( $caseChild[ "children" ] as $child ){
-                        $verb = AbstractVerb::getInstance( serialize( $child ), 
+                        $verb = AbstractVerb::getInstance( $child, 
                             $this->getAction() );
                         $verb->setParent( $this );
                         if( !is_null( $verb ) ) {
@@ -206,7 +206,7 @@ class SwitchVerb extends AbstractVerb {
         if( isset( $defaultChild[ "children" ] ) ) {
 	        if( count( $defaultChild[ "children" ] ) ) {
 	            foreach( $defaultChild[ "children" ] as $child ){
-                    $verb = AbstractVerb::getInstance( serialize( $child ), 
+                    $verb = AbstractVerb::getInstance( $child, 
                         $this->getAction() );
                     $verb->setParent( $this );
                     if( !is_null( $verb ) ) {
