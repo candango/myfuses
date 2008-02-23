@@ -299,14 +299,6 @@ abstract class AbstractPlugin implements Plugin{
         return $plugin;
     }
     
-    public function getCachedCode() {
-        $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
-			$this->phase . "\", \"" . $this->name . "\", \"" . 
-			addslashes( $this->path ) . 
-			"\", \"" . $this->file . "\" );\n";
-		return $strOut;
-    }
-    
     public function getParsedCode( $comented, $identLevel ) {
         $controllerClass = $this->getApplication()->getControllerClass();
         $strOut = "\$plugin = " . $controllerClass . "::getApplication( \"" . 

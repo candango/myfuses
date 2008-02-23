@@ -184,9 +184,9 @@ abstract class AbstractVerb implements Verb {
      */
     public static function getInstance( $data, CircuitAction $action = null ) {
         
-        $data = stripslashes( $data );
+        //$data = stripslashes( $data );
         
-        $data = unserialize( $data );
+        //$data = unserialize( $data );
         
         if ( isset( self::$verbTypes[ @$data[ "namespace" ] . ":" . 
             $data[ "name" ] ] ) ) {
@@ -250,16 +250,6 @@ abstract class AbstractVerb implements Verb {
         }
         return null;
     }
-    
-    public function getCachedCode() {
-	    $data = $this->getData();
-	    //$data[ "name" ] = str_replace( ":", "_ns_", $data[ "name" ] );
-	    $data = serialize( $data );
-	    $data = addslashes( $data );
-	    $data = str_replace( '$', '\$', $data );
-	    $strOut = "\$verb = AbstractVerb::getInstance( \"" . $data . "\"  , \$action );\n";
-        return $strOut;
-	}
     
 	public function getData() {
 	    if( $this->getNamespace() != "myfuses" ) {

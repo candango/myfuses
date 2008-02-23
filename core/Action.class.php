@@ -37,7 +37,7 @@
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
-require_once "myfuses/core/ICacheable.class.php";
+
 require_once "myfuses/core/IParseable.class.php";
 
 /**
@@ -57,7 +57,7 @@ require_once "myfuses/core/IParseable.class.php";
  * @version    SVN: $Revision$
  * @since      Revision 25
  */
-interface Action extends ICacheable, IParseable {
+interface Action extends IParseable {
    
     /**
      * Return the action name
