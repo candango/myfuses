@@ -46,8 +46,6 @@ try {
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/Application.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/ICacheable.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/IParseable.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
@@ -153,6 +151,7 @@ class MyFuses {
      * @param string $applicationName
      */
     protected function __construct() {
+        $this->debugger = new MyFusesDebugger();
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
             DIRECTORY_SEPARATOR );        
             
@@ -308,10 +307,10 @@ class MyFuses {
      * Loads all applications registered
      */
     private function loadApplications() {
-        $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
+        /*$appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
             "myfuses_tools/";
         
-        $this->createApplication( "myfuses", $appReference );
+        $this->createApplication( "myfuses", $appReference );*/
          
         foreach( $this->applications as $key => $application ) {
              if( $key != Application::DEFAULT_APPLICATION_NAME ) {
@@ -390,7 +389,7 @@ class MyFuses {
     protected function storeApplication( Application $application ) {
         $strStore = "";
         
-        //if( $application->mustParse() ) {
+        if( $application->mustParse() ) {
             if( !file_exists( $application->getParsedPath() ) ) {
                 mkdir( $application->getParsedPath(), 0777, true );
              
@@ -417,9 +416,7 @@ class MyFuses {
         
             MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
 	            $strStore );
-        //}
-         
-        
+        }
     }
     
     /**
@@ -551,27 +548,15 @@ class MyFuses {
      */
     public function doProcess() {
         try {
-            $this->debugger = new MyFusesDebugger();
             // initilizing application if necessary
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "Start loading" ) );
-            $this->loadApplications();
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "End loading" ) );
             
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "Start building" ) );
+            $this->loadApplications();
             
             $this->buildApplications();
             
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "End building" ) );
-            
             $this->createRequest();
+            
+            $this->parseRequest();
             
             // storing all applications if necessary
             $this->storeApplications();
@@ -580,7 +565,6 @@ class MyFuses {
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Request completed" ) );
             
-            $this->parseRequest();
             
         }
         catch( MyFusesException $mfe ) {
