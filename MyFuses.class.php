@@ -56,6 +56,9 @@ try {
         "engine/loaders/XmlMyFusesLoader.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "engine/BasicMyFusesBuilder.class.php" );
+    
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/FuseRequest.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "process/MyFusesLifecycle.class.php" );
@@ -150,7 +153,6 @@ class MyFuses {
      * @param string $applicationName
      */
     protected function __construct() {
-        $this->debugger = new MyFusesDebugger();
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
             DIRECTORY_SEPARATOR );        
             
@@ -319,6 +321,19 @@ class MyFuses {
          }
     }
     
+    private function buildApplications() {
+        $builder = new BasicMyFusesBuilder();
+        
+        foreach( $this->applications as $key => $application ) {
+             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                 $builder->setApplication( $application );
+                 $builder->buildApplication();
+                 $builder->unsetApplication();
+             }
+             
+         }
+    }
+    
     protected function loadApplication( Application $application ) {
         $application->getLoader()->loadApplication();
     }
@@ -375,7 +390,7 @@ class MyFuses {
     protected function storeApplication( Application $application ) {
         $strStore = "";
         
-        if( $application->mustParse() ) {
+        //if( $application->mustParse() ) {
             if( !file_exists( $application->getParsedPath() ) ) {
                 mkdir( $application->getParsedPath(), 0777, true );
              
@@ -391,13 +406,18 @@ class MyFuses {
                     $path = array_slice( $path, 0, count( $path ) - 1 );
                 }
             } 
-            $strStore = $application->getCachedCode();
-         
+            
+            $strStore = "return unserialize( '";
+            
+            $strStore .= str_replace("'","\'", serialize( $application->getLoader()->getCachedApplicationData() ) );
+            
+            $strStore .= "' );";
+            
             $fileName = $application->getCompleteCacheFile();
         
             MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
 	            $strStore );
-        }
+        //}
          
         
     }
@@ -504,7 +524,8 @@ class MyFuses {
 	        $strParse = 
                 str_replace( array( ". \"\";" ), ";", $strParse );
             if( !file_exists( $path ) ) {
-	            mkdir( $path );
+	            
+                mkdir( $path, 0777, true );
 	            chmod( $path, 0777 );
 	        }
 	        
@@ -530,13 +551,34 @@ class MyFuses {
      */
     public function doProcess() {
         try {
+            $this->debugger = new MyFusesDebugger();
             // initilizing application if necessary
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Start loading" ) );
             $this->loadApplications();
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "End loading" ) );
+            
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Start building" ) );
+            
+            $this->buildApplications();
+            
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "End building" ) );
             
             $this->createRequest();
             
             // storing all applications if necessary
             $this->storeApplications();
+            
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Request completed" ) );
             
             $this->parseRequest();
             
@@ -544,7 +586,7 @@ class MyFuses {
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
         }
-        //echo $this->getDebugger();
+        echo $this->getDebugger();
     }
     
     
