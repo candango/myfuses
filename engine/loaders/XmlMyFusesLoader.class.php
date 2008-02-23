@@ -65,20 +65,12 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         if ( is_file( $this->getApplication()->getPath() . 
             self::MYFUSES_APP_FILE ) ) {
             $this->getApplication()->setFile( self::MYFUSES_APP_FILE );
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "Getting Application file \"" . 
-                    $this->getApplication()->getCompleteFile() . "\"" ) );
             return true;
         }
         
         if ( is_file( $this->getApplication()->getPath() . 
             self::MYFUSES_PHP_APP_FILE ) ) {
             $this->getApplication()->setFile( self::MYFUSES_PHP_APP_FILE );
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "Getting Application file \"" .
-                    $this->getApplication()->getCompleteFile() . "\"" ) );
             return true;
         }
         
@@ -86,6 +78,7 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     public function applicationWasModified() {
+        $this->chooseApplicationFile();
         if( filectime( $this->getApplication()->getCompleteFile() ) > 
             $this->getApplication()->getLastLoadTime() ) {
             return true;
@@ -94,7 +87,6 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     public function circuitWasModified( Circuit $circuit ) {
-        
         if( filectime( $circuit->getCompleteFile() ) > 
             $circuit->getLastLoadTime() ) {
             return true;
@@ -104,17 +96,18 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     // TODO Throw some exception here!!!
-    private function chooseCircuitFile( Circuit $circuit ) {
+    private function chooseCircuitFile( &$circuitChild ) {
         
-        $circuitPath = $circuit->getApplication()->getPath() . $circuit->getPath();
+        $circuitPath = $this->getApplication()->getPath() . 
+            $circuitChild[ 'attributes' ][ 'path' ];
         
         if ( is_file( $circuitPath . self::CIRCUIT_FILE ) ) {
-            $circuit->setFile( self::CIRCUIT_FILE );
+            $circuitChild[ 'attributes' ][ 'file' ] = self::CIRCUIT_FILE;
             return true;
         }
         
         if ( is_file( $circuitPath . self::CIRCUIT_PHP_FILE ) ) {
-            $circuit->setFile( self::CIRCUIT_PHP_FILE );
+            $circuitChild[ 'attributes' ][ 'file' ] = self::CIRCUIT_PHP_FILE;
             return true;
         }
         
@@ -148,6 +141,12 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
                 MyFusesFileOperationException::LOCK_FILE );
         }
         
+        
+        MyFuses::getInstance()->getDebugger()->registerEvent( 
+            new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                "Getting Application file \"" . 
+                $this->getApplication()->getCompleteFile() . "\"" ) );
+        
         $fileCode = fread( $fp, filesize( $this->getApplication()->
             getCompleteFile() ) );
         
@@ -163,11 +162,11 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
      *
      * @param Circuit $circuit
      */
-    public function getCircuitData( Circuit $circuit ) {
+    public function getCircuitData( $circuitChild ) {
         
-        $this->chooseCircuitFile( $circuit );
+        $this->chooseCircuitFile( $circuitChild );
         
-        $rootNode = $this->loadCircuitFile( $circuit );
+        $rootNode = $this->loadCircuitFile( $circuitChild );
         
         return self::getDataFromXml( "circuit", $rootNode );
         
@@ -180,12 +179,12 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
      * @param Circuit $circuit
      * @return SimpleXMLElement
      */
-    private function loadCircuitFile( Circuit $circuit ) {
+    private function loadCircuitFile( $circuitChild ) {
         
-        $circuitPath = $circuit->getApplication()->getPath() . 
-            $circuit->getPath();
+        $circuitPath = $this->getApplication()->getPath() . 
+            $circuitChild[ 'attributes' ][ 'path' ];
         
-        $circuitFile = $circuitPath . $circuit->getFile();
+        $circuitFile = $circuitPath . $circuitChild[ 'attributes' ][ 'file' ];
         
         // TODO verify if all conditions is satisfied for a file load ocours
         if ( @!$fp = fopen( $circuitFile ,"r" ) ){

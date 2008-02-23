@@ -9,13 +9,6 @@ interface MyFusesLoader {
     const XML_LOADER = 0;
     
     /**
-     * Do fisical load
-     *
-     * @param Application $application
-     */
-    public function doLoadApplication();
-    
-    /**
      * Load the aplication
      *
      * @param Application $application
@@ -23,8 +16,6 @@ interface MyFusesLoader {
     public function loadApplication();
     
     public function applicationWasModified();
-    
-    public function loadCircuit( Circuit $circuit );
     
     public function circuitWasModified( Circuit $circuit );
     
@@ -35,13 +26,13 @@ interface MyFusesLoader {
      *
      * @return Application
      */
-    public function &getApplication();
+    public function getApplication();
     
     /**
      * Set the loader Application
      *
      * @param Application $application
      */
-    public function setApplication( Application &$application );
+    public function setApplication( Application $application );
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
