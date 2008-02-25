@@ -87,6 +87,13 @@ class Application {
     private $rewrite = true;
     
     /**
+     * Application debug flag
+     *
+     * @var boolean
+     */
+    private $debug = false;
+    
+    /**
      * Application name
      * 
      * @access private
@@ -307,6 +314,24 @@ class Application {
         $this->plugins[ Plugin::POST_FUSEACTION_PHASE ] = array();
         $this->plugins[ Plugin::POST_PROCESS_PHASE ] = array();
         $this->plugins[ Plugin::PROCESS_ERROR_PHASE ] = array();
+    }
+    
+    /**
+     * Return if the degug is alowed
+     *
+     * @return boolean
+     */
+    public function isDebugAlowed() {
+        return $this->debug;
+    }
+    
+    /**
+     * Set application debug flag
+     *
+     * @param boolean $debug
+     */
+    public function setDebug( $debug ) {
+        $this->debug = $debug;
     }
     
     /**
