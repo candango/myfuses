@@ -80,7 +80,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
         else {
-            $this->doLoadApplication();   
+            $this->doLoadApplication();
         }
         
         foreach( $this->applicationData[ 'application' ][ 'children' ] 
@@ -92,6 +92,17 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 }
             }
         }
+        
+        if( $this->getApplication()->isDefault() ) {
+            if( $this->isToolsAllowed() ) {
+                $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
+                "myfuses_tools/";
+            
+                $this->getApplication()->getController()->
+                    createApplication( "myfuses", $appReference );    
+            }
+        }
+        
     }
     
     
@@ -155,6 +166,21 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                 "Loading circuit \"" . $name . "\"" ) );
         
+    }
+    
+    private function isToolsAllowed() {
+        foreach( $this->applicationData[ 'application' ]['children'] 
+            as $child ) {
+            if( $child[ 'name' ] == 'parameters' ) {
+                foreach( $child[ 'children' ] as $pchild ) {
+                    if( $pchild[ 'attributes' ][ 'name' ] == 'tools' ) {
+                        return ( $pchild[ 'attributes' ][ 'value' ] == 'true' ) 
+                            ? true : false;        
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     private function getLastLoadTime() {

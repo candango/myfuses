@@ -287,6 +287,13 @@ class Application {
      * @var CircuitAction
      */
     private $postProcessFuseAction;
+
+    /**
+     * Application tools flag
+     *
+     * @var boolean
+     */
+    private $tools = false;
     
     private $plugins;
     
@@ -543,7 +550,6 @@ class Application {
      */
     public function updateCircuitsParents() {
         foreach( $this->circuits as $circuit ) {
-            
             if( $circuit->getParentName() != "" ) {
                 try {        
 	                if( !is_null( $this->getCircuit( 
@@ -556,7 +562,6 @@ class Application {
 		            $mfe->breakProcess();
 		        }
             }
-            
         }
     }
     
@@ -1076,6 +1081,34 @@ class Application {
 	            $plugin->clearApplication();
 	        }
 	        $this->plugins[ $fase ] = array();    
+        }
+    }
+    
+    /**
+     * Return if the tools application is allowed
+     *
+     * @return boolean
+     */
+    public function isToolsAllowed(){
+        return $this->tools; 
+    }
+    
+    /**
+     * Set application tools flag
+     *
+     * @param boolean $tools
+     */
+    public function setTools( $tools ) {
+        if( is_bool( $tools ) ) {
+            $this->tools = $tools;    
+        }
+        else {
+            if( $tools == "true" ) {
+                $this->tools = true;
+            }
+            else {
+                $this->tools = false;
+            }
         }
     }
     

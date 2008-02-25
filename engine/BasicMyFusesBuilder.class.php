@@ -344,6 +344,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             "defaultFuseaction" => "setDefaultFuseaction",
             "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
             "debug" => "setDebug",
+            "tools" => "setTools",
             "mode" => "setMode",
             "strictMode" => "setStrictMode",
             "password" => "setPassword",
@@ -360,7 +361,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         if( count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {    
-            
                 $name = "";
                 $value = "";
                 foreach( $child[ 'attributes' ] as 
@@ -371,8 +371,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                             $attribute; 
                     }
                 }
-            
-            
                 // putting into $application
                 if( isset( $applicationParameters[ $name ] ) ) {
                     $this->getApplication()->

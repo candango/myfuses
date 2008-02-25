@@ -232,9 +232,19 @@ class MyFuses {
      * @param string $name
      * @return Application
      */
-    public function &getApplication( 
+    public function getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) {
-        return $this->applications[ $name ];
+        if( $this->hasApplication( $name ) ) {
+            return $this->applications[ $name ];   
+        }
+        return null;
+    }
+    
+    public function hasApplication( $name ) {
+        if( isset( $this->applications[ $name ] ) ) {
+            return true;   
+        }
+        return false;
     }
     
     /**
@@ -307,16 +317,14 @@ class MyFuses {
      * Loads all applications registered
      */
     private function loadApplications() {
-        /*$appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
-            "myfuses_tools/";
-        
-        $this->createApplication( "myfuses", $appReference );*/
-         
         foreach( $this->applications as $key => $application ) {
              if( $key != Application::DEFAULT_APPLICATION_NAME ) {
                  $this->loadApplication( $application );
-             }
-             
+             }     
+         }
+         
+         if( $this->hasApplication( 'myfuses' ) ) {
+             $this->loadApplication( $this->getApplication( 'myfuses' ) );
          }
     }
     
@@ -324,12 +332,11 @@ class MyFuses {
         $builder = new BasicMyFusesBuilder();
         
         foreach( $this->applications as $key => $application ) {
-             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+            if( $key != Application::DEFAULT_APPLICATION_NAME ) {
                  $builder->setApplication( $application );
                  $builder->buildApplication();
                  $builder->unsetApplication();
              }
-             
          }
     }
     
@@ -400,7 +407,6 @@ class MyFuses {
                 while( $this->getParsedPath() != ( 
                     implode( DIRECTORY_SEPARATOR, $path ) . 
                     DIRECTORY_SEPARATOR ) ) {
-                    var_dump( $path );
                     chmod( implode( DIRECTORY_SEPARATOR, $path ), 
                         0777 );
                     $path = array_slice( $path, 0, count( $path ) - 1 );
@@ -578,7 +584,7 @@ class MyFuses {
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Request completed" ) );
                 
-            if( $this->getRequest()->getApplication()->isDebugAlowed() ) {
+            if( $this->getRequest()->getApplication()->isDebugAllowed() ) {
                 print $this->getDebugger();    
             }
         }
