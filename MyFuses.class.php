@@ -389,7 +389,7 @@ class MyFuses {
     protected function storeApplication( Application $application ) {
         $strStore = "";
         
-        //if( $application->mustParse() ) {
+        if( $application->mustParse() ) {
             if( !file_exists( $application->getParsedPath() ) ) {
                 mkdir( $application->getParsedPath(), 0777, true );
              
@@ -416,7 +416,7 @@ class MyFuses {
         
             MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
 	            $strStore );
-        //}
+        }
     }
     
     /**
@@ -567,7 +567,7 @@ class MyFuses {
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
         }
-        echo $this->getDebugger();
+        //echo $this->getDebugger();
     }
     
     
