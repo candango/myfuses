@@ -29,6 +29,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     }
     
     public function buildApplication(){
+        
+        
         $appMethods = array( 
             "circuits" => "buildCircuits", 
             "classes" => "buildClasses",
@@ -52,9 +54,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 $this->buildCircuit( $circuit );
             }
         }
-        
-        $this->getApplication()->setLastLoadTime( time() );
-        
     }
     
     protected function buildCircuits( &$data ) {
@@ -99,9 +98,10 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     }
     
     protected function buildCircuit( Circuit $circuit ){
-        $appData = &$this->getApplication()->getLoader()->getCachedApplicationData();
+        $appData = &$this->getApplication()->getLoader()->
+            getCachedApplicationData();
         
-        $data = $appData[ 'circuits' ][ $circuit->getName() ];
+        $data = &$appData[ 'circuits' ][ $circuit->getName() ];
         
         $circuitMethods = array( 
             "fuseaction" => "buildAction",
@@ -161,7 +161,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    protected function buildAction( Circuit $circuit, $data ) {
+    protected function buildAction( Circuit $circuit, &$data ) {
         
         $action = new FuseAction( $circuit );
         
@@ -233,8 +233,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    protected function buildGlobalAction( Circuit $circuit, $data ) {
-        
+    protected function buildGlobalAction( Circuit $circuit, &$data ) {
+                
         $globalActionMethods = array(
             "prefuseaction" => "setPreFuseAction",
             "postfuseaction" => "setPostFuseAction"
@@ -262,8 +262,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param CircuitAction $action
      * @param SimpleXMLElement $parentNode
      */
-    protected function buildVerb( CircuitAction $action, $data ) {
-        $verb = AbstractVerb::getInstance( serialize( $data ), $action );
+    protected function buildVerb( CircuitAction $action, &$data ) {
+        $verb = AbstractVerb::getInstance( $data, $action );
         if( !is_null( $verb ) ){
             $action->addVerb( $verb );    
         }
@@ -274,7 +274,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * 
      * @param array $parentNode
      */
-    protected function buildClasses( $data ) {
+    protected function buildClasses( &$data ) {
         $parameterAttributes = array(
             "name" => "name",
             "classPath" => "path"
@@ -292,7 +292,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
     }
     
-    protected function buildClass( $data ) {
+    protected function buildClass( &$data ) {
         
         $parameterAttributes = array(
             "name" => "name",
@@ -327,7 +327,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param Application $application
      * @param array $data
      */
-    protected function buildParameters( $data ) {
+    protected function buildParameters( &$data ) {
         
         $parameterAttributes = array(
             "name" => "name",
@@ -382,7 +382,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      *
      * @param array $data
      */
-    protected function buildGlobalFuseActions( $data ) {
+    protected function buildGlobalFuseActions( &$data ) {
         
         $globalActionMethods = array(
             "preprocess" => "getPreProcessFuseAction",
@@ -423,7 +423,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
     }
     
-    protected function buildPlugins( $data ) {
+    protected function buildPlugins( &$data ) {
         $this->getApplication()->clearPlugins();
         if( count( $data[ 'children' ] ) ) {
             foreach( $data[ 'children' ] as $child ) {
@@ -434,7 +434,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     }
     
     
-    protected function buildFase( $data ) {
+    protected function buildFase( &$data ) {
         
         $faseParams = array(
             'name' => 'name',

@@ -50,8 +50,11 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = $this->loadApplicationFile();
         
-        return self::getDataFromXml( "myfuses", $rootNode );
+        $data = self::getDataFromXml( "myfuses", $rootNode );
         
+        $data[ 'file' ] = $this->getApplication()->getFile();
+        
+        return $data;
     }
     
 	/**
@@ -86,7 +89,14 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         return false;
     }
     
-    public function circuitWasModified( Circuit $circuit ) {
+    public function circuitWasModified( $name ) {
+        return true;
+        $data = $this->getCachedApplicationData();
+        
+        $file = $this->getApplication()->getPath() . 
+            $data[ 'circuits' ][ $name ][ 'attributes' ][ 'path' ] . 
+            $data[ 'circuits' ][ $name ][ 'attributes' ][ 'file' ];
+        
         if( filectime( $circuit->getCompleteFile() ) > 
             $circuit->getLastLoadTime() ) {
             return true;
@@ -141,7 +151,6 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
                 MyFusesFileOperationException::LOCK_FILE );
         }
         
-        
         MyFuses::getInstance()->getDebugger()->registerEvent( 
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                 "Getting Application file \"" . 
@@ -168,6 +177,13 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         
         $rootNode = $this->loadCircuitFile( $circuitChild );
         
+        $data = self::getDataFromXml( "circuit", $rootNode );
+        
+        $data[ 'attributes' ][ 'file' ] = 
+            $circuitChild[ 'attributes' ][ 'file' ];
+        
+        
+            
         return self::getDataFromXml( "circuit", $rootNode );
         
     }

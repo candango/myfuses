@@ -17,7 +17,7 @@ interface MyFusesLoader {
     
     public function applicationWasModified();
     
-    public function circuitWasModified( Circuit $circuit );
+    public function circuitWasModified( $name );
     
     public function getApplicationData();
     

@@ -53,7 +53,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      */
     public function loadApplication() {
         if( is_file( $this->getApplication()->getCompleteCacheFile() ) ) {
-            
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Restoring Application " . 
@@ -64,6 +63,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 
             $this->getApplication()->setLastLoadTime( 
                 $this->getLastLoadTime() );
+                
+            $this->getApplication()->setFile( 
+                $this->applicationData[ 'application' ]['file'] );    
                 
             $this->getApplication()->setMode( $this->getMode() );
             
@@ -89,7 +91,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     $this->doLoadCircuit( $circuitChild );
                 }
             }
-        }        
+        }
     }
     
     
@@ -101,9 +103,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         $this->applicationData[ 'application' ] = $data;
     }
     
-    protected function doLoadCircuit( &$circuitChild ){
-        
-        $data = $this->getCircuitData( $circuitChild );
+    protected function doLoadCircuit( &$circuitChild ) {
         
         $name = "";
         
@@ -115,7 +115,18 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $name = $circuitChild[ 'attributes' ][ 'alias' ];
         }
         
+        $data = $this->getCircuitData( $circuitChild );
+        
+        $data[ 'attributes' ][ 'lastloadtime' ] = time();
+        
+        $data[ 'attributes' ][ 'path' ] = 
+            $circuitChild[ 'attributes' ][ 'path' ];
+        
         $this->applicationData[ 'circuits' ][ $name ] = $data;
+        
+        MyFuses::getInstance()->getDebugger()->registerEvent( 
+            new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                "Loading circuit \"" . $name . "\"" ) );
         
     }
     
@@ -124,7 +135,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     }
     
     private function getMode() {
-        
         foreach( $this->applicationData[ 'application' ]['children'] 
             as $child ) {
             if( $child[ 'name' ] == 'parameters' ) {
@@ -137,6 +147,27 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         return 'development';
+    }
+    
+    private function getCircuitPath( $name ) {
+        foreach( $this->applicationData[ 'application' ]['children'] 
+            as $child ) {
+            if( $child[ 'name' ] == 'circuits' ) {
+                foreach( $child[ 'children' ] as $pchild ) {
+                    if( isset( $pchild[ 'attributes' ][ 'name' ] ) ) {
+                        if( $pchild[ 'attributes' ][ 'name' ] == $name ) {
+                            return $pchild[ 'attributes' ][ 'path' ];        
+                        }    
+                    }
+                    if( isset( $pchild[ 'attributes' ][ 'alias' ] ) ) {
+                        if( $pchild[ 'attributes' ][ 'alias' ] == $name ) {
+                            return $pchild[ 'attributes' ][ 'path' ];        
+                        }    
+                    }
+                    
+                }
+            }
+        }
     }
     
     /**
