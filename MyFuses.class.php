@@ -400,6 +400,7 @@ class MyFuses {
                 while( $this->getParsedPath() != ( 
                     implode( DIRECTORY_SEPARATOR, $path ) . 
                     DIRECTORY_SEPARATOR ) ) {
+                    var_dump( $path );
                     chmod( implode( DIRECTORY_SEPARATOR, $path ), 
                         0777 );
                     $path = array_slice( $path, 0, count( $path ) - 1 );
@@ -408,12 +409,19 @@ class MyFuses {
             
             $strStore = "return unserialize( '";
             
-            $strStore .= str_replace("'","\'", serialize( $application->getLoader()->getCachedApplicationData() ) );
+            $strStore .= str_replace("'","\'", 
+                serialize( $application->getLoader()->
+                getCachedApplicationData() ) );
             
             $strStore .= "' );";
             
             $fileName = $application->getCompleteCacheFile();
-        
+            
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Application " . 
+                    $application->getName() . " Stored" ) );
+            
             MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
 	            $strStore );
         }
@@ -438,6 +446,8 @@ class MyFuses {
         $this->lifecycle = new MyFusesLifecycle();
         
         $circuit = $this->request->getAction()->getCircuit();
+        
+        //var_dump( $circuit->isModified() );
         
         $controllerName = $circuit->getApplication()->getControllerClass();
         
@@ -521,8 +531,7 @@ class MyFuses {
 	        $strParse = 
                 str_replace( array( ". \"\";" ), ";", $strParse );
             if( !file_exists( $path ) ) {
-	            
-                mkdir( $path, 0777, true );
+	            mkdir( $path );
 	            chmod( $path, 0777 );
 	        }
 	        
@@ -531,14 +540,19 @@ class MyFuses {
 	        if ( !flock($fp,LOCK_EX) ) {
 	            die("Could not get exclusive lock to Parsed File file");
 	        }
-	
+	        
 	        if ( !fwrite($fp, "<?php\n" . $strParse) ) {
 	            var_dump( "deu pau 2!!!" );
 	        }
 	        flock($fp,LOCK_UN);
 	        fclose($fp);
 	        chmod( $fileName, 0777 );
-        
+            
+	        MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Fuseaction " . 
+                    $this->getRequest()->getFuseActionName() . " Compiled" ) );
+	        
         }
         include $fileName;
     }
@@ -567,7 +581,7 @@ class MyFuses {
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
         }
-        //echo $this->getDebugger();
+        echo $this->getDebugger();
     }
     
     

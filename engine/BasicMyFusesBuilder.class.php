@@ -100,8 +100,12 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     protected function buildCircuit( Circuit $circuit ){
         $appData = &$this->getApplication()->getLoader()->
             getCachedApplicationData();
-        
+            
         $data = &$appData[ 'circuits' ][ $circuit->getName() ];
+        
+        $circuit->setModified( $data[ 'attributes' ][ 'modified' ] );
+        
+        //var_dump( $circuit->getName() . " - " .  $circuit->isModified() ? "true":"false" );
         
         $circuitMethods = array( 
             "fuseaction" => "buildAction",
@@ -149,10 +153,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 }               
             }
         }
-        
-        $circuit->setLastLoadTime( time() );
-        $circuit->setModified( true );
-        
     }
     
     /**
