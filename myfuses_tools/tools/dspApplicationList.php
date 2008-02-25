@@ -3,7 +3,11 @@
 <ul>
 <?foreach( MyFuses::getInstance()->getApplications() as $key => $application ){?>
     <?if( $key != Application::DEFAULT_APPLICATION_NAME ){?>    
-    <li><?=$application->getName()?><?=$application->isDefault() ? "*" : ""?></li>
+    <li>
+        <a href="<?=MyFuses::getMySelfXfa( "goToApplicationSummary", true, false ) ?>application=<?=$application->getName()?>">
+            <?=$application->getName()?><?=$application->isDefault() ? "*" : ""?>
+        </a>
+    </li>
     <?}?>
 <?}?>
 </ul>
