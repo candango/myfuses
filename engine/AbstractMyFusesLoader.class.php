@@ -83,6 +83,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         else {
             $this->doLoadApplication();
+            $this->getApplication()->setParse( true );
         }
         
         foreach( $this->applicationData[ 'application' ][ 'children' ] 
