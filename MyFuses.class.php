@@ -389,7 +389,7 @@ class MyFuses {
     protected function storeApplication( Application $application ) {
         $strStore = "";
         
-        if( $application->mustParse() ) {
+        //if( $application->mustParse() ) {
             if( !file_exists( $application->getParsedPath() ) ) {
                 mkdir( $application->getParsedPath(), 0777, true );
              
@@ -416,7 +416,7 @@ class MyFuses {
         
             MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
 	            $strStore );
-        }
+        //}
     }
     
     /**
@@ -549,23 +549,20 @@ class MyFuses {
     public function doProcess() {
         try {
             // initilizing application if necessary
-            
             $this->loadApplications();
             
             $this->buildApplications();
             
             $this->createRequest();
             
-            $this->parseRequest();
-            
             // storing all applications if necessary
             $this->storeApplications();
+            
+            $this->parseRequest();
             
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Request completed" ) );
-            
-            
         }
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
