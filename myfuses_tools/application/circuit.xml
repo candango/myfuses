@@ -1,7 +1,20 @@
 <circuit access="public">
     
 	<fuseaction name="sumary">
-        
+	    <do action="getApplicationFromGet"/>
+	    <include file="dspApplicationSummary.php"/>
+    </fuseaction>
+    
+    <fuseaction name="getApplicationFromGet">
+        <if condition="isset( $_GET[ 'application' ] )" >
+            <true>
+                <set name="appName" value="#$_GET[ 'application' ]#"/>
+                <include file="actGetApplicationFromGet.php"/>    
+            </true>
+            <false>
+                <relocate xfa="goToStart" />
+            </false>
+        </if>
     </fuseaction>
     
 </circuit>
