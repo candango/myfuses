@@ -577,11 +577,14 @@ class MyFuses {
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Request completed" ) );
+                
+            if( $this->getRequest()->getApplication()->isDebugAlowed() ) {
+                print $this->getDebugger();    
+            }
         }
         catch( MyFusesException $mfe ) {
             $mfe->breakProcess();
         }
-        echo $this->getDebugger();
     }
     
     
