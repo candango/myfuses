@@ -335,7 +335,7 @@ class Application {
             $this->debug = $debug;    
         }
         else {
-            if( $lexiconAllowed == "true" ) {
+            if( $debug == "true" ) {
                 $this->debug = true;
             }
             else {

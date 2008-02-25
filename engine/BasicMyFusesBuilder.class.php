@@ -30,7 +30,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     
     public function buildApplication(){
         
-        
         $appMethods = array( 
             "circuits" => "buildCircuits", 
             "classes" => "buildClasses",
@@ -39,7 +38,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             "plugins" => "buildPlugins"
              );
         
-        $data = &$this->getApplication()->getLoader()->getCachedApplicationData();
+        $data = &$this->getApplication()->getLoader()->
+            getCachedApplicationData();
         
         if( count( $data[ 'application' ][ 'children' ] ) ) {
             foreach( $data[ 'application' ][ 'children' ] as $child ) {
@@ -53,6 +53,11 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
                 $this->buildCircuit( $circuit );
             }
+        }
+        
+        if( !$this->getApplication()->mustParse() ) {
+            $this->getApplication()->getLoader()->
+                destroyCachedApplicationData();    
         }
     }
     
@@ -338,6 +343,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             "fuseactionVariable" => "setFuseactionVariable",
             "defaultFuseaction" => "setDefaultFuseaction",
             "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
+            "debug" => "setDebug",
             "mode" => "setMode",
             "strictMode" => "setStrictMode",
             "password" => "setPassword",
