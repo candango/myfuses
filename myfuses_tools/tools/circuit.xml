@@ -19,8 +19,7 @@
 	</fuseaction>
 	
 	<fuseaction name="login">
-	   
-       <include file="dspFormLogin.php"/>
+	   <include file="dspFormLogin.php"/>
     </fuseaction>
 	
 	<fuseaction name="logout">

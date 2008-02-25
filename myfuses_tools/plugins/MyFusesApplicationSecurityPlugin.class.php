@@ -10,12 +10,12 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin {
         
         $request = MyFuses::getInstance()->getRequest();
         
-        if( $request->getFuseActionName() == "main.logout" ) {
+        if( $request->getFuseActionName() == "tools.logout" ) {
             $this->logout();
             $this->goToLogin();
         }
         
-        if( $request->getFuseActionName() != "main.login" ) {
+        if( $request->getFuseActionName() != "tools.login" ) {
             if( !$this->isLogged() ) {
                 $this->goToLogin();
             }    
@@ -91,11 +91,11 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin {
         $request = MyFuses::getInstance()->getRequest();
         
         if( $this->getApplication()->isDefault() ) {
-            $request->getAction()->addXFA( "goToLogin", "main.login" );    
+            $request->getAction()->addXFA( "goToLogin", "tools.login" );    
         }
         else{
             $request->getAction()->addXFA( "goToLogin", 
-                $this->getApplication()->getName() . ".main.login" );
+                $this->getApplication()->getName() . ".tools.login" );
         }
         
         MyFuses::sendToUrl( MyFuses::getInstance()->getMySelfXfa( 

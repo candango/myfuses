@@ -23,7 +23,7 @@
     
     <parameters>
         <parameter name="fuseactionVariable" value="fuseaction" />
-        <parameter name="defaultFuseaction" value="main.start" />
+        <parameter name="defaultFuseaction" value="tools.start" />
         <parameter name="precedenceFormOrUrl" value="form"/>
         <parameter name="mode" value="development"/>
         <parameter name="password" value=""/>
