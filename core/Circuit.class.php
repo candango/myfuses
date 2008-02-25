@@ -73,6 +73,14 @@ class Circuit {
     const INTERNAL_ACCESS = 2;
     
     /**
+     * Private Access Constant.<br>
+     * Value 2
+     * 
+     * @var int
+     */
+    const PRIVATE_ACCESS = 3;
+    
+    /**
      * Circuit application reference
      *
      * @var Application
@@ -263,6 +271,22 @@ class Circuit {
      */
     public function getAccess(){
         return $this->access;
+    }
+    
+    /**
+     * Return circuit access name
+     *
+     * @return string
+     */
+    public function getAccessName(){
+        switch ( $this->getAccess() ) {
+            case self::PUBLIC_ACCESS :
+                return "public";
+            case self::INTERNAL_ACCESS :
+                return "internal";
+            case self::PRIVATE_ACCESS :
+                return "private";
+        }
     }
     
     /**
@@ -478,7 +502,7 @@ class Circuit {
     }
     
     public function setModified( $modified ) {
-        return $this->modified = $modified;
+        $this->modified = $modified;
     }
     
     private function evalExpression( $matches ){
