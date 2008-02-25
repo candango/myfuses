@@ -14,7 +14,7 @@
 <myfuses>
     <circuits>
         <circuit alias="tools" path="tools/" parent="" />
-        <circuit alias="application" path="application/" parent="" />
+        <circuit alias="application" path="application/" parent="tools" />
     </circuits>
     
     
