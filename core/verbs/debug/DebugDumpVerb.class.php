@@ -27,21 +27,6 @@ class DebugDumpVerb extends AbstractVerb {
     }
     
     /**
-     * Get verb data
-     * 
-     * @return array
-     */
-    public function getData() {
-        $data = parent::getData();
-        
-        $data[ "attributes" ][ "variable" ] = $this->getVariable();
-        
-        $data[ "attributes" ][ "die" ] = $this->isDie() ? "true" : "false";
-        
-        return $data;
-    }
-    
-    /**
      * Set verb data
      * 
      * @param array $data

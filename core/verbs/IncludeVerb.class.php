@@ -82,12 +82,6 @@ class IncludeVerb extends ParameterizedVerb {
         $this->file = $file;
     }
     
-    public function getData() {
-        $data = parent::getData();
-        $data[ "attributes" ][ "file" ] = $this->getFile();
-        return $data;
-    }
-    
     public function setData( $data ) {
         parent::setData( $data );
         $file = "";

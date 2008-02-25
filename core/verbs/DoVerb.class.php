@@ -106,15 +106,6 @@ class DoVerb extends ParameterizedVerb {
         
     }
     
-    public function getData() {
-        $data = parent::getData();
-        $app = $this->getAction()->getCircuit()->getApplication()->getName();
-        $data[ "attributes" ][ "action" ] = ( $this->appName != $app ? 
-            $this->appName . "." : "" ) .  $this->circuitToBeExecutedName . 
-            "." . $this->actionToBeExecutedName;
-        return $data;
-    }
-    
     public function setData( $data ) {
         parent::setData( $data );
         $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );

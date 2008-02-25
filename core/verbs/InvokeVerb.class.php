@@ -150,44 +150,7 @@ class InvokeVerb extends AbstractVerb {
         }
         return $strOut;
     }
-	
-	public function getData() {
-		
-	    $data = parent::getData();
-		
-	    if( !is_null( $this->getClass() ) ) {
-	        $data[ "attributes" ][ "class" ] = $this->getClass();
-	    }
-	    
-	    if( !is_null( $this->getObject() ) ) {
-	        $data[ "attributes" ][ "object" ] = $this->getObject();
-	    }
-	    
-	    if( !is_null( $this->getMethod() ) ) {
-	        $data[ "attributes" ][ "method" ] = $this->getMethod();
-	    }
-	    
-	    if( !is_null( $this->getArguments() ) ) {
-            foreach( $this->getArguments() as $argument ) {
-                $child = array();
-                $child[ 'name' ] = 'argument';
-                $child[ 'namespace' ] = 'myfuses';
-                $child[ 'attributes' ][ 'value' ] = $argument;
-                $data[ 'children' ][] = $child; 
-            }
-        }
-	    
-	    if(!is_null( $this->getMethodCall() ) ){
-	        $data[ "attributes" ][ "methodcall" ] = $this->getMethodCall();
-	    }
-		
-	    if( !is_null( $this->getVariable() ) ) {
-			$data[ "attributes" ][ "returnvariable" ] = $this->getVariable();
-		}
-		
-		return $data;
-	}
-
+    
 	public function setData( $data ) {
 		
 	    parent::setData( $data );
