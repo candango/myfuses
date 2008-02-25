@@ -90,15 +90,18 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
     }
     
     public function circuitWasModified( $name ) {
-        return true;
         $data = $this->getCachedApplicationData();
+        
+        if( !isset( $data[ 'circuits' ][ 'name' ] ) ) {
+            return false;
+        }
         
         $file = $this->getApplication()->getPath() . 
             $data[ 'circuits' ][ $name ][ 'attributes' ][ 'path' ] . 
             $data[ 'circuits' ][ $name ][ 'attributes' ][ 'file' ];
         
-        if( filectime( $circuit->getCompleteFile() ) > 
-            $circuit->getLastLoadTime() ) {
+        if( filectime( $file ) > 
+            $data[ 'circuits' ][ $name ][ 'attributes' ][ 'lastloadtime' ] ) {
             return true;
         }
         
@@ -181,10 +184,8 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         
         $data[ 'attributes' ][ 'file' ] = 
             $circuitChild[ 'attributes' ][ 'file' ];
-        
-        
             
-        return self::getDataFromXml( "circuit", $rootNode );
+        return $data;
         
     }
     
