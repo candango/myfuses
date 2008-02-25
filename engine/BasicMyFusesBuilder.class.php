@@ -120,20 +120,25 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         );
         
         $circuitParameterAttributes = array(
-            "access" => "access"
+            "access" => "access",
+            "file" => "file"
         );
         
         $access = "";
+        
+        $file = "";
         
         if( isset( $data[ 'attributes' ] ) ) {
             foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
                 if ( isset( $circuitParameterAttributes[ $attributeName ] ) ) {
                     // getting $name
-                    $$circuitParameterAttributes[ $attributeName ] = "" . $attribute;
+                    $$circuitParameterAttributes[ $attributeName ] = "" . 
+                        $attribute;
                 }
             }
         }
         
+        $circuit->setFile( $file );
         
         $circuit->setAccessByString( $access );
         
