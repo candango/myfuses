@@ -321,7 +321,7 @@ class Application {
      *
      * @return boolean
      */
-    public function isDebugAlowed() {
+    public function isDebugAllowed() {
         return $this->debug;
     }
     
@@ -331,7 +331,17 @@ class Application {
      * @param boolean $debug
      */
     public function setDebug( $debug ) {
-        $this->debug = $debug;
+        if( is_bool( $debug ) ) {
+            $this->debug = $debug;    
+        }
+        else {
+            if( $lexiconAllowed == "true" ) {
+                $this->debug = true;
+            }
+            else {
+                $this->debug = false;
+            }
+        }
     }
     
     /**
