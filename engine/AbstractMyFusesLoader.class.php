@@ -80,13 +80,13 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
         else {
+            $this->getApplication()->setMode( 'development' );
             $this->doLoadApplication();
         }
         
         foreach( $this->applicationData[ 'application' ][ 'children' ] 
             as $child ) {
             if( strtolower( $child[ 'name' ] ) == 'circuits' ) {
-                $child[ 'teste' ] = 'buga';
                 foreach( $child[ 'children' ] as $circuitChild ) {
                     $this->loadCircuit( $circuitChild );
                 }
@@ -123,7 +123,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     
     protected function loadCircuit( &$circuitChild ) {
-        
         $name = "";
         
         if( isset( $circuitChild[ 'attributes' ][ 'name' ] ) ) {
@@ -160,6 +159,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         $data[ 'attributes' ][ 'modified' ] = true;    
             
+        
         $this->applicationData[ 'circuits' ][ $name ] = $data;
         
         MyFuses::getInstance()->getDebugger()->registerEvent( 

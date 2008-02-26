@@ -155,7 +155,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         }
         
         if( count( $data[ 'children' ] > 0 ) ) {
-            
             foreach( $data[ 'children' ] as $child ) {
                 if ( isset( $circuitMethods[ $child[ 'name' ] ] ) ) {
                     $this->$circuitMethods[ $child[ 'name' ] ]( $circuit, 
