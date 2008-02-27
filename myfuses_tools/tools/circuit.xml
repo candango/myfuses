@@ -16,7 +16,7 @@
     </fuseaction>
 	
 	<fuseaction name="start">
-	    <xfa name="goToApplicationSummary" value="application.sumary" />
+	    <xfa name="goToApplicationSummary" value="application.summary" />
         <include file="dspApplicationList.php" />
 	</fuseaction>
 	
