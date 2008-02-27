@@ -1,20 +1,35 @@
 <circuit access="public">
     
-	<fuseaction name="sumary">
-	    <do action="getApplicationFromGet"/>
-	    <include file="dspApplicationSummary.php"/>
-    </fuseaction>
-    
-    <fuseaction name="getApplicationFromGet">
+    <prefuseaction>
         <if condition="isset( $_GET[ 'application' ] )" >
             <true>
                 <set name="appName" value="#$_GET[ 'application' ]#"/>
-                <include file="actGetApplicationFromGet.php"/>    
+                <do action="getApplicationFromGet"/>
+                <xfa name="goToApplicationSumary" value="summary" />
+                <xfa name="goToViewAppicationCache" value="viewCache" />
+                <do action="menu"/>    
             </true>
             <false>
                 <relocate xfa="goToStart" />
             </false>
         </if>
+        
+    </prefuseaction>
+    
+	<fuseaction name="summary">
+	    <include file="dspApplicationSummary.php"/>
+    </fuseaction>
+    
+    <fuseaction name="getApplicationFromGet">
+        <include file="actGetApplicationFromGet.php"/>
+    </fuseaction>
+    
+    <fuseaction name="menu">
+        <include file="dspApplicationMenu.php" />
+    </fuseaction>
+    
+    <fuseaction name="viewCache">
+        <include file="dspViewApplicationCache.php"/>
     </fuseaction>
     
 </circuit>
