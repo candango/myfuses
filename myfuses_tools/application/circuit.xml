@@ -29,7 +29,7 @@
     </fuseaction>
     
     <fuseaction name="viewCache">
-        <include file="dspViewApplicationCache.php"/>
+        <include file="dspCacheDirectoryList.php"/>
     </fuseaction>
     
 </circuit>
