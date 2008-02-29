@@ -49,10 +49,14 @@ try {
         "core/IParseable.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "engine/MyFusesApplicationLoaderListener.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/AbstractMyFusesLoader.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/loaders/XmlMyFusesLoader.class.php" );
     
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "engine/MyFusesApplicationBuilderListener.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/BasicMyFusesBuilder.class.php" );
     
@@ -140,6 +144,7 @@ class MyFuses {
     
     private $applicationClass = "Application";
     
+    private $builder;
     
     const MODE_DEVELOPMENT = "development";
     const MODE_PRODUCTION = "production";
@@ -151,6 +156,7 @@ class MyFuses {
      * @param string $applicationName
      */
     protected function __construct() {
+        $this->builder = new BasicMyFusesBuilder();
         $this->debugger = new MyFusesDebugger();
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
             DIRECTORY_SEPARATOR );        
@@ -329,19 +335,28 @@ class MyFuses {
     }
     
     private function buildApplications() {
-        $builder = new BasicMyFusesBuilder();
+        
         
         foreach( $this->applications as $key => $application ) {
             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                 $builder->setApplication( $application );
-                 $builder->buildApplication();
-                 $builder->unsetApplication();
+                 $this->builder->setApplication( $application );
+                 $this->builder->buildApplication();
+                 $this->builder->unsetApplication();
              }
          }
     }
     
     protected function loadApplication( Application $application ) {
         $application->getLoader()->loadApplication();
+    }
+    
+    /**
+     * Return the MyFuses builder
+     *
+     * @return MyFusesBuilder
+     */
+    public function getBuilder() {
+        return $this->builder;
     }
     
     protected function createRequest() {
