@@ -10,6 +10,8 @@ MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH .
 class BasicMyFusesBuilder  implements MyFusesBuilder {
     
     private $application;
+
+    private $applciationBuilderListeners = array();
     
     /**
      * Enter description here...
@@ -53,6 +55,12 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
                 $this->buildCircuit( $circuit );
             }
+        }
+        
+        foreach( $this->getApplicationBuilderListeners() as $listener ) {
+            $listener->applicationBuildPerformed( $this->getApplication(), 
+                $this->getApplication()->getLoader()->
+                getCachedApplicationData() );
         }
         
         if( !$this->getApplication()->mustParse() ) {
@@ -472,6 +480,25 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             }
         }
         
+    }
+    
+    /**
+     * Add one application builder listener
+     *
+     * @param MyFusesApplicationBuilderListener $listener
+     */
+    public function addApplicationBuilderListener( 
+        MyFusesApplicationBuilderListener $listener ){
+        $this->applciationBuilderListeners[] = $listener;
+    }
+    
+    /**
+     * Return all application builder listerners
+     *
+     * @return array
+     */
+    private function getApplicationBuilderListeners() {
+        return $this->applciationBuilderListeners;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
