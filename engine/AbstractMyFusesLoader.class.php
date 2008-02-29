@@ -10,6 +10,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     private $applicationData = array();
     
+    private $applciationLoaderListeners = array();
+    
     /**
      * Loader application
      * 
@@ -82,6 +84,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         else {
             $this->getApplication()->setMode( 'development' );
             $this->doLoadApplication();
+        }
+        
+        foreach( $this->getApplicationLoadListeners() as $listener ) {
+            $listener->applicationLoadPerformed( $this, 
+                $this->applicationData );
         }
         
         foreach( $this->applicationData[ 'application' ][ 'children' ] 
@@ -249,6 +256,25 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         return  preg_replace( 
             "@([#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#])@", 
             "\" . $2 . \"" , $hstring );
+    }
+    
+    /**
+     * Add one application load listener
+     *
+     * @param MyFusesApplicationLoaderListener $listener
+     */
+    public function addApplicationLoadListener( 
+        MyFusesApplicationLoaderListener $listener ){
+        $this->applciationLoaderListeners[] = $listener;
+    }
+    
+    /**
+     * Return all application load listerners
+     *
+     * @return array
+     */
+    private function getApplicationLoadListeners() {
+        return $this->applciationLoaderListeners;
     }
     
 }

@@ -22,6 +22,14 @@ interface MyFusesLoader {
     public function getApplicationData();
     
     /**
+     * Add one application load listener
+     *
+     * @param MyFusesApplicationLoaderListener $listener
+     */
+    public function addApplicationLoadListener( 
+        MyFusesApplicationLoaderListener $listener );
+    
+    /**
      * Return the application
      *
      * @return Application
