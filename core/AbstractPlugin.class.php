@@ -252,12 +252,12 @@ abstract class AbstractPlugin implements Plugin{
         
         $class = $name;
             
-        if( substr( $name, -6 ) != "Plugin" ) {
+        if( substr( $name, -6 ) !== "Plugin" ) {
             $class .= "Plugin";   
         }
             
         if( $file == "" ) {
-            if( substr( $name, -6 ) == "Plugin" ) {
+            if( substr( $name, -6 ) === "Plugin" ) {
                 $file = $name . ".class.php";   
             }
             else {
