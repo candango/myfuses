@@ -71,11 +71,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 
             $this->getApplication()->setMode( $this->getMode() );
             
-            if( $this->getApplication()->getMode() == 'development' ) {
+            if( $this->getApplication()->getMode() === 'development' ) {
                 $this->doLoadApplication();
             }
             
-            if( $this->getApplication()->getMode() == 'production' ) {
+            if( $this->getApplication()->getMode() === 'production' ) {
                 if( $this->applicationWasModified() ) {
                     $this->doLoadApplication();
                 }
@@ -93,7 +93,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         
         foreach( $this->applicationData[ 'application' ][ 'children' ] 
             as $child ) {
-            if( strtolower( $child[ 'name' ] ) == 'circuits' ) {
+            if( strtolower( $child[ 'name' ] ) === 'circuits' ) {
                 foreach( $child[ 'children' ] as $circuitChild ) {
                     $this->loadCircuit( $circuitChild );
                 }
@@ -140,11 +140,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $name = $circuitChild[ 'attributes' ][ 'alias' ];
         }
         
-        if( $this->getApplication()->getMode() == 'development' ) {
+        if( $this->getApplication()->getMode() === 'development' ) {
             $this->doLoadCircuit( $name, $data, $circuitChild );
         }
         
-        if( $this->getApplication()->getMode() == 'production' ) {
+        if( $this->getApplication()->getMode() === 'production' ) {
             if( $this->circuitWasModified( $name ) || 
                 $this->applicationWasModified() ) {
                 $this->doLoadCircuit( $name, $data, $circuitChild );    
@@ -178,10 +178,10 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     private function isToolsAllowed() {
         foreach( $this->applicationData[ 'application' ]['children'] 
             as $child ) {
-            if( $child[ 'name' ] == 'parameters' ) {
+            if( $child[ 'name' ] === 'parameters' ) {
                 foreach( $child[ 'children' ] as $pchild ) {
                     if( $pchild[ 'attributes' ][ 'name' ] == 'tools' ) {
-                        return ( $pchild[ 'attributes' ][ 'value' ] == 'true' ) 
+                        return ( $pchild[ 'attributes' ][ 'value' ] === 'true' ) 
                             ? true : false;        
                     }
                 }
