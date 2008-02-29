@@ -100,7 +100,7 @@ class IfVerb extends AbstractVerb {
         
         $method = "";
         
-        if( $type == 'true' ) {
+        if( $type === 'true' ) {
             $method = "addTrueVerb";
         }
         else {
