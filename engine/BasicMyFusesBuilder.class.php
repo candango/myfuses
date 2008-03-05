@@ -32,21 +32,27 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     
     public function buildApplication(){
         
-        $appMethods = array( 
-            "circuits" => "buildCircuits", 
-            "classes" => "buildClasses",
-            "parameters" => "buildParameters",
-            "globalfuseactions" => "buildGlobalFuseActions",
-            "plugins" => "buildPlugins"
-             );
-        
         $data = &$this->getApplication()->getLoader()->
             getCachedApplicationData();
         
         if( count( $data[ 'application' ][ 'children' ] ) ) {
             foreach( $data[ 'application' ][ 'children' ] as $child ) {
-                if ( isset( $appMethods[ $child[ 'name' ] ] ) ) {
-                    $this->$appMethods[ $child[ 'name' ] ]( $child );
+                switch( $child[ 'name' ] ) {
+                    case "circuits":
+                        $this->buildCircuits( $child );
+                        break;
+                    case "classes":
+                        $this->buildClasses( $child );
+                        break;
+                    case "parameters":
+                        $this->buildParameters( $child );
+                        break;
+                    case "globalfuseactions":
+                        $this->buildGlobalFuseActions( $child );
+                        break;
+                    case "plugins":
+                        $this->buildPlugins( $child );
+                        break;    
                 }            
             }
         }
@@ -118,15 +124,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         $circuit->setModified( $data[ 'attributes' ][ 'modified' ] );
         
-        //var_dump( $circuit->getName() . " - " .  $circuit->isModified() ? "true":"false" );
-        
-        $circuitMethods = array( 
-            "fuseaction" => "buildAction",
-            "action" => "buildAction",
-            "prefuseaction" => "buildGlobalAction",
-            "postfuseaction" => "buildGlobalAction"
-        );
-        
         $circuitParameterAttributes = array(
             "access" => "access",
             "file" => "file"
@@ -164,10 +161,17 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         if( count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {
-                if ( isset( $circuitMethods[ $child[ 'name' ] ] ) ) {
-                    $this->$circuitMethods[ $child[ 'name' ] ]( $circuit, 
-                        $child );
-                }               
+                switch( $child[ 'name' ] ) {
+                    case "fuseaction":
+                    case "action":
+                        $this->buildAction( $circuit, $child );
+                        break;
+                    case "prefuseaction":
+                    case "postfuseaction":
+                        $this->buildGlobalAction( $circuit, $child );
+                        break;
+                        
+                }
             }
         }
     }
