@@ -49,14 +49,33 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         $this->applicationData = array();
     }
     
+    private function isCached() {
+        if( $this->getApplication()->getController()->isMemcacheEnabled() ) {
+            return !is_null( $this->applicationData );
+        }
+        else {
+            return is_file( $this->getApplication()->getCompleteCacheFile() );
+        }
+        
+    }
+    
     /**
      * Load the application
      *
      */
     public function loadApplication() {
-        if( is_file( $this->getApplication()->getCompleteCacheFile() ) ) {
-            $this->applicationData = include( 
-                $this->getApplication()->getCompleteCacheFile() );
+        if( $this->getApplication()->getController()->isMemcacheEnabled() ) {
+            $this->applicationData = $this->getApplication()->
+                getController()->getMemcache()->get( 
+                $this->getApplication()->getTag() );
+        }
+        
+        if( $this->isCached() ) {
+            if( !$this->getApplication()->getController()->
+                isMemcacheEnabled() ) {
+                $this->applicationData = include( 
+                    $this->getApplication()->getCompleteCacheFile() );
+            }
             
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
