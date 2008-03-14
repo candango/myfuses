@@ -295,7 +295,17 @@ class Application {
      */
     private $tools = false;
     
+    /**
+     * Plugin map
+     *
+     * @var array
+     */
     private $plugins;
+    
+    /**
+     * Memcalhe enabled flag
+     */
+    private $memcacheEnabled = false;
     
     /**
      * Application constructor
