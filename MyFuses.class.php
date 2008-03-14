@@ -102,6 +102,33 @@ class MyFuses {
      */
     const MYFUSES_ROOT_PATH = MYFUSES_ROOT_PATH;
     
+    
+    /**
+     * Memcache enabled flag
+     *
+     * @var boolean
+     */
+    private $memcacheEnabled = true;
+    
+    /**
+     * All myfuses memcache servers
+     *
+     * @var array
+     */
+    private $memcaheServers;
+    
+    /**
+     * MyFuses memcache instance
+     *
+     * @var Memcache
+     */
+    private $memcache;
+    
+    /**
+     * Path used by myfuses to search some plugin
+     *
+     * @var array
+     */
     private $pluginPaths = array();
     
     /**
@@ -120,7 +147,7 @@ class MyFuses {
     protected $applications = array();
     
     /**
-     * 
+     * The MyFuses request instance
      * 
      * @var FuseRequest
      */
@@ -186,6 +213,74 @@ class MyFuses {
         return $this->pluginPaths;
     }
     
+    /**
+     * Enable/disable the memcache feature
+     *
+     * @param boolean $enable
+     */
+    public function enableMemcache( $enable ) {
+        $this->memcacheEnabled = $enable;
+    }
+    
+    /**
+     * Add a memcache server to controller
+     *
+     * @param MyFusesMemcacheServer $server
+     */
+    public function addMemcacheServer( MyFusesMemcacheServer $server ) {
+        $this->memcaheServers[] = $server;
+    }
+    
+    /**
+     * Return all memcache servers
+     *
+     * @return array
+     */
+    private function getMemcacheServers() {
+        return $this->memcaheServers;
+    }
+    
+    /**
+     * Return the memcache object
+     *
+     * @return Memcache
+     */
+    public function getMemcache() {
+        return $this->memcache;
+    }
+    
+    /**
+     * Set the memcache object
+     *
+     * @param Memcache $memcache
+     */
+    private function setMemcache( Memcache $memcache ) {
+        $this->memcache = $memcache;
+    }
+    
+    /**
+     *  Add servers to mencache object
+     */
+    private function configureMemcache() {
+        
+        if( is_null( $this->getMemcache() ) ) {
+            $this->setMemcache( new Memcache() );
+        }
+        
+        foreach( $this->getMemcacheServers() as $server ) {
+            $server->configureMemcache( $this->getMemcache() );
+        }
+    }
+    
+    /**
+     * Return if the memcache is enabled
+     *
+     * @return boolean
+     */
+    public function isMemcacheEnabled() {
+        return $this->memcacheEnabled;
+    }
+    
     public function getParsedPath() {
         return $this->parsedPath;
     }
@@ -246,6 +341,12 @@ class MyFuses {
         return null;
     }
     
+    /**
+     * Returns if the application exisits
+     *
+     * @param string $name
+     * @return boolean
+     */
     public function hasApplication( $name ) {
         if( isset( $this->applications[ $name ] ) ) {
             return true;   
@@ -262,6 +363,11 @@ class MyFuses {
         return $this->applications;
     }
     
+    /**
+     * Add one application to controller
+     *
+     * @param Application $application
+     */
     public function addApplication( Application $application ) {
         if( count( $this->applications ) == 0 ) {
             $application->setDefault( true );
@@ -334,9 +440,10 @@ class MyFuses {
          }
     }
     
+    /**
+     * Builds all applications registered
+     */
     private function buildApplications() {
-        
-        
         foreach( $this->applications as $key => $application ) {
             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
                  $this->builder->setApplication( $application );
@@ -346,6 +453,11 @@ class MyFuses {
          }
     }
     
+    /**
+     * Load one application
+     *
+     * @param Application $application
+     */
     protected function loadApplication( Application $application ) {
         $application->getLoader()->loadApplication();
     }
@@ -412,39 +524,46 @@ class MyFuses {
         $strStore = "";
         
         if( $application->mustParse() ) {
-            if( !file_exists( $application->getParsedPath() ) ) {
-                mkdir( $application->getParsedPath(), 0777, true );
-             
-                $path = explode( DIRECTORY_SEPARATOR, 
-                    substr( $application->getParsedPath(), 0, 
-                    strlen( $application->getParsedPath() ) - 1 ) );
-             
-                while( $this->getParsedPath() != ( 
-                    implode( DIRECTORY_SEPARATOR, $path ) . 
-                    DIRECTORY_SEPARATOR ) ) {
-                    chmod( implode( DIRECTORY_SEPARATOR, $path ), 
-                        0777 );
-                    $path = array_slice( $path, 0, count( $path ) - 1 );
-                }
-            } 
-            
-            $strStore = "return unserialize( '";
-            
-            $strStore .= str_replace("'","\'", 
-                serialize( $application->getLoader()->
-                getCachedApplicationData() ) );
-            
-            $strStore .= "' );";
-            
-            $fileName = $application->getCompleteCacheFile();
-            
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "Application " . 
-                    $application->getName() . " Stored" ) );
-            
-            MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
-	            $strStore );
+            if( !$this->isMemcacheEnabled() ) {
+                if( !file_exists( $application->getParsedPath() ) ) {
+                    mkdir( $application->getParsedPath(), 0777, true );
+                 
+                    $path = explode( DIRECTORY_SEPARATOR, 
+                        substr( $application->getParsedPath(), 0, 
+                        strlen( $application->getParsedPath() ) - 1 ) );
+                 
+                    while( $this->getParsedPath() != ( 
+                        implode( DIRECTORY_SEPARATOR, $path ) . 
+                        DIRECTORY_SEPARATOR ) ) {
+                        chmod( implode( DIRECTORY_SEPARATOR, $path ), 
+                            0777 );
+                        $path = array_slice( $path, 0, count( $path ) - 1 );
+                    }
+                } 
+                
+                $strStore = "return unserialize( '";
+                
+                $strStore .= str_replace("'","\'", 
+                    serialize( $application->getLoader()->
+                    getCachedApplicationData() ) );
+                
+                $strStore .= "' );";
+                
+                $fileName = $application->getCompleteCacheFile();
+                
+                MyFuses::getInstance()->getDebugger()->registerEvent( 
+                    new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                        "Application " . 
+                        $application->getName() . " Stored" ) );
+                
+                MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
+    	            $strStore );
+            }
+            else {
+                $this->getMemcache()->set( $application->getTag(), 
+                    $application->getLoader()->
+                    getCachedApplicationData() );
+            }
         }
     }
     
@@ -467,8 +586,6 @@ class MyFuses {
         $this->lifecycle = new MyFusesLifecycle();
         
         $circuit = $this->request->getAction()->getCircuit();
-        
-        //var_dump( $circuit->isModified() );
         
         $controllerName = $circuit->getApplication()->getControllerClass();
         
@@ -583,6 +700,11 @@ class MyFuses {
      */
     public function doProcess() {
         try {
+            
+            if( $this->isMemcacheEnabled() ) {
+                $this->configureMemcache();
+            }
+            
             // initilizing application if necessary
             $this->loadApplications();
             
@@ -744,5 +866,57 @@ class MyFuses {
 	    }
     }
     
+}
+
+class MyFusesMemcacheServer {
+    
+    private $host;
+    
+    private $port;
+    
+    private $persistent;
+    
+    /**
+     * Server constructor
+     *
+     * @param string $host
+     * @param string $port
+     * @param boolean $persistent
+     */
+    public function __construct( $host = null, $port = "11211", 
+        $persistent = false ) {
+        $this->setHost( $host );
+        $this->setPort( $port );
+        $this->setPersistent( $persistent );
+    }
+    
+    public function getHost() {
+        return $this->host;
+    }
+    
+    public function setHost( $host ) {
+        $this->host = $host;
+    }
+    
+    public function getPort() {
+        return $this->port;
+    }
+    
+    public function setPort( $port ) {
+        $this->port = $port;
+    }
+    
+    public function isPersistent() {
+        return $this->persistent;
+    }
+    
+    public function setPersistent( $persistent ) {
+        $this->persistent = $persistent;
+    }
+    
+    public function configureMemcache( Memcache $memcache ) {
+        $memcache->addServer( $this->getHost(), $this->getPort(), 
+            $this->isPersistent() );
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
