@@ -108,7 +108,7 @@ class MyFuses {
      *
      * @var boolean
      */
-    private $memcacheEnabled = true;
+    private $memcacheEnabled = false;
     
     /**
      * All myfuses memcache servers
@@ -262,7 +262,6 @@ class MyFuses {
      *  Add servers to mencache object
      */
     private function configureMemcache() {
-        
         if( is_null( $this->getMemcache() ) ) {
             $this->setMemcache( new Memcache() );
         }
@@ -561,8 +560,8 @@ class MyFuses {
             }
             else {
                 $this->getMemcache()->set( $application->getTag(), 
-                    $application->getLoader()->
-                    getCachedApplicationData() );
+                    serialize( $application->getLoader()->
+                    getCachedApplicationData() ) );
             }
         }
     }
@@ -712,14 +711,14 @@ class MyFuses {
             
             $this->createRequest();
             
-            // storing all applications if necessary
-            $this->storeApplications();
-            
             $this->parseRequest();
             
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Request completed" ) );
+            
+            // storing all applications if necessary
+            $this->storeApplications();
                 
             if( $this->getRequest()->getApplication()->isDebugAllowed() ) {
                 print $this->getDebugger();    
