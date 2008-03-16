@@ -51,7 +51,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     
     private function isCached() {
         if( $this->getApplication()->getController()->isMemcacheEnabled() ) {
-            return !is_null( $this->applicationData );
+            return !( $this->applicationData === false );
         }
         else {
             return is_file( $this->getApplication()->getCompleteCacheFile() );
@@ -64,10 +64,11 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      *
      */
     public function loadApplication() {
+        
         if( $this->getApplication()->getController()->isMemcacheEnabled() ) {
-            $this->applicationData = $this->getApplication()->
+            $this->applicationData = unserialize( $this->getApplication()->
                 getController()->getMemcache()->get( 
-                $this->getApplication()->getTag() );
+                $this->getApplication()->getTag() ) );        
         }
         
         if( $this->isCached() ) {
