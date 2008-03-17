@@ -24,7 +24,8 @@ class FuseRequest {
             $this->application = & MyFuses::getInstance()->getApplication();    
         }
         else{
-            $this->application = & MyFuses::getInstance()->getApplication( $applicationName );
+            $this->application = & MyFuses::getInstance()->getApplication( 
+                $applicationName );
         }
         
         $defaultFuseaction = $this->application->getDefaultFuseAction();
@@ -82,7 +83,6 @@ class FuseRequest {
         
         list( $this->circuitName, $this->actionName ) = 
         	explode( '.', $this->validFuseactionName );
-        
     }
     
     /**
