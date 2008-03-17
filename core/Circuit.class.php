@@ -101,6 +101,8 @@ class Circuit {
      */
     private $path;
     
+    private $built = false;
+    
     private $verbPaths = array();
     
     /**
@@ -336,6 +338,11 @@ class Circuit {
     		return $this->actions[ $name ];
     	}
     	
+    	if( $this->getApplication()->getBuilder()->buildAction( $this, 
+    	   $name ) ) {
+    	   return $this->actions[ $name ];
+    	}
+    	
     	$params = array( "actionName" => $name, "circuit" => &$this , 
     	    "application" => $this->getApplication() );
     	throw new MyFusesFuseActionException( $params, 
@@ -509,6 +516,23 @@ class Circuit {
 	    return eval( "return " . $matches[ 1 ] . ";" );
     }
     
+    /**
+     * Return if circuit was built
+     *
+     * @return boolean
+     */
+    public function wasBuilt() {
+        return $this->built;
+    }
+    
+    /**
+     * Set circuit built status
+     *
+     * @param boolean $built
+     */
+    public function setBuilt( $built ) {
+        $this->built = $built;
+    }
     
     public function setCustomAttribute( $namespace, $name, $value ) {
         $this->customAttributes[ $namespace ][ $name ] = $value;

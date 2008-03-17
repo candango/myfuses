@@ -70,6 +70,13 @@ class Application {
     private $loader;
     
     /**
+     * Application builder
+     *
+     * @var MyFusesBuilder
+     */
+    private $builder;
+    
+    /**
      * Flag that indicates that this application was loaded
      *
      * @var boolean
@@ -326,6 +333,8 @@ class Application {
         
         $this->setLoader( $loader );
         
+        $this->setBuilder( new BasicMyFusesBuilder() );
+        
         $this->plugins[ Plugin::PRE_PROCESS_PHASE ] = array();
         $this->plugins[ Plugin::PRE_FUSEACTION_PHASE ] = array();
         $this->plugins[ Plugin::POST_FUSEACTION_PHASE ] = array();
@@ -445,9 +454,28 @@ class Application {
      * @param MyFusesLoader $loader
      * @access public
      */
-    public function setLoader( MyFusesLoader &$loader ) {
-        $this->loader = &$loader;
+    public function setLoader( MyFusesLoader $loader ) {
+        $this->loader = $loader;
         $loader->setApplication( $this );
+    }
+    
+    /**
+     * Return application builder
+     *
+     * @return MyFusesBuilder
+     */
+    public function getBuilder() {
+        return $this->builder;
+    }
+    
+    /**
+     * Set application builder
+     *
+     * @param MyFusesBuilder $builder
+     */
+    public function setBuilder( MyFusesBuilder $builder ) {
+        $this->builder = $builder;
+        $builder->setApplication( $this );
     }
     
     /**
@@ -596,7 +624,14 @@ class Application {
      */
     public function getCircuit( $name ) {
     	if( isset( $this->circuits[ $name ] ) ) {
-    		return $this->circuits[ $name ];
+    		if( !$this->circuits[ $name ]->wasBuilt() ) {
+    		    if( $name !== 'MYFUSES_GLOBAL_CIRCUIT' ) {
+    		        $this->getBuilder()->buildCircuit( 
+    		          $this->circuits[ $name ] );
+    		    }
+    		    $this->circuits[ $name ]->setBuilt( true );
+    		}
+    	    return $this->circuits[ $name ];
     	}
     	
     	$params = array( "circuitName" => $name, "application" => &$this );
@@ -1101,6 +1136,16 @@ class Application {
      */
     public function isToolsAllowed(){
         return $this->tools; 
+    }
+    
+    /**
+     * Return the application tag
+     *
+     * @return string
+     */
+    public function getTag() {
+        return get_class( $this->getController() ) . "_" . 
+            get_class( $this ) . "_" . $this->getName();
     }
     
     /**
