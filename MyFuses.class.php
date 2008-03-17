@@ -580,6 +580,16 @@ class MyFuses {
         }
     }
     
+    protected function configureApplications() {
+        foreach( $this->applications as $index => $application ) {
+            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
+                $this->configureApplication( $application );
+            }
+        }
+    }
+    
+    protected function configureApplication( Application $application ) {}
+    
     /**
      * This method parse the request and write the genereted 
      * string in one file
@@ -716,6 +726,8 @@ class MyFuses {
             $this->buildApplications();
             
             $this->createRequest();
+            
+            $this->configureApplications();
             
             $this->parseRequest();
             
