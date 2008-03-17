@@ -14,7 +14,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     private $applciationBuilderListeners = array();
     
     /**
-     * Enter description here...
+     * Rerturn builder application
      *
      * @return Application
      */
@@ -22,6 +22,11 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         return $this->application;
     }
     
+    /**
+     * Set builder application
+     *
+     * @return Application
+     */
     public function setApplication( Application $application ) {
         $this->application = $application;
     }
@@ -57,11 +62,11 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             }
         }
         
-        foreach( $this->getApplication()->getCircits() as $circuit ) {
+        /*foreach( $this->getApplication()->getCircits() as $circuit ) {
             if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
                 $this->buildCircuit( $circuit );
             }
-        }
+        }*/
         
         foreach( $this->getApplicationBuilderListeners() as $listener ) {
             $listener->applicationBuildPerformed( $this->getApplication(), 
@@ -69,10 +74,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 getCachedApplicationData() );
         }
         
-        if( !$this->getApplication()->mustParse() ) {
-            $this->getApplication()->getLoader()->
-                destroyCachedApplicationData();    
-        }
     }
     
     protected function buildCircuits( &$data ) {
@@ -116,7 +117,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
     }
     
-    protected function buildCircuit( Circuit $circuit ){
+    public function buildCircuit( Circuit $circuit ) {
         $appData = &$this->getApplication()->getLoader()->
             getCachedApplicationData();
             
@@ -159,13 +160,14 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             }
         }
         
+        
         if( count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {
                 switch( $child[ 'name' ] ) {
-                    case "fuseaction":
+                    /*case "fuseaction":
                     case "action":
                         $this->buildAction( $circuit, $child );
-                        break;
+                        break;*/
                     case "prefuseaction":
                     case "postfuseaction":
                         $this->buildGlobalAction( $circuit, $child );
@@ -174,6 +176,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 }
             }
         }
+        
+        $circuit->setBuilt( true );
     }
     
     /**
@@ -182,9 +186,32 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    protected function buildAction( Circuit $circuit, &$data ) {
+    public function buildAction( Circuit $circuit, $name ) {
         
         $action = new FuseAction( $circuit );
+        
+        $appCData = &$circuit->getApplication()->getLoader()->
+            getCachedApplicationData();
+        
+        $data = null;
+        
+        foreach( $appCData[ 'circuits' ] as $key => $circuitData ) {
+            if( $key === $circuit->getName() ) {
+                foreach( $circuitData[ 'children' ] as $actionData ) {
+                    if( isset( $actionData[ 'attributes' ][ 'name' ] ) ) {
+                        if( $actionData[ 'attributes' ][ 'name' ] === $name ) {
+                            $data = $actionData;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        
+        if( is_null( $data ) ) {
+            return false;
+        }
         
         // TODO implement class and namespace options
         $actionParameterAttributes = array(
@@ -246,6 +273,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 
             }
         }
+        return true;
     }
     
     /**

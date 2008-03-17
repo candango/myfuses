@@ -445,9 +445,7 @@ class MyFuses {
     private function buildApplications() {
         foreach( $this->applications as $key => $application ) {
             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                 $this->builder->setApplication( $application );
-                 $this->builder->buildApplication();
-                 $this->builder->unsetApplication();
+                 $application->getBuilder()->buildApplication();
              }
          }
     }
@@ -519,26 +517,31 @@ class MyFuses {
         return $this->request;
     }
     
+    protected function createApplicationPath( Application $application ) {
+        if( !file_exists( $application->getParsedPath() ) ) {
+            mkdir( $application->getParsedPath(), 0777, true );
+         
+            $path = explode( DIRECTORY_SEPARATOR, 
+                substr( $application->getParsedPath(), 0, 
+                strlen( $application->getParsedPath() ) - 1 ) );
+         
+            while( $this->getParsedPath() != ( 
+                implode( DIRECTORY_SEPARATOR, $path ) . 
+                DIRECTORY_SEPARATOR ) ) {
+                chmod( implode( DIRECTORY_SEPARATOR, $path ), 
+                    0777 );
+                $path = array_slice( $path, 0, count( $path ) - 1 );
+            }
+        }
+    }
+    
     protected function storeApplication( Application $application ) {
         $strStore = "";
         
         if( $application->mustParse() ) {
             if( !$this->isMemcacheEnabled() ) {
-                if( !file_exists( $application->getParsedPath() ) ) {
-                    mkdir( $application->getParsedPath(), 0777, true );
-                 
-                    $path = explode( DIRECTORY_SEPARATOR, 
-                        substr( $application->getParsedPath(), 0, 
-                        strlen( $application->getParsedPath() ) - 1 ) );
-                 
-                    while( $this->getParsedPath() != ( 
-                        implode( DIRECTORY_SEPARATOR, $path ) . 
-                        DIRECTORY_SEPARATOR ) ) {
-                        chmod( implode( DIRECTORY_SEPARATOR, $path ), 
-                            0777 );
-                        $path = array_slice( $path, 0, count( $path ) - 1 );
-                    }
-                } 
+                
+                $this->createApplicationPath( $application );
                 
                 $strStore = "return unserialize( '";
                 
@@ -667,6 +670,9 @@ class MyFuses {
                 str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
 	        $strParse = 
                 str_replace( array( ". \"\";" ), ";", $strParse );
+
+            $this->createApplicationPath( $application );
+            
             if( !file_exists( $path ) ) {
 	            mkdir( $path );
 	            chmod( $path, 0777 );
