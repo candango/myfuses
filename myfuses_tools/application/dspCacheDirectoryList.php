@@ -1,4 +1,11 @@
+<?if ( isset( $_SESSION[ 'file_message' ] ) ) {?>
+<br><br><font color="red"><?=$_SESSION[ 'file_message' ]?></font>
+<?}
+unset( $_SESSION[ 'file_message' ] );
+?>
+
 <h2>MyFuses Cache Listing</h2>
+
 <?php
 $cachedPath = $application->getController()->getParsedPath() . 
     $application->getName();
@@ -8,19 +15,26 @@ $cachedPath = $application->getController()->getParsedPath() .
 <?php
 $it = new RecursiveDirectoryIterator( $cachedPath );
 
+
+$depth = count( explode( DIRECTORY_SEPARATOR, $it->getPath() ) );
+
 // RecursiveIteratorIterator accepts the following modes:
 //     LEAVES_ONLY = 0  (default)
 //     SELF_FIRST  = 1
 //     CHILD_FIRST = 2
+
 foreach (new RecursiveIteratorIterator($it, 1) as $path) {
-
+    $iDepth = 0;
     if ($path->isDir()) {
-
-        echo "Path: $path<br>";
-
+        $iDepth = count( explode( DIRECTORY_SEPARATOR, $path ) );        
+        echo str_repeat( "-", $iDepth - $depth ) . "Path: $path <a href=\"" . 
+            MyFuses::getMySelfXfa( "deletePath", true, false )  . 
+            "application=" . $application->getName() . "&file=" . 
+            urlencode( $path ) ."\">delete</a><br>";
     }
     else {
-        echo "File: $path<br>";
+        $iDepth = count( explode( DIRECTORY_SEPARATOR, $path->getPath() ) ) + 1;
+        echo str_repeat( "-", $iDepth - $depth ) . "File: $path<br>";
     }
 
 }

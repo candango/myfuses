@@ -29,7 +29,17 @@
     </fuseaction>
     
     <fuseaction name="viewCache">
+        <xfa name="deletePath" value="deletePath"/>
         <include file="dspCacheDirectoryList.php"/>
+    </fuseaction>
+    
+    <fuseaction name="deletePath">
+        <xfa name="backToViewCache" value="viewCache"/>
+        <include file="actDeletePath.php"/>
+        <set name="appName" value="#$application->getName()#"/>
+        <relocate xfa="backToViewCache" >
+            <parameter name="application" value="#$appName#"/>
+        </relocate>
     </fuseaction>
     
 </circuit>
