@@ -61,11 +61,13 @@ class FuseRequest {
             }
         }
         else {
-            if ( isset( $_GET[ $fuseactionVariable ] ) && $_GET[ $fuseactionVariable ] != '' ) {
+            if ( isset( $_GET[ $fuseactionVariable ] ) 
+                && $_GET[ $fuseactionVariable ] != '' ) {
 	            $this->validFuseactionName = $_GET[ $fuseactionVariable ];
 	        }
 	        
-	        if ( isset( $_POST[ $fuseactionVariable ] ) && $_POST[ $fuseactionVariable ] != '' ) {
+	        if ( isset( $_POST[ $fuseactionVariable ] ) 
+	           && $_POST[ $fuseactionVariable ] != '' ) {
 	            $this->validFuseactionName = $_POST[ $fuseactionVariable ];
 	        }
         }
@@ -73,7 +75,16 @@ class FuseRequest {
         if( count( explode( ".", $this->validFuseactionName ) ) > 2 ) {
             list( $appName, $circuitName, $actionName ) = 
         	    explode( '.', $this->validFuseactionName );
-            $this->application = & MyFuses::getInstance()->getApplication( $appName );
+            
+            $this->application = MyFuses::getInstance()->getApplication( 
+                $appName );
+                
+            if( is_null( $this->application ) ) {
+                $params = array( "applicationName" => $appName );
+                throw new MyFusesApplicationException( $params, 
+                    MyFusesApplicationException::NON_EXISTENT_APPLICATION );    
+            }
+            
             $this->validFuseactionName = $circuitName . "." . $actionName;
         }
         
