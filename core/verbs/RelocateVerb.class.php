@@ -59,10 +59,21 @@ require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
  */
 class RelocateVerb extends ParameterizedVerb {
     
-    
+    /**
+     * Url that verb will relocate to
+     *
+     * @var string
+     */
     private $url;
     
+    /**
+     * eXit FuseAction that will be used to resolve the verb url
+     *
+     * @var string
+     */
     private $xfa;
+
+    private $variable = true;
     
     public function getUrl() {
         return $this->url;
@@ -78,6 +89,14 @@ class RelocateVerb extends ParameterizedVerb {
     
     public function setXfa( $xfa ) {
         $this->xfa = $xfa;
+    }
+    
+    public function getVariable() {
+        return $this->variable ? "true" : "false";
+    }
+    
+    public function setVariable( $variable ) {
+        $this->variable = ( $variable === "true" ) ? true : false;
     }
     
     public function setData( $data ) {
