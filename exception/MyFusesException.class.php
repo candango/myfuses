@@ -6,6 +6,9 @@ require_once MYFUSES_ROOT_PATH .
     "exception/MyFusesFileOperationException.class.php";
 
 require_once MYFUSES_ROOT_PATH . 
+    "exception/MyFusesApplicationException.class.php";
+
+require_once MYFUSES_ROOT_PATH . 
     "exception/MyFusesCircuitException.class.php";
     
 require_once MYFUSES_ROOT_PATH . 
@@ -37,9 +40,10 @@ abstract class MyFusesException extends Exception {
     
     const FILE_OPERATION = 101;
     const MISSING_CORE_FILE = 102;
-    const NON_EXISTENT_CIRCUIT = 103;
-    const NON_EXISTENT_FUSEACTION = 104;
-    const USER_TRYING_ACCESS_INTERNAL_CIRCUIT = 105;
+    const NON_EXISTENT_APPLICATION = 103;
+    const NON_EXISTENT_CIRCUIT = 104;
+    const NON_EXISTENT_FUSEACTION = 105;
+    const USER_TRYING_ACCESS_INTERNAL_CIRCUIT = 107;
     
     private static $currentInstance;
     
