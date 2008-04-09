@@ -217,8 +217,8 @@ class InstantiateVerb extends AbstractVerb {
 	    $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
 	        
-	    $fileCall = $controllerClass . "::getApplication( \"" . $appName .
-	        "\" )->getClass( \"" . $this->getClass() . 
+	    $fileCall = $controllerClass . "::getInstance()->getApplication( \"" . 
+            $appName . "\" )->getClass( \"" . $this->getClass() . 
 	        "\" )->getCompletePath()";
 
 	    $strOut = parent::getParsedCode( $commented, $identLevel );

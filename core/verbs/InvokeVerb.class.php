@@ -219,7 +219,8 @@ class InvokeVerb extends AbstractVerb {
 				    $controllerClass = $this->getAction()->getCircuit()->
 				        getApplication()->getControllerClass();
 				        
-				    $fileCall = $controllerClass . "::getApplication( \"" . $appName .
+				    $fileCall = $controllerClass . 
+				        "::getInstance()->getApplication( \"" . $appName .
 				        "\" )->getClass( \"" . $this->getClass() . 
 				        "\" )->getCompletePath()";
 				    
