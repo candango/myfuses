@@ -109,7 +109,7 @@ class IncludeVerb extends ParameterizedVerb {
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         
-        $fileCall = $controllerClass . "::getApplication( \"" . $appName . 
+        $fileCall = $controllerClass . "::getInstance()->getApplication( \"" . $appName . 
             "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
         
         $strOut = str_repeat( "\t", $identLevel );
