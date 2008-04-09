@@ -120,6 +120,14 @@ class DoVerb extends ParameterizedVerb {
             
         $strOut = $action->getParsedCode( $action->getCircuit()->
             getApplication()->isParsedWithComments(), 0 );
+
+        $path = $action->getCircuit()->getApplication()->getParsedPath() .
+            $action->getCircuit()->getName() . DIRECTORY_SEPARATOR;
+            
+        if( !file_exists( $path ) ) {
+            mkdir( $path );
+            chmod( $path, 0777 );
+        }   
             
         MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
                     $strOut );
