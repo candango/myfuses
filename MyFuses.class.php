@@ -688,19 +688,8 @@ class MyFuses {
 	            chmod( $path, 0777 );
 	        }
 	        
-	        $fp = fopen( $fileName,"w" );
-	         
-	        if ( !flock($fp,LOCK_EX) ) {
-	            die("Could not get exclusive lock to Parsed File file");
-	        }
+	        MyFusesFileHandler::writeFile( $fileName, "<?php\n" . $strParse );
 	        
-	        if ( !fwrite($fp, "<?php\n" . $strParse) ) {
-	            var_dump( "deu pau 2!!!" );
-	        }
-	        flock($fp,LOCK_UN);
-	        fclose($fp);
-	        chmod( $fileName, 0777 );
-            
 	        MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Fuseaction " . 
@@ -724,6 +713,8 @@ class MyFuses {
             $this->loadApplications();
             
             $this->buildApplications();
+            
+            
             
             $this->createRequest();
             
