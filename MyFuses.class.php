@@ -850,6 +850,23 @@ class MyFuses {
         return $link;
     }
     
+    public static function doAction( $actionName ) {
+        $actionNameX = explode( ".", $actionName );
+        if( count( $actionNameX ) < 3 ) {
+            array_unshift( $actionNameX, 
+                MyFuses::getInstance()->getApplication()->getName() );
+        }
+        
+        $application = MyFuses::getInstance()->getApplication( 
+            $actionNameX[ 0 ] );
+        
+        $circuit = $application->getCircuit( $actionNameX[ 1 ] );
+            
+        $action =  $circuit->getAction( $actionNameX[ 2 ] );
+        
+        DoVerb::doAction( $action );
+    }
+    
     /**
      * Includes core files.<br>
      * Throws IFBExeption when <code>file doesn't exists</code>.
