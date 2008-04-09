@@ -111,12 +111,40 @@ class DoVerb extends ParameterizedVerb {
         $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );
     }
     
+    public static function doAction( CircuitAction $action ) {        
+        $parsedPath = $action->getCircuit()->
+            getApplication()->getParsedPath();
+
+        $actionFile = $parsedPath . $action->getCircuit()->getName() . 
+            DIRECTORY_SEPARATOR . $action->getName() . ".action.do.php";    
+            
+        $strOut = $action->getParsedCode( $action->getCircuit()->
+            getApplication()->isParsedWithComments(), 0 );
+            
+        MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
+                    $strOut );
+        
+        MyFuses::getInstance()->getDebugger()->registerEvent( 
+            new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                "Fuseaction " . $action->getCircuit()->
+                getApplication()->getName() . "." . 
+                $action->getCircuit()->getName() . "." .
+                $action->getName() . " Compiled" ) );
+        
+        include $actionFile;            
+    }
+    
 	/**
      * Return the parsed code
      *
      * @return string
      */
     public function getRealParsedCode( $commented, $identLevel ) {
+        
+        $completeActionName = $this->appName . "." . 
+            $this->circuitToBeExecutedName . "." . 
+            $this->actionToBeExecutedName; 
+            
         try {
             $action =  MyFuses::getInstance()->getApplication( 
                 $this->appName )->getCircuit( 
@@ -130,12 +158,16 @@ class DoVerb extends ParameterizedVerb {
             $mffae->breakProcess();
         }
         
+        //$this->generateActionFile( $action, $commented );
+        
         $strOut = str_repeat( "\t", $identLevel );
         
         $action->setCalledByDo( true );
         
-        $strOut .= $action->getParsedCode( $commented, $identLevel + 1 );
-        
+        $strOut .=  $this->getAction()->getCircuit()->getApplication()->
+            getControllerClass() . "::doAction( \"" . 
+            $completeActionName . "\" );";
+            
         $action->setCalledByDo( false );
         
         return $strOut;
