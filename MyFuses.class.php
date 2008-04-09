@@ -46,6 +46,8 @@ try {
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/Application.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "core/ICacheable.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/IParseable.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
