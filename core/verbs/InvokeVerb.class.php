@@ -206,63 +206,70 @@ class InvokeVerb extends AbstractVerb {
 		// Make identation
 		$strOut .= str_repeat( "\t", $identLevel );
 		
+    	if( !is_null( $this->getClass() ) ) {
+            if( !isset( self::$classCall[ $this->getClass() ] ) ) {
+
+                $appName = $this->getAction()->getCircuit()->
+                    getApplication()->getName();
+                
+                $controllerClass = $this->getAction()->getCircuit()->
+                    getApplication()->getControllerClass();
+                    
+                $fileCall = $controllerClass . 
+                    "::getInstance()->getApplication( \"" . $appName .
+                    "\" )->getClass( \"" . $this->getClass() . 
+                    "\" )->getCompletePath()";
+                
+                $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
+                $strOut .= str_repeat( "\t", $identLevel + 1 );
+                $strOut .= "require_once( " . $fileCall . " );\n";
+                $strOut .= str_repeat( "\t", $identLevel );
+                $strOut .= "}\n";
+                $strOut .= str_repeat( "\t", $identLevel );
+                
+                self::$classCall[ $this->getClass() ] = "called";
+                
+            }
+    	}
+		
+    	if( !is_null( $this->getVariable() ) ) {
+    	    
+    	    $strOut .= "MyFusesCodeHandler::setVariable( \"" .
+                $this->getVariable() . "\", ";
+    	    
+    	}
+    	
 		// Begin method call
 		if( !is_null( $this->getMethod() ) ) {
-			
-			if( !is_null( $this->getClass() ) ) {
-			    
-			    if( !isset( self::$classCall[ $this->getClass() ] ) ) {
-
-			        $appName = $this->getAction()->getCircuit()->
-				        getApplication()->getName();
-			        
-				    $controllerClass = $this->getAction()->getCircuit()->
-				        getApplication()->getControllerClass();
-				        
-				    $fileCall = $controllerClass . 
-				        "::getInstance()->getApplication( \"" . $appName .
-				        "\" )->getClass( \"" . $this->getClass() . 
-				        "\" )->getCompletePath()";
-				    
-				    $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
-				    $strOut .= str_repeat( "\t", $identLevel + 1 );
-				    $strOut .= "require_once( " . $fileCall . " );\n";
-				    $strOut .= str_repeat( "\t", $identLevel );
-				    $strOut .= "}\n";
-				    $strOut .= str_repeat( "\t", $identLevel );
-			        
-				    self::$classCall[ $this->getClass() ] = "called";
-				    
-			    }
-			    
-			    // Verify if it has a variable (Method returns a value)
-				if ( !is_null( $this->getVariable() ) ) {
-					$strOut .= "\$" . $this->getVariable() . " = ";
-				}
-			     
-			    $strOut .= $this->getClass() . "::" . 
-			        $this->getMethod() . "( ";    
+			if( is_null( $this->getClass() ) ) {
+                $strOut .= "MyFusesCodeHandler::getVariable( \"" . 
+                    $this->getObject() . "\" )->" . 
+                    $this->getMethod() . "( ";    
 			}
 			else {
-			    // Verify if it has a variable (Method returns a value)
-				if ( !is_null( $this->getVariable() ) ) {
-					$strOut .= "\$" . $this->getVariable() . " = ";
-				}
-			    $strOut .= "\$" . $this->getObject() . "->" . 
-			        $this->getMethod() . "( ";    
+                $strOut .= $this->getClass() . "::" . 
+                    $this->getMethod() . "( ";    
 			}
-			
+		    
 			// Verify arguments - Fusebox 5 (strictMode set to true)
-			if ( !is_null( $this->getArguments() ) )
-				$strOut .= $this->getArgumentString();
+			if ( !is_null( $this->getArguments() ) ){
+                $strOut .= $this->getArgumentString();
+			}
 		    // Close method
-	        $strOut .= " );\n\n";
+	        $strOut .= " )";
 		}
 		else {
 		    $strOut .= "\$" . $this->getObject() . "->" . 
 		        $this->getMethodCall() . ";\n\n";
 		}
 		
+        if( is_null( $this->getVariable() ) ) {
+            $strOut .= ";\n\n";
+        }
+		else {
+            $strOut .= " );\n\n";
+        }
+        
 		return $strOut;
 	}
     

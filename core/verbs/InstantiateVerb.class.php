@@ -231,8 +231,10 @@ class InstantiateVerb extends AbstractVerb {
 		    $strOut .= str_repeat( "\t", $identLevel );
 		    $strOut .= "}\n";
 		    $strOut .= str_repeat( "\t", $identLevel );
-		    $strOut .= "\$" . $this->getObject() . " = new " . 
-		        $this->getClass() . "( " . $this->getArgumentString() . " );\n\n";    
+		    
+		    $strOut .= "MyFusesCodeHandler::setVariable( \"" . 
+		      $this->getObject() . "\", new " . 
+            $this->getClass() . "( " . $this->getArgumentString() . " ) );\n\n";    
 	    }
 	    else {
 	        $strOut .= "\$" . $this->getObject() . " = new SoapClient" . 
