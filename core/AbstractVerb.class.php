@@ -314,5 +314,20 @@ abstract class AbstractVerb implements Verb {
 	    return $params;
 	}
 	
+	protected function getIncludeFileString( $fileName ) {
+	    $strOut = "MyFusesCodeHandler::includeFile( " . 
+	       $fileName . " );\n\n";
+        $strOut .= self::getContextRestoreString();
+        return $strOut;
+	}
+	
+	protected function getContextRestoreString() {
+	    $strOut = "foreach( MyFusesCodeHandler::getContext() as \$key => \$value ) {";
+        $strOut .= "global \$\$key;";
+        $strOut .= "}\n\n";
+        return $strOut;
+	}
+	
+	
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
