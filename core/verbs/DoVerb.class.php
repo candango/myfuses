@@ -128,10 +128,14 @@ class DoVerb extends ParameterizedVerb {
             mkdir( $path );
             chmod( $path, 0777 );
         }   
-            
+
+        // sanitizing " "'s    
+        $strOut = str_replace( array( " \"\" .", ". \"\" " ), "", $strOut );
+        $strOut = str_replace( array( ". \"\";" ), ";", $strOut );
+        
         MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
                     $strOut );
-        
+                    
         MyFuses::getInstance()->getDebugger()->registerEvent( 
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                 "Fuseaction " . $action->getCircuit()->
@@ -139,7 +143,7 @@ class DoVerb extends ParameterizedVerb {
                 $action->getCircuit()->getName() . "." .
                 $action->getName() . " Compiled" ) );
         
-        include $actionFile;            
+        MyFusesCodeHandler::includeFile( $actionFile );           
     }
     
 	/**
@@ -175,6 +179,8 @@ class DoVerb extends ParameterizedVerb {
         $strOut .=  $this->getAction()->getCircuit()->getApplication()->
             getControllerClass() . "::doAction( \"" . 
             $completeActionName . "\" );";
+
+        $strOut .= self::getContextRestoreString();
             
         $action->setCalledByDo( false );
         

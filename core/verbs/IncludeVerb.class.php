@@ -109,17 +109,13 @@ class IncludeVerb extends ParameterizedVerb {
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         
-        $fileCall = $controllerClass . "::getInstance()->getApplication( \"" . $appName . 
-            "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
+        $fileCall = $controllerClass . "::getInstance()->getApplication( \"" . 
+            $appName . "\" )->getCircuit( \"" . $circuitName . "\" )->getCompletePath()";
         
         $strOut = str_repeat( "\t", $identLevel );
-        $strOut .= "if ( file_exists( " . $fileCall . " . \"" . 
-            $this->getFile() . "\" ) ) {\n";
-        $strOut .= str_repeat( "\t", $identLevel + 1 );
-        $strOut .= "include( " . $fileCall . " . \"" . 
-            $this->getFile() . "\" );\n";
-        $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= "}\n\n";
+        
+        $strOut .= $this->getIncludeFileString( $fileCall . ". \"" . 
+            DIRECTORY_SEPARATOR . $this->getFile() . "\"" );
         return $strOut;
     }
 
