@@ -70,6 +70,8 @@ try {
         "process/MyFusesDebugger.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/code/MyFusesCodeHandler.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/file/MyFusesFileHandler.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
@@ -698,7 +700,11 @@ class MyFuses {
                     $this->getRequest()->getFuseActionName() . " Compiled" ) );
 	        
         }
-        include $fileName;
+        self::includeFile( $fileName );
+    }
+    
+    public static function includeFile( $file ) {
+        include $file;
     }
     
     /**
