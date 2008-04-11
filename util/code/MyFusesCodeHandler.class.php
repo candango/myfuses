@@ -102,12 +102,26 @@ class MyFusesCodeHandler {
     
     public static function restoreParameter( $name ) {
         self::unsetVariable( $name );
-        var_dump( self::$context );
     }
     
     public static function getContext(){
         return self::$context;
     }
-       
+    
+    /**
+     * Clean all hashed strings ex:#<string>#
+     *
+     * @param string $hstring
+     * @return string
+     */
+    public static function sanitizeHashedString( $hstring ) {
+        // resolving #valriable#'s 
+        $hstring =  preg_replace( 
+            "@([#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#])@", 
+            " $2 " , $hstring );
+        
+        return  $hstring;
+    }
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
