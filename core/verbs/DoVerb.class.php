@@ -128,13 +128,9 @@ class DoVerb extends ParameterizedVerb {
             mkdir( $path );
             chmod( $path, 0777 );
         }   
-
-        // sanitizing " "'s    
-        $strOut = str_replace( array( " \"\" .", ". \"\" " ), "", $strOut );
-        $strOut = str_replace( array( ". \"\";" ), ";", $strOut );
         
         MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
-                    $strOut );
+                    MyFusesCodeHandler::sanitizeHashedString( $strOut ) );
                     
         MyFuses::getInstance()->getDebugger()->registerEvent( 
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
