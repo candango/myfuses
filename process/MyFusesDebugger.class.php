@@ -58,6 +58,8 @@ class MyFusesDebugger {
     
     const MYFUSES_CATEGORY = "MyFuses";
     
+    const RUNTIME_CATEGORY = "Runtime";
+    
     private $initTime = 0;
     
     /**
