@@ -266,19 +266,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     }
     
     /**
-     * Clean all hashed strings ex:#<string>#
-     *
-     * @param string $hstring
-     * @return string
-     */
-    public static function sanitizeHashedString( $hstring ) {
-        // resolving #valriable#'s 
-        return  preg_replace( 
-            "@([#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#])@", 
-            "\" . $2 . \"" , $hstring );
-    }
-    
-    /**
      * Add one application load listener
      *
      * @param MyFusesApplicationLoaderListener $listener
