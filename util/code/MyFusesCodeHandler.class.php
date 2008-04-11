@@ -47,25 +47,67 @@
  */
 class MyFusesCodeHandler {
     
-    public static function setVariable( $variable, $value ) {
+    public static $context = array();
+    
+    public static function setVariable( $name, $value ) {
+        global $$name;
         
-        global $$variable;
+        $$name = $value;
+        if( !in_array( $name, self::$context ) ) {
+            self::$context[] = $name;    
+        }
+    }
+    
+    public static function getVariable( $name ) {
+        global $$name;
         
-        $$variable = $value;
+        return in_array( $name, self::$context ) ? $$name : null;
+    }
+    
+    public static function unsetVariable( $name ) {
+        global $$name;
+        
+        self::$context = array_diff( self::$context, array( $name ) );
+        
+        unset( $$name );
+    }
+    
+    public static function includeFile( $__MFCH_FILE_MONSTER_OFF_LAKE ) {
+        
+        foreach( self::$context as $variable ) {
+            global $$variable;
+        }
+        
+        if( file_exists( $__MFCH_FILE_MONSTER_OFF_LAKE ) ) {
+             include $__MFCH_FILE_MONSTER_OFF_LAKE;
+        }
+        // getting defined variables in this context
+        foreach( get_defined_vars() as $key => $value ) {
+            if( !in_array( $key, self::$context ) ) {
+                if( $key != "__MFCH_FILE_MONSTER_OFF_LAKE" ) {
+                    self::setVariable( $key, $value );    
+                }
+            }
+        }
+        // trow some exception when file doesnt exists!!!
+    }
+    
+    public static function setParameter( $name, $value ) {
+        
+        if( !in_array( $name, self::$context ) ) {
+            self::setVariable( $name, $value );    
+        }
         
     }
     
-    public static function getVariable( $variable ) {
-        
-        global $$variable;
-        
-        return $$variable;
-        
+    public static function restoreParameter( $name ) {
+        self::unsetVariable( $name );
+        var_dump( self::$context );
     }
     
-    public static function includeFile( $file ) {
-        var_dump( $file );die();
+    public static function getContext(){
+        return self::$context;
     }
-    
+       
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
