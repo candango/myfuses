@@ -127,36 +127,19 @@ abstract class ParameterizedVerb extends AbstractVerb {
         $id = uniqid();
         
         foreach( $this->getParameters() as $name => $value ) {
-                
             $strOut .= str_repeat( "\t", $identLevel );
-            $strOut .=  "if( isset( \$" . $name . " ) ) {\n";
-            $strOut .= str_repeat( "\t", $identLevel + 1 );
-            $strOut .=  "\$" . $name ."_" . $id . " =  \$" . 
-                $name . ";\n";
-            $strOut .= str_repeat( "\t", $identLevel );
-            $strOut .=  "}\n";
-            
-            $strOut .= str_repeat( "\t", $identLevel );            
-            $strOut .=  "\$" . $name . " = \"" . $value . "\";\n\n";
-            
+            $strOut .=  "MyFusesCodeHandler::setParameter( \"" . $name . "\", \"" . $value . "\" );\n";
         }
+        
         
         $strOut .= $this->getRealParsedCode( $commented, $identLevel );
         
         foreach( $this->getParameters() as  $name => $value ) {
             $strOut .= str_repeat( "\t", $identLevel );
-            $strOut .=  "if( isset( \$" . $name ."_" . $id . " ) ) {\n";
-            $strOut .= str_repeat( "\t", $identLevel + 1 );
-            $strOut .=  "\$" . $name . " =  \$" . 
-                $name . "_" . $id . ";\n";
-            $strOut .= str_repeat( "\t", $identLevel );
-            $strOut .=  "}\n";
-            $strOut .=  "else {\n";
-            $strOut .= str_repeat( "\t", $identLevel + 1 );
-            $strOut .=  "unset( \$" . $name . " );\n";
-            $strOut .=  "}\n";    
+            $strOut .=  "MyFusesCodeHandler::restoreParameter( \"" . $name . "\" );\n";
         }
         $strOut .=  "\n";
+        
         return $strOut;
     }
     
