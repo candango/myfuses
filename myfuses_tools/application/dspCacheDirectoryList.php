@@ -34,7 +34,10 @@ foreach (new RecursiveIteratorIterator($it, 1) as $path) {
     }
     else {
         $iDepth = count( explode( DIRECTORY_SEPARATOR, $path->getPath() ) ) + 1;
-        echo str_repeat( "-", $iDepth - $depth ) . "File: $path<br>";
+        echo str_repeat( "-", $iDepth - $depth ) . "File: $path <a href=\"" . 
+            MyFuses::getMySelfXfa( "deletePath", true, false )  . 
+            "application=" . $application->getName() . "&file=" . 
+            urlencode( $path ) ."\">delete</a><br>";
     }
 
 }

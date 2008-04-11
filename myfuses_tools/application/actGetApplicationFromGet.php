@@ -1,3 +1,3 @@
 <?php
 $application = MyFuses::getInstance()->getApplication( 
-    $_GET[ 'application' ] );
+    $_GET[ 'application' ] );    
