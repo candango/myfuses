@@ -118,7 +118,7 @@ class MyFusesCodeHandler {
         // resolving #valriable#'s 
         $hstring =  preg_replace( 
             "@([\"][#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#][\"])@", 
-            " $2 " , $hstring );
+            "$2" , $hstring );
         
         return  $hstring;
     }
