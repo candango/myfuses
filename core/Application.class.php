@@ -77,6 +77,8 @@ class Application implements ICacheable {
      */
     private $loaded = false;
     
+    private $load = false;
+    
     private $parse = false;
     
     /**
@@ -697,6 +699,24 @@ class Application implements ICacheable {
      */
     public function setDefault( $value ) {
         $this->default = $value;
+    }
+    
+    /**
+     * Return if the application must be loaded of not
+     *
+     * @return boolean
+     */
+    public function mustLoad() {
+        return $this->loadl;
+    }
+    
+    /**
+     * Set if the application must be loaded or not
+     *
+     * @param boolean $load
+     */
+    public function setLoad( $load ) {
+        $this->load = $load;
     }
     
     /**
