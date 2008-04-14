@@ -1202,20 +1202,36 @@ class Application implements ICacheable {
         }
         
         // parameters
-        $strOut .= "\n\$application->setFuseactionVariable( \"" . $this->getFuseactionVariable() . "\" );\n";
-        $strOut .= "\$application->setDefaultFuseaction( \"" . $this->getDefaultFuseaction() . "\" );\n";
-        $strOut .= "\$application->setPrecedenceFormOrUrl( \"" . $this->getPrecedenceFormOrUrl() . "\" );\n";
-        $strOut .= "\$application->setMode( \"" . $this->getMode() . "\" );\n";
-        $strOut .= "\$application->setPassword( \"" . $this->getPassword() . "\" );\n";
-        $strOut .= "\$application->setParsedWithComments( " . ( $this->isParsedWithComments() ? "true" : "false" ) . " );\n";
-        $strOut .= "\$application->setConditionalParse( " . ( $this->isConditionalParse() ? "true" : "false" ) . " );\n";
-        $strOut .= "\$application->setLexiconAllowed( " . ( $this->isLexiconAllowed() ? "true" : "false" ) . " );\n";
-        $strOut .= "\$application->setBadGrammarIgnored( " . ( $this->isBadGrammarIgnored() ? "true" : "false" ) . " );\n";
-        $strOut .= "\$application->setAssertionsUsed( " . ( $this->isAssertionsUsed() ? "true" : "false" ) . " );\n";
-        $strOut .= "\$application->setScriptLanguage( \"" . $this->getScriptLanguage() . "\" );\n";
-        $strOut .= "\$application->setScriptFileDelimiter( \"" . $this->getScriptFileDelimiter() . "\" );\n";
-        $strOut .= "\$application->setMaskedFileDelimiters( \"" . implode( ",", $this->getMaskedFileDelimiters() ) . "\" );\n";
-        $strOut .= "\$application->setCharacterEncoding( \"" . $this->getCharacterEncoding() . "\" );\n";
+        $strOut .= "\n\$application->setFuseactionVariable( \"" . 
+            $this->getFuseactionVariable() . "\" );\n";
+        $strOut .= "\$application->setDefaultFuseaction( \"" . 
+            $this->getDefaultFuseaction() . "\" );\n";
+        $strOut .= "\$application->setPrecedenceFormOrUrl( \"" . 
+            $this->getPrecedenceFormOrUrl() . "\" );\n";
+        $strOut .= "\$application->setMode( \"" . 
+            $this->getMode() . "\" );\n";
+        $strOut .= "\$application->setPassword( \"" . 
+            $this->getPassword() . "\" );\n";
+        $strOut .= "\$application->setParsedWithComments( " . ( 
+            $this->isParsedWithComments() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setConditionalParse( " . ( 
+            $this->isConditionalParse() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setLexiconAllowed( " . ( 
+            $this->isLexiconAllowed() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setBadGrammarIgnored( " . ( 
+            $this->isBadGrammarIgnored() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setAssertionsUsed( " . ( 
+            $this->isAssertionsUsed() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setScriptLanguage( \"" . 
+            $this->getScriptLanguage() . "\" );\n";
+        $strOut .= "\$application->setScriptFileDelimiter( \"" . 
+            $this->getScriptFileDelimiter() . "\" );\n";
+        if( !is_null( $this->getMaskedFileDelimiters() ) ) {
+            $strOut .= "\$application->setMaskedFileDelimiters( \"" . 
+                implode( ",", $this->getMaskedFileDelimiters() ) . "\" );\n";    
+        }
+        $strOut .= "\$application->setCharacterEncoding( \"" . 
+            $this->getCharacterEncoding() . "\" );\n";
         // end paramenters
         
         $strOut .= $this->getCircuitsCachedCode();
@@ -1226,7 +1242,8 @@ class Application implements ICacheable {
         
         $controllerClass = $this->getControllerClass();
         
-        $strOut .= $controllerClass . "::getInstance()->addApplication( \$application );\n";
+        $strOut .= $controllerClass . 
+            "::getInstance()->addApplication( \$application );\n";
         
         return $strOut;
     }
