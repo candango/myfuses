@@ -53,7 +53,7 @@
  * @version    SVN: $Revision$
  * @since      Revision 50
  */
-class ClassDefinition {
+class ClassDefinition implements ICacheable {
     
     /**
      * Class name
@@ -138,6 +138,19 @@ class ClassDefinition {
      */
     public function setApplication( Application $application ) {
         $this->application = $application;
+    }
+    
+    public function getCachedCode() {
+        $strOut = "\$class = new ClassDefinition();\n";
+        
+        $strOut .= "\$class->setName( \"" . $this->getName() . "\" );\n";
+        
+        $strOut .= "\$class->setPath( \"" .  
+            addslashes( $this->getPath() ) . "\");\n";
+        
+        $strOut .= "\$application->addClass( \$class );\n";
+        
+        return $strOut;
     }
     
 }

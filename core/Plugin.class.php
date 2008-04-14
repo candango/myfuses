@@ -53,7 +53,7 @@
  * @version    SVN: $Revision$
  * @since      Revision 88
  */
-interface Plugin extends IParseable {
+interface Plugin extends IParseable, ICacheable {
     
     /**
      * Pre process fase constant<br>

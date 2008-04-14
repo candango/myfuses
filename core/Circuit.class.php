@@ -54,7 +54,7 @@ require_once "myfuses/core/CircuitAction.class.php";
  * @version    SVN: $Revision:23 $
  * @since      Revision 48
  */
-class Circuit {
+class Circuit implements ICacheable {
     
     /**
      * Public Access Constant.<br>
@@ -553,6 +553,86 @@ class Circuit {
             "circuitFile" => $this->getCompleteFile()
         );
         return $params;
+    }
+    
+    public function getCachedCode() {
+        $strOut = "\$circuit = new Circuit();\n";
+        $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
+        $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . 
+            "\" );\n";
+        $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . 
+            "\" );\n";
+        
+        foreach( $this->customAttributes as $namespace => $attributes ) {
+            foreach( $attributes as $name => $value ) {
+                $strOut .= "\$circuit->setCustomAttribute( \"" . $namespace . 
+                    "\", \"" . $name . "\", \"" . $value . "\" );\n";
+            }
+        }
+            
+        $strOut .= "\$application->addCircuit( \$circuit );\n";
+        $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
+            serialize( $this->getVerbPaths() ) ) . "\" );\n";
+        $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
+        $strOut .= "\$circuit->setLastLoadTime( " . 
+            $this->getLastLoadTime() . " );\n";
+        $strOut .= "\$circuit->setParentName( \"" . 
+            $this->getParentName() . "\" );\n";
+        $strOut .= $this->getActionsCachedCode();
+        
+        $strOut .= $this->getPreFuseActionCachedCode();
+        
+        $strOut .= $this->getPostFuseActionCachedCode();
+        
+        return $strOut;
+    }
+    
+    /**
+     * Returns all circuit actions cache code
+     * 
+     * @return string
+     */
+    private function getActionsCachedCode() {
+        
+        $strOut = "\n";
+        
+        foreach( $this->actions as $action ) {
+            $strOut .= $action->getCachedCode();
+            $strOut .= "\$circuit->addAction( \$action );\n";
+        }
+        
+        return $strOut;
+    }
+    
+    /**
+     * Returns pre fuse action cache code
+     * 
+     * @return string
+     */
+    private function getPreFuseActionCachedCode() {
+        $strOut = "";
+        if( !( is_null( $this->preFuseAction ) ) ) {
+            $strOut = "\n" . $this->preFuseAction->getCachedCode();
+            $strOut .= "\$circuit->setPreFuseAction( \$action );\n";    
+        }
+         
+        return $strOut;
+    }
+    
+    /**
+     * Returns post fuse action cache code
+     * 
+     * @return string
+     */
+    private function getPostFuseActionCachedCode() {
+        $strOut = "";
+        
+        if( !( is_null( $this->postFuseAction ) ) ) {
+            $strOut = "\n" . $this->postFuseAction->getCachedCode();
+            $strOut .= "\$circuit->setPostFuseAction( \$action );\n";
+        }
+         
+        return $strOut;
     }
     
 }

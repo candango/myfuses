@@ -51,7 +51,7 @@
  * @version    SVN: $Revision:23 $
  * @since      Revision 23
  */
-class Application {
+class Application implements ICacheable {
     
     /**
      * Default applicatication name
@@ -536,6 +536,16 @@ class Application {
      */
     public function getCompleteCacheFile() {
         return $this->parsedPath . $this->getCacheFile();
+    }
+    
+    /**
+     * Return the complete application file path
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCompleteCacheFileData() {
+        return $this->parsedPath . "data." . $this->getCacheFile();
     }
     
     /**
@@ -1165,6 +1175,94 @@ class Application {
                 $this->tools = false;
             }
         }
+    }
+    
+    /**
+     * Return the application cache code
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCachedCode() {
+        $strOut = "\$application = new " . get_class( $this ) . "( \"" . $this->getName() . "\" );\n";
+        
+        $strOut .= "\$application->setPath( \"" . addslashes( $this->getPath() ) . "\" );\n";
+        
+        $strOut .= "\$application->setRewrite( " . ( $this->allowRewrite() ? "true" : "false" ) . " );\n";
+        
+        $strOut .= "\$application->setParsedPath( \"" . addslashes( $this->getParsedPath() ) . "\");\n";
+        
+        $strOut .= "\$application->setFile( \"" . addslashes( $this->getFile() ) . "\" );\n";
+        
+        $strOut .= "\$application->setLastLoadTime( " . $this->getLastLoadTime() . " );\n";
+        $strOut .= "\$application->setLoader( new " . get_class( $this->getLoader() ) . "() );\n";
+        
+        if( $this->isDefault() ) {
+            //$strOut .= "\$application->setDefault( true );\n";
+        }
+        
+        // parameters
+        $strOut .= "\n\$application->setFuseactionVariable( \"" . $this->getFuseactionVariable() . "\" );\n";
+        $strOut .= "\$application->setDefaultFuseaction( \"" . $this->getDefaultFuseaction() . "\" );\n";
+        $strOut .= "\$application->setPrecedenceFormOrUrl( \"" . $this->getPrecedenceFormOrUrl() . "\" );\n";
+        $strOut .= "\$application->setMode( \"" . $this->getMode() . "\" );\n";
+        $strOut .= "\$application->setPassword( \"" . $this->getPassword() . "\" );\n";
+        $strOut .= "\$application->setParsedWithComments( " . ( $this->isParsedWithComments() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setConditionalParse( " . ( $this->isConditionalParse() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setLexiconAllowed( " . ( $this->isLexiconAllowed() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setBadGrammarIgnored( " . ( $this->isBadGrammarIgnored() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setAssertionsUsed( " . ( $this->isAssertionsUsed() ? "true" : "false" ) . " );\n";
+        $strOut .= "\$application->setScriptLanguage( \"" . $this->getScriptLanguage() . "\" );\n";
+        $strOut .= "\$application->setScriptFileDelimiter( \"" . $this->getScriptFileDelimiter() . "\" );\n";
+        $strOut .= "\$application->setMaskedFileDelimiters( \"" . implode( ",", $this->getMaskedFileDelimiters() ) . "\" );\n";
+        $strOut .= "\$application->setCharacterEncoding( \"" . $this->getCharacterEncoding() . "\" );\n";
+        // end paramenters
+        
+        $strOut .= $this->getCircuitsCachedCode();
+        
+        $strOut .= $this->getClassesCacheCode();
+        
+        $strOut .= $this->getPluginsCacheCode();
+        
+        $controllerClass = $this->getControllerClass();
+        
+        $strOut .= $controllerClass . "::getInstance()->addApplication( \$application );\n";
+        
+        return $strOut;
+    }
+    
+    /**
+     * Returns all application circuits cache code
+     * 
+     * @return string
+     * @access public
+     */
+    private function getCircuitsCachedCode() {
+        $strOut = "";        
+        foreach( $this->circuits as $circuit ) {
+            $strOut .= $circuit->getCachedCode() . "\n";
+        }
+        
+        return $strOut;
+    }
+    
+    private function getClassesCacheCode(){
+        $strOut = "";        
+        foreach( $this->classes as $class ) {
+            $strOut .= $class->getCachedCode() . "\n";
+        }
+        return $strOut;
+    }
+    
+    private function getPluginsCacheCode(){
+        $strOut = "";
+        
+        foreach( $this->plugins as $phase ) {
+            foreach( $phase as $plugin ) {
+                $strOut .= $plugin->getCachedCode() . "\n";    
+            }
+        }
+        return $strOut;
     }
     
 }

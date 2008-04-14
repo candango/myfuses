@@ -312,5 +312,13 @@ abstract class AbstractPlugin implements Plugin{
             
     }
     
+    public function getCachedCode() {
+        $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
+            $this->phase . "\", \"" . $this->name . "\", \"" . 
+            addslashes( $this->path ) . 
+            "\", \"" . $this->file . "\" );\n";
+        return $strOut;
+    }
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
