@@ -44,11 +44,11 @@ require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
 
 try {
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/Application.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/ICacheable.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/IParseable.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "core/Application.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/MyFusesApplicationLoaderListener.class.php" );
@@ -336,10 +336,10 @@ class MyFuses {
      * @param string $name
      * @return Application
      */
-    public function getApplication( 
+    public static function getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) {
-        if( $this->hasApplication( $name ) ) {
-            return $this->applications[ $name ];   
+        if( self::getInstance()->hasApplication( $name ) ) {
+            return self::getInstance()->applications[ $name ];   
         }
         return null;
     }
@@ -449,7 +449,7 @@ class MyFuses {
     private function buildApplications() {
         foreach( $this->applications as $key => $application ) {
             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                 $application->getBuilder()->buildApplication();
+                BasicMyFusesBuilder::buildApplication( $application );
              }
          }
     }
@@ -547,15 +547,19 @@ class MyFuses {
                 
                 $this->createApplicationPath( $application );
                 
-                $strStore = "return unserialize( '";
+                $strStore .= $application->getCachedCode();
                 
-                $strStore .= str_replace("'","\'", 
+                $strStoreData = "return unserialize( '";
+                
+                $strStoreData .= str_replace("'","\'", 
                     serialize( $application->getLoader()->
                     getCachedApplicationData() ) );
                 
-                $strStore .= "' );";
+                $strStoreData .= "' );";
                 
                 $fileName = $application->getCompleteCacheFile();
+                
+                $dataFileName = $application->getCompleteCacheFileData();
                 
                 MyFuses::getInstance()->getDebugger()->registerEvent( 
                     new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
@@ -564,6 +568,9 @@ class MyFuses {
                 
                 MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
     	            $strStore );
+    	            
+    	        MyFusesFileHandler::writeFile( $dataFileName, "<?php\n" . 
+                    $strStoreData );
             }
             else {
                 $this->getMemcache()->set( $application->getTag(), 
@@ -631,7 +638,8 @@ class MyFuses {
             // parsing pre process plugins
             if( count( $application->getPlugins( 
                 Plugin::PRE_PROCESS_PHASE ) ) ) {
-                $pluginsStr = $controllerName . "::getApplication( \"" . 
+                $pluginsStr = $controllerName . 
+                    "::getInstance()->getApplication( \"" . 
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::PRE_PROCESS_PHASE . "\" )";
                 $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
@@ -671,20 +679,15 @@ class MyFuses {
                 $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
                         MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
                         $actionString . " );\n\n";
-                $pluginsStr = $controllerName . "::getApplication( \"" . 
+                $pluginsStr = $controllerName . 
+                    "::getInstance()->getApplication( \"" . 
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::POST_PROCESS_PHASE . "\" )";
                 $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
                 $strParse .= "\t\$plugin->run();\n}\n\n";
             }
             //end parsing post process plugins
-	        
-	        // sanitizing " "'s    
-            $strParse = 
-                str_replace( array( " \"\" .", ". \"\" " ), "", $strParse );
-	        $strParse = 
-                str_replace( array( ". \"\";" ), ";", $strParse );
-
+            
             $this->createApplicationPath( $application );
             
             if( !file_exists( $path ) ) {
@@ -692,7 +695,8 @@ class MyFuses {
 	            chmod( $path, 0777 );
 	        }
 	        
-	        MyFusesFileHandler::writeFile( $fileName, "<?php\n" . $strParse );
+	        MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
+	           MyFusesCodeHandler::sanitizeHashedString( $strParse ) );
 	        
 	        MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
@@ -700,7 +704,8 @@ class MyFuses {
                     $this->getRequest()->getFuseActionName() . " Compiled" ) );
 	        
         }
-        self::includeFile( $fileName );
+        
+        MyFusesCodeHandler::includeFile( $fileName );
     }
     
     public static function includeFile( $file ) {
@@ -721,8 +726,6 @@ class MyFuses {
             $this->loadApplications();
             
             $this->buildApplications();
-            
-            
             
             $this->createRequest();
             

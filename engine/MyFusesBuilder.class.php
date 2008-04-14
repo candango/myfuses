@@ -6,7 +6,12 @@
  */
 interface MyFusesBuilder {
     
-    public function buildApplication();
+    /**
+     * Builds the application structure
+     *
+     * @param Application $application
+     */
+    public static function buildApplication( Application $application );
     
     /**
      * Add one application build listener

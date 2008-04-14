@@ -72,24 +72,24 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         if( $this->isCached() ) {
+            
             if( !$this->getApplication()->getController()->
                 isMemcacheEnabled() ) {
+                include $this->getApplication()->getCompleteCacheFile();
+                // correcting cached application reference
+                $this->setApplication( 
+                    $this->getApplication()->getController()->getApplication( 
+                        $this->application->getName() ) );
+                $this->getApplication()->setLoader( $this );                
                 $this->applicationData = include( 
-                    $this->getApplication()->getCompleteCacheFile() );
+                    $this->getApplication()->getCompleteCacheFileData() );
             }
             
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Application " . 
                     $this->getApplication()->getName() . " Restored" ) );
-                
-            $this->getApplication()->setLastLoadTime( 
-                $this->getLastLoadTime() );
-                
-            $this->getApplication()->setFile( 
-                $this->applicationData[ 'application' ]['file'] );    
-                
-            $this->getApplication()->setMode( $this->getMode() );
+
             
             if( $this->getApplication()->getMode() === 'development' ) {
                 $this->doLoadApplication();
@@ -102,7 +102,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
         }
         else {
-            $this->getApplication()->setMode( 'development' );
             $this->doLoadApplication();
         }
         
@@ -121,7 +120,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         if( $this->getApplication()->isDefault() ) {
-            if( $this->isToolsAllowed() ) {
+            if( $this->getApplication()->isToolsAllowed() ) {
                 $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
                 "myfuses_tools/";
             
@@ -136,7 +135,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     protected function doLoadApplication() {
         $data = $this->getApplicationData();
         
-        $data[ 'lastloadtime' ] = time();
+        $this->getApplication()->setLastLoadTime( time() );
         
         $this->applicationData[ 'application' ] = $data;
         
@@ -160,20 +159,28 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $name = $circuitChild[ 'attributes' ][ 'alias' ];
         }
         
-        if( $this->getApplication()->getMode() === 'development' ) {
+        try {
+            $circuit = $this->getApplication()->getCircuit( $name );
+            if( $circuit->getApplication()->getMode() === 'development' ) {
+                $this->doLoadCircuit( $name, $data, $circuitChild );
+            }
+            
+            if( $circuit->getApplication()->getMode() === 'production' ) {
+                if( $this->circuitWasModified( $name ) || 
+                    $this->applicationWasModified() ) {
+                    $this->doLoadCircuit( $name, $data, $circuitChild );    
+                }
+                else {
+                    $this->applicationData[ 'circuits' ][ $name ]
+                        [ 'attributes' ][ 'modified' ] = false;
+                }    
+            }
+        }
+        catch( MyFusesCircuitException $mfce ) {
             $this->doLoadCircuit( $name, $data, $circuitChild );
         }
         
-        if( $this->getApplication()->getMode() === 'production' ) {
-            if( $this->circuitWasModified( $name ) || 
-                $this->applicationWasModified() ) {
-                $this->doLoadCircuit( $name, $data, $circuitChild );    
-            }
-            else {
-                $this->applicationData[ 'circuits' ][ $name ]
-                    [ 'attributes' ][ 'modified' ] = false;
-            }    
-        }
+        
     }
     
     protected function doLoadCircuit( $name, &$data, &$circuitChild ) {
@@ -193,61 +200,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                 "Loading circuit \"" . $name . "\"" ) );
         
-    }
-    
-    private function isToolsAllowed() {
-        foreach( $this->applicationData[ 'application' ]['children'] 
-            as $child ) {
-            if( $child[ 'name' ] === 'parameters' ) {
-                foreach( $child[ 'children' ] as $pchild ) {
-                    if( $pchild[ 'attributes' ][ 'name' ] == 'tools' ) {
-                        return ( $pchild[ 'attributes' ][ 'value' ] === 'true' ) 
-                            ? true : false;        
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    
-    private function getLastLoadTime() {
-        return $this->applicationData[ 'application' ][ 'lastloadtime' ];
-    }
-    
-    private function getMode() {
-        foreach( $this->applicationData[ 'application' ]['children'] 
-            as $child ) {
-            if( $child[ 'name' ] == 'parameters' ) {
-                foreach( $child[ 'children' ] as $pchild ) {
-                    if( $pchild[ 'attributes' ][ 'name' ] == 'mode' ) {
-                        return $pchild[ 'attributes' ][ 'value' ];        
-                    }
-                }
-            }
-        }
-        
-        return 'development';
-    }
-    
-    private function getCircuitPath( $name ) {
-        foreach( $this->applicationData[ 'application' ]['children'] 
-            as $child ) {
-            if( $child[ 'name' ] == 'circuits' ) {
-                foreach( $child[ 'children' ] as $pchild ) {
-                    if( isset( $pchild[ 'attributes' ][ 'name' ] ) ) {
-                        if( $pchild[ 'attributes' ][ 'name' ] == $name ) {
-                            return $pchild[ 'attributes' ][ 'path' ];        
-                        }    
-                    }
-                    if( isset( $pchild[ 'attributes' ][ 'alias' ] ) ) {
-                        if( $pchild[ 'attributes' ][ 'alias' ] == $name ) {
-                            return $pchild[ 'attributes' ][ 'path' ];        
-                        }    
-                    }
-                    
-                }
-            }
-        }
     }
     
     /**
