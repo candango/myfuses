@@ -7,7 +7,9 @@
                 <do action="getApplicationFromGet"/>
                 <xfa name="goToApplicationSumary" value="summary" />
                 <xfa name="goToViewAppicationCache" value="viewCache" />
-                <do action="menu"/>    
+                <do action="menu">
+                    <parameter name="appName" value="#$_GET[ 'application' ]#"/>
+                </do>    
             </true>
             <false>
                 <relocate xfa="goToStart" />

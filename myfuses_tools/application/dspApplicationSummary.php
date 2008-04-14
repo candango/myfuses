@@ -8,7 +8,7 @@
     <th>Path</th>
     <th>File</th>
     <th>Access</th>
-  </tr>
+  </tr>  
 <?if( count( $application->getCircits() ) ) {?>  
     <?foreach( $application->getCircits() as $circuit ) {?>
         <?if( $circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT' ) {?>
