@@ -707,7 +707,7 @@ class Application implements ICacheable {
      * @return boolean
      */
     public function mustLoad() {
-        return $this->loadl;
+        return $this->load;
     }
     
     /**
