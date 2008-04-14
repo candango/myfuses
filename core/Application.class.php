@@ -70,13 +70,6 @@ class Application implements ICacheable {
     private $loader;
     
     /**
-     * Application builder
-     *
-     * @var MyFusesBuilder
-     */
-    private $builder;
-    
-    /**
      * Flag that indicates that this application was loaded
      *
      * @var boolean
@@ -314,6 +307,10 @@ class Application implements ICacheable {
      */
     private $memcacheEnabled = false;
     
+    private $loaderListeners = array();
+    
+    private $builderListeners = array();
+    
     /**
      * Application constructor
      * 
@@ -332,8 +329,6 @@ class Application implements ICacheable {
         }
         
         $this->setLoader( $loader );
-        
-        $this->setBuilder( new BasicMyFusesBuilder() );
         
         $this->plugins[ Plugin::PRE_PROCESS_PHASE ] = array();
         $this->plugins[ Plugin::PRE_FUSEACTION_PHASE ] = array();
@@ -634,14 +629,7 @@ class Application implements ICacheable {
      */
     public function getCircuit( $name ) {
     	if( isset( $this->circuits[ $name ] ) ) {
-    		if( !$this->circuits[ $name ]->wasBuilt() ) {
-    		    if( $name !== 'MYFUSES_GLOBAL_CIRCUIT' ) {
-    		        $this->getBuilder()->buildCircuit( 
-    		          $this->circuits[ $name ] );
-    		    }
-    		    $this->circuits[ $name ]->setBuilt( true );
-    		}
-    	    return $this->circuits[ $name ];
+    		return $this->circuits[ $name ];
     	}
     	
     	$params = array( "circuitName" => $name, "application" => &$this );
@@ -1280,6 +1268,44 @@ class Application implements ICacheable {
             }
         }
         return $strOut;
+    }
+    
+    /**
+     * Add one application load listener
+     *
+     * @param MyFusesApplicationLoaderListener $listener
+     */
+    public function addLoadListener( 
+        MyFusesApplicationLoaderListener $listener ){
+        $this->loaderListeners[] = $listener;
+    }
+    
+    /**
+     * Return all application load listerners
+     *
+     * @return array
+     */
+    private function getLoadListeners() {
+        return $this->loaderListeners;
+    }
+    
+    /**
+     * Add one application builder listener
+     *
+     * @param MyFusesApplicationBuilderListener $listener
+     */
+    public function addBuilderListener( 
+        MyFusesApplicationBuilderListener $listener ){
+        $this->builderListeners[] = $listener;
+    }
+    
+    /**
+     * Return all application builder listerners
+     *
+     * @return array
+     */
+    private function getBuilderListeners() {
+        return $this->builderListeners;
     }
     
 }
