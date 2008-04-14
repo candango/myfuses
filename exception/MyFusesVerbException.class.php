@@ -126,7 +126,7 @@ class MyFusesVerbException extends MyFusesException {
     private function getMissingNamespaceMessage( $params ) {
         return array(
 	       0 => "You have one \"" . $params[ "verbName" ] . 
-	            "\" verb without a namespace " . 
+	            "\" verb with undefined namespace " . 
 	            "in fuseaction \"" . $params[ "actionName" ] . 
 	            "\" in circuit \"" . $params[ "circuitName" ] .
 	            "\" in application \"" . $params[ "appName" ] . 
