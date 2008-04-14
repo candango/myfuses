@@ -338,7 +338,7 @@ class Circuit implements ICacheable {
     		return $this->actions[ $name ];
     	}
     	
-    	if( $this->getApplication()->getBuilder()->buildAction( $this, 
+    	if( BasicMyFusesBuilder::buildAction( $this, 
     	   $name ) ) {
     	   return $this->actions[ $name ];
     	}
