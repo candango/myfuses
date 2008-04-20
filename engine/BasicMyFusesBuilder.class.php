@@ -38,28 +38,41 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     public static function buildApplication( Application $application ) {
         
         $data = &$application->getLoader()->
-            getCachedApplicationData();
+                getCachedApplicationData();
         
-        if( count( $data[ 'application' ][ 'children' ] ) ) {
-            foreach( $data[ 'application' ][ 'children' ] as $child ) {
-                switch( $child[ 'name' ] ) {
-                    case "circuits":
-                        self::buildCircuits( $application, $child );
-                        break;
-                    case "classes":
-                        self::buildClasses( $application, $child );
-                        break;
-                    case "parameters":
-                        self::buildParameters( $application, $child );
-                        break;
-                    case "globalfuseactions":
-                        self::buildGlobalFuseActions( $application, $child );
-                        break;
-                    case "plugins":
-                        self::buildPlugins( $application, $child );
-                        break;    
-                }            
+        if( $application->mustParse() ) {
+            if( count( $data[ 'application' ][ 'children' ] ) ) {
+                foreach( $data[ 'application' ][ 'children' ] as $child ) {
+                    switch( $child[ 'name' ] ) {
+                        case "circuits":
+                            self::buildCircuits( $application, $child );
+                            break;
+                        case "classes":
+                            self::buildClasses( $application, $child );
+                            break;
+                        case "parameters":
+                            self::buildParameters( $application, $child );
+                            break;
+                        case "globalfuseactions":
+                            self::buildGlobalFuseActions( $application, $child );
+                            break;
+                        case "plugins":
+                            self::buildPlugins( $application, $child );
+                            break;    
+                    }            
+                }
             }
+        }
+        else {
+            if( count( $data[ 'application' ][ 'children' ] ) ) {
+                foreach( $data[ 'application' ][ 'children' ] as $child ) {
+                    switch( $child[ 'name' ] ) {
+                        case "globalfuseactions":
+                            self::buildGlobalFuseActions( $application, $child );
+                            break;   
+                    }            
+                }
+            }    
         }
         
         /*foreach( $this->getApplication()->getCircits() as $circuit ) {
@@ -68,11 +81,10 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             }
         }*/
         // FIXME call build listeners from application
-        /*foreach( $this->getApplicationBuilderListeners() as $listener ) {
-            $listener->applicationBuildPerformed( $this->getApplication(), 
-                $this->getApplication()->getLoader()->
-                getCachedApplicationData() );
-        }*/
+        foreach( $application->getBuilderListeners() as $listener ) {
+            $listener->applicationBuildPerformed( $application, 
+                $application->getLoader()->getCachedApplicationData() );
+        }
         
     }
     
