@@ -251,13 +251,31 @@ abstract class AbstractVerb implements Verb {
         return null;
     }
     
+    private function dataToString( $data ) {
+        $strOut = "array( ";
+        $comma = false;
+        foreach( $data as $key => $value ) {
+            $strOut .= $comma ? ", " : "";    
+            if( is_array( $value ) ) {
+                $strOut .= "'" . $key . "' => " . $this->dataToString( $value );
+            }
+            else {
+                $strOut .= "'" . $key . "' => '" . $value . "'";
+            }
+            $comma = true;
+        }
+        $strOut .= " )";
+        return $strOut;
+    }
+    
     public function getCachedCode() {
         $data = $this->getData();
-        //$data[ "name" ] = str_replace( ":", "_ns_", $data[ "name" ] );
-        $data = serialize( $data );
-        $data = addslashes( $data );
-        $data = str_replace( '$', '\$', $data );
-        $strOut = "\$verb = AbstractVerb::getInstance( \"" . $data . "\"  , \$action );\n";
+        
+        $strOut = "\$data = " . 
+            $this->dataToString( $data ) . ";\n";
+        
+        $strOut .= "\$verb = AbstractVerb::getInstance( \$data, \$action );\n";
+            
         return $strOut;
     }
     
