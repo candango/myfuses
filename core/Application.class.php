@@ -1234,6 +1234,10 @@ class Application implements ICacheable {
             $this->getScriptLanguage() . "\" );\n";
         $strOut .= "\$application->setScriptFileDelimiter( \"" . 
             $this->getScriptFileDelimiter() . "\" );\n";
+            
+        $strOut .= "\$application->setDebug( " . ( 
+            $this->isDebugAllowed() ? "true" : "false" ) . " );\n";    
+            
         if( !is_null( $this->getMaskedFileDelimiters() ) ) {
             $strOut .= "\$application->setMaskedFileDelimiters( \"" . 
                 implode( ",", $this->getMaskedFileDelimiters() ) . "\" );\n";    
