@@ -57,7 +57,7 @@ require_once "myfuses/core/IParseable.class.php";
  * @version    SVN: $Revision$
  * @since      Revision 25
  */
-interface Action extends IParseable {
+interface Action extends ICacheable, IParseable {
    
     /**
      * Return the action name

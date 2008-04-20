@@ -280,5 +280,48 @@ class FuseAction extends AbstractAction implements CircuitAction {
 	public function doAction() {
 	    
 	}
+	
+    /**
+     * Enter description here...
+     *
+     * @return string
+     */
+    public function getCachedCode() {
+        $strOut = "";
+        if( !is_null( $this->getPath() ) ) {
+            $strOut .= "require_once \"" . $this->getPath() . "\";\n";
+        }
+        $strOut .= "\$action = new " . get_class( $this ) . "( \$circuit );\n";
+        if( !is_null( $this->getPath() ) ) {
+            $strOut .= "\$action->setPath( \"" . $this->getPath() . "\" );\n";    
+        }
+        $strOut .= "\$action->setName( \"" . $this->getName() . "\" );\n";
+        foreach( $this->customAttributes as $namespace => $attributes ) {
+            foreach( $attributes as $name => $value ) {
+                $strOut .= "\$action->setCustomAttribute( \"" . $namespace . 
+                    "\", \"" . $name . "\", \"" . $value . "\" );\n";
+            }
+        }
+        
+        $strOut .= $this->getVerbsCachedCode();
+        return $strOut;
+    }
+    
+    /**
+     * Returns all Action Verbs cache code
+     * 
+     * @return string
+     */
+    private function getVerbsCachedCode() {
+        
+        $strOut = "\n";
+        
+        foreach( $this->verbs as $verb ) {
+            $strOut .= $verb->getCachedCode() . "\n";
+            $strOut .= "\$action->addVerb( \$verb );\n\n";
+        }
+        
+        return $strOut;
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
