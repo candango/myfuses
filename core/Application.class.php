@@ -1328,7 +1328,7 @@ class Application implements ICacheable {
      *
      * @return array
      */
-    private function getBuilderListeners() {
+    public function getBuilderListeners() {
         return $this->builderListeners;
     }
     

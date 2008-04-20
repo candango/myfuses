@@ -345,6 +345,7 @@ abstract class AbstractVerb implements Verb {
 	protected function getVariableSetString( $variable, $value ) {
 	    $strOut = "MyFusesCodeHandler::setVariable( \"" . 
               $variable . "\", \"" . $value . "\" );\n\n";
+        $strOut .= self::getContextRestoreString();
         return $strOut;      
 	}
 	
