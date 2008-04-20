@@ -251,6 +251,16 @@ abstract class AbstractVerb implements Verb {
         return null;
     }
     
+    public function getCachedCode() {
+        $data = $this->getData();
+        //$data[ "name" ] = str_replace( ":", "_ns_", $data[ "name" ] );
+        $data = serialize( $data );
+        $data = addslashes( $data );
+        $data = str_replace( '$', '\$', $data );
+        $strOut = "\$verb = AbstractVerb::getInstance( \"" . $data . "\"  , \$action );\n";
+        return $strOut;
+    }
+    
 	public function getData() {
 	    if( $this->getNamespace() != "myfuses" ) {
 	        $data[ "name" ] = $this->getName();

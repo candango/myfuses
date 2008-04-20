@@ -38,6 +38,7 @@
  * @version    SVN: $Id$
  */
 
+require_once "myfuses/core/ICacheable.class.php";
 require_once "myfuses/core/IParseable.class.php";
 require_once "myfuses/core/CircuitAction.class.php";
 
@@ -58,7 +59,7 @@ require_once "myfuses/core/CircuitAction.class.php";
  * @version    SVN: $Revision$
  * @since      Revision 25
  */
-interface Verb extends IParseable {
+interface Verb extends ICacheable, IParseable {
     
     /**
      * Return the verb Action
