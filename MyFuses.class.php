@@ -865,7 +865,7 @@ class MyFuses {
         $circuit = $application->getCircuit( $actionNameX[ 1 ] );
             
         $action =  $circuit->getAction( $actionNameX[ 2 ] );
-        
+        require_once "myfuses/core/verbs/DoVerb.class.php";        
         DoVerb::doAction( $action );
     }
     
