@@ -1205,9 +1205,9 @@ class Application implements ICacheable {
         $strOut .= "\$application->setLastLoadTime( " . $this->getLastLoadTime() . " );\n";
         $strOut .= "\$application->setLoader( new " . get_class( $this->getLoader() ) . "() );\n";
         
-        if( $this->isDefault() ) {
-            //$strOut .= "\$application->setDefault( true );\n";
-        }
+        /*if( $this->isDefault() ) {
+            $strOut .= "\$application->setDefault( true );\n";
+        }*/
         
         // parameters
         $strOut .= "\n\$application->setFuseactionVariable( \"" . 
