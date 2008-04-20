@@ -117,28 +117,30 @@ class DoVerb extends ParameterizedVerb {
 
         $actionFile = $parsedPath . $action->getCircuit()->getName() . 
             DIRECTORY_SEPARATOR . $action->getName() . ".action.do.php";    
-            
-        $strOut = $action->getParsedCode( $action->getCircuit()->
-            getApplication()->isParsedWithComments(), 0 );
 
-        $path = $action->getCircuit()->getApplication()->getParsedPath() .
-            $action->getCircuit()->getName() . DIRECTORY_SEPARATOR;
+        if( !is_file( $actionFile ) || $action->getCircuit()->isModified() ) {
+                
+            $strOut = $action->getParsedCode( $action->getCircuit()->
+                getApplication()->isParsedWithComments(), 0 );
+    
+            $path = $action->getCircuit()->getApplication()->getParsedPath() .
+                $action->getCircuit()->getName() . DIRECTORY_SEPARATOR;
+                
+            if( !file_exists( $path ) ) {
+                mkdir( $path );
+                chmod( $path, 0777 );
+            }   
             
-        if( !file_exists( $path ) ) {
-            mkdir( $path );
-            chmod( $path, 0777 );
-        }   
-        
-        MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
-                    MyFusesCodeHandler::sanitizeHashedString( $strOut ) );
-                    
-        MyFuses::getInstance()->getDebugger()->registerEvent( 
-            new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                "Fuseaction " . $action->getCircuit()->
-                getApplication()->getName() . "." . 
-                $action->getCircuit()->getName() . "." .
-                $action->getName() . " Compiled" ) );
-        
+            MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
+                        MyFusesCodeHandler::sanitizeHashedString( $strOut ) );
+                        
+            MyFuses::getInstance()->getDebugger()->registerEvent( 
+                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                    "Fuseaction " . $action->getCircuit()->
+                    getApplication()->getName() . "." . 
+                    $action->getCircuit()->getName() . "." .
+                    $action->getName() . " Compiled" ) );
+        }
         MyFusesCodeHandler::includeFile( $actionFile );           
     }
     
