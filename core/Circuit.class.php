@@ -580,9 +580,9 @@ class Circuit implements ICacheable {
             $this->getParentName() . "\" );\n";
         //$strOut .= $this->getActionsCachedCode();
         
-        //$strOut .= $this->getPreFuseActionCachedCode();
+        $strOut .= $this->getPreFuseActionCachedCode();
         
-        //$strOut .= $this->getPostFuseActionCachedCode();
+        $strOut .= $this->getPostFuseActionCachedCode();
         
         return $strOut;
     }
