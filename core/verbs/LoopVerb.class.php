@@ -127,6 +127,37 @@ class LoopVerb extends AbstractVerb {
         $this->item = $item;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        if( !is_null( $this->getCondition() ) ) {
+            $data[ "condition" ] = $this->getCondition();
+        }
+        elseif( !is_null( $this->getFrom() ) ) {
+            $data[ "attributes" ][ "from" ] = $this->getFrom();
+            $data[ "attributes" ][ "to" ] = $this->getTo();
+            $data[ "attributes" ][ "index" ] = $this->getIndex();
+            if( !is_null( $this->getStep() ) ) {
+                $data[ "attributes" ][ "step" ] = $this->getStep();
+            }
+        }
+        elseif( !is_null( $this->getCollection() ) ) {
+            $data[ "attributes" ][ "collection" ] = $this->getCollection();
+            $data[ "attributes" ][ "item" ] = $this->getItem();
+            if( !is_null( $this->getIndex() ) ) {
+                $data[ "attributes" ][ "index" ] = $this->getIndex();
+            }
+        }
+
+        if( count( $this->loopVerbs ) ) {
+            foreach( $this->loopVerbs as $verb ) {
+                $data[ "children" ][] = $verb->getData();
+            }
+        }
+        
+        return $data;
+    }
+    
     public function setData( $data ) {
         parent::setData( $data );
         

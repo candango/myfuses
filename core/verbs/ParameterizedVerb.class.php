@@ -81,6 +81,23 @@ abstract class ParameterizedVerb extends AbstractVerb {
         $this->parameters[ $name ] = $value;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        if( !is_null( $this->getParameters() ) ) {
+            foreach( $this->getParameters() as $name => $value ) {
+                $child = array();
+                $child[ 'name' ] = 'parameter';
+                $child[ 'namespace' ] = 'myfuses';
+                $child[ 'attributes' ][ 'name' ] = $name;
+                $child[ 'attributes' ][ 'value' ] = $value;
+                $data[ 'children' ][] = $child; 
+            }
+        }
+        
+        return $data;
+    }
+    
     public function setData( $data ) {
         parent::setData( $data );
         if( isset( $data[ "children" ] ) ) {

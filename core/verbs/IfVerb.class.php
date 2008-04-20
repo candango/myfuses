@@ -74,6 +74,32 @@ class IfVerb extends AbstractVerb {
         $this->condition = $condition;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        $data[ "attributes" ][ "condition" ] =  $this->getCondition();
+        
+        if( count( $this->trueVerbs ) ) {
+            $child[ "name" ] = "true";
+            foreach( $this->trueVerbs as $verb ) {
+                $child[ "children" ][] = $verb->getData();
+            }
+            $data[ "children" ][] = $child;
+        }
+        
+        unset( $child );
+        
+        if( count( $this->falseVerbs ) ) {
+            $child[ "name" ] = "false";
+            foreach( $this->falseVerbs as $verb ) {
+                $child[ "children" ][] = $verb->getData();
+            }
+            $data[ "children" ][] = $child;
+        }
+        
+        return $data;
+    }
+    
     public function setData( $data ) {
         parent::setData( $data );
         

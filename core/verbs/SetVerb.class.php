@@ -75,6 +75,13 @@ class SetVerb extends AbstractVerb {
         $this->value = $value;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        $data[ "attributes" ][ "name" ] = $this->getVariableName();
+        $data[ "attributes" ][ "value" ] = $this->getValue();
+        return $data;
+    }
+    
     public function setData( $data ) {
         parent::setData( $data );
         $this->setVariableName( $data[ "attributes" ][ "name" ] );

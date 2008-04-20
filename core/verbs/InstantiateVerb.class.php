@@ -172,6 +172,31 @@ class InstantiateVerb extends AbstractVerb {
         return $strOut;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        if( !is_null( $this->getClass() ) ) {
+            $data[ "attributes" ][ "class" ] = $this->getClass();    
+        }
+        
+        $data[ "attributes" ][ "object" ] = $this->getObject();
+        
+        if( !is_null( $this->getWebservice() ) ) {
+            $data[ "attributes" ][ "webservice" ] = $this->getWebservice();
+        }
+        
+        if( !is_null( $this->getArguments() ) ) {
+            foreach( $this->getArguments() as $argument ) {
+                $child = array();
+                $child[ 'name' ] = 'argument';
+                $child[ 'namespace' ] = 'myfuses';
+                $child[ 'attributes' ][ 'value' ] = $argument;
+                $data[ 'children' ][] = $child; 
+            }
+        }
+        return $data;
+    }
+    
     public function setData( $data ) {
         parent::setData( $data );
         if( isset( $data[ "attributes" ][ "webservice" ] ) ) {

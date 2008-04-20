@@ -115,6 +115,22 @@ class XfaVerb extends AbstractVerb {
     }
     
     /**
+     * Return the XFA data array
+     * 
+     * @return array
+     */
+    public function getData() {
+        
+        $data = parent::getData();
+        
+        $data[ "attributes" ][ "name" ] = $this->getXfaName();
+        
+        $data[ "attributes" ][ "value" ] = $this->getValue();
+        
+        return $data;
+    }
+    
+    /**
      * Recieve the XFA data array and put and set all properties 
      *
      * @param array $data

@@ -95,7 +95,40 @@ class SwitchVerb extends AbstractVerb {
     public function setCondition( $condition ) {
         $this->condition = $condition;
     }
-
+    
+    public function getData() {
+        $data = parent::getData();
+        
+        $data[ "attributes" ][ "condition" ] =  $this->getCondition();
+        
+        if( count( $this->caseVerbs ) ) {
+            
+            foreach( $this->caseVerbs as $key => $verbs ) {
+                $child = null;
+                $child[ "name" ] = "case";
+                $child[ "namespace" ] = "myfuses";
+                $child[ "attributes" ][ "value" ] = $key;
+                foreach( $verbs as $verb ) {
+                    $child[ 'children' ][]  = $verb->getData();    
+                }
+                $data[ "children" ][] = $child;
+            }
+            
+        }
+        
+        if( count( $this->defaultVerbs ) ) {
+            $child = null;
+            $child[ "name" ] = "default";
+            $child[ "namespace" ] = "myfuses";
+            foreach( $this->defaultVerbs as $verb ) {
+                $child[ 'children' ][]  = $verb->getData();    
+            }
+            $data[ "children" ][] = $child;
+        }
+        
+        return $data;
+    }
+    
     public function setData( $data ) {
         
         parent::setData( $data );

@@ -99,6 +99,19 @@ class RelocateVerb extends ParameterizedVerb {
         $this->variable = ( $variable === "true" ) ? true : false;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        if( !is_null( $this->getUrl() ) ) {
+            $data[ "attributes" ][ "url" ] = $this->getUrl();
+        }
+        
+        if( !is_null( $this->getXfa() ) ) {
+            $data[ "attributes" ][ "xfa" ] = $this->getXfa();
+        }
+        
+        return $data;
+    }
+    
     public function setData( $data ) {
         parent::setData( $data );
         
