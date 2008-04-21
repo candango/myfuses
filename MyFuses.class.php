@@ -338,10 +338,14 @@ class MyFuses {
      */
     public static function getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) {
-        if( self::getInstance()->hasApplication( $name ) ) {
+        
+        if( isset( self::getInstance()->applications[ $name ] ) ) {
             return self::getInstance()->applications[ $name ];   
         }
-        return null;
+        
+        $params = array( "applicationName" => $name );
+        throw new MyFusesApplicationException( $params, 
+            MyFusesApplicationException::NON_EXISTENT_APPLICATION );
     }
     
     /**
@@ -350,11 +354,14 @@ class MyFuses {
      * @param string $name
      * @return boolean
      */
-    public function hasApplication( $name ) {
-        if( isset( $this->applications[ $name ] ) ) {
-            return true;   
+    public static function hasApplication( $name ) {
+        try {
+            self::getApplication( $name );
+            return true;
         }
-        return false;
+        catch( MyFusesApplicationException $mfae ) {
+            return false;
+        }
     }
     
     /**
@@ -428,20 +435,7 @@ class MyFuses {
     }
     
     
-    /**
-     * Loads all applications registered
-     */
-    private function loadApplications() {
-        foreach( $this->applications as $key => $application ) {
-             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                 $this->loadApplication( $application );
-             }     
-         }
-         
-         if( $this->hasApplication( 'myfuses' ) ) {
-             $this->loadApplication( $this->getApplication( 'myfuses' ) );
-         }
-    }
+    
     
     /**
      * Builds all applications registered
@@ -452,15 +446,6 @@ class MyFuses {
                 BasicMyFusesBuilder::buildApplication( $application );
              }
          }
-    }
-    
-    /**
-     * Load one application
-     *
-     * @param Application $application
-     */
-    protected function loadApplication( Application $application ) {
-        $application->getLoader()->loadApplication();
     }
     
     /**
@@ -723,7 +708,7 @@ class MyFuses {
             }
             
             // initilizing application if necessary
-            $this->loadApplications();
+            MyFusesLifecycle::loadApplications();
             
             $this->buildApplications();
             

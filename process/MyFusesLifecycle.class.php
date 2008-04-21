@@ -1,27 +1,72 @@
 <?php
+/**
+ * MyFusesLifecycle - MyFusesLifecycle.class.php
+ * 
+ * The MyFuses Lifecycle controls all phases of application and request process.
+ * 
+ * PHP version 5
+ * 
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ * 
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * This product includes software developed by the Fusebox Corporation 
+ * (http://www.fusebox.org/).
+ * 
+ * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
+ * Fusebox" part .
+ * 
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+ * All Rights Reserved.
+ * 
+ * Contributor(s): Flávio Gonçalves Garcia.
+ *
+ * @category   process
+ * @package    process
+ * @author     Flávio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
+ * @link       http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Id: MyFuses.class.php 405 2008-04-20 02:53:35Z piraz $
+ */
+
+/**
+ * MyFusesLifecycle - MyFusesLifecycle.class.php
+ * 
+ * The MyFuses Lifecycle controls all phases of application and request process.
+ * 
+ * PHP version 5
+ *
+ * @category   process
+ * @package    process
+ * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
+ * @link http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Revision: 405 $
+ * @since      Revision 17
+ */
 class MyFusesLifecycle {
     
+    const LOAD_PHASE = "load";
+    
+    const BUILD_PHASE = "build";
+    
+    const STORE_PHASE = "store";
+    
     /**
-     * Lifecycle Phase
+     * Process phase constant<br>
+     * value "process"
      *
      * @var string
      */
-    private $phase;
-    
-    /**
-     * Lifecycle circuit
-     *
-     * @var Circuit
-     */
-    private $circuit;
-    
-    /**
-     * Lifecycle action
-     *
-     * @var CircuitAction
-     */
-    private $action;
-    
     const PROCESS_PHASE = "process";
     
     /**
@@ -65,6 +110,31 @@ class MyFusesLifecycle {
     const PROCESS_ERROR_PHASE = "processError";
     
     /**
+     * Lifecycle Phase
+     *
+     * @var string
+     */
+    private $phase;
+    
+    /**
+     * Lifecycle circuit
+     *
+     * @var Circuit
+     */
+    private $circuit;
+    
+    /**
+     * Lifecycle action
+     *
+     * @var CircuitAction
+     */
+    private $action;
+    
+    
+    
+    
+    
+    /**
      * Return the current lifecycle phase
      *
      * @return string
@@ -98,6 +168,31 @@ class MyFusesLifecycle {
      */
     public function setAction( CircuitAction &$action ) {
         $this->action = $action;
+    }
+    
+    /**
+     * Load all registered applications 
+     */
+    public static function loadApplications() {
+        foreach( MyFuses::getInstance()->getApplications() as 
+            $key => $application ) {
+             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                 self::loadApplication( $application );
+             }     
+         }
+         
+         if( MyFuses::getInstance()->hasApplication( 'myfuses' ) ) {
+             $this->loadApplication( $this->getApplication( 'myfuses' ) );
+         }
+    }
+    
+    /**
+     * Load one application
+     *
+     * @param Application $application
+     */
+    public static function loadApplication( Application $application ) {
+        $application->getLoader()->loadApplication();
     }
     
 }
