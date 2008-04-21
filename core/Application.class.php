@@ -70,16 +70,25 @@ class Application implements ICacheable {
     private $loader;
     
     /**
-     * Flag that indicates that this application was loaded
+     * Flag that indicates that the application must be loaded
      *
      * @var boolean
-     * @access privae
      */
-    private $loaded = false;
-    
     private $load = false;
     
+    /**
+     * Flag that indicates if the application must be parsed
+     *
+     * @var boolean
+     */
     private $parse = false;
+    
+    /**
+     * Flag that indicates if the application must be stored
+     *
+     * @var boolean
+     */
+    private $store = false;
     
     /**
      * Flag that alows automatic rewrite for action resolution
@@ -275,7 +284,6 @@ class Application implements ICacheable {
      */
     private $classes = array();
     
-    
     /**
      * FuseAction to be executed before process
      * 
@@ -309,8 +317,18 @@ class Application implements ICacheable {
      */
     private $memcacheEnabled = false;
     
+    /**
+     * Array of loader listeners
+     *
+     * @var array
+     */
     private $loaderListeners = array();
     
+    /**
+     * Array of builder listeners
+     *
+     * @var array
+     */
     private $builderListeners = array();
     
     /**
@@ -339,11 +357,11 @@ class Application implements ICacheable {
         
         $this->setLoader( $loader );
         
-        $this->plugins[ Plugin::PRE_PROCESS_PHASE ] = array();
-        $this->plugins[ Plugin::PRE_FUSEACTION_PHASE ] = array();
-        $this->plugins[ Plugin::POST_FUSEACTION_PHASE ] = array();
-        $this->plugins[ Plugin::POST_PROCESS_PHASE ] = array();
-        $this->plugins[ Plugin::PROCESS_ERROR_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::PRE_PROCESS_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::PRE_FUSEACTION_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::POST_FUSEACTION_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::POST_PROCESS_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::PROCESS_ERROR_PHASE ] = array();
     }
     
     /**
@@ -480,26 +498,6 @@ class Application implements ICacheable {
     public function setBuilder( MyFusesBuilder $builder ) {
         $this->builder = $builder;
         $builder->setApplication( $this );
-    }
-    
-    /**
-     * Return if the application was loaded or not
-     *
-     * @return boolean
-     * @access public
-     */
-    public function isLoaded() {
-        return $this->loaded;
-    }
-    
-    /**
-     * Set if the application was loaded or not
-     *
-     * @param boolean $loaded
-     * @access public
-     */
-    public function setLoaded( $loaded ) {
-        $this->loaded = $loaded;
     }
     
     /**
@@ -744,6 +742,24 @@ class Application implements ICacheable {
      */
     public function setParse( $parse ) {
         $this->parse = $parse;
+    }
+    
+    /**
+     * Returns if application must be stored
+     *
+     * @return boolean
+     */
+    public function mustStore() {
+        return $this->store;
+    }
+    
+    /**
+     * Set if application must be stored
+     *
+     * @param boolean $store
+     */
+    public function setSotore( $store ) {
+        $this->store = $store;
     }
     
     /**
