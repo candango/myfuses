@@ -314,6 +314,13 @@ class Application implements ICacheable {
     private $builderListeners = array();
     
     /**
+     * Application data
+     *
+     * @var string
+     */
+    private $data = array();
+    
+    /**
      * Application constructor
      * 
      * @param $name Application name
@@ -1330,6 +1337,24 @@ class Application implements ICacheable {
      */
     public function getBuilderListeners() {
         return $this->builderListeners;
+    }
+    
+    /**
+     * Return application data
+     *
+     * @return array
+     */
+    public function &getData() {
+        return $data;
+    }
+    
+    /**
+     * Set application data
+     *
+     * @param array $data
+     */
+    public function setData( $data ) {
+        $this->data = $data;
     }
     
 }
