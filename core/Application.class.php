@@ -758,7 +758,7 @@ class Application implements ICacheable {
      *
      * @param boolean $store
      */
-    public function setSotore( $store ) {
+    public function setStore( $store ) {
         $this->store = $store;
     }
     

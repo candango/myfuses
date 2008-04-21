@@ -527,7 +527,7 @@ class MyFuses {
     protected function storeApplication( Application $application ) {
         $strStore = "";
         
-        if( $application->mustParse() ) {
+        if( $application->mustStore() ) {
             if( !$this->isMemcacheEnabled() ) {
                 
                 $this->createApplicationPath( $application );

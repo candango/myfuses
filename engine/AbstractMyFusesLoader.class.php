@@ -85,11 +85,12 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     $this->getApplication()->getCompleteCacheFileData() );
             }
             
-            MyFuses::getInstance()->getDebugger()->registerEvent( 
-                new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                    "Application " . 
-                    $this->getApplication()->getName() . " Restored" ) );
-
+            if( $this->getApplication()->isDebugAllowed() ) {
+                MyFuses::getInstance()->getDebugger()->registerEvent( 
+                    new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                        "Application " . 
+                        $this->getApplication()->getName() . " Restored" ) );    
+            }
             
             if( $this->getApplication()->getMode() === 'development' ) {
                 $this->doLoadApplication();
@@ -140,6 +141,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         $this->applicationData[ 'application' ] = $data;
         
         $this->getApplication()->setParse( true );
+        $this->getApplication()->setStore( true );
         
         MyFuses::getInstance()->getDebugger()->registerEvent( 
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
