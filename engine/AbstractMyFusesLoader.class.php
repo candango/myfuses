@@ -46,7 +46,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     }
     
     public function destroyCachedApplicationData() {
-        $this->applicationData = array();
+        unset( $this->applicationData[ 'application' ] );
     }
     
     private function isCached() {
@@ -72,15 +72,18 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         if( $this->isCached() ) {
-            
+                
             if( !$this->getApplication()->getController()->
                 isMemcacheEnabled() ) {
+                    
                 include $this->getApplication()->getCompleteCacheFile();
+                
                 // correcting cached application reference
                 $this->setApplication( 
                     $this->getApplication()->getController()->getApplication( 
                         $this->application->getName() ) );
-                $this->getApplication()->setLoader( $this );                
+                $this->getApplication()->setLoader( $this );
+                
                 $this->applicationData = include( 
                     $this->getApplication()->getCompleteCacheFileData() );
             }
@@ -110,15 +113,30 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $listener->applicationLoadPerformed( $this, 
                 $this->applicationData );
         }
+
         
-        foreach( $this->applicationData[ 'application' ][ 'children' ] 
-            as $child ) {
-            if( strtolower( $child[ 'name' ] ) === 'circuits' ) {
-                foreach( $child[ 'children' ] as $circuitChild ) {
-                    $this->loadCircuit( $circuitChild );
+        
+        if( $this->getApplication()->getMode() === 'production' ) {
+            foreach( $this->applicationData[ 'application' ][ 'children' ] 
+                as $child ) {
+                if( strtolower( $child[ 'name' ] ) === 'circuits' ) {
+                    foreach( $child[ 'children' ] as $circuitChild ) {
+                        $this->loadCircuit( $circuitChild );
+                    }
+                }
+            }    
+        }
+        else {
+            foreach( $this->applicationData[ 'application' ][ 'children' ] 
+                as $child ) {
+                if( strtolower( $child[ 'name' ] ) === 'circuits' ) {
+                    foreach( $child[ 'children' ] as $circuitChild ) {
+                        $this->loadCircuit( $circuitChild );
+                    }
                 }
             }
         }
+        
         
         if( $this->getApplication()->isDefault() ) {
             if( $this->getApplication()->isToolsAllowed() ) {
