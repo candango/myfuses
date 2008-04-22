@@ -304,7 +304,8 @@ class InvokeVerb extends AbstractVerb {
             $strOut .= ";\n\n";
         }
 		else {
-            $strOut .= " );\n\n";
+            $strOut .= " );\n";
+            $strOut .= $this->getContextRestoreString();
         }
         
 		return $strOut;
