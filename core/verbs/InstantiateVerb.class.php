@@ -263,9 +263,11 @@ class InstantiateVerb extends AbstractVerb {
             $strOut .= self::getContextRestoreString();
 	    }
 	    else {
+	        $strOut .= "MyFusesCodeHandler::setVariable( \"" . 
+              $this->getObject() . "\", new SoapClient" . 
+                "( \"" . $this->getWebservice() . "\" ) );\n\n";
+            $strOut .= self::getContextRestoreString();
 	        // FIXME use MyFusesCodeHandler::setVariable in here
-	        $strOut .= "\$" . $this->getObject() . " = new SoapClient" . 
-		        "( \"" . $this->getWebservice() . "\" );\n\n";
 	    }
 	    return $strOut;
 	}
