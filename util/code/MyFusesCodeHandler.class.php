@@ -117,9 +117,13 @@ class MyFusesCodeHandler {
     public static function sanitizeHashedString( $hstring ) {
         // resolving #valriable#'s 
         $hstring =  preg_replace( 
-            "@([\"][#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#][\"])@", 
-            "$2" , $hstring );
+            "@([#])([\$|\d|\w|\-\>|\:|\(|\)|\'|\\\"|\[|\]|\s]*)([#])@", 
+            "\" .$2. \"" , $hstring );
         
+        $hstring = str_replace( "\"\" .", " ",$hstring );
+        $hstring = str_replace( ". \"\"", "",$hstring );
+        $hstring = str_replace( " \"#", " ",$hstring );
+        $hstring = str_replace( "#\" ", " ",$hstring );
         return  $hstring;
     }
     
