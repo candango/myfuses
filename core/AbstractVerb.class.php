@@ -260,7 +260,7 @@ abstract class AbstractVerb implements Verb {
                 $strOut .= "'" . $key . "' => " . $this->dataToString( $value );
             }
             else {
-                $strOut .= "'" . $key . "' => '" . $value . "'";
+                $strOut .= "'" . $key . "' => '" . addslashes( $value ) . "'";
             }
             $comma = true;
         }
