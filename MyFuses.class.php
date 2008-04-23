@@ -434,20 +434,6 @@ class MyFuses {
         $this->applications[ $name ]->setPath( $value );
     }
     
-    
-    
-    
-    /**
-     * Builds all applications registered
-     */
-    private function buildApplications() {
-        foreach( $this->applications as $key => $application ) {
-            if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                BasicMyFusesBuilder::buildApplication( $application );
-             }
-         }
-    }
-    
     /**
      * Return the MyFuses builder
      *
@@ -710,7 +696,9 @@ class MyFuses {
             // initilizing application if necessary
             MyFusesLifecycle::loadApplications();
             
-            $this->buildApplications();
+            MyFusesLifecycle::buildApplications();            
+            
+            MyFusesLifecycle::enableTools();
             
             $this->createRequest();
             

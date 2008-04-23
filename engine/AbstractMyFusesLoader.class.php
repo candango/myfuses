@@ -72,7 +72,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         if( $this->isCached() ) {
-                
+            
+            $default = $this->getApplication()->isDefault();
             if( !$this->getApplication()->getController()->
                 isMemcacheEnabled() ) {
                     
@@ -88,7 +89,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     $this->getApplication()->getCompleteCacheFileData() );
             }
             
-            if( $this->getApplication()->isDebugAllowed() ) {
+            $this->getApplication()->setDefault( $default );
+            
+            if( MyFuses::getApplication()->isDebugAllowed() ) {
                 MyFuses::getInstance()->getDebugger()->registerEvent( 
                     new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                         "Application " . 
@@ -113,8 +116,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $listener->applicationLoadPerformed( $this, 
                 $this->applicationData );
         }
-
-        
         
         if( $this->getApplication()->getMode() === 'production' ) {
             foreach( $this->applicationData[ 'application' ][ 'children' ] 
@@ -134,17 +135,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                         $this->loadCircuit( $circuitChild );
                     }
                 }
-            }
-        }
-        
-        
-        if( $this->getApplication()->isDefault() ) {
-            if( $this->getApplication()->isToolsAllowed() ) {
-                $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
-                "myfuses_tools/";
-            
-                $this->getApplication()->getController()->
-                    createApplication( "myfuses", $appReference );    
             }
         }
         

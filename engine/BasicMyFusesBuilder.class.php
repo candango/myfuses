@@ -65,6 +65,17 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             // TODO destroy application cache
             //$application->getLoader()->destroyCachedApplicationData();
         }
+        else{
+            if( count( $data[ 'application' ][ 'children' ] ) ) {
+                foreach( $data[ 'application' ][ 'children' ] as $child ) {
+                    switch( $child[ 'name' ] ) {
+                        case "globalfuseactions":
+                            self::buildGlobalFuseActions( $application, $child );
+                            break;    
+                    }            
+                }
+            }
+        }
         
         /*foreach( $this->getApplication()->getCircits() as $circuit ) {
             if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {

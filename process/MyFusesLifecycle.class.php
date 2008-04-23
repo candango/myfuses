@@ -179,11 +179,7 @@ class MyFusesLifecycle {
              if( $key != Application::DEFAULT_APPLICATION_NAME ) {
                  self::loadApplication( $application );
              }     
-         }
-         
-         if( MyFuses::getInstance()->hasApplication( 'myfuses' ) ) {
-             $this->loadApplication( $this->getApplication( 'myfuses' ) );
-         }
+         } 
     }
     
     /**
@@ -193,6 +189,35 @@ class MyFusesLifecycle {
      */
     public static function loadApplication( Application $application ) {
         $application->getLoader()->loadApplication();
+    }
+    
+    /**
+     * Builds all applications registered
+     */
+    public static function buildApplications() {
+        foreach( MyFuses::getInstance()->getApplications() as 
+            $key => $application ) {
+            if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                BasicMyFusesBuilder::buildApplication( $application );
+             }
+         }
+    }
+    
+    public static function enableTools() {
+        
+        if( MyFuses::getApplication()->isToolsAllowed() ) {
+            $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
+            "myfuses_tools/";
+            
+            MyFuses::getInstance()->createApplication( "myfuses", 
+                $appReference );
+
+            self::loadApplication( MyFuses::getApplication( 'myfuses' ) );
+            
+            BasicMyFusesBuilder::buildApplication( 
+                MyFuses::getApplication( 'myfuses' ) );
+        }
+        
     }
     
 }
