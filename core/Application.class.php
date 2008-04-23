@@ -1259,7 +1259,10 @@ class Application implements ICacheable {
             $this->getScriptFileDelimiter() . "\" );\n";
             
         $strOut .= "\$application->setDebug( " . ( 
-            $this->isDebugAllowed() ? "true" : "false" ) . " );\n";    
+            $this->isDebugAllowed() ? "true" : "false" ) . " );\n";
+        
+        $strOut .= "\$application->setTools( " . ( 
+            $this->isToolsAllowed() ? "true" : "false" ) . " );\n";    
             
         if( !is_null( $this->getMaskedFileDelimiters() ) ) {
             $strOut .= "\$application->setMaskedFileDelimiters( \"" . 
