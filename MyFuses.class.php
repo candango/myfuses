@@ -136,6 +136,13 @@ class MyFuses {
     private $pluginPaths = array();
     
     /**
+     * Path used by myfuses to search verbs
+     *
+     * @var array
+     */
+    private $verbPaths = array();
+    
+    /**
      * Unique instance to be created in process. MyFuses is implemmented using
      * the singleton pattern.
      *
@@ -192,15 +199,18 @@ class MyFuses {
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
             DIRECTORY_SEPARATOR );        
             
-        // adding pluguins paths
+        // adding plugin paths
         $this->addPluginPath( "plugins/" );
         $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins/" );
+        
+        // adding verb paths
+        $this->addVerbPath( self::MYFUSES_ROOT_PATH );
         
     }
     
     /**
      * Add one plugin path. MyFuses will be search plugins in this paths if
-     * the no path was informed. 
+     * no path was informed. 
      *
      * @param string $path
      */
@@ -215,6 +225,25 @@ class MyFuses {
      */
     public function getPluginPaths() {
         return $this->pluginPaths;
+    }
+    
+    /**
+     * Add one verb path. MyFuses will be search verbs in this paths if
+     * no path was informed. 
+     *
+     * @param string $path
+     */
+    protected function addVerbPath( $path ) {
+        $this->verbPaths[] = $path;
+    }
+    
+    /**
+     * Return all verb paths
+     *
+     * @return array
+     */
+    public function getVerbPaths() {
+        return $this->verbPaths;
     }
     
     /**
