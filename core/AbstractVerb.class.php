@@ -214,6 +214,25 @@ abstract class AbstractVerb implements Verb {
                 $path = $action->getCircuit()->getVerbPath( 
                     $data[ "namespace" ] ); 
                 
+                if( !MyFusesFileHandler::isAbsolutePath( $path ) ) {
+                    if( file_exists( $action->getCircuit()->getApplication()
+                        ->getPath() . $path ) ) {
+                        $path = $action->getCircuit()->getApplication()
+                            ->getPath() . $path;
+                    }
+                    else {
+                        foreach( $action->getCircuit()->getApplication()->
+                            getController()->getVerbPaths() 
+                            as $vPath ) {
+                            if( file_exists( $vPath . $path ) ) {
+                                $path = $vPath . $path;
+                            } 
+                        }
+                    }   
+                }
+                
+                
+                    
                 $className = strtoupper( substr( 
                     $data[ "namespace" ], 0, 1 ) ) . 
                     substr( $data[ "namespace" ], 1, 

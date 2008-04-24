@@ -235,25 +235,7 @@ class Circuit implements ICacheable {
      * @return string
      */
     public function getVerbPath( $name ) {
-        if( MyFusesFileHandler::isAbsolutePath( $this->verbPaths[ $name ] ) ) {
-            return $this->verbPaths[ $name ];
-        }
-        
-        if( file_exists( $this->getApplication()->getPath() . 
-            $this->verbPaths[ $name ] ) ) {
-            return $this->getApplication()->getPath() . 
-                $this->verbPaths[ $name ];
-        }
-        
-        foreach( $this->getApplication()->getController()->getVerbPaths() 
-            as $path ) {
-            if( file_exists( $path . $this->verbPaths[ $name ] ) ) {
-                return $path . $this->verbPaths[ $name ];
-            }    
-                
-        }
-        
-        return null;
+        return $this->verbPaths[ $name ];
     }
     
     /**

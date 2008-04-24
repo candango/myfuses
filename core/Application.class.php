@@ -1272,16 +1272,16 @@ class Application implements ICacheable {
             $this->getCharacterEncoding() . "\" );\n";
         // end paramenters
         
+        $controllerClass = $this->getControllerClass();
+        
+        $strOut .= $controllerClass . 
+            "::getInstance()->addApplication( \$application );\n";
+            
         $strOut .= $this->getCircuitsCachedCode();
         
         $strOut .= $this->getClassesCacheCode();
         
         $strOut .= $this->getPluginsCacheCode();
-        
-        $controllerClass = $this->getControllerClass();
-        
-        $strOut .= $controllerClass . 
-            "::getInstance()->addApplication( \$application );\n";
         
         return $strOut;
     }
