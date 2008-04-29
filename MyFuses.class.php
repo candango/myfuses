@@ -430,35 +430,6 @@ class MyFuses {
         }
     }
     
-    /**
-     * Sets the application $name
-     * 
-     * @param string
-     */
-    public function setApplicationName( $value, 
-        $name = Application::DEFAULT_APPLICATION_NAME ) {
-        return $this->applications[ $name ]->setName( $value );
-    }
-    
-    /**
-     * Returns the application $path
-     * 
-     * @return string
-     */
-    public function getApplicationPath( 
-        $name = Application::DEFAULT_APPLICATION_NAME ) {
-        $this->applications[ $name ]->getPath();
-    }
-    
-    /**
-     * Sets the application path
-     * 
-     * @param string $name
-     */
-    public function setApplicationPath( $value, 
-        $name = Application::DEFAULT_APPLICATION_NAME ) {
-        $this->applications[ $name ]->setPath( $value );
-    }
     
     protected function createRequest() {
         $this->request = new FuseRequest();
