@@ -106,6 +106,8 @@ class MyFuses {
      */
     const MYFUSES_ROOT_PATH = MYFUSES_ROOT_PATH;
     
+    const MODE_DEVELOPMENT = "development";
+    const MODE_PRODUCTION = "production";
     
     /**
      * Memcache enabled flag
@@ -181,11 +183,6 @@ class MyFuses {
     private $parsedPath;
     
     private $applicationClass = "Application";
-    
-    private $builder;
-    
-    const MODE_DEVELOPMENT = "development";
-    const MODE_PRODUCTION = "production";
     
     /**
      * MyFuses constructor
@@ -461,15 +458,6 @@ class MyFuses {
     public function setApplicationPath( $value, 
         $name = Application::DEFAULT_APPLICATION_NAME ) {
         $this->applications[ $name ]->setPath( $value );
-    }
-    
-    /**
-     * Return the MyFuses builder
-     *
-     * @return MyFusesBuilder
-     */
-    public function getBuilder() {
-        return $this->builder;
     }
     
     protected function createRequest() {
