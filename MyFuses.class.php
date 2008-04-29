@@ -443,11 +443,11 @@ class MyFuses {
         $this->lifecycle->setPhase( $phase );
     }
     
-    public function &getCurrentCircuit() {
+    public function getCurrentCircuit() {
         return $this->lifecycle->getAction()->getCircuit();
     }
     
-    public function &getCurrentAction() {
+    public function getCurrentAction() {
         return $this->lifecycle->getAction();
     }
     
@@ -476,7 +476,7 @@ class MyFuses {
      * 
      * @return FuseRequest
      */
-    public function &getRequest() {
+    public function getRequest() {
         return $this->request;
     }
     
@@ -718,7 +718,7 @@ class MyFuses {
      * @return MyFuses
      * @static 
      */
-     public static function &getInstance() {
+     public static function getInstance() {
         
         if( is_null( self::$instance ) ) {
             self::$instance = new MyFuses();
@@ -787,9 +787,9 @@ class MyFuses {
         else {
             $mySelf = self::getSelf() . "?";
         
-	        $mySelf .= self::getInstance()->getRequest()->
-	            getApplication()->getFuseactionVariable();
-	        $mySelf .= "=" ;    
+            $mySelf .= self::getInstance()->getRequest()->
+                getApplication()->getFuseactionVariable();
+            $mySelf .= "=" ;    
         }
         
         return $mySelf;
