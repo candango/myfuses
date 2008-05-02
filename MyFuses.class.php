@@ -344,7 +344,7 @@ class MyFuses {
             
         }
         else {
-            $application->setPath( dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );    
+			$application->setPath( dirname( str_replace( "/", DIRECTORY_SEPARATOR, $_SERVER[ 'SCRIPT_FILENAME' ] ) ) );    
         }
         
         // setting parsed path
