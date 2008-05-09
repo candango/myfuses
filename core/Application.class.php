@@ -601,15 +601,18 @@ class Application implements ICacheable {
     public function updateCircuitsParents() {
         foreach( $this->circuits as $circuit ) {
             if( $circuit->getParentName() != "" ) {
-                try {        
-	                if( !is_null( $this->getCircuit( 
+                try {
+                    if( !is_null( $this->getCircuit( 
 	                    $circuit->getParentName() ) ) ) {
+	                     
 	                    $circuit->setParent( $this->getCircuit( 
 	                        $circuit->getParentName() ) );
 	                }
                 }
 	            catch ( MyFusesCircuitException $mfe ) {
-		            $mfe->breakProcess();
+		            // TODO think about that
+	                //$mfe->breakProcess();
+		            return;
 		        }
             }
         }
