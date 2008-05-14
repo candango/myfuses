@@ -162,8 +162,8 @@ abstract class MyFusesException extends Exception {
                 }
                 else {
                     if( is_string( $value ) ) {
-                        $value = ( strlen( $value ) < 20 ? $value : 
-                            substr( $value, 0, 20 ) . "..." );
+                        $value = ( strlen( $value ) < 40 ? $value : 
+                            substr( $value, 0, 40 ) . "..." );
                     }
                     $traceX[ $key ] = "<b>" . gettype( $value ) . 
                         "</b> => '" . $value . "'"  ;
