@@ -59,6 +59,13 @@
  */
 class MyFusesDataUtil {
     
+    /**
+     * Transform php objetcs to array
+     *
+     * @param object $item
+     * @param boolean $assoc
+     * @return unknown
+     */
     public static function objectToArray( $item, $assoc=false ) {
         $itemArray = array();
         
