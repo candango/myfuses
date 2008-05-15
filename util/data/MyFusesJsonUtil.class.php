@@ -59,6 +59,12 @@
  */
 class MyFusesJsonUtil {
     
+    /**
+     * This mehtod calls jsonPrepare and encondes the data to json
+     *
+     * @param mixed $data
+     * @return string
+     */
     public static function toJson( $data ) {
         return json_encode( self::jsonPrepare( $data ) );
     }
