@@ -73,6 +73,12 @@ try {
         "util/code/MyFusesCodeHandler.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/file/MyFusesFileHandler.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/data/MyFusesDataUtil.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/data/MyFusesJsonUtil.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/data/MyFusesXmlUtil.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();

@@ -74,7 +74,7 @@ class MyFusesJsonUtil {
     private static function jsonPrepare( $data ) {
         if ( is_object( $data ) ) {
             if (!$data instanceof stdClass ){
-                $data = self::objectToArray( $data );
+                $data = MyFusesDataUtil::objectToArray( $data );
             }
         }
         
