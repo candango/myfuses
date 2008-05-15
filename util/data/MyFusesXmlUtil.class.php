@@ -36,7 +36,7 @@
  * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id$
+ * @version    SVN: $Id:MyFusesXmlUtil.class.php 446 2008-05-15 14:45:48Z piraz $
  */
 
 /**
@@ -54,7 +54,182 @@
  * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision$
+ * @version    SVN: $Revision:446 $
  * @since      Revision 17
  */
-?>
+class MyFusesXmlUtil {
+    
+    public static function toXml( $data, $root = "myfuses_xml" ) {
+        $strXml = "<" . $root . ">\n";
+        $strXml .= self::doXmlTransformation( self::xmlPrepare( $data ) );
+        $strXml .= "</" . $root . ">";
+        return $strXml;
+    }
+    
+    private static function doXmlTransformation( $data, $level=1, 
+        $tagName = "" ) {
+        $strXml = "";
+        if( is_array( $data ) ) {
+            foreach( $data as $_key => $_value ) {
+                if( substr( $_key, -4 ) == "_<s>" ) {
+                    $tagName = str_replace( substr( $_key, -4 ), "", $_key);
+                    if( count( $_value ) ) {
+                        foreach( $_value as $_vkey => $_vvalue ) {
+                            $strXml .= str_repeat( "\t", $level ) . 
+                                "<" . $tagName . ">\n";
+                            $strXml .= self::doXmlTransformation( 
+                                $_vvalue, $level + 1 );
+                            $strXml .= str_repeat( "\t", $level ) . 
+                                "</" . $tagName . ">\n";
+                        }    
+                    }
+                    else {
+                        $strXml .= str_repeat( "\t", $level ) . "<" . 
+                            $tagName . "/>\n";
+                    }
+                }
+                else {
+                    if( count( $_value ) > 1 ) {
+                        $strXml .= str_repeat( "\t", $level ) . "<" . $_key . ">\n";    
+                    }
+                    $strXml .= self::doXmlTransformation( $_value, 
+                        $level+1, $_key );
+                    if( count( $_value ) > 1 ) {
+                        $strXml .= str_repeat( "\t", $level ) . "</" . $_key . ">\n";    
+                    }
+                }
+            }
+        }
+        else {
+            if( is_bool( $data ) ) {
+                $strXml .= str_repeat( "\t", $level ) . "<" . $tagName . ">";
+                $strXml .= $data ? "true" : "false";
+                $strXml .= "</" . $tagName . ">\n";
+            }
+            else {
+                if( is_null( $data ) ) {
+                    $strXml .= str_repeat( "\t", $level ) . "<" . 
+                        $tagName . "\>\n";    
+                }
+                else {
+                    $strXml .= str_repeat( "\t", $level ) . "<" . 
+                        $tagName . ">";
+                    $strXml .= $data;
+                    $strXml .= "</" . $tagName . ">\n";
+                }
+            }
+            
+        }
+        return $strXml;
+    }
+    
+    
+    /**
+     * Tra
+     *
+     * @param mixed $data
+     * @return array
+     */
+    private static function xmlPrepare( $data ) {
+        
+        $monster = $data;
+        
+        if ( is_object( $data ) ) {
+            $monster = 
+                array( get_class( $data ) => 
+                    MyFusesDataUtil::objectToArray( $data, true ) );
+        }
+        
+        if ( is_array( $data ) ) { // objects will also fall here
+            foreach ( $data as $key => $item ) {
+                if( is_object( $item ) ) {
+                    $monster[ get_class( $item ) . "_<s>" ][] = 
+                        self::xmlPrepare( $item );
+                    unset( $monster[$key] );    
+                }
+                else {
+                    $monster[ $key ] = self::xmlPrepare( $item );    
+                }
+            }
+            
+            return $monster;
+        }
+        
+        if ( is_string( $data ) ) {
+            return $data;
+        }
+        
+        return $monster;
+    }
+    
+    
+    /**
+     * Return php structures from xml string
+     *
+     * @param string $xml
+     * @return mixed
+     */
+    public static function fromXml( $xml ) {
+        
+        $document = new SimpleXMLElement( $xml );
+        
+        return self::fromXmlElement( $document );
+        
+    }
+    
+    private static function fromXmlElement( SimpleXMLElement $element, $struct = null ) {
+        if( count( $element ) ) {
+            foreach( $element as $key => $value ) {
+                return self::getStruct( $key, $value );
+            }
+        }
+        else {
+            return "" . $element;
+        }
+        
+        return $struct;
+    }
+    
+    
+    private static function getStruct( $key, $value ) {
+        $struct = null;
+        
+        
+        if( count( $value ) ) {
+            if( class_exists( $key, true ) ) {
+                $struct = new $key();
+            } else {
+                $struct = new stdClass(); 
+            }
+            foreach( $value as $key1 => $item ) {
+                        
+                if( !( $struct instanceof stdClass ) ) {
+                    $refClass = new ReflectionClass( $struct );
+                    if( $refClass->hasProperty( $key1 ) ) {
+                        if( $refClass->getProperty( $key1 )->isPublic() ) {
+                            $struct->$key1 = self::fromXmlElement( $item );    
+                        }
+                    }
+                    
+                    $method = "set" . strtoupper( substr( $key1, 0, 1 ) ) . 
+                        substr( $key1, 1, count( $key1 ) + 2 );
+                    
+                    if( $refClass->hasMethod( $method ) ) {
+                        if( $refClass->getMethod( $method )->isPublic() ) {
+                            $struct->$method( self::fromXmlElement( $item ) );    
+                        }
+                    }
+                }
+                else {
+                    $struct->$key1 = self::fromXmlElement( $item, $struct );
+                }
+            }
+        }
+        else {
+            $struct = "" . $value;
+        }
+        
+        return $struct;
+        
+    }
+}
