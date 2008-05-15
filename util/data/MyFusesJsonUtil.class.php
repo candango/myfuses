@@ -59,8 +59,8 @@
  */
 class MyFusesJsonUtil {
     
-    public static function toJson( $var ) {
-        return json_encode( self::jsonPrepare( $var ) );
+    public static function toJson( $data ) {
+        return json_encode( self::jsonPrepare( $data ) );
     }
     
     /**
@@ -71,27 +71,27 @@ class MyFusesJsonUtil {
      *                   or null, to be converted
      * @return mixed     A converted value in the same format as the given
      */
-    private static function jsonPrepare( $var ) {
-        if ( is_object( $var ) ) {
-            if (!$var instanceof stdClass ){
-                $var = self::objectToArray( $var );
+    private static function jsonPrepare( $data ) {
+        if ( is_object( $data ) ) {
+            if (!$data instanceof stdClass ){
+                $data = self::objectToArray( $data );
             }
         }
-
-        if ( is_array( $var ) ) { // objects will also fall here
-            foreach ( $var as &$item ) {
+        
+        if ( is_array( $data ) ) { // objects will also fall here
+            foreach ( $data as &$item ) {
                 $item = self::jsonPrepare( $item );
             }
-            return $var;
+            return $data;
         }
 
-        if ( is_string( $var ) ) {
-            return utf8_encode( $var );
+        if ( is_string( $data ) ) {
+            return utf8_encode( $data );
         }
 
         // for all other cases (number, boolean, null), no change
 
-        return $var;
+        return $data;
     }
     
 }
