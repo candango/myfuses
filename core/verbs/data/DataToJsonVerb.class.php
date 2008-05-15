@@ -1,24 +1,44 @@
 <?php
-class RestListenVerb extends AbstractVerb {
+class DataToJsonVerb extends AbstractVerb {
     
-    private $variable;
+    private $name;
     
-    private $method;
+    private $value;
+    
+    private $root;
+    
+    private $output = false;
+    
+    public function getName() {
+        return $name;
+    }
+    
+    public function setName( $name ) {
+        $this->name = $name;
+    }
     
     public function getVariable(){
         return $this->variable;
+    }
+    
+    public function isOutput() {
+        return $this->output;
+    }
+    
+    public function setOutput( $output ) {
+        $this->output = $output;
     }
     
     public function setVariable( $variable ) {
         $this->variable = $variable;
     }
     
-    public function getMethod(){
-        return $this->method;
+    public function getRoot(){
+        return $this->root;
     }
     
-    public function setMethod( $method ) {
-        $this->method = $method;
+    public function setRoot( $root ) {
+        $this->root = $root;
     }
     
     /**
@@ -34,8 +54,8 @@ class RestListenVerb extends AbstractVerb {
             $this->setVariable( $data[ "attributes" ][ "variable" ] );
         }
         
-        if( isset( $data[ "attributes" ][ "method" ] ) ) {
-            $this->setMethod( $data[ "attributes" ][ "method" ] );
+        if( isset( $data[ "attributes" ][ "root" ] ) ) {
+            $this->setRoot( $data[ "attributes" ][ "root" ] );
         }
         
     }
