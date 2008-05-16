@@ -136,7 +136,7 @@ class DoVerb extends ParameterizedVerb {
                 $action->getCircuit()->getName() . DIRECTORY_SEPARATOR;
                 
             if( !file_exists( $path ) ) {
-                mkdir( $path );
+                MyFusesFileHandler::createPath( $path );
                 chmod( $path, 0777 );
             }   
             

@@ -105,6 +105,28 @@ class MyFusesFileHandler {
         return $path;
     }
     
+    public static function createPath( $path, $permission = 0777 ) {
+        
+        if( substr( $path, -1 ) == DIRECTORY_SEPARATOR ) {
+            $path = substr( $path, 0, strlen( $path ) - 1 );
+        }
+        
+        $children = array();
+        
+        
+        while( !file_exists( $path ) ) {
+            $pathX = explode( DIRECTORY_SEPARATOR, $path );
+            array_unshift( $children, array_pop( $pathX ) );
+            $path = implode( DIRECTORY_SEPARATOR, $pathX );
+        }
+        foreach( $children as $child ) {
+            $path .= DIRECTORY_SEPARATOR . $child; 
+            mkdir( $path );
+            chmod( $path, $permission );
+        }
+        
+    }
+    
     
     
     /**
