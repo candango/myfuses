@@ -159,7 +159,7 @@ class DoVerb extends ParameterizedVerb {
      * @return string
      */
     public function getRealParsedCode( $commented, $identLevel ) {
-        
+        InvokeVerb::clearClassCall();        
         $completeActionName = $this->appName . "." . 
             $this->circuitToBeExecutedName . "." . 
             $this->actionToBeExecutedName; 
