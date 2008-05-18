@@ -39,6 +39,7 @@
  */
 
 require_once "myfuses/core/verbs/ParameterizedVerb.class.php";
+require_once "myfuses/core/verbs/InvokeVerb.class.php";
 
 /**
  * DoVerb  - DoVerb.class.php
