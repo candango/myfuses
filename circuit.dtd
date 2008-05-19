@@ -135,6 +135,7 @@
 <!ELEMENT case (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
 <!ATTLIST case
 	value CDATA #REQUIRED
+	break (true | false) "true"
 >
 
 <!ELEMENT default (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
