@@ -79,12 +79,20 @@ class MyFusesJsonUtil {
      */
     private static function jsonPrepare( $data ) {
         if ( is_object( $data ) ) {
-            if (!$data instanceof stdClass ){
+            if (!$data instanceof stdClass ) {
+                $className = get_class( $data );
                 $data = MyFusesDataUtil::objectToArray( $data );
+                
+                $data[ 'data_type' ] =  "class";
+        
+                $data[ 'data_class_name' ] =  $className;
             }
         }
         
         if ( is_array( $data ) ) { // objects will also fall here
+            if( !isset( $data[ 'data_type' ] ) ){
+                $data[ 'data_type' ] =  "array";
+            }
             foreach ( $data as &$item ) {
                 $item = self::jsonPrepare( $item );
             }
@@ -98,6 +106,66 @@ class MyFusesJsonUtil {
         // for all other cases (number, boolean, null), no change
 
         return $data;
+    }
+    
+    public static function fromJson( $data ) {
+        return self::toPhp( json_decode( $data, true ) );
+    }
+    
+    private static function toPhp( $data ) {
+        
+        if( $data[ "data_type" ] == "class" ) {
+            
+            if( class_exists( $data[ "data_class_name" ] ) ) {
+                $object = new $data[ "data_class_name" ]();
+                
+                $refClass = new ReflectionClass( $object );
+                
+                foreach( $data as $key => $value ) {
+                    $phpValue = self::toPhp( $value );
+                    try {
+                        if( $property = $refClass->getProperty( $key ) ) {
+                            if( $property->isPublic() ) {
+                                $object->$key = $phpValue;    
+                            }
+                        }
+                        
+                        $methodName = "set" . strtoupper( substr( $key, 0, 1 ) ) . 
+                            substr( $key, 1, strlen( $key ) );
+                            
+                        if( $method = $refClass->getMethod( $methodName ) ) {
+                            if( $method->isPublic() ) {
+                                $object->$methodName( $phpValue );    
+                            }
+                        }
+                    }
+                    catch( ReflectionException $re ) {
+                        switch( $re->getCode() ) {
+                            // ignoring non existent properties and methods
+                            case 0;
+                            case 1;
+                                break;
+                            default:
+                                throw $re;
+                        }
+                    }
+                    
+                }
+                return $object;
+            }
+            
+        }
+        
+        if( $data[ 'data_type' ] == "array" ) {
+            foreach( $data as $key => $value ) {
+                $data[ $key ] = self::toPhp( $value );
+            }
+            unset( $data[ 'data_type' ] );
+            return $data;
+        }
+        
+        return $data;
+        
     }
     
 }

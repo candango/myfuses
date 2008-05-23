@@ -212,8 +212,8 @@ class MyFusesXmlUtil {
                     }
                     
                     $method = "set" . strtoupper( substr( $key1, 0, 1 ) ) . 
-                        substr( $key1, 1, count( $key1 ) + 2 );
-                    
+                        substr( $key1, 1, count( $key1 ) + 1 );
+                        
                     if( $refClass->hasMethod( $method ) ) {
                         if( $refClass->getMethod( $method )->isPublic() ) {
                             $struct->$method( self::fromXmlElement( $item ) );    
