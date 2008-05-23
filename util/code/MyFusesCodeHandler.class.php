@@ -72,19 +72,19 @@ class MyFusesCodeHandler {
         unset( $$name );
     }
     
-    public static function includeFile( $__MFCH_FILE_MONSTER_OFF_LAKE ) {
+    public static function includeFile( $__MFCH_FILE_MONSTER_OF_LAKE ) {
         
         foreach( self::$context as $variable ) {
             global $$variable;
         }
         
-        if( file_exists( $__MFCH_FILE_MONSTER_OFF_LAKE ) ) {
-             include $__MFCH_FILE_MONSTER_OFF_LAKE;
+        if( file_exists( $__MFCH_FILE_MONSTER_OF_LAKE ) ) {
+             include $__MFCH_FILE_MONSTER_OF_LAKE;
         }
         // getting defined variables in this context
         foreach( get_defined_vars() as $key => $value ) {
             if( !in_array( $key, self::$context ) ) {
-                if( $key != "__MFCH_FILE_MONSTER_OFF_LAKE" ) {
+                if( $key != "__MFCH_FILE_MONSTER_OF_LAKE" ) {
                     self::setVariable( $key, $value );    
                 }
             }
