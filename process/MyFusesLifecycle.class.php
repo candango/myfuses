@@ -53,7 +53,7 @@
  * @version    SVN: $Revision: 405 $
  * @since      Revision 17
  */
-class MyFusesLifecycle {
+abstract class MyFusesLifecycle {
     
     const LOAD_PHASE = "load";
     
@@ -114,23 +114,32 @@ class MyFusesLifecycle {
      *
      * @var string
      */
-    private $phase;
+    private static $phase;
     
     /**
      * Lifecycle circuit
      *
      * @var Circuit
      */
-    private $circuit;
+    private static $circuit;
     
     /**
      * Lifecycle action
      *
      * @var CircuitAction
      */
-    private $action;
+    private static $action;
     
+    public static function configureApplications() {
+        foreach( MyFuses::getInstance()->getApplications() as 
+            $index => $application ) {
+            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
+                self::configureApplication( $application );
+            }
+        }
+    }
     
+    public static function configureApplication( Application $application ) {}
     
     
     
@@ -139,8 +148,8 @@ class MyFusesLifecycle {
      *
      * @return string
      */
-    public function getPhase(){
-        return $this->phase;
+    public static function getPhase(){
+        return self::$phase;
     }
     
     /**
@@ -148,8 +157,8 @@ class MyFusesLifecycle {
      *
      * @param string $phase
      */
-    public function setPhase( $phase ){
-        $this->phase = $phase;
+    public static function setPhase( $phase ){
+        self::$phase = $phase;
     }
     
     /**
@@ -157,8 +166,8 @@ class MyFusesLifecycle {
      *
      * @return CircuitAction
      */
-    public function &getAction() {
-        return $this->action;
+    public static function getAction() {
+        return self::$action;
     }
     
     /**
@@ -166,8 +175,8 @@ class MyFusesLifecycle {
      *
      * @param CircuitAction $circuit
      */
-    public function setAction( CircuitAction &$action ) {
-        $this->action = $action;
+    public static function setAction( CircuitAction $action ) {
+        self::$action = $action;
     }
     
     /**

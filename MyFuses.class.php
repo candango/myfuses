@@ -442,24 +442,24 @@ class MyFuses {
     }
     
     public function getCurrentPhase() {
-        return $this->lifecycle->getPhase();
+        return MyFusesLifecycle::getPhase();
     }
     
     public function setCurrentPhase( $phase ) {
-        $this->lifecycle->setPhase( $phase );
+        MyFusesLifecycle::setPhase( $phase );
     }
     
     public function getCurrentCircuit() {
-        return $this->lifecycle->getAction()->getCircuit();
+        return MyFusesLifecycle::getAction()->getCircuit();
     }
     
     public function getCurrentAction() {
-        return $this->lifecycle->getAction();
+        return MyFusesLifecycle::getAction();
     }
     
     public function setCurrentAction( $fuseaction ) {
         list( $appName, $cName, $aName ) = explode( ".", $fuseaction );
-        $this->lifecycle->setAction( $this->getApplication( $appName )->
+        MyFusesLifecycle::setAction( $this->getApplication( $appName )->
             getCircuit( $cName )->getAction( $aName ) );
     }
     
@@ -556,22 +556,11 @@ class MyFuses {
         }
     }
     
-    protected function configureApplications() {
-        foreach( $this->applications as $index => $application ) {
-            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                $this->configureApplication( $application );
-            }
-        }
-    }
-    
-    protected function configureApplication( Application $application ) {}
-    
     /**
      * This method parse the request and write the genereted 
      * string in one file
      */
     public function parseRequest() {
-        $this->lifecycle = new MyFusesLifecycle();
         
         $circuit = $this->request->getAction()->getCircuit();
         
@@ -696,7 +685,7 @@ class MyFuses {
             
             $this->createRequest();
             
-            $this->configureApplications();
+            MyFusesLifecycle::configureApplications();
             
             $this->parseRequest();
             
