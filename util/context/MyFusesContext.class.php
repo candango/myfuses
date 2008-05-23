@@ -1,6 +1,6 @@
 <?php
 /**
- * MyFuses Code Handler class - MyFusesCodeHandler.class.php
+ * MyFuses Context class - MyFusesContext.class.php
  *
  * Utility to handle usual code operations.
  *
@@ -32,7 +32,7 @@
  */
  
 /**
- * MyFuses Code Handler class - MyFusesCodeHandler.class.php
+ * MyFuses Context class - MyFusesContext.class.php
  *
  * Utility to handle usual code operations.
  *
@@ -45,7 +45,7 @@
  * @version    SVN: $Revision: 183 $
  * @since      Revision 125
  */
-class MyFusesCodeHandler {
+class MyFusesContext {
     
     public static $context = array();
     
