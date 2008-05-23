@@ -2,7 +2,7 @@
 /**
  * Circuit - Circuit.class.php
  * 
- * MyFuses Circuit class
+ * MyFuses Circuit interface
  * 
  * PHP version 5
  * 
@@ -42,7 +42,7 @@ require_once "myfuses/core/CircuitAction.class.php";
 /**
  * Circuit - Circuit.class.php
  * 
- * MyFuses Circuit class
+ * MyFuses Circuit interface
  * 
  * PHP version 5
  * 
@@ -54,7 +54,7 @@ require_once "myfuses/core/CircuitAction.class.php";
  * @version    SVN: $Revision:23 $
  * @since      Revision 48
  */
-class Circuit implements ICacheable {
+interface Circuit extends ICacheable {
     
     /**
      * Public Access Constant.<br>
@@ -81,133 +81,46 @@ class Circuit implements ICacheable {
     const PRIVATE_ACCESS = 3;
     
     /**
-     * Circuit application reference
-     *
-     * @var Application
-     */
-    private $application;
-    
-    /**
-     * Circuit name
-     *
-     * @var string
-     */
-    private $name;
-    
-    /**
-     * Circuit path
-     * 
-     * @var string
-     */
-    private $path;
-    
-    private $built = false;
-    
-    private $verbPaths = array();
-    
-    /**
-     * Circuit access type
-     *
-     * @var integer
-     */
-    private $access;
-    
-    /**
-     * Cicuit actions
-     *
-     * @var array
-     */
-    private $actions = array();
-    
-    private $file;
-    
-    /**
-     * Application parent name
-     * 
-     * @var string
-     */
-    private $parentName = "";
-    
-    /**
-     * Application parent
-     * 
-     * @var Application
-     */
-    private $parent;
-    
-    /**
-     * Last time that circuit was loaded
-     *
-     * @var integer
-     */
-    private $lastLoadTime = 0;
-    
-    private $preFuseAction;
-    
-    private $postFuseAction;
-    
-    private $modified = false;
-    
-    /**
-     * Custom attributes defined by develloper
-     * 
-     * @var array 
-     */
-    private $customAttributes = array();
-    
-    /**
      * Return circuit application
      *
      * @return Application
      */
-    public function &getApplication() {
-        return $this->application;
-    }
+    public function &getApplication();
     
     /**
      * Set circuit application
      * 
      * @param Application $application
      */
-    public function setApplication( Application &$application ) {
-        $this->application = &$application;
-    }
+    public function setApplication( Application &$application );
     
     /**
      * Return the circuit name
      *
      * @return string
      */
-    public function getName() {
-        return $this->name;
-    }
+    public function getName();
     
     /**
      * Set the circuit name
      *
      * @param string $name
      */
-    public function setName( $name ) {
-        $this->name = $name;
-    }
+    public function setName( $name );
     
     /**
      * Return the circuit path
      *
      * @return string
      */
-    public function getPath() {
-        return $this->path;
-    }
+    public function getPath();
     
     /**
      * Return the circuit complete path
      *
      * @return string
      */
-    public function getCompletePath() {
-        return $this->getApplication()->getPath() . $this->getPath();
-    }
+    public function getCompletePath();
     
     
     /**
@@ -215,18 +128,14 @@ class Circuit implements ICacheable {
      *
      * @param string $path
      */
-    public function setPath( $path ) {
-        $this->path = $path;
-    }
+    public function setPath( $path );
     
     /**
      * Return circuit verb paths
      *
      * @return array
      */
-    public function getVerbPaths() {
-        return $this->verbPaths;
-    }
+    public function getVerbPaths();
     
     /**
      * Return one verb path
@@ -234,24 +143,14 @@ class Circuit implements ICacheable {
      * @param string $name
      * @return string
      */
-    public function getVerbPath( $name ) {
-        return $this->verbPaths[ $name ];
-    }
+    public function getVerbPath( $name );
     
     /**
      * Set circui verb paths
      *
      * @param array $verbPaths
      */
-    public function setVerbPaths( $verbPaths ) {
-        $verbPaths = unserialize( $verbPaths );
-        foreach( $verbPaths as $key => $path ) {
-            $verbPaths[ $key ] = preg_replace_callback( 
-                '@{([\$?\w+][\:\:\w+\(\)]*[->\w+\(\)]*)}@', 
-                array( $this, 'evalExpression' ), $path );
-        }
-        $this->verbPaths = $verbPaths;
-    }
+    public function setVerbPaths( $verbPaths );
     
     /**
      * Return if a given verbPath exists
@@ -259,69 +158,42 @@ class Circuit implements ICacheable {
      * @param string $verbPath
      * @return boolean
      */
-    public function verbPathExists( $verbPath ) {
-        return isset( $this->verbPaths[ $verbPath ] );
-    }
+    public function verbPathExists( $verbPath );
     
     /**
      * Return the circuit access
      *
      * @return integer
      */
-    public function getAccess(){
-        return $this->access;
-    }
+    public function getAccess();
     
     /**
      * Return circuit access name
      *
      * @return string
      */
-    public function getAccessName(){
-        switch ( $this->getAccess() ) {
-            case self::PUBLIC_ACCESS :
-                return "public";
-            case self::INTERNAL_ACCESS :
-                return "internal";
-            case self::PRIVATE_ACCESS :
-                return "private";
-        }
-    }
+    public function getAccessName();
     
     /**
      * Set the circuit access
      *
      * @param integer $access
      */
-    public function setAccess( $access = Circuit::PUBLIC_ACCESS ) {
-        $this->access = $access; 
-    }
+    public function setAccess( $access = Circuit::PUBLIC_ACCESS );
     
 	/**
      * Set the circuit access using a string
      *
      * @param string $access
      */
-    public function setAccessByString( $accessString = "public" ) {
-        if( $accessString == "" ){
-            $accessString = "public";
-        }
-            
-        $accessList = array(
-            "public" => self::PUBLIC_ACCESS,
-            "internal" => self::INTERNAL_ACCESS
-        );
-        $this->setAccess( $accessList[ $accessString ] );
-    }
+    public function setAccessByString( $accessString = "public" );
     
     /**
      * Add one action to circuit
      * 
      * @param Action $action
      */
-    public function addAction( Action $action ) {
-         $this->actions[ $action->getName() ] = $action;
-    }
+    public function addAction( Action $action );
     
     /**
      * Return one Circuit by name
@@ -330,77 +202,46 @@ class Circuit implements ICacheable {
      * @return FuseAction
      * @throws MyFusesFuseActionException
      */
-    public function getAction( $name ) {
-        if( isset( $this->actions[ $name ] ) ) {
-    		return $this->actions[ $name ];
-    	}
-    	
-    	if( BasicMyFusesBuilder::buildAction( $this, 
-    	   $name ) ) {
-    	   return $this->actions[ $name ];
-    	}
-    	
-    	$params = array( "actionName" => $name, "circuit" => &$this , 
-    	    "application" => $this->getApplication() );
-    	throw new MyFusesFuseActionException( $params, 
-    	    MyFusesFuseActionException::NON_EXISTENT_FUSEACTION );
-        
-    }
+    public function getAction( $name );
     
     /**
      * 
      */
-    public function hasAction( $name ) {
-       return isset( $this->actions[ $name ] ); 
-    }
+    public function hasAction( $name );
     
-    public function getActions() {
-        return $this->actions;
-    }
+    public function getActions();
     
     /**
      * Enter description here...
      *
      * @return CircuitAction
      */
-    public function getPreFuseAction() {
-        return $this->preFuseAction;
-    }
+    public function getPreFuseAction();
     
 	/**
 	 * Enter description here...
 	 *
 	 * @param CircuitAction $action
 	 */
-	public function setPreFuseAction( CircuitAction $action ) {
-	    return $this->preFuseAction = $action;
-	}
+	public function setPreFuseAction( CircuitAction $action );
     
-	public function unsetPreFuseAction() {
-	    $this->preFuseAction = null;
-	}
+	public function unsetPreFuseAction();
 	
 	/**
 	 * Enter description here...
 	 *
 	 * @return CircuitAction
 	 */
-	public function getPostFuseAction() {
-	    return $this->postFuseAction;
-	}
+	public function getPostFuseAction();
     
 	/**
 	 * Enter description here...
 	 *
 	 * @param CircuitAction $action
 	 */
-	public function setPostFuseAction( CircuitAction $action ) {
-	    return $this->postFuseAction = $action;
-	}
+	public function setPostFuseAction( CircuitAction $action );
     
-    public function unsetPostFuseAction() {
-	    $this->postFuseAction = null;
-	}
+    public function unsetPostFuseAction();
 	
     /**
      * Return the circuit complete file
@@ -409,27 +250,21 @@ class Circuit implements ICacheable {
      *
      * @return string
      */
-    public function getCompleteFile() {
-        return $this->getCompletePath() . $this->getFile();
-    }
+    public function getCompleteFile();
 	
     /**
      * Return the circuit file
      *
      * @return string
      */
-    public function getFile() {
-        return $this->file;
-    }
+    public function getFile();
     
     /**
      * Set the circuit file
      *
      * @param string $file
      */
-    public function setFile( $file ) {
-        $this->file = $file;
-    }
+    public function setFile( $file );
     
 	/**
      * Return the application parent name
@@ -437,13 +272,7 @@ class Circuit implements ICacheable {
      * @return string
      * @access public
      */
-    public function getParentName() {
-        if( !is_null( $this->parent ) ) {
-            return $this->parent->getName();
-        }
-        
-        return $this->parentName;
-    }
+    public function getParentName();
     
     /**
      * Set the applciation parent name.<br>
@@ -452,13 +281,7 @@ class Circuit implements ICacheable {
      * @param string $parentName
      * @access public
      */
-    public function setParentName( $parentName ) {
-        if( $parentName == null ) {
-            $parentName = "";
-        }
-        $this->parent = null;
-        $this->parentName = $parentName;
-    }
+    public function setParentName( $parentName );
     
     /**
      * Return the application parent
@@ -466,9 +289,7 @@ class Circuit implements ICacheable {
      * @return Circuit
      * @access public
      */
-    public function getParent() {
-        return $this->parent;
-    }
+    public function getParent();
     
     /**
      * Set the application parent
@@ -476,10 +297,7 @@ class Circuit implements ICacheable {
      * @param Circuit $parent
      * @access public
      */
-    public function setParent( Circuit $parent ) {
-        $this->parentName = $parent->getName();
-        $this->parent = $parent;
-    }
+    public function setParent( Circuit $parent );
     
     /**
      * Return the circuit last load time
@@ -487,9 +305,7 @@ class Circuit implements ICacheable {
      * @return integer
      * @access public
      */
-    public function getLastLoadTime() {
-        return $this->lastLoadTime;
-    }
+    public function getLastLoadTime();
     
     /**
      * Sets the circuit last load time
@@ -497,140 +313,33 @@ class Circuit implements ICacheable {
      * @param integer $lastLoadTime
      * @access public
      */
-    public function setLastLoadTime( $lastLoadTime ) {
-        $this->lastLoadTime = $lastLoadTime;
-    }
+    public function setLastLoadTime( $lastLoadTime );
     
-    public function isModified() {
-        return $this->modified;
-    }
+    public function isModified();
     
-    public function setModified( $modified ) {
-        $this->modified = $modified;
-    }
-    
-    private function evalExpression( $matches ){
-	    return eval( "return " . $matches[ 1 ] . ";" );
-    }
+    public function setModified( $modified );
     
     /**
      * Return if circuit was built
      *
      * @return boolean
      */
-    public function wasBuilt() {
-        return $this->built;
-    }
+    public function wasBuilt();
     
     /**
      * Set circuit built status
      *
      * @param boolean $built
      */
-    public function setBuilt( $built ) {
-        $this->built = $built;
-    }
+    public function setBuilt( $built );
     
-    public function setCustomAttribute( $namespace, $name, $value ) {
-        $this->customAttributes[ $namespace ][ $name ] = $value;
-    }
+    public function setCustomAttribute( $namespace, $name, $value );
     
-    public function getCustomAttribute( $namespace, $name ) {
-        return $this->customAttributes[ $namespace ][ $name ];
-    }
+    public function getCustomAttribute( $namespace, $name );
     
-    public function getCustomAttributes( $namespace ) {
-        return $this->customAttributes[ $namespace ];
-    }
+    public function getCustomAttributes( $namespace );
     
-    public function getErrorParams() {
-        $params = array(
-            "appName" => $this->getApplication()->getName(),
-            "circuitName" => $this->getName(),
-            "circuitFile" => $this->getCompleteFile()
-        );
-        return $params;
-    }
-    
-    public function getCachedCode() {
-        $strOut = "\$circuit = new Circuit();\n";
-        $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
-        $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . 
-            "\" );\n";
-        $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . 
-            "\" );\n";
-        
-        foreach( $this->customAttributes as $namespace => $attributes ) {
-            foreach( $attributes as $name => $value ) {
-                $strOut .= "\$circuit->setCustomAttribute( \"" . $namespace . 
-                    "\", \"" . $name . "\", \"" . $value . "\" );\n";
-            }
-        }
-            
-        $strOut .= "\$application->addCircuit( \$circuit );\n";
-        $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
-            serialize( $this->getVerbPaths() ) ) . "\" );\n";
-        $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
-        $strOut .= "\$circuit->setLastLoadTime( " . 
-            $this->getLastLoadTime() . " );\n";
-        $strOut .= "\$circuit->setParentName( \"" . 
-            $this->getParentName() . "\" );\n";
-        //$strOut .= $this->getActionsCachedCode();
-        
-        $strOut .= $this->getPreFuseActionCachedCode();
-        
-        $strOut .= $this->getPostFuseActionCachedCode();
-        
-        return $strOut;
-    }
-    
-    /**
-     * Returns all circuit actions cache code
-     * 
-     * @return string
-     */
-    private function getActionsCachedCode() {
-        
-        $strOut = "\n";
-        
-        foreach( $this->actions as $action ) {
-            $strOut .= $action->getCachedCode();
-            $strOut .= "\$circuit->addAction( \$action );\n";
-        }
-        
-        return $strOut;
-    }
-    
-    /**
-     * Returns pre fuse action cache code
-     * 
-     * @return string
-     */
-    private function getPreFuseActionCachedCode() {
-        $strOut = "";
-        if( !( is_null( $this->preFuseAction ) ) ) {
-            $strOut = "\n" . $this->preFuseAction->getCachedCode();
-            $strOut .= "\$circuit->setPreFuseAction( \$action );\n";    
-        }
-         
-        return $strOut;
-    }
-    
-    /**
-     * Returns post fuse action cache code
-     * 
-     * @return string
-     */
-    private function getPostFuseActionCachedCode() {
-        $strOut = "";
-        
-        if( !( is_null( $this->postFuseAction ) ) ) {
-            $strOut = "\n" . $this->postFuseAction->getCachedCode();
-            $strOut .= "\$circuit->setPostFuseAction( \$action );\n";
-        }
-         
-        return $strOut;
-    }
+    public function getErrorParams();
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

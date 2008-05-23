@@ -1,6 +1,6 @@
 <?php
 /**
- * Circuit - Circuit.class.php
+ * BasicCircuit - BasicCircuit.class.php
  * 
  * MyFuses Circuit class
  * 
@@ -36,11 +36,10 @@
  * @version    SVN: $Id:Circuit.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
-require_once "myfuses/core/Application.class.php";
-require_once "myfuses/core/CircuitAction.class.php";
+require_once "myfuses/core/Circuit.class.php";
 
 /**
- * Circuit - Circuit.class.php
+ * BasicCircuit - BasicCircuit.class.php
  * 
  * MyFuses Circuit class
  * 
@@ -54,31 +53,7 @@ require_once "myfuses/core/CircuitAction.class.php";
  * @version    SVN: $Revision:23 $
  * @since      Revision 48
  */
-class Circuit implements ICacheable {
-    
-    /**
-     * Public Access Constant.<br>
-     * Value 1
-     * 
-     * @var int
-     */
-    const PUBLIC_ACCESS = 1;
-    
-    /**
-     * Internal Access Constant.<br>
-     * Value 2
-     * 
-     * @var int
-     */
-    const INTERNAL_ACCESS = 2;
-    
-    /**
-     * Private Access Constant.<br>
-     * Value 2
-     * 
-     * @var int
-     */
-    const PRIVATE_ACCESS = 3;
+class BasicCircuit implements Circuit {
     
     /**
      * Circuit application reference
@@ -553,7 +528,7 @@ class Circuit implements ICacheable {
     }
     
     public function getCachedCode() {
-        $strOut = "\$circuit = new Circuit();\n";
+        $strOut = "\$circuit = new BasicCircuit();\n";
         $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
         $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . 
             "\" );\n";

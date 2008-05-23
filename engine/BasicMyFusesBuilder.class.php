@@ -116,7 +116,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                     $circuit = $application->getCircuit( $name );
                 }
                 else {
-                    $circuit = new Circuit();    
+                    $circuit = new BasicCircuit();    
                 }
                 
                 //TODO handle this parameters changes
@@ -457,7 +457,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             "postprocess" => "getPostProcessFuseAction"
         );   
         
-        $circuit = new Circuit();
+        $circuit = new BasicCircuit();
         
         $circuit->setName( "MYFUSES_GLOBAL_CIRCUIT" );
         

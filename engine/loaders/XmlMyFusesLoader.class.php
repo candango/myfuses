@@ -8,7 +8,7 @@ MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH .
 MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
     "core/ClassDefinition.class.php" );
 MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-    "core/Circuit.class.php" );
+    "core/BasicCircuit.class.php" );
 MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
     "core/FuseAction.class.php" );
 MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
