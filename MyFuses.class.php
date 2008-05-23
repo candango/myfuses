@@ -48,7 +48,7 @@ try {
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "core/IParseable.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/Application.class.php" );
+        "core/BasicApplication.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "engine/MyFusesApplicationLoaderListener.class.php" );
@@ -188,7 +188,7 @@ class MyFuses {
     
     private $parsedPath;
     
-    private $applicationClass = "Application";
+    private $applicationClass = "BasicApplication";
     
     /**
      * MyFuses constructor
