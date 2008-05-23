@@ -257,17 +257,17 @@ class InstantiateVerb extends AbstractVerb {
 		    $strOut .= "}\n";
 		    $strOut .= str_repeat( "\t", $identLevel );
 		    
-		    $strOut .= "MyFusesCodeHandler::setVariable( \"" . 
+		    $strOut .= "MyFusesContext::setVariable( \"" . 
 		      $this->getObject() . "\", new " . 
             $this->getClass() . "( " . $this->getArgumentString() . " ) );\n\n";
             $strOut .= self::getContextRestoreString();
 	    }
 	    else {
-	        $strOut .= "MyFusesCodeHandler::setVariable( \"" . 
+	        $strOut .= "MyFusesContext::setVariable( \"" . 
               $this->getObject() . "\", new SoapClient" . 
                 "( \"" . $this->getWebservice() . "\" ) );\n\n";
             $strOut .= self::getContextRestoreString();
-	        // FIXME use MyFusesCodeHandler::setVariable in here
+	        // FIXME use MyFusesContext::setVariable in here
 	    }
 	    return $strOut;
 	}

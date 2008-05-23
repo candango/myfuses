@@ -362,21 +362,21 @@ abstract class AbstractVerb implements Verb {
 	}
 	
 	protected function getVariableSetString( $variable, $value ) {
-	    $strOut = "MyFusesCodeHandler::setVariable( \"" . 
+	    $strOut = "MyFusesContext::setVariable( \"" . 
               $variable . "\", \"" . $value . "\" );\n\n";
         $strOut .= self::getContextRestoreString();
         return $strOut;      
 	}
 	
 	protected function getIncludeFileString( $fileName ) {
-	    $strOut = "MyFusesCodeHandler::includeFile( " . 
+	    $strOut = "MyFusesContext::includeFile( " . 
 	       $fileName . " );\n\n";
         $strOut .= self::getContextRestoreString();
         return $strOut;
 	}
 	
 	protected function getContextRestoreString() {
-	    $strOut = "foreach( MyFusesCodeHandler::getContext() as \$key => \$value ) {";
+	    $strOut = "foreach( MyFusesContext::getContext() as \$key => \$value ) {";
         $strOut .= "global \$\$value;";
         $strOut .= "}\n\n";
         return $strOut;

@@ -142,7 +142,7 @@ class DoVerb extends ParameterizedVerb {
             }   
             
             MyFusesFileHandler::writeFile( $actionFile, "<?php\n" . 
-                        MyFusesCodeHandler::sanitizeHashedString( $strOut ) );
+                        MyFusesContext::sanitizeHashedString( $strOut ) );
                         
             MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
@@ -151,7 +151,7 @@ class DoVerb extends ParameterizedVerb {
                     $action->getCircuit()->getName() . "." .
                     $action->getName() . " Compiled" ) );
         }
-        MyFusesCodeHandler::includeFile( $actionFile );           
+        MyFusesContext::includeFile( $actionFile );           
     }
     
 	/**

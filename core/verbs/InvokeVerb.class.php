@@ -271,7 +271,7 @@ class InvokeVerb extends AbstractVerb {
 		
     	if( !is_null( $this->getVariable() ) ) {
     	    
-    	    $strOut .= "MyFusesCodeHandler::setVariable( \"" .
+    	    $strOut .= "MyFusesContext::setVariable( \"" .
                 $this->getVariable() . "\", ";
     	    
     	}
@@ -279,7 +279,7 @@ class InvokeVerb extends AbstractVerb {
 		// Begin method call
 		if( !is_null( $this->getMethod() ) ) {
 			if( is_null( $this->getClass() ) ) {
-                $strOut .= "MyFusesCodeHandler::getVariable( \"" . 
+                $strOut .= "MyFusesContext::getVariable( \"" . 
                     $this->getObject() . "\" )->" . 
                     $this->getMethod() . "( ";    
 			}

@@ -70,7 +70,7 @@ try {
         "process/MyFusesDebugger.class.php" );
     
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/code/MyFusesCodeHandler.class.php" );
+        "util/context/MyFusesContext.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/file/MyFusesFileHandler.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
@@ -597,7 +597,9 @@ class MyFuses {
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::PRE_PROCESS_PHASE . "\" )";
                 $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
-                $strParse .= "\t\$plugin->run();\n}\n\n";
+                $strParse .= "\t\$plugin->run();\n}\n";
+                $strParse .= "foreach( MyFusesContext::getContext() as " . 
+                    " \$key => \$value ) {global \$\$value;}\n\n";
             }
             //end parsing pre process plugins
             
@@ -650,7 +652,7 @@ class MyFuses {
 	        }
 	        
 	        MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
-	           MyFusesCodeHandler::sanitizeHashedString( $strParse ) );
+	           MyFusesContext::sanitizeHashedString( $strParse ) );
 	        
 	        MyFuses::getInstance()->getDebugger()->registerEvent( 
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
@@ -659,7 +661,7 @@ class MyFuses {
 	        
         }
         
-        MyFusesCodeHandler::includeFile( $fileName );
+        MyFusesContext::includeFile( $fileName );
     }
     
     public static function includeFile( $file ) {

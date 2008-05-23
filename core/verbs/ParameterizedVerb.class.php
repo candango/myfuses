@@ -145,7 +145,7 @@ abstract class ParameterizedVerb extends AbstractVerb {
         
         foreach( $this->getParameters() as $name => $value ) {
             $strOut .= str_repeat( "\t", $identLevel );
-            $strOut .=  "MyFusesCodeHandler::setParameter( \"" . $name . "\", \"" . $value . "\" );\n";
+            $strOut .=  "MyFusesContext::setParameter( \"" . $name . "\", \"" . $value . "\" );\n";
         }
         
         
@@ -153,7 +153,7 @@ abstract class ParameterizedVerb extends AbstractVerb {
         
         foreach( $this->getParameters() as  $name => $value ) {
             $strOut .= str_repeat( "\t", $identLevel );
-            $strOut .=  "MyFusesCodeHandler::restoreParameter( \"" . $name . "\" );\n";
+            $strOut .=  "MyFusesContext::restoreParameter( \"" . $name . "\" );\n";
         }
         $strOut .=  "\n";
         
