@@ -130,7 +130,7 @@ abstract class MyFusesLifecycle {
      */
     private static $action;
     
-    public static function configureApplications() {
+    /*public static function configureApplications() {
         foreach( MyFuses::getInstance()->getApplications() as 
             $index => $application ) {
             if( $index != Application::DEFAULT_APPLICATION_NAME ) {
@@ -139,7 +139,7 @@ abstract class MyFusesLifecycle {
         }
     }
     
-    public static function configureApplication( Application $application ) {}
+    public static function configureApplication( Application $application ) {}*/
     
     
     

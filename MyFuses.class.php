@@ -668,6 +668,16 @@ class MyFuses {
         include $file;
     }
     
+    private function configureApplications() {
+        foreach( $this->getApplications() as $index => $application ) {
+            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
+                $this->configureApplication( $application );
+            }
+        }
+    }
+    
+    protected function configureApplication( Application $application ) {}
+    
     /**
      * Process the user request
      */
@@ -687,7 +697,7 @@ class MyFuses {
             
             $this->createRequest();
             
-            MyFusesLifecycle::configureApplications();
+            $this->configureApplications();
             
             $this->parseRequest();
             
