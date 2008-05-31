@@ -112,6 +112,10 @@ class MyFusesJsonUtil {
         return self::toPhp( json_decode( $data, true ) );
     }
     
+    public static function fromJsonUrl( $url ) {
+        return self::toPhp( json_decode( file_get_contents( $url ), true ) );
+    }
+    
     private static function toPhp( $data ) {
         
         if( $data[ "data_type" ] == "class" ) {
