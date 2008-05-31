@@ -1,16 +1,28 @@
 <?php
-class DataToJsonVerb extends AbstractVerb {
+class DataFromJsonVerb extends AbstractVerb {
     
     private $url;
     
-    private $name;
+    private $varName;
     
-    public function getName() {
-        return $name;
+    private $value;
+    
+    private $xfa;
+    
+    public function getVarName() {
+        return $this->varName;
     }
     
-    public function setName( $name ) {
-        $this->name = $name;
+    public function setVarName( $varName ) {
+        $this->varName = $varName;
+    }
+    
+    public function getValue(){
+        return $this->value;
+    }
+    
+    public function setValue( $value ) {
+        $this->value = $value;
     }
     
     public function getUrl(){
@@ -19,6 +31,14 @@ class DataToJsonVerb extends AbstractVerb {
     
     public function setUrl( $url ) {
         $this->url = $url;
+    }
+    
+    public function getXfa(){
+        return $this->xfa;
+    }
+    
+    public function setXfa( $xfa ) {
+        $this->xfa = $xfa;
     }
     
     /**
@@ -30,8 +50,13 @@ class DataToJsonVerb extends AbstractVerb {
         
         parent::setData( $data );
         
+        
         if( isset( $data[ "attributes" ][ "name" ] ) ) {
-            $this->setName( $data[ "attributes" ][ "name" ] );
+            $this->setVarName( $data[ "attributes" ][ "name" ] );
+        }
+        
+        if( isset( $data[ "attributes" ][ "value" ] ) ) {
+            $this->setValue( $data[ "attributes" ][ "value" ] );
         }
         
         if( isset( $data[ "attributes" ][ "url" ] ) ) {
@@ -39,8 +64,7 @@ class DataToJsonVerb extends AbstractVerb {
         }
         
         if( isset( $data[ "attributes" ][ "xfa" ] ) ) {
-            $this->setUrl( MyFuses::getMySelfXfa( 
-                $data[ "attributes" ][ "xfa" ] ) );
+            $this->setXfa( $data[ "attributes" ][ "xfa" ] );
         }
         
     }
@@ -55,27 +79,30 @@ class DataToJsonVerb extends AbstractVerb {
         
         $strOut .= str_repeat( "\t", $identLevel );
         
-            $strOut = parent::getParsedCode( $commented, $identLevel );
-            
-            $strOut .= str_repeat( "\t", $identLevel );
-            
-            $strOut .= self::getVariableSetString( $this->getName(), 
-                "" );
-            
-            if( $this->isClean() ) {
-                $strOut .= str_repeat( "\t", $identLevel );
-                $strOut .= "ob_clean();\n";
+        $strOut = parent::getParsedCode( $commented, $identLevel );
+        
+        $strOut .= str_repeat( "\t", $identLevel );
+        
+        $strValue = "";
+        
+        if( is_null( $this->getValue() ) ) {
+            if( is_null( $this->getUrl() ) ) {
+                $strValue = "#MyFusesJsonUtil::fromJsonUrl( " . 
+                    "MyFuses::getMySelfXfa( \"" . $this->getXfa() . "\" ) )#";
             }
-            
-            $strOut .= "print( MyFusesJsonUtil::toJson( \"" . 
-                $this->getValue() . "\" ) );\n";
-            
-            if( $this->isDie() ) {
-                $strOut .= str_repeat( "\t", $identLevel );
-                $strOut .= "die();\n";
-            }    
+            else {
+                $strValue = "#MyFusesJsonUtil::fromJsonUrl( \"" . 
+                    $this->getUrl() . "\" )#";    
+            }
+        }
+        else {
+            $strValue = "MyFusesJsonUtil::fromJson( \"" . 
+                $this->getValue() . "\" )" ;
+        }
         
-        
+        $strOut .= self::getVariableSetString( $this->getVarName(), 
+            $strValue );
+            
         return $strOut;
     }
 }
