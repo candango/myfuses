@@ -99,10 +99,20 @@ class MyFusesFileHandler {
      * @return string
      */
     public static function sanitizePath( $path ) {
-        if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
+    	if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
             $path .= DIRECTORY_SEPARATOR;
         }
         return $path;
+    }
+    
+    /**
+     * Unquerify a uri, removing all parameters
+     *
+     * @param string $path
+     * @return string
+     */
+    public static function unquerifyUri( $uri ){
+    	return current(explode('&',$uri));
     }
     
     public static function createPath( $path, $permission = 0777 ) {
