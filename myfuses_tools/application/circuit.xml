@@ -7,6 +7,7 @@
                 <do action="getApplicationFromGet"/>
                 <xfa name="goToApplicationSumary" value="summary" />
                 <xfa name="goToViewAppicationCache" value="viewCache" />
+                <xfa name="goToViewApplicationFiles" value="viewFiles" />
                 <do action="menu">
                     <parameter name="appName" value="#$_GET[ 'application' ]#"/>
                 </do>    
@@ -15,7 +16,6 @@
                 <relocate xfa="goToStart" />
             </false>
         </if>
-        
     </prefuseaction>
     
 	<fuseaction name="summary">
@@ -43,5 +43,20 @@
             <parameter name="application" value="#$appName#"/>
         </relocate>
     </fuseaction>
+    
+    <fuseaction name="viewFiles">
+        <xfa name="chmodPath" value="chmodPath"/>
+        <include file="dspFileList.php"/>
+    </fuseaction>
+    
+    <fuseaction name="chmodPath">
+        <xfa name="backToViewFiles" value="viewFiles"/>
+        <include file="actChmodPath.php"/>
+        <set name="appName" value="#$application->getName()#"/>
+        <relocate xfa="backToViewFiles" >
+            <parameter name="application" value="#$appName#"/>
+        </relocate>
+    </fuseaction>
+    
     
 </circuit>
