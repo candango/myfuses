@@ -23,8 +23,7 @@
  * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+  * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
  * All Rights Reserved.
  * 
  * Contributor(s): Flávio Gonçalves Garcia.
@@ -61,7 +60,7 @@ class MyFusesXmlUtil {
     
     public static function toXml( $data, $root = "myfuses_xml" ) {
         $strXml = "<" . $root . ">\n";
-        $strXml .= self::doXmlTransformation( self::xmlPrepare( $data ) );
+        $strXml .= self::doXmlTransformation( $data );
         $strXml .= "</" . $root . ">";
         return $strXml;
     }
@@ -69,7 +68,33 @@ class MyFusesXmlUtil {
     private static function doXmlTransformation( $data, $level=1, 
         $tagName = "" ) {
         $strXml = "";
-        if( is_array( $data ) ) {
+        
+        if( is_object( $data ) ) {
+            $strXml .= self::getObjectXml( $data, $level );
+        }
+        elseif( is_array( $data ) ) {
+            
+        }
+        else {
+            if( is_bool( $data ) ) {
+                $strXml .= str_repeat( "\t", $level ) . "<" . $tagName . ">";
+                $strXml .= $data ? "true" : "false";
+                $strXml .= "</" . $tagName . ">\n";
+            }
+            else {
+                if( is_null( $data ) ) {
+                    $strXml .= str_repeat( "\t", $level ) . "<" . 
+                        $tagName . "\>\n";    
+                }
+                else {
+                    $strXml .= str_repeat( "\t", $level ) . "<" . 
+                        $tagName . ">";
+                    $strXml .= $data;
+                    $strXml .= "</" . $tagName . ">\n";
+                }
+            }
+        }
+        /*if( is_array( $data ) ) {
             foreach( $data as $_key => $_value ) {
                 if( substr( $_key, -4 ) == "_<s>" ) {
                     $tagName = str_replace( substr( $_key, -4 ), "", $_key);
@@ -101,6 +126,7 @@ class MyFusesXmlUtil {
             }
         }
         else {
+            
             if( is_bool( $data ) ) {
                 $strXml .= str_repeat( "\t", $level ) . "<" . $tagName . ">";
                 $strXml .= $data ? "true" : "false";
@@ -112,6 +138,12 @@ class MyFusesXmlUtil {
                         $tagName . "\>\n";    
                 }
                 else {
+                    if( is_object( $data ) ) {
+                        
+                        
+                        
+                        
+                    }
                     $strXml .= str_repeat( "\t", $level ) . "<" . 
                         $tagName . ">";
                     $strXml .= $data;
@@ -119,10 +151,47 @@ class MyFusesXmlUtil {
                 }
             }
             
-        }
+        }*/
         return $strXml;
     }
     
+    
+    private static function getObjectXml( $object, $level ) {
+        
+        $tagName = get_class( $object );
+            
+        $refClass = new ReflectionClass( $object );
+        
+        $strXml = str_repeat( "\t", $level ) . 
+                            "<" . $tagName . ">\n";
+        
+        foreach( $refClass->getMethods() as $method )  {
+            if( $method->isPublic() ) {
+                if( substr( $method->getName(), 0, 3 ) == "get" || 
+                    substr( $method->getName(), 0, 2 ) == "is" ) {
+                    $methodName =& $method->getName();
+                    $subInit = substr( $methodName, 0 , 4 );
+                    $subFinal = substr( $methodName, 4 );
+                    $subInit = str_replace( array( "get", "is" ), "", $subInit );
+                    
+                    $property = strtolower( $subInit ) . $subFinal;
+                    
+                    $value = $object->$methodName();
+                    
+                    $strXml .= 
+                        self::doXmlTransformation( $value, $level + 1, $property );
+                }
+            }
+        }
+        
+        $strXml .= str_repeat( "\t", $level ) . 
+                            "</" . $tagName . ">\n";
+        
+        //var_dump( $strXml );die();
+        
+        return $strXml;
+        
+    }
     
     /**
      * Tra
