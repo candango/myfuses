@@ -58,6 +58,14 @@
  */
 class MyFusesXmlUtil {
     
+    /**
+     * Transforms one php structure to xml.
+     * Encloses the data xml representation by a given root tag.
+     *
+     * @param mixed $data
+     * @param string $root
+     * @return string
+     */
     public static function toXml( $data, $root = "myfuses_xml" ) {
         $strXml = "<" . $root . ">\n";
         $strXml .= self::doXmlTransformation( $data );
@@ -65,6 +73,14 @@ class MyFusesXmlUtil {
         return $strXml;
     }
     
+    /**
+     * Transforms any php structure to xml string
+     *
+     * @param mixed $data
+     * @param integer $level
+     * @param string $tagName
+     * @return string
+     */
     private static function doXmlTransformation( $data, $level=1, 
         $tagName = "" ) {
         $strXml = "";
@@ -73,7 +89,14 @@ class MyFusesXmlUtil {
             $strXml .= self::getObjectXml( $data, $level );
         }
         elseif( is_array( $data ) ) {
-            
+            if( $tagName === "" ) {
+                $tagName = "array";
+            }
+            $strXml .= str_repeat( "\t", $level ) . "<" . $tagName . ">\n";
+            foreach( $data as $items ) {
+                $strXml .= self::doXmlTransformation( $items, $level+1 );    
+            }
+            $strXml .= str_repeat( "\t", $level ) . "</" . $tagName . ">\n";
         }
         else {
             if( is_bool( $data ) ) {
@@ -94,68 +117,17 @@ class MyFusesXmlUtil {
                 }
             }
         }
-        /*if( is_array( $data ) ) {
-            foreach( $data as $_key => $_value ) {
-                if( substr( $_key, -4 ) == "_<s>" ) {
-                    $tagName = str_replace( substr( $_key, -4 ), "", $_key);
-                    if( count( $_value ) ) {
-                        foreach( $_value as $_vkey => $_vvalue ) {
-                            $strXml .= str_repeat( "\t", $level ) . 
-                                "<" . $tagName . ">\n";
-                            $strXml .= self::doXmlTransformation( 
-                                $_vvalue, $level + 1 );
-                            $strXml .= str_repeat( "\t", $level ) . 
-                                "</" . $tagName . ">\n";
-                        }    
-                    }
-                    else {
-                        $strXml .= str_repeat( "\t", $level ) . "<" . 
-                            $tagName . "/>\n";
-                    }
-                }
-                else {
-                    if( count( $_value ) > 1 ) {
-                        $strXml .= str_repeat( "\t", $level ) . "<" . $_key . ">\n";    
-                    }
-                    $strXml .= self::doXmlTransformation( $_value, 
-                        $level+1, $_key );
-                    if( count( $_value ) > 1 ) {
-                        $strXml .= str_repeat( "\t", $level ) . "</" . $_key . ">\n";    
-                    }
-                }
-            }
-        }
-        else {
-            
-            if( is_bool( $data ) ) {
-                $strXml .= str_repeat( "\t", $level ) . "<" . $tagName . ">";
-                $strXml .= $data ? "true" : "false";
-                $strXml .= "</" . $tagName . ">\n";
-            }
-            else {
-                if( is_null( $data ) ) {
-                    $strXml .= str_repeat( "\t", $level ) . "<" . 
-                        $tagName . "\>\n";    
-                }
-                else {
-                    if( is_object( $data ) ) {
-                        
-                        
-                        
-                        
-                    }
-                    $strXml .= str_repeat( "\t", $level ) . "<" . 
-                        $tagName . ">";
-                    $strXml .= $data;
-                    $strXml .= "</" . $tagName . ">\n";
-                }
-            }
-            
-        }*/
+        
         return $strXml;
     }
     
-    
+    /**
+     * Return xml representation form
+     *
+     * @param Object $object
+     * @param integer $level
+     * @return string
+     */
     private static function getObjectXml( $object, $level ) {
         
         $tagName = get_class( $object );
