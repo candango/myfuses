@@ -162,7 +162,16 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         $fileCode = fread( $fp, filesize( $this->getApplication()->
             getCompleteFile() ) );
         
-        $rootNode = new SimpleXMLElement( $fileCode );
+        try {
+            // FIXME put no warning modifier in SimpleXMLElement call
+            $rootNode = @new SimpleXMLElement( $fileCode );    
+        }
+        catch ( Exception $e ) {
+            // FIXME handle error
+            echo "<b>" . $this->getApplication()->
+                getCompleteFile() . "<b><br>";
+            die( $e->getMessage() );    
+        }
         
         return $rootNode;
         
@@ -222,6 +231,7 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
         }
         catch ( Exception $e ) {
             // FIXME handle error
+            echo "<b>" . $circuitFile . "<b><br>";
             die( $e->getMessage() );    
         }
         
