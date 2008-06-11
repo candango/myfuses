@@ -107,7 +107,7 @@ class MyFusesXmlUtil {
             else {
                 if( is_null( $data ) ) {
                     $strXml .= str_repeat( "\t", $level ) . "<" . 
-                        $tagName . "\>\n";    
+                        $tagName . "/>\n";    
                 }
                 else {
                     $strXml .= str_repeat( "\t", $level ) . "<" . 
