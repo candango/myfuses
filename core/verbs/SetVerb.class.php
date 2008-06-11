@@ -77,14 +77,23 @@ class SetVerb extends AbstractVerb {
     
     public function getData() {
         $data = parent::getData();
-        $data[ "attributes" ][ "name" ] = $this->getVariableName();
+        
+        if( !is_null( $this->getVariableName() ) ){
+            $data[ "attributes" ][ "name" ] = $this->getVariableName();    
+        }
+        
         $data[ "attributes" ][ "value" ] = $this->getValue();
+        
         return $data;
     }
     
     public function setData( $data ) {
         parent::setData( $data );
-        $this->setVariableName( $data[ "attributes" ][ "name" ] );
+        
+        if( isset( $data[ "attributes" ][ "name" ] ) ) {
+            $this->setVariableName( $data[ "attributes" ][ "name" ] );    
+        }
+        
         $this->setValue( $data[ "attributes" ][ "value" ] );
     }
 
@@ -96,8 +105,15 @@ class SetVerb extends AbstractVerb {
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
-        $strOut .= self::getVariableSetString( $this->getVariableName(), 
-            $this->getValue() );
+        if( is_null( $this->getVariableName() ) ) {
+            $strOut .= MyFusesContext::sanitizeHashedString( "\"" . 
+                $this->getValue() . "\"" ) . ";\n";
+        }
+        else{
+            $strOut .= self::getVariableSetString( $this->getVariableName(), 
+                $this->getValue() );    
+        }
+        
         return $strOut; 
     }
 

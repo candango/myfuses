@@ -124,6 +124,8 @@ class MyFusesContext {
         $hstring = str_replace( ". \"\"", "",$hstring );
         $hstring = str_replace( " \"#", " ",$hstring );
         $hstring = str_replace( "#\" ", " ",$hstring );
+        $hstring = str_replace( "\"#", "",$hstring );
+        $hstring = str_replace( "#\"", "",$hstring );
         return  $hstring;
     }
     
