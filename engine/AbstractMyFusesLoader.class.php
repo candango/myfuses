@@ -65,6 +65,10 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      */
     public function loadApplication() {
         
+        foreach( $this->getApplicationLoadListeners() as $listener ) {
+            $listener->loadInitialized( $this->getApplication() );
+        }
+        
         if( $this->getApplication()->getController()->isMemcacheEnabled() ) {
             $this->applicationData = unserialize( $this->getApplication()->
                 getController()->getMemcache()->get( 
@@ -113,7 +117,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         foreach( $this->getApplicationLoadListeners() as $listener ) {
-            $listener->applicationLoadPerformed( $this, 
+            $listener->loadPerformed( $this, 
                 $this->applicationData );
         }
         
