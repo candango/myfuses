@@ -214,63 +214,69 @@ class MyFusesXmlUtil {
         
         $document = new SimpleXMLElement( $xml );
         
-        return self::fromXmlElement( $document );
+        return self::fromXmlElement( $document->children() );
         
     }
     
-    private static function fromXmlElement( SimpleXMLElement $element, $struct = null ) {
-        if( count( $element ) ) {
-            foreach( $element as $key => $value ) {
-                return self::getStruct( $key, $value );
-            }
-        }
-        else {
-            return "" . $element;
-        }
-        
-        return $struct;
+    public static function fromXmlUrl( $url ) {
+        return self::fromXml( file_get_contents( $url ), true );
     }
     
-    
-    private static function getStruct( $key, $value ) {
+    private static function fromXmlElement( SimpleXMLElement $element ) {
+        
         $struct = null;
         
-        
-        if( count( $value ) ) {
-            if( class_exists( $key, true ) ) {
-                $struct = new $key();
-            } else {
-                $struct = new stdClass(); 
-            }
-            foreach( $value as $key1 => $item ) {
-                        
-                if( !( $struct instanceof stdClass ) ) {
-                    $refClass = new ReflectionClass( $struct );
-                    if( $refClass->hasProperty( $key1 ) ) {
-                        if( $refClass->getProperty( $key1 )->isPublic() ) {
-                            $struct->$key1 = self::fromXmlElement( $item );    
-                        }
-                    }
+        if( count( $element->children() ) ) {
+            
+            $structName = $element->getName();
+            if( class_exists( $structName, true ) ) {
+                $struct = new $structName();
+                
+                $refClass = new ReflectionClass( $struct );
+                
+                foreach( $element->children() as $key => $item ) {
                     
-                    $method = "set" . strtoupper( substr( $key1, 0, 1 ) ) . 
-                        substr( $key1, 1, count( $key1 ) + 1 );
+                    $phpValue = self::fromXmlElement( $item );
+                    
+                    try {
+                        if( $property = $refClass->getProperty( $key ) ) {
+                            if( $property->isPublic() ) {
+                                $struct->$key = $phpValue;    
+                            }
+                        }
                         
-                    if( $refClass->hasMethod( $method ) ) {
-                        if( $refClass->getMethod( $method )->isPublic() ) {
-                            $struct->$method( self::fromXmlElement( $item ) );    
+                        $methodName = "set" . strtoupper( substr( $key, 0, 1 ) ) . 
+                            substr( $key, 1, strlen( $key ) );
+                            
+                        if( $method = $refClass->getMethod( $methodName ) ) {
+                            if( $method->isPublic() ) {
+                                $struct->$methodName( $phpValue );    
+                            }
                         }
                     }
-                }
-                else {
-                    $struct->$key1 = self::fromXmlElement( $item, $struct );
+                    catch( ReflectionException $re ) {
+                        switch( $re->getCode() ) {
+                            // ignoring non existent properties and methods
+                            case 0;
+                            case 1;
+                                break;
+                            default:
+                                throw $re;
+                        }
+                    }
+                }    
+                
+            } else {
+                $struct = array();
+                foreach( $element as $item ) {
+                    $struct[] = self::fromXmlElement( $item );    
                 }
             }
         }
         else {
-            $struct = "" . $value;
+            $struct = "" . $element;    
         }
-        
         return $struct;
-        
     }
+    
 }
