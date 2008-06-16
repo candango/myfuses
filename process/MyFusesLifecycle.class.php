@@ -130,6 +130,12 @@ abstract class MyFusesLifecycle {
      */
     private static $action;
     
+    public static function configureLocale() {
+        
+        MyFusesI18nHandler::setLocale();
+        
+    }
+    
     /*public static function configureApplications() {
         foreach( MyFuses::getInstance()->getApplications() as 
             $index => $application ) {

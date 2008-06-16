@@ -47,7 +47,22 @@
  */
 class MyFusesI18nHandler {
     
+    public static function setLocale() {
+        
+        $locale = MyFuses::getApplication()->getLocale();
+        
+        putenv( "LANG=" . $locale );
+        
+        setlocale(LC_ALL, $locale);
+    }
     
+    public static function checkFiles() {
+        
+    }
+    
+    public static function loadFiles() {
+        
+    }
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

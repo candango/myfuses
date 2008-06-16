@@ -79,6 +79,8 @@ try {
         "util/data/MyFusesJsonUtil.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/data/MyFusesXmlUtil.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/i18n/MyFusesI18nHandler.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();
@@ -683,6 +685,7 @@ class MyFuses {
      */
     public function doProcess() {
         try {
+            MyFusesLifecycle::configureLocale();
             
             if( $this->isMemcacheEnabled() ) {
                 $this->configureMemcache();
