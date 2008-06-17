@@ -47,13 +47,27 @@
  */
 class MyFusesI18nHandler {
     
+    private static $timeStamp;
+    
+    public static function markTimeStamp() {
+        self::$timeStamp = time();
+    }
+    
+    
+    public static function getTimeStamp(){
+        return self::$timeStamp;
+    }
+    
     public static function setLocale() {
         
         $locale = MyFuses::getApplication()->getLocale();
         
         putenv( "LANG=" . $locale );
         
+        putenv( "LANG=" . "pt_BR" );
+        
         setlocale(LC_ALL, $locale);
+        
     }
     
     public static function checkFiles() {
@@ -61,6 +75,18 @@ class MyFusesI18nHandler {
     }
     
     public static function loadFiles() {
+        
+        $application = MyFuses::getApplication();
+        
+        MyFuses::getInstance()->createApplicationPath( $application );
+        
+        $path = MyFusesFileHandler::sanitizePath( 
+                $application->getParsedPath() . 'i18n' );
+                
+        if( !file_exists( $path ) ) {
+            mkdir( $path, 0777, true );
+            chmod( $path, 0777 );
+        }
         
         $i18nPath = MyFusesFileHandler::sanitizePath( 
             MyFuses::MYFUSES_ROOT_PATH . "i18n" );
@@ -114,10 +140,34 @@ class MyFusesI18nHandler {
     }
     
     private static function storeFiles( $exps ) {
+        $path = MyFusesFileHandler::sanitizePath( 
+            MyFuses::getApplication()->getParsedPath() . 'i18n' );
         foreach( $exps as $locale => $expressions ) {
             $strOut = self::getFileComments( $locale );
             $strOut .= self::getFileHeaders( $locale );
             $strOut .= self::getExpressions( $locale, $expressions );
+            
+            $pathI18n = MyFusesFileHandler::sanitizePath( $path . $locale );
+            
+            if( !file_exists( $pathI18n ) ) {
+                mkdir( $pathI18n, 0777, true );
+                chmod( $pathI18n, 0777 );
+            }
+            
+            $pathI18n = MyFusesFileHandler::sanitizePath( $pathI18n . 
+                "LC_MESSAGES" );
+            
+            if( !file_exists( $pathI18n ) ) {
+                mkdir( $pathI18n, 0777, true );
+                chmod( $pathI18n, 0777 );
+            }
+            
+            $fileI18n = $pathI18n . "myfuses.po";
+            
+            MyFusesFileHandler::writeFile( $fileI18n, $strOut );
+            
+            exec( 'msgfmt ' . $fileI18n . ' -o ' . $pathI18n . 'myfuses.mo' );
+            
         }
         
     }
@@ -127,20 +177,23 @@ class MyFusesI18nHandler {
         $strOut .= "# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER\n";
         $strOut .= "# This file is distributed under the same license as the PACKAGE package.\n";
         $strOut .= "# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.\n";
-        $strOut .= "#\n\n";         
+        $strOut .= "#\n";
+        $strOut .= "#, fuzzy\n";
+        $strOut .= "msgid \"\"\n";
+        $strOut .= "msgstr \"\"\n";
         return $strOut;
     }
     
     private static function getFileHeaders( $locale ) {
-        $strOut = "Project-Id-Version: PACKAGE VERSION\n";
-        $strOut .= "Report-Msgid-Bugs-To: \n";
-        $strOut .= "POT-Creation-Date: 2008-06-16 09:54-0300\n";
-        $strOut .= "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n";
-        $strOut .= "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n";
-        $strOut .= "Language-Team: LANGUAGE <LL@li.org>\n";
-        $strOut .= "MIME-Version: 1.0\n";
-        $strOut .= "Content-Type: text/plain; charset=CHARSET\n";
-        $strOut .= "Content-Transfer-Encoding: 8bit\n\n";
+        $strOut = "\"Project-Id-Version: PACKAGE VERSION\\n\"\n";
+        $strOut .= "\"Report-Msgid-Bugs-To: \\n\"\n";
+        $strOut .= "\"POT-Creation-Date: 2008-06-16 09:54-0300\\n\"\n";
+        $strOut .= "\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n";
+        $strOut .= "\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n";
+        $strOut .= "\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n";
+        $strOut .= "\"MIME-Version: 1.0\\n\"\n";
+        $strOut .= "\"Content-Type: text/plain; charset=UTF-8\\n\"\n";
+        $strOut .= "\"Content-Transfer-Encoding: 8bit\\n\"\n\n";
         
         return $strOut;
     }
