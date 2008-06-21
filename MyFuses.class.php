@@ -488,7 +488,7 @@ class MyFuses {
         return $this->request;
     }
     
-    protected function createApplicationPath( Application $application ) {
+    public function createApplicationPath( Application $application ) {
         if( !file_exists( $application->getParsedPath() ) ) {
             mkdir( $application->getParsedPath(), 0777, true );
          

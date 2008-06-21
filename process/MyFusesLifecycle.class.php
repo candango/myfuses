@@ -132,7 +132,26 @@ abstract class MyFusesLifecycle {
     
     public static function configureLocale() {
         
+        MyFusesI18nHandler::markTimeStamp();
+        
         MyFusesI18nHandler::setLocale();
+        
+        MyFusesI18nHandler::loadFiles();
+        
+        $locale = MyFuses::getApplication()->getLocale();
+        
+        var_dump( MyFuses::getApplication()->getParsedPath() . "i18n" );
+        
+        
+        MyFuses::getApplication()->setLocale( "pt_BR" );
+        
+        MyFusesI18nHandler::setLocale();
+        
+        
+        bindtextdomain( "myfuses", 
+            MyFuses::getApplication()->getParsedPath() . "i18n" );
+        
+        textdomain( "myfuses" );
         
     }
     

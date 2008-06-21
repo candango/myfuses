@@ -63,7 +63,20 @@ interface Application extends ICacheable {
      * @final
      */
     const DEFAULT_APPLICATION_NAME = "default";
-
+    
+    /**
+     * Return application locale
+     *
+     * @return string
+     */
+    public function getLocale();
+    
+    /**
+     * Set application locale
+     *
+     * @param string $locale
+     */
+    public function setLocale( $locale );
     
     /**
      * Return if the degug is alowed

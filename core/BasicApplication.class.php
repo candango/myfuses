@@ -63,6 +63,13 @@ class BasicApplication implements Application {
     private $loader;
     
     /**
+     * Application locale. English locale is seted by default.
+     *
+     * @var string
+     */
+    private $locale = "en_US";
+    
+    /**
      * Flag that indicates that the application must be loaded
      *
      * @var boolean
@@ -472,6 +479,24 @@ class BasicApplication implements Application {
     public function setLoader( MyFusesLoader $loader ) {
         $this->loader = $loader;
         $loader->setApplication( $this );
+    }
+    
+    /**
+     * Return application locale
+     *
+     * @return string
+     */
+    public function getLocale() {
+        return $this->locale;
+    }
+    
+    /**
+     * Set application locale
+     *
+     * @param string $locale
+     */
+    public function setLocale( $locale ) {
+        $this->locale = $locale;
     }
     
     /**

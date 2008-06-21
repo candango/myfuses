@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expressions>
+    <expression name="TEST_EXPRESSION">This is ddd dasdfs %s a test.</expression>
+    <expression name="MONSTRO">Outra expressão</expression>
+    <expression name="MONSTRO1">Outra expressão</expression>
+</expressions>
