@@ -685,7 +685,7 @@ class MyFuses {
      */
     public function doProcess() {
         try {
-            MyFusesLifecycle::configureLocale();
+            //MyFusesLifecycle::configureLocale();
             
             if( $this->isMemcacheEnabled() ) {
                 $this->configureMemcache();
