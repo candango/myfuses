@@ -191,6 +191,13 @@ class MyFuses {
     private $parsedPath;
     
     private $applicationClass = "BasicApplication";
+
+    /**
+     * I18n type flag. Default native.
+     *
+     * @var string
+     */
+    private static $i18nType = 'native';
     
     /**
      * MyFuses constructor
@@ -211,6 +218,24 @@ class MyFuses {
         // adding verb paths
         $this->addVerbPath( self::MYFUSES_ROOT_PATH );
         
+    }
+    
+    /**
+     * Return i18n type
+     *
+     * @return string
+     */
+    public static function getI18nType() {
+        return self::$i18nType;
+    }
+    
+    /**
+     * Set i18n type
+     *
+     * @param string $i18nType
+     */
+    public static function setI18nType( $i18nType ) {
+        self::$i18nType = $i18nType;
     }
     
     /**
