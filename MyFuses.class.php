@@ -148,6 +148,13 @@ class MyFuses {
     private $pluginPaths = array();
     
     /**
+     * Path used by myfuses to search i18n files
+     *
+     * @var array
+     */
+    private $i18nPaths = array();
+    
+    /**
      * Path used by myfuses to search verbs
      *
      * @var array
@@ -217,6 +224,11 @@ class MyFuses {
         $this->addPluginPath( "plugins/" );
         $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins/" );
         
+        // adding i18n paths
+        $this->addI18nPath( self::MYFUSES_ROOT_PATH . "i18n/" );
+        $this->addI18nPath( "i18n/" );
+        
+        
         // adding verb paths
         $this->addVerbPath( self::MYFUSES_ROOT_PATH );
         
@@ -257,6 +269,24 @@ class MyFuses {
      */
     public function getPluginPaths() {
         return $this->pluginPaths;
+    }
+    
+    /**
+     * Add one i18n path to myfuses
+     *
+     * @param string $path
+     */
+    protected function addI18nPath( $path ) {
+        $this->i18nPaths[] = $path;
+    }
+    
+    /**
+     * Return all i18n paths
+     *
+     * @return array
+     */
+    public function getI18nPath() {
+        return $this->i18nPaths;
     }
     
     /**
