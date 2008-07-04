@@ -1,8 +1,8 @@
 <?php
 /**
- * MyFuses i18n Context class - MyFusesI18nContext.class.php
+ * MyFuses i18n Handler class - MyFusesI18nHandler.class.php
  *
- * Utility that controls i18n state.
+ * Utility to handle usual i18n operations.
  *
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -32,9 +32,9 @@
  */
 
 /**
- * MyFuses i18n Context class - MyFusesI18nContext.class.php
+ * MyFuses i18n Handler class - MyFusesI18nHandler.class.php
  *
- * Utility that controls i18n state.
+ * Utility to handle usual i18n operations.
  *
  * @category   i18n
  * @package    myfuses.util.i18n
@@ -43,88 +43,81 @@
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:521 $
- * @since      Revision 514
+ * @since      Revision 125
  */
-class MyFusesI18nContext {
+abstract class MyFusesI18nHandler {
     
-    private static $timeStamp;
+    /**
+     * Native type constant
+     *
+     * @var string
+     */
+    const NATIVE_TYPE = 'native';
     
-    public static function markTimeStamp() {
-        self::$timeStamp = time();
+    /**
+     * Gettext type constant
+     *
+     * @var string
+     */
+    const GETTEXT_TYPE = 'gettext';
+    
+    /**
+     * Time stamp mark
+     *
+     * @var long
+     */
+    private $timeStamp;
+    
+    /**
+     * Unique instance
+     *
+     * @var MyFusesI18nHandler
+     */
+    private static $instance;
+    
+    
+    /**
+     * Method that execute all steps to configure i18n
+     */
+    public function configure(){
+        $this->markTimeStamp();
+        $this->setLocale();
+        $this->checkFiles();
+        $this->loadFiles();
+    }
+    
+    /**
+     * Set handler locale
+     */
+    abstract public function setLocale();
+    
+    /**
+     * Check files 
+     *
+     */
+    abstract public function checkFiles();
+    
+    abstract public function loadFiles();
+    
+    /**
+     * Mark timestamp
+     */
+    public function markTimeStamp() {
+        $this->timeStamp = time();
     }
     
     
-    public static function getTimeStamp(){
-        return self::$timeStamp;
+    /**
+     * Return marked timestamp
+     *
+     * @return long
+     */
+    public function getTimeStamp(){
+        return $this->timeStamp;
     }
     
-    public static function setLocale() {
-        
-        $locale = MyFuses::getApplication()->getLocale();
-        
-        putenv( "LANG=" . $locale );
-        
-        putenv( "LANG=" . "pt_BR" );
-        
-        setlocale( LC_ALL, $locale );
-        
-    }
     
-    public static function checkFiles() {
-        
-    }
     
-    public static function loadFiles() {
-        
-        $application = MyFuses::getApplication();
-        
-        MyFuses::getInstance()->createApplicationPath( $application );
-        
-        $path = MyFusesFileHandler::sanitizePath( 
-                $application->getParsedPath() . 'i18n' );
-                
-        if( !file_exists( $path ) ) {
-            mkdir( $path, 0777, true );
-            chmod( $path, 0777 );
-        }
-        
-        $i18nPath = MyFusesFileHandler::sanitizePath( 
-            MyFuses::MYFUSES_ROOT_PATH . "i18n" );
-        $it = new RecursiveDirectoryIterator( $i18nPath );
-        
-        $exps = array();
-        
-        foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
-            if( $child->isDir() ) {
-                $localePath = MyFusesFileHandler::sanitizePath( 
-                    $child->getPath() . DIRECTORY_SEPARATOR . 
-                    $child->getFileName() );
-                $locale = $child->getFileName();
-                if( $localePath != $i18nPath ) {
-                    if( file_exists( $localePath . "expression.xml" ) ) {
-                        $expressions = self::loadFile( $localePath . 
-                            "expression.xml" );
-                        foreach( $expressions as $expression ){
-                            if( strtolower( $expression->getName() ) === 
-                                'expression' ) {
-                                $name = "";
-                                foreach( $expression->attributes() as $attr ) {
-                                    if( strtolower( $attr->getName() ) === 
-                                        'name' ) {
-                                        $exps[ $locale ][ "" . $attr ] = "" . 
-                                            $expression;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        self::storeFiles( $exps );
-        
-    }
     
     private static function loadFile( $file ) {
         try {
@@ -208,6 +201,24 @@ class MyFusesI18nContext {
         }
         
         return $strOut;
+    }
+    
+    /**
+     * Return one 
+     *
+     * @return unknown
+     */
+    public static function getInstance() {
+        
+        if( is_null( self::$instance ) ) {
+            switch( MyFuses::getI18nType() ) {
+                case self::NATIVE_TYPE:
+                    self::$instance = new MyFusesNativeI18nHandler();
+                    break;
+            }    
+        }
+        
+        return self::$instance;
     }
     
 }

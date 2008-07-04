@@ -81,6 +81,8 @@ try {
         "util/data/MyFusesXmlUtil.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/i18n/MyFusesI18nHandler.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/i18n/MyFusesNativeI18nHandler.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();
@@ -197,7 +199,7 @@ class MyFuses {
      *
      * @var string
      */
-    private static $i18nType = 'native';
+    private static $i18nType = MyFusesI18nHandler::NATIVE_TYPE;
     
     /**
      * MyFuses constructor
@@ -710,7 +712,7 @@ class MyFuses {
      */
     public function doProcess() {
         try {
-            //MyFusesLifecycle::configureLocale();
+            MyFusesLifecycle::configureLocale();
             
             if( $this->isMemcacheEnabled() ) {
                 $this->configureMemcache();
