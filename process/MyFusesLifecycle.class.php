@@ -134,7 +134,7 @@ abstract class MyFusesLifecycle {
         
         $handler = MyFusesI18nHandler::getInstance();
         
-        
+        $handler->configure();
         
         var_dump( $handler );die();
         

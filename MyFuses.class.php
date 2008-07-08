@@ -285,7 +285,7 @@ class MyFuses {
      *
      * @return array
      */
-    public function getI18nPath() {
+    public function getI18nPaths() {
         return $this->i18nPaths;
     }
     

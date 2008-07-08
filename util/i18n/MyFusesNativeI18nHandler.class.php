@@ -53,12 +53,8 @@ class MyFusesNativeI18nHandler extends MyFusesI18nHandler {
         var_dump( "buu" );    
     }
     
-    public function checkFiles() {
-        var_dump( "baa" );
-    }
-    
-    public function loadFiles() {
-        var_dump( "biii" );
+//    public function loadFiles() {
+//        var_dump( "biii" );
 //        $application = MyFuses::getApplication();
 //        
 //        MyFuses::getInstance()->createApplicationPath( $application );
@@ -107,7 +103,7 @@ class MyFusesNativeI18nHandler extends MyFusesI18nHandler {
 //        
 //        self::storeFiles( $exps );
         
-    }
+//    }
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

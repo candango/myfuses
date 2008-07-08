@@ -82,8 +82,13 @@ abstract class MyFusesI18nHandler {
     public function configure(){
         $this->markTimeStamp();
         $this->setLocale();
-        $this->checkFiles();
-        $this->loadFiles();
+        
+        if( $this->mustLoadFiles() ) {
+            
+            $this->loadFiles();
+            
+        }
+        
     }
     
     /**
@@ -92,12 +97,56 @@ abstract class MyFusesI18nHandler {
     abstract public function setLocale();
     
     /**
-     * Check files 
-     *
+     * Load i18n files
      */
-    abstract public function checkFiles();
+    public function loadFiles() {
+        
+        $application = MyFuses::getApplication();
+        
+        MyFuses::getInstance()->createApplicationPath( $application );
+        
+        foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
+            
+            if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
+                $this->digPath( $path );
+            }
+            else {
+                foreach( MyFuses::getInstance()->getApplications() as $key => $application ) {
+                    if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                        $this->digPath( $application->getPath() . $path );
+                    }
+                }
+            }
+            
+        }
+        
+    }
     
-    abstract public function loadFiles();
+    /**
+     * Dig the given path to find i18n files
+     *
+     * @param string $paht
+     */
+    private function digPath( $path ) {
+        if( file_exists( $path ) ) {
+            $it = new RecursiveDirectoryIterator( $path );
+            
+            foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
+                if( $child->isDir() ) {
+                    $locale = $child->getBaseName();
+                    
+                    $localePath = MyFusesFileHandler::sanitizePath( 
+                        $child->getPath() . DIRECTORY_SEPARATOR . $locale );
+                    
+                    if( $localePath != $path ) {
+                        if( file_exists( $localePath . "expression.xml" ) ) {
+                            var_dump( $localePath );    
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     /**
      * Mark timestamp
@@ -117,7 +166,9 @@ abstract class MyFusesI18nHandler {
     }
     
     
-    
+    private function mustLoadFiles() {
+        return true;
+    }
     
     private static function loadFile( $file ) {
         try {
@@ -165,48 +216,10 @@ abstract class MyFusesI18nHandler {
         
     }
     
-    private static function getFileComments( $locale ) {
-        $strOut = "# " . MyFuses::getApplication()->getName() . " " . $locale . " i18n expressions file.\n";
-        $strOut .= "# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER\n";
-        $strOut .= "# This file is distributed under the same license as the PACKAGE package.\n";
-        $strOut .= "# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.\n";
-        $strOut .= "#\n";
-        $strOut .= "#, fuzzy\n";
-        $strOut .= "msgid \"\"\n";
-        $strOut .= "msgstr \"\"\n";
-        return $strOut;
-    }
-    
-    private static function getFileHeaders( $locale ) {
-        $strOut = "\"Project-Id-Version: PACKAGE VERSION\\n\"\n";
-        $strOut .= "\"Report-Msgid-Bugs-To: \\n\"\n";
-        $strOut .= "\"POT-Creation-Date: 2008-06-16 09:54-0300\\n\"\n";
-        $strOut .= "\"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n\"\n";
-        $strOut .= "\"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n\"\n";
-        $strOut .= "\"Language-Team: LANGUAGE <LL@li.org>\\n\"\n";
-        $strOut .= "\"MIME-Version: 1.0\\n\"\n";
-        $strOut .= "\"Content-Type: text/plain; charset=UTF-8\\n\"\n";
-        $strOut .= "\"Content-Transfer-Encoding: 8bit\\n\"\n\n";
-        
-        return $strOut;
-    }
-    
-    private static function getExpressions( $locale, $expressions ) {
-        $strOut = "";
-        
-        foreach( $expressions as $key => $expression ) {
-            $strOut .= "#: expression " . $key . "\n";
-            $strOut .= "msgid \"" . $key . "\"\n";
-            $strOut .= "msgstr \"" . $expression . "\"\n\n";    
-        }
-        
-        return $strOut;
-    }
-    
     /**
-     * Return one 
+     * Return one MyFusesI18nHandler implementation 
      *
-     * @return unknown
+     * @return MyFusesI18nHandler
      */
     public static function getInstance() {
         
