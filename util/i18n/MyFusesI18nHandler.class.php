@@ -31,6 +31,8 @@
  * @version    SVN: $Id:MyFusesI18nContext.class.php 521 2008-06-25 12:43:32Z piraz $
  */
 
+require_once "myfuses/util/i18n/MyFusesI18nContext.class.php";
+
 /**
  * MyFuses i18n Handler class - MyFusesI18nHandler.class.php
  *
@@ -100,7 +102,6 @@ abstract class MyFusesI18nHandler {
      * Load i18n files
      */
     public function loadFiles() {
-        
         $application = MyFuses::getApplication();
         
         MyFuses::getInstance()->createApplicationPath( $application );
@@ -140,11 +141,24 @@ abstract class MyFusesI18nHandler {
                     
                     if( $localePath != $path ) {
                         if( file_exists( $localePath . "expression.xml" ) ) {
-                            var_dump( $localePath );    
+                            $doc = $this->loadFile( $localePath . "expression.xml" );
+                            foreach( $doc->expression as $expression ) {
+                                $name = "";
+                                foreach( $expression->attributes() as $key => $attr ) {
+                                    if( $key == 'name' ) {
+                                        $name = "" . $attr;
+                                    }    
+                                }
+                                
+                                if( $name != "" ) {
+                                    MyFusesI18nContext::setExpression( $locale, $name, "" . $expression );
+                                }
+                            }
                         }
                     }
                 }
             }
+            var_dump( MyFusesI18nContext::getContext() );die();
         }
     }
     

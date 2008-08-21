@@ -50,7 +50,7 @@
 class MyFusesNativeI18nHandler extends MyFusesI18nHandler {
     
     public function setLocale() {
-        var_dump( "buu" );    
+            
     }
     
 //    public function loadFiles() {
