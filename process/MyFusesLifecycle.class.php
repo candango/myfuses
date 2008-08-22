@@ -135,9 +135,7 @@ abstract class MyFusesLifecycle {
         $handler = MyFusesI18nHandler::getInstance();
         
         $handler->configure();
-        
-        var_dump( $handler );die();
-        
+        /*
         MyFusesI18nHandler::markTimeStamp();
         
         MyFusesI18nHandler::setLocale();
@@ -146,12 +144,10 @@ abstract class MyFusesLifecycle {
         
         $locale = MyFuses::getApplication()->getLocale();
         
-        var_dump( MyFuses::getApplication()->getParsedPath() . "i18n" );
-        
         bindtextdomain( "myfuses", 
             MyFuses::getApplication()->getParsedPath() . "i18n" );
         
-        textdomain( "myfuses" );
+        textdomain( "myfuses" );*/
         
     }
     
