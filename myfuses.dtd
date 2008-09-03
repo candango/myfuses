@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT fusebox (circuits+, classes?, parameters?, globalfuseactions?, plugins?)>
+<!ELEMENT myfuses (circuits+, classes?, parameters?, globalfuseactions?, plugins?)>
+
+<!ELEMENT circuits (circuit*)>
+<!ELEMENT circuit EMPTY>
+<!ATTLIST circuit
+	alias CDATA #REQUIRED
+	path CDATA #REQUIRED
+	parent CDATA #IMPLIED
+	relative (true | false | yes | no) "true"
+>
+
+<!ELEMENT classes (class*)>
+<!ELEMENT class EMPTY>
+<!ATTLIST class
+	alias CDATA #REQUIRED
+	type (component | java) "component"
+	classpath CDATA #REQUIRED
+	constructor CDATA #IMPLIED
+>
+
+<!ELEMENT globalfuseactions (appinit?, preprocess?, postprocess?)>
+<!ELEMENT appinit ((do | fuseaction)*)>
+<!ELEMENT preprocess ((do | fuseaction)*)>
+<!ELEMENT postprocess ((do | fuseaction)*)>
+
+<!ELEMENT do EMPTY>
+<!ATTLIST do
+	action CDATA #REQUIRED
+>
+
+<!ELEMENT fuseaction EMPTY>
+<!ATTLIST fuseaction
+	action CDATA #REQUIRED
+>
+
+<!ELEMENT plugins (phase*)>
+<!ELEMENT phase (plugin*)>
+<!ATTLIST phase
+	name (fuseactionException | postFuseaction | postProcess | preFuseaction | preProcess | processError) #REQUIRED
+>
+
+<!ELEMENT plugin (parameter*)>
+<!ATTLIST plugin
+	name CDATA #REQUIRED
+	file CDATA #IMPLIED
+	template CDATA #IMPLIED
+	path CDATA #IMPLIED
+>
+
+<!ELEMENT parameters (parameter*)>
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+	name CDATA #REQUIRED
+	value CDATA #REQUIRED
+>
