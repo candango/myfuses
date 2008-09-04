@@ -1,5 +1,4 @@
 <?php
-
 require_once "myfuses/util/security/MyFusesSecurityManager.class.php";
 
 abstract class MyFusesAbstractSecurityManager 
@@ -51,7 +50,8 @@ abstract class MyFusesAbstractSecurityManager
      */
     public static function getInstance() {
         if( is_null( self::$instance ) ) {
-            self::$instance = new BasicSecurityManager();
+            require_once "myfuses/util/security/MyFusesBasicSecurityManager.class.php";
+            self::$instance = new MyFusesBasicSecurityManager();
         }
         
         return self::$instance;

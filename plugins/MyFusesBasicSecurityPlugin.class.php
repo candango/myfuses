@@ -1,14 +1,16 @@
 <?php
-require_once "iflux/plugins/myfuses/AbstractSecurityPlugin.class.php";
+require_once "myfuses/plugins/MyFusesAbstractSecurityPlugin.class.php";
 
-class BasicSecurityPlugin extends AbstractSecurityPlugin{
+class MyFusesBasicSecurityPlugin extends MyFusesAbstractSecurityPlugin{
 
 
         public function run() {
 
             parent::run();
             
-            $securityManager = AbstractSecurityManager::getInstance();
+            $securityManager = MyFusesAbstractSecurityManager::getInstance();
+            
+            var_dump( $securityManager );die();
 
         }
 

@@ -1,7 +1,7 @@
 <?php
 require_once "myfuses/util/security/MyFusesAbstractSecurityManager.class.php";
 
-class BasicSecurityManager extends MyFusesAbstractSecurityManager {
+class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
     
     private $credential;
     

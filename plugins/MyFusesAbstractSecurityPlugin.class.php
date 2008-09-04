@@ -1,5 +1,7 @@
 <?php
-abstract class AbstractSecurityPlugin extends AbstractPlugin {
+require_once 'myfuses/util/security/MyFusesAbstractSecurityManager.class.php';
+
+abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
 	
 	public function run() {
 		
@@ -22,7 +24,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin {
 	
     private function runPreProcess() {
         
-        $manager = AbstractSecurityManager::getInstance();
+        $manager = MyFusesAbstractSecurityManager::getInstance();
         
         $this->configureSecurityManager( $manager );
         
