@@ -768,6 +768,8 @@ class MyFuses {
             // storing all applications if necessary
             $this->storeApplications();
                 
+            MyFusesLifecycle::storeLocale();
+            
             if( $this->getRequest()->getApplication()->isDebugAllowed() ) {
                 print $this->getDebugger();    
             }

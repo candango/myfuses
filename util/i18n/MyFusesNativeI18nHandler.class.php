@@ -53,57 +53,28 @@ class MyFusesNativeI18nHandler extends MyFusesI18nHandler {
             
     }
     
-//    public function loadFiles() {
-//        var_dump( "biii" );
-//        $application = MyFuses::getApplication();
-//        
-//        MyFuses::getInstance()->createApplicationPath( $application );
-//        
-//        $path = MyFusesFileHandler::sanitizePath( 
-//                $application->getParsedPath() . 'i18n' );
-//                
-//        if( !file_exists( $path ) ) {
-//            mkdir( $path, 0777, true );
-//            chmod( $path, 0777 );
-//        }
-//        
-//        $i18nPath = MyFusesFileHandler::sanitizePath( 
-//            MyFuses::MYFUSES_ROOT_PATH . "i18n" );
-//        $it = new RecursiveDirectoryIterator( $i18nPath );
-//        
-//        $exps = array();
-//        
-//        foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
-//            if( $child->isDir() ) {
-//                $localePath = MyFusesFileHandler::sanitizePath( 
-//                    $child->getPath() . DIRECTORY_SEPARATOR . 
-//                    $child->getFileName() );
-//                $locale = $child->getFileName();
-//                if( $localePath != $i18nPath ) {
-//                    if( file_exists( $localePath . "expression.xml" ) ) {
-//                        $expressions = self::loadFile( $localePath . 
-//                            "expression.xml" );
-//                        foreach( $expressions as $expression ){
-//                            if( strtolower( $expression->getName() ) === 
-//                                'expression' ) {
-//                                $name = "";
-//                                foreach( $expression->attributes() as $attr ) {
-//                                    if( strtolower( $attr->getName() ) === 
-//                                        'name' ) {
-//                                        $exps[ $locale ][ "" . $attr ] = "" . 
-//                                            $expression;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        
-//        self::storeFiles( $exps );
+    public function storeFiles() {
         
-//    }
-    
+        $path = MyFuses::getApplication()->getParsedPath();
+        
+        $path = MyFusesFileHandler::sanitizePath( $path . 'i18n' );
+        
+        if( !file_exists( $path ) ) {
+            MyFusesFileHandler::createPath( $path );
+        }
+        
+        $fileName = $path . "locale.data.php";
+        
+        $data = "<?php\nreturn unserialize( '";
+                
+        $data .= str_replace("'","\'", 
+            serialize( MyFusesI18nContext::getContext() ) );
+        
+        $data .= "' );";
+        
+        MyFusesFileHandler::writeFile( $fileName, $data );
+        
+    }
+        
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

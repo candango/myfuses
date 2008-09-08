@@ -17,7 +17,7 @@
  * The Original Code is Candango Fusebox Implementation part .
  * 
  * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2005 - 2006.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2008.
  * All Rights Reserved.
  * 
  * Contributor(s): Flávio Gonçalves Garcia.
@@ -77,7 +77,6 @@ abstract class MyFusesI18nHandler {
      */
     private static $instance;
     
-    
     /**
      * Method that execute all steps to configure i18n
      */
@@ -105,6 +104,21 @@ abstract class MyFusesI18nHandler {
         $application = MyFuses::getApplication();
         
         MyFuses::getInstance()->createApplicationPath( $application );
+        
+        $i18nPath = MyFusesFileHandler::sanitizePath( 
+            MyFuses::getApplication()->getParsedPath() . "i18n" ); 
+        
+        $i18nFile = $i18nPath . "locale.data.php";
+            
+        
+        if( file_exists( $i18nFile ) ) {
+            $i18nData = require $i18nFile;
+        }
+        
+        //var_dump( MyFusesFileHandler::readFile( $loca ) );die();
+        
+        
+        MyFuses::getApplication()->getParsedPath();
         
         foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
             
@@ -197,7 +211,9 @@ abstract class MyFusesI18nHandler {
         }
     }
     
-    private static function storeFiles( $exps ) {
+    public abstract function storeFiles();
+    
+    /*private static function storeFiles( $exps ) {
         $path = MyFusesFileHandler::sanitizePath( 
             MyFuses::getApplication()->getParsedPath() . 'i18n' );
         foreach( $exps as $locale => $expressions ) {
@@ -228,7 +244,7 @@ abstract class MyFusesI18nHandler {
             
         }
         
-    }
+    }*/
     
     /**
      * Return one MyFusesI18nHandler implementation 

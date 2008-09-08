@@ -151,6 +151,13 @@ abstract class MyFusesLifecycle {
         
     }
     
+    public static function storeLocale() {
+        $handler = MyFusesI18nHandler::getInstance();
+        
+        $handler->storeFiles();
+        
+    }
+    
     /*public static function configureApplications() {
         foreach( MyFuses::getInstance()->getApplications() as 
             $index => $application ) {
