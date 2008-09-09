@@ -115,9 +115,6 @@ abstract class MyFusesI18nHandler {
             $i18nData = require $i18nFile;
         }
         
-        //var_dump( MyFusesFileHandler::readFile( $loca ) );die();
-        
-        
         MyFuses::getApplication()->getParsedPath();
         
         foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
@@ -165,7 +162,8 @@ abstract class MyFusesI18nHandler {
                                 }
                                 
                                 if( $name != "" ) {
-                                    MyFusesI18nContext::setExpression( $locale, $name, "" . $expression );
+                                    MyFusesI18nContext::setExpression( 
+                                        $locale, $name, "" . $expression );
                                 }
                             }
                         }
