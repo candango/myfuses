@@ -1,5 +1,7 @@
 <?php
-interface MyFusesAbstractCredential {
+require_once "myfuses/util/security/MyFusesCredential.class.php";
+
+class MyFusesAbstractCredential implements MyFusesCredential {
     
     /**
      * Credential name
