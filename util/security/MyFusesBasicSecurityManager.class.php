@@ -6,7 +6,10 @@ class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
     private $credential;
     
     public function createCredential() {
-        // TODO create credential here
+        if( !isset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] ) ) {
+            $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = 
+                new MyFusesBasicCredential();    
+        }
     }
     
     public function getCredential() {

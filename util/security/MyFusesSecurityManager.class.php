@@ -1,4 +1,6 @@
 <?php
+require_once "myfuses/util/security/MyFusesBasicCredential.class.php";
+
 interface MyFusesSecurityManager {
 
     /**

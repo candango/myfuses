@@ -46,7 +46,7 @@ abstract class MyFusesAbstractSecurityManager
     /**
      * Return new Basic Security Manager instance
      *
-     * @return SecurityManager
+     * @return MyFusesSecurityManager
      */
     public static function getInstance() {
         if( is_null( self::$instance ) ) {
