@@ -10,6 +10,13 @@ class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
             $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = 
                 new MyFusesBasicCredential();    
         }
+        else {
+            $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
+            if( $credential->isExpired() ) {
+                $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = 
+                    new MyFusesBasicCredential();
+            }
+        }
     }
     
     public function getCredential() {

@@ -36,7 +36,7 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      *
      * @var int
      */
-    private $timeExpire = 180;
+    private $timeExpire = 5;
     
     /**
      * Default constructor
@@ -110,10 +110,14 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     }
     
     public function isExpired() {
-        if( ( $this->createTime + $this->createTime ) > time() ) {
+        if( ( $this->createTime + $this->timeExpire ) < time() ) {
             return true;
         }
         return false;
+    }
+    
+    public function getExpireDate( $format = "m/d/Y h:i:s" ) {
+        return date( $format, $this->createTime + $this->timeExpire );
     }
     
 }
