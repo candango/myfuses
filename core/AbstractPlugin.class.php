@@ -237,6 +237,13 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     /**
+     * Configure parameters if founded
+     */
+    public function configure( $parameters ) {
+        
+    }
+    
+    /**
      * Return a new plugin instance
      * 
      * @param Application $application

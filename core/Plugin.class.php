@@ -199,6 +199,11 @@ interface Plugin extends IParseable, ICacheable {
     public function clearApplication();
     
     /**
+     * Configure parameters if founded
+     */
+    public function configure( $parameters );
+    
+    /**
      * This is the method that runs plugin action.
      *
      */
