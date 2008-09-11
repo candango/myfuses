@@ -103,6 +103,14 @@ abstract class AbstractPlugin implements Plugin{
      */
     private $application;
     
+    
+    /**
+     * Plugins paramters
+     *
+     * @var array
+     */
+    private $paramters = array();
+    
     /**
      * Return the plugin name
      *
@@ -237,9 +245,29 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     /**
-     * Configure parameters if founded
+     * Get plugins parameters
+     * 
+     * @return array An array of paramters
      */
-    public function configure( $parameters ) {
+    public function getParameters() {
+        
+    }
+    
+    /**
+     * Enter description here...
+     *
+     * @param array $parameters
+     */
+    public function setParameters( $parameters ) {
+        
+    }
+    
+    /**
+     * Get one parameter by a given name
+     * 
+     * @return strin The paramter name
+     */
+    public function getParameter( $name ) {
         
     }
     
