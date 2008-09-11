@@ -245,12 +245,22 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     /**
+     * Add one parameter to plugin
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function addParameter( $name, $value ) {
+        $this->paramters[ $name ] = $value;
+    }
+    
+    /**
      * Get plugins parameters
      * 
      * @return array An array of paramters
      */
     public function getParameters() {
-        
+        return $this->paramters;
     }
     
     /**
@@ -259,7 +269,7 @@ abstract class AbstractPlugin implements Plugin{
      * @param array $parameters
      */
     public function setParameters( $parameters ) {
-        
+        $this->paramters = $parameters;
     }
     
     /**
@@ -268,7 +278,11 @@ abstract class AbstractPlugin implements Plugin{
      * @return strin The paramter name
      */
     public function getParameter( $name ) {
-        
+        if( isset( $this->paramters[ $name ] ) ) {
+            return $this->paramters[ $name ];    
+        }
+        //TODO throw an exception task #17
+        return null;
     }
     
     /**

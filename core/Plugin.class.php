@@ -199,6 +199,14 @@ interface Plugin extends IParseable, ICacheable {
     public function clearApplication();
     
     /**
+     * Add one parameter to plugin
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function addParameter( $name, $value );
+    
+    /**
      * Get plugins parameters
      * 
      * @return array An array of paramters
