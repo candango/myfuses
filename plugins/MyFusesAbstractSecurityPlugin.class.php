@@ -31,8 +31,6 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         $manager->createCredential();
         
         $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
-        var_dump( $credential->getExpireDate() );
-        var_dump( $credential );die();
         
     }
 	
