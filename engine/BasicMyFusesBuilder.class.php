@@ -526,8 +526,22 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                         $$faseParams[ $attributeName ] = $attribute;
                     }
                     
+                    $paramters = array();
+                    
+                    if( isset( $child[ 'children' ] ) ) {
+                        foreach( $child[ 'children' ] as $key => $paramChild ) {
+                            
+                            if( strtolower( $paramChild[ 'name' ] ) == 'parameter' ) {
+                                $param = array( 
+                                    'name' => $paramChild[ 'attributes' ][ 'name' ], 
+                                    'value' => $paramChild[ 'attributes' ][ 'value' ] );
+                                $paramters[] = $param;
+                            }
+                        }
+                    }
+                    
                     AbstractPlugin::getInstance( $application, 
-                        $phase, $name, $path, $file );
+                        $phase, $name, $path, $file, $paramters );
                     
                 }
             }

@@ -297,7 +297,7 @@ abstract class AbstractPlugin implements Plugin{
      * @return Plugin
      */
     public static function getInstance( Application $application, 
-        $phase, $name, $path, $file ) {
+        $phase, $name, $path, $file, $parameters = array() ) {
         
         $class = $name;
             
@@ -343,6 +343,8 @@ abstract class AbstractPlugin implements Plugin{
         $plugin->setFile( $file );
         $plugin->setPhase( $phase );
         
+        $plugin->setParameters( $parameters );
+        
         $application->addPlugin( $plugin );
         
         return $plugin;
@@ -365,7 +367,8 @@ abstract class AbstractPlugin implements Plugin{
         $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
             $this->phase . "\", \"" . $this->name . "\", \"" . 
             addslashes( $this->path ) . 
-            "\", \"" . $this->file . "\" );\n";
+            "\", \"" . $this->file . "\", unserialize( '" . 
+            addslashes( serialize( $this->getParameters() ) ) . "' ) );\n";
         return $strOut;
     }
     
