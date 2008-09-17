@@ -108,6 +108,17 @@ class FuseAction extends AbstractAction implements CircuitAction {
      * @return Circuit
      */
     public function &getCircuit() {
+        $circuit = $this->circtuit;
+        
+        if( !is_null( $this->circtuit->getApplication()->getController()->getCurrentPhase() ) ) {
+                if( !$circuit->isLoaded() ) {
+                    $circuit->setData( $this->circtuit->getApplication()->getLoader()->loadCircuit( $circuit ) );
+                    BasicMyFusesBuilder::buildCircuit( $circuit );
+                    $circuit->setLoaded( true );    
+                }
+        }
+        
+        
          return $this->circtuit;
     }
     
