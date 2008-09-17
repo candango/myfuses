@@ -1,7 +1,7 @@
 <?php
 class DataToJsonVerb extends AbstractVerb {
     
-    private $name;
+    private $jsonName;
     
     private $value;
     
@@ -11,12 +11,12 @@ class DataToJsonVerb extends AbstractVerb {
     
     private $clean = false;
     
-    public function getName() {
-        return $name;
+    public function getJsonName() {
+        return $this->jsonName;
     }
     
-    public function setName( $name ) {
-        $this->name = $name;
+    public function setJsonName( $jsonName ) {
+        $this->jsonName = $jsonName;
     }
     
     public function getValue(){
@@ -94,7 +94,7 @@ class DataToJsonVerb extends AbstractVerb {
         
         $strOut .= str_repeat( "\t", $identLevel );
         
-        if( is_null( $this->getName() ) ) {
+        if( is_null( $this->getJsonName() ) ) {
             
             if( $this->isClean() ) {
                 $strOut .= str_repeat( "\t", $identLevel );

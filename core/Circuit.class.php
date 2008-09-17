@@ -317,6 +317,10 @@ interface Circuit extends ICacheable {
     
     public function isModified();
     
+    public function isLoaded();
+    
+    public function setLoaded( $loaded );
+    
     public function setModified( $modified );
     
     /**
@@ -325,6 +329,20 @@ interface Circuit extends ICacheable {
      * @return boolean
      */
     public function wasBuilt();
+    
+    /**
+     * Return the circuit cache data
+     *
+     * @return array
+     */
+    public function getData();
+    
+    /**
+     * Set circuit cache data
+     *
+     * @param array $data
+     */
+    public function setData( $data );
     
     /**
      * Set circuit built status

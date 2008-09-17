@@ -1,0 +1,2 @@
+<?php
+return unserialize( 'a:2:{s:5:"en_US";a:3:{s:15:"TEST_EXPRESSION";s:29:"This is ddd dasdfs %s a test.";s:7:"MONSTRO";s:16:"Outra expressão";s:8:"MONSTRO1";s:16:"Outra expressão";}s:5:"pt_BR";a:1:{s:15:"TEST_EXPRESSION";s:23:"Isto asdfsdfs um teste.";}}' );

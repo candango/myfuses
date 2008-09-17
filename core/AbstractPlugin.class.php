@@ -251,7 +251,8 @@ abstract class AbstractPlugin implements Plugin{
      * @param string $value
      */
     public function addParameter( $name, $value ) {
-        $this->paramters[ $name ] = $value;
+        $parameter = array( "name" => $name, "value" => $value );
+        $this->paramters[] = $parameter;
     }
     
     /**
@@ -364,11 +365,15 @@ abstract class AbstractPlugin implements Plugin{
     }
     
     public function getCachedCode() {
-        $strOut = "AbstractPlugin::getInstance( \$application, \"" . 
+        $strOut = "\$plugin = AbstractPlugin::getInstance( \$application, \"" . 
             $this->phase . "\", \"" . $this->name . "\", \"" . 
             addslashes( $this->path ) . 
-            "\", \"" . $this->file . "\", unserialize( '" . 
-            addslashes( serialize( $this->getParameters() ) ) . "' ) );\n";
+            "\", \"" . $this->file . "\" );\n";
+            
+        foreach( $this->getParameters() as $parameter ) {
+            $strOut .= "\$plugin->addParameter( \"" . $parameter[ 'name' ] . 
+                "\", \"" . addslashes( $parameter[ 'value' ] ) . "\" );\n";
+        }
         return $strOut;
     }
     

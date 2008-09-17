@@ -97,6 +97,13 @@ class BasicCircuit implements Circuit {
     private $file;
     
     /**
+     * Circuit cache data
+     *
+     * @var array
+     */
+    private $data;
+    
+    /**
      * Application parent name
      * 
      * @var string
@@ -121,7 +128,19 @@ class BasicCircuit implements Circuit {
     
     private $postFuseAction;
     
+    /**
+     * Circuit modified flag
+     *
+     * @var boolean
+     */
     private $modified = false;
+    
+    /**
+     * Circuit loaded flag
+     *
+     * @var boolean
+     */
+    private $loaded = false;
     
     /**
      * Custom attributes defined by develloper
@@ -484,6 +503,24 @@ class BasicCircuit implements Circuit {
         $this->modified = $modified;
     }
     
+    /**
+     * Return if the circuit was loaded
+     *
+     * @return boolean
+     */
+    public function isLoaded() {
+        return $this->loaded;
+    }
+    
+    /**
+     * Set if the circuit was loaded
+     *
+     * @param boolean $loaded
+     */
+    public function setLoaded( $loaded ) {
+        $this->loaded = $loaded;
+    }
+    
     private function evalExpression( $matches ){
 	    return eval( "return " . $matches[ 1 ] . ";" );
     }
@@ -495,6 +532,24 @@ class BasicCircuit implements Circuit {
      */
     public function wasBuilt() {
         return $this->built;
+    }
+    
+    /**
+     * Return the circuit cache data
+     *
+     * @return array
+     */
+    public function getData() {
+        return $this->data;
+    }
+    
+    /**
+     * Set circuit cache data
+     *
+     * @param array $data
+     */
+    public function setData( $data ) {
+        $this->data = $data;
     }
     
     /**

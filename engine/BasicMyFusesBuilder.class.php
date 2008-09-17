@@ -129,7 +129,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 $circuit->unsetPreFuseAction();
                 $circuit->unsetPostFuseAction();
                 
-                self::buildCircuit( $circuit );        
+                //self::buildCircuit( $circuit );        
                 
             }
         }
@@ -137,12 +137,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     }
     
     public static function buildCircuit( Circuit $circuit ) {
-        $appData = &$circuit->getApplication()->getLoader()->
-            getCachedApplicationData();
-            
-        $data = &$appData[ 'circuits' ][ $circuit->getName() ];
         
-        $circuit->setModified( $data[ 'attributes' ][ 'modified' ] );
+        $data = &$circuit->getData();
         
         $circuitParameterAttributes = array(
             "access" => "access",
@@ -182,6 +178,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         if( count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {
+                
                 switch( $child[ 'name' ] ) {
                     /*case "fuseaction":
                     case "action":
@@ -209,24 +206,18 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         $action = new FuseAction( $circuit );
         
-        $appCData = &$circuit->getApplication()->getLoader()->
-            getCachedApplicationData();
+        $circuitData = &$circuit->getData();
             
-        $data = null;
-        
-        foreach( $appCData[ 'circuits' ] as $key => $circuitData ) {
-            if( $key === $circuit->getName() ) {
-                foreach( $circuitData[ 'children' ] as $actionData ) {
-                    if( isset( $actionData[ 'attributes' ][ 'name' ] ) ) {
-                        if( $actionData[ 'attributes' ][ 'name' ] === $name ) {
-                            $data = $actionData;
-                            break;
-                        }
-                    }
-                }
-                break;
+        foreach( $circuitData[ 'children' ] as $circuitDataChild ) {
+            if( $circuitDataChild[ 'name' ] == 'fuseaction' ) {
+                // TODO throw exception here
+                if( $circuitDataChild[ 'attributes' ][ 'name' ] == $name ) {
+                    $data = $circuitDataChild;
+                    break;
+                }    
             }
         }
+        
         
         if( is_null( $data ) ) {
             return false;
@@ -302,7 +293,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param SimpleXMLElement $parentNode
      */
     protected function buildGlobalAction( Circuit $circuit, &$data ) {
-             
+        
         $globalActionMethods = array(
             "prefuseaction" => "setPreFuseAction",
             "postfuseaction" => "setPostFuseAction"
@@ -314,7 +305,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         
         if( count( $data[ 'children' ] ) > 0 ) {
-            foreach( $data[ 'children' ] as $child ) {    
+            foreach( $data[ 'children' ] as $child ) {
                 self::buildVerb( $action, $child );
             }
         }

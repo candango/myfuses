@@ -656,13 +656,32 @@ class BasicApplication implements Application {
      * @return Circuit
      */
     public function getCircuit( $name ) {
+        
+        $circuit = null;
+        
     	if( isset( $this->circuits[ $name ] ) ) {
-    		return $this->circuits[ $name ];
+    		$circuit = $this->circuits[ $name ];
     	}
     	
-    	$params = array( "circuitName" => $name, "application" => &$this );
-    	throw new MyFusesCircuitException( $params, 
-    	    MyFusesCircuitException::NON_EXISTENT_CIRCUIT );
+    	if( is_null( $circuit ) ) {
+    	    $params = array( "circuitName" => $name, "application" => &$this );
+                throw new MyFusesCircuitException( $params, 
+                    MyFusesCircuitException::NON_EXISTENT_CIRCUIT );
+    	}
+    	
+    	if( $circuit->getName() ==  'MYFUSES_GLOBAL_CIRCUIT' ) {
+    	    $circuit->setLoaded( true );
+    	}
+    	
+        if( !is_null( $this->getController()->getCurrentPhase() ) ) {
+            if( !$circuit->isLoaded() ) {
+                $circuit->setData( $this->getLoader()->loadCircuit( $circuit ) );
+                BasicMyFusesBuilder::buildCircuit( $circuit );
+                $circuit->setLoaded( true );    
+            }
+        }
+    	
+        return $circuit;
     }
 
     /**

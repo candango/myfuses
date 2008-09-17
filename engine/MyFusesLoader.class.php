@@ -22,6 +22,13 @@ interface MyFusesLoader {
     public function getApplicationData();
     
     /**
+     * Load one circuit
+     *
+     * @param Circuit $circuit
+     */
+    public function loadCircuit( Circuit $circuit );
+    
+    /**
      * Add one application load listener
      *
      * @param MyFusesApplicationLoaderListener $listener

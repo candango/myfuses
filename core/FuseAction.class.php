@@ -80,6 +80,13 @@ class FuseAction extends AbstractAction implements CircuitAction {
     
     private $path;
     
+    /**
+     * Call prefuseaction flag
+     *
+     * @var boolean
+     */
+    private $callPreFuseaction = true;
+    
     public function __construct( Circuit $circuit ) {
         $this->setCircuit( $circuit );
     }
@@ -160,6 +167,24 @@ class FuseAction extends AbstractAction implements CircuitAction {
     
     public function setPath( $path ) {
         $this->path = $path;
+    }
+    
+    /**
+     * Return if the fuseaction must call prefusection
+     *
+     * @return boolean
+     */
+    public function mustCallPreFuseaction() {
+        return $this->callPreFuseaction;
+    }
+    
+    /**
+     * Set if the fuseaction must call prefuseaction
+     *
+     * @param boolean $callPreFuseaction
+     */
+    public function setCallPreFuseaction( $callPreFuseaction ) {
+        $this->callPreFuseaction = $callPreFuseaction;
     }
     
     public function getParsedCode( $comented, $identLevel ) {

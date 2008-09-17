@@ -183,7 +183,6 @@ abstract class AbstractVerb implements Verb {
      * @return Verb
      */
     public static function getInstance( &$data, CircuitAction $action = null ) {
-        
         //$data = stripslashes( $data );
         
         //$data = unserialize( $data );

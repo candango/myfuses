@@ -121,7 +121,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 $this->applicationData );
         }
         
-        if( $this->getApplication()->getMode() === 'production' ) {
+        /*if( $this->getApplication()->getMode() === 'production' ) {
             foreach( $this->applicationData[ 'application' ][ 'children' ] 
                 as $child ) {
                 if( strtolower( $child[ 'name' ] ) === 'circuits' ) {
@@ -140,7 +140,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     }
                 }
             }
-        }
+        }*/
         
     }
     
@@ -162,58 +162,37 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
     }
     
     
-    protected function loadCircuit( &$circuitChild ) {
-        $name = "";
+    public function loadCircuit( Circuit $circuit ) {
+        $data = null;
         
-        if( isset( $circuitChild[ 'attributes' ][ 'name' ] ) ) {
-            $name = $circuitChild[ 'attributes' ][ 'name' ];
+        if( $circuit->getApplication()->getMode() === 'development' ) {
+            $data = $this->doLoadCircuit( $circuit );
         }
         
-        if( isset( $circuitChild[ 'attributes' ][ 'alias' ] ) ) {
-            $name = $circuitChild[ 'attributes' ][ 'alias' ];
-        }
-        
-        try {
-            $circuit = $this->getApplication()->getCircuit( $name );
-            if( $circuit->getApplication()->getMode() === 'development' ) {
-                $this->doLoadCircuit( $name, $data, $circuitChild );
+        if( $circuit->getApplication()->getMode() === 'production' ) {
+            if( $this->circuitWasModified( $name ) || 
+                $this->applicationWasModified() ) {
+                $data = $this->doLoadCircuit( $circuit );    
             }
-            
-            if( $circuit->getApplication()->getMode() === 'production' ) {
-                if( $this->circuitWasModified( $name ) || 
-                    $this->applicationWasModified() ) {
-                    $this->doLoadCircuit( $name, $data, $circuitChild );    
-                }
-                else {
-                    $this->applicationData[ 'circuits' ][ $name ]
-                        [ 'attributes' ][ 'modified' ] = false;
-                }    
-            }
-        }
-        catch( MyFusesCircuitException $mfce ) {
-            $this->doLoadCircuit( $name, $data, $circuitChild );
+            else {
+                $circuit->setModified( false );
+            }    
         }
         
-        
+        return $data;
     }
     
-    protected function doLoadCircuit( $name, &$data, &$circuitChild ) {
-        $data = $this->getCircuitData( $circuitChild );
+    protected function doLoadCircuit( Circuit $circuit ) {
+        $data = $this->getCircuitData( $circuit );
         
-        $data[ 'attributes' ][ 'lastloadtime' ] = time();
-
-        $data[ 'attributes' ][ 'path' ] = 
-            $circuitChild[ 'attributes' ][ 'path' ];
+        $circuit->setLastLoadTime( time() );
         
-        $data[ 'attributes' ][ 'modified' ] = true;    
-            
-        
-        $this->applicationData[ 'circuits' ][ $name ] = $data;
+        $circuit->setModified( true );
         
         MyFuses::getInstance()->getDebugger()->registerEvent( 
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                "Loading circuit \"" . $name . "\"" ) );
-        
+                "Loading circuit \"" . $circuit->getName() . "\"" ) );
+        return $data;
     }
     
     /**

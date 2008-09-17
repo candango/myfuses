@@ -5,7 +5,7 @@
 						(postfuseaction?, fuseaction*, prefuseaction?)),
 					fuseaction*)>
 <!ATTLIST circuit
-	access (internal | public | private) "internal"
+	access (internal | public | private) "public"
 	permissions CDATA #IMPLIED
 >
 
