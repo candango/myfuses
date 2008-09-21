@@ -65,7 +65,6 @@ class FuseQueue {
         array_unshift( $queue, $this->request->getApplication()->
             getCircuit( "MYFUSES_GLOBAL_CIRCUIT" )->
             getAction( "PreProcessFuseAction" ) );
-          
         
         $this->preProcessQueue = $queue;
     }

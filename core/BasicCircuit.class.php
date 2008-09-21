@@ -461,6 +461,19 @@ class BasicCircuit implements Circuit {
      * @access public
      */
     public function getParent() {
+        if( !is_null( $this->parent ) ) {
+            $circuit = $this->parent;
+            
+            if( !is_null( $circuit->getApplication()->getController()->getCurrentPhase() ) ) {
+                    
+                    if( !$circuit->isLoaded() ) {
+                        $circuit->setLoaded( true );
+                        $circuit->setData( $circuit->getApplication()->getLoader()->loadCircuit( $circuit ) );
+                        BasicMyFusesBuilder::buildCircuit( $circuit );
+                    }
+            }    
+        }
+        
         return $this->parent;
     }
     
