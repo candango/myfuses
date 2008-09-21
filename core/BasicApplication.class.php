@@ -675,9 +675,9 @@ class BasicApplication implements Application {
     	
         if( !is_null( $this->getController()->getCurrentPhase() ) ) {
             if( !$circuit->isLoaded() ) {
+                $circuit->setLoaded( true );
                 $circuit->setData( $this->getLoader()->loadCircuit( $circuit ) );
                 BasicMyFusesBuilder::buildCircuit( $circuit );
-                $circuit->setLoaded( true );    
             }
         }
     	
