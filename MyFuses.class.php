@@ -217,8 +217,16 @@ class MyFuses {
     protected function __construct() {
         $this->builder = new BasicMyFusesBuilder();
         $this->debugger = new MyFusesDebugger();
+        
+        $pathStr = str_replace( array( DIRECTORY_SEPARATOR, ':' ), '_', 
+            dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
+        
+        if( substr( $pathStr, 0, 1 ) == "_" ) {
+            $pathStr = substr( $pathStr, 1, strlen( $pathStr ) );      
+        }
+        
         $this->setParsedPath( MyFuses::MYFUSES_ROOT_PATH . "parsed" . 
-            DIRECTORY_SEPARATOR );        
+            DIRECTORY_SEPARATOR . $pathStr . DIRECTORY_SEPARATOR );        
             
         // adding plugin paths
         $this->addPluginPath( "plugins/" );
