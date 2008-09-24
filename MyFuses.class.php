@@ -592,9 +592,6 @@ class MyFuses {
                 
                 MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
     	            $strStore );
-    	            
-    	        MyFusesFileHandler::writeFile( $dataFileName, "<?php\n" . 
-                    $strStoreData );
             }
             else {
                 $this->getMemcache()->set( $application->getTag(), 

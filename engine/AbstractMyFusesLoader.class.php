@@ -89,8 +89,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                         $this->application->getName() ) );
                 $this->getApplication()->setLoader( $this );
                 
-                $this->applicationData = include( 
-                    $this->getApplication()->getCompleteCacheFileData() );
             }
             
             $this->getApplication()->setDefault( $default );
