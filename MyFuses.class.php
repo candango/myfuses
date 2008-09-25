@@ -581,17 +581,7 @@ class MyFuses {
                 
                 $strStore .= $application->getCachedCode();
                 
-                $strStoreData = "return unserialize( '";
-                
-                $strStoreData .= str_replace("'","\'", 
-                    serialize( $application->getLoader()->
-                    getCachedApplicationData() ) );
-                
-                $strStoreData .= "' );";
-                
                 $fileName = $application->getCompleteCacheFile();
-                
-                $dataFileName = $application->getCompleteCacheFileData();
                 
                 MyFuses::getInstance()->getDebugger()->registerEvent( 
                     new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
@@ -607,6 +597,24 @@ class MyFuses {
                     getCachedApplicationData() ) );
             }
         }
+        
+        foreach( $application->getCircits() as $circuit ) {
+            if( $circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT" ) {
+                if( $circuit->isLoaded() ) {
+                      
+                    $strCircuitStoreData = "";
+                    
+                    $strCircuitStoreData = $circuit->getCachedCode();
+                    
+                    $fileName = $circuit->getCompleteCacheFile();
+                    
+                    MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
+                        $strCircuitStoreData );
+                    
+                }
+            }
+        }
+        
     }
     
     /**
