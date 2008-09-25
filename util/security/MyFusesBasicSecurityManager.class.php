@@ -19,8 +19,13 @@ class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
         }
     }
     
+    /**
+     * Return registered credential
+     *
+     * @return MyFusesCredential
+     */
     public function getCredential() {
-        return $this->credential;
+        return $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
     }
     
     public function setCredential( MyFusesCredential $credential ) {

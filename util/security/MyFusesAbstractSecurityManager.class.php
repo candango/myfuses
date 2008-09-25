@@ -12,11 +12,12 @@ abstract class MyFusesAbstractSecurityManager
     private $securityListeners = array();
 
     private static $instance;
-
-    public function isAuthenticated(){
-        foreach( $this->getSecutiyListeners() as $listener ){
-            $listener->authenticationPerformed();
-        }
+    
+    public function isAuthenticated() {
+        
+        $credential = $this->getCredential();
+        
+        return $credential->isAuthenticated();
     }
 
     public function isAuthorized(){
