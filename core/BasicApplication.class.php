@@ -1315,7 +1315,7 @@ class BasicApplication implements Application {
         $controllerClass = $this->getControllerClass();
         
         $strOut .= $controllerClass . 
-            "::getInstance()->addApplication( \$application );\n";
+            "::getInstance()->addApplication( \$application );\n\n";
             
         $strOut .= $this->getCircuitsCachedCode();
         
@@ -1335,7 +1335,12 @@ class BasicApplication implements Application {
     private function getCircuitsCachedCode() {
         $strOut = "";        
         foreach( $this->circuits as $circuit ) {
-            $strOut .= $circuit->getCachedCode() . "\n";
+            $strOut .= "\$circuit = new BasicCircuit();\n";
+            $strOut .= "\$circuit->setName( \"" . $circuit->getName() . "\" );\n";
+            $strOut .= "\$circuit->setPath( \"" . addslashes( $circuit->getPath() ) . 
+                "\" );\n";
+            $strOut .= "\$circuit->setParentName( \"" . 
+                $circuit->getParentName() . "\" );\n\n";
         }
         
         return $strOut;
