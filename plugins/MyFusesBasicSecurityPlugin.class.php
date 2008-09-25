@@ -6,7 +6,5 @@ class MyFusesBasicSecurityPlugin extends MyFusesAbstractSecurityPlugin{
 
         public function run() {
             parent::run();
-            
-            
         }
 }

@@ -97,6 +97,12 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
         self::setLoginAction( $loginAction );
         
+        $authAction = $this->getParameter( 'AuthAction' );
+        
+        $authAction = $authAction[ 0 ];
+        
+        self::setAuthAction( $authAction );
+        
         $currentAction = MyFuses::getInstance()->getRequest()->
             getFuseActionName();
         
