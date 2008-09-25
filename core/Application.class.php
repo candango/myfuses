@@ -203,14 +203,6 @@ interface Application extends ICacheable {
     public function getCompleteCacheFile();
     
     /**
-     * Return the complete application file path
-     * 
-     * @return string
-     * @access public
-     */
-    public function getCompleteCacheFileData();
-    
-    /**
      * Set the application file name
      * 
      * @param string $file

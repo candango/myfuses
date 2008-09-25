@@ -349,7 +349,6 @@ class BasicApplication implements Application {
         
         $this->setName( $name );
         
-        // FIXME each application must have its own loader
         if( is_null( $loader ) ) {
             $loader = 
                 AbstractMyFusesLoader::getLoader( MyFusesLoader::XML_LOADER );
@@ -556,16 +555,6 @@ class BasicApplication implements Application {
      */
     public function getCompleteCacheFile() {
         return $this->parsedPath . $this->getCacheFile();
-    }
-    
-    /**
-     * Return the complete application file path
-     * 
-     * @return string
-     * @access public
-     */
-    public function getCompleteCacheFileData() {
-        return $this->parsedPath . "data." . $this->getCacheFile();
     }
     
     /**
