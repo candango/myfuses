@@ -39,6 +39,13 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     private $timeExpire = 5;
     
     /**
+     * Credential autenticated flag
+     *
+     * @var boolean
+     */
+    private $authenticated = false;
+    
+    /**
      * Default constructor
      *
      */
@@ -118,6 +125,24 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     
     public function getExpireDate( $format = "m/d/Y h:i:s" ) {
         return date( $format, $this->createTime + $this->timeExpire );
+    }
+    
+    /**
+     * Returns if the credential is atenticated
+     *
+     * @return boolean
+     */
+    public function isAuthenticated() {
+        return $this->authenticated;
+    }
+    
+    /**
+     * Set credential atenticated status
+     *
+     * @param $autenticated boolean
+     */
+    public function setAuthenticated( $authenticated ) {
+        $this->authenticated = $authenticated;
     }
     
 }
