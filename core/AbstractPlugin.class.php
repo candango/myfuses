@@ -279,11 +279,16 @@ abstract class AbstractPlugin implements Plugin{
      * @return strin The paramter name
      */
     public function getParameter( $name ) {
-        if( isset( $this->paramters[ $name ] ) ) {
-            return $this->paramters[ $name ];    
+        $params = array();
+        
+        foreach( $this->paramters as $param ) {
+            if( $param[ 'name' ] == $name ) {
+                $params[] = $param[ 'value' ]; 
+            }
         }
+        
         //TODO throw an exception task #17
-        return null;
+        return $params;
     }
     
     /**
