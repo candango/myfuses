@@ -11,7 +11,7 @@ interface MyFusesSecurityManager {
     /**
      * Return manager credential
      *
-     * return IfluxCredential Managed iflux credential
+     * @return MyFusesCredential Managed iflux credential
      */
     public function getCredential();
 
