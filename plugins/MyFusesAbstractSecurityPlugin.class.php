@@ -10,13 +10,21 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      */
     private static $loginAction = "";
     
+    
+    /**
+     * Application authentication fuseaction
+     *
+     * @var string
+     */
+    private static $authAction = "";
+    
     /**
      * Return application login action
      *
      * @return string
      */
     private static function getLoginAction() {
-        return self::loginAction;
+        return self::$loginAction;
     }
     
     /**
@@ -27,7 +35,27 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
     private static function setLoginAction( $loginAction ) {
         self::$loginAction = $loginAction;
         MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
-                'goToLoginPage', $loginAction );
+                'goToLoginAction', $loginAction );
+    }
+    
+    /**
+     * Return application authentication action
+     *
+     * @return string
+     */
+    private static function getAuthAction() {
+        return self::$authAction;
+    }
+    
+    /**
+     * Set application authentication action
+     *
+     * @param string $authAction
+     */
+    private static function setAuthAction( $authAction ) {
+        self::$authAction = $authAction;
+        MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
+                'goToAuthAction', $authAction );
     }
     
 	public function run() {
@@ -72,10 +100,10 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         $currentAction = MyFuses::getInstance()->getRequest()->
             getFuseActionName();
         
-        if( $loginAction != $currentAction ) {
+        if( $loginAction != $currentAction && $authAction != $currentAction ) {
             if( !$manager->isAuthenticated() ) {
                 MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
-                    'goToLoginPage' ) );
+                    'goToLoginAction' ) );
             }
         }
     }
