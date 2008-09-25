@@ -464,14 +464,7 @@ class BasicCircuit implements Circuit {
         if( !is_null( $this->parent ) ) {
             $circuit = $this->parent;
             
-            if( !is_null( $circuit->getApplication()->getController()->getCurrentPhase() ) ) {
-                    
-                    if( !$circuit->isLoaded() ) {
-                        $circuit->setLoaded( true );
-                        $circuit->setData( $circuit->getApplication()->getLoader()->loadCircuit( $circuit ) );
-                        BasicMyFusesBuilder::buildCircuit( $circuit );
-                    }
-            }    
+            MyFusesLifecycle::seekCircuit( $circuit );
         }
         
         return $this->parent;
@@ -618,7 +611,6 @@ class BasicCircuit implements Circuit {
             $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
-        //$strOut .= $this->getActionsCachedCode();
         
         $strOut .= $this->getPreFuseActionCachedCode();
         
