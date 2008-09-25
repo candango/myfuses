@@ -122,6 +122,12 @@ interface Circuit extends ICacheable {
      */
     public function getCompletePath();
     
+    /**
+     * REturn the complete path for cache file
+     *
+     * @return string
+     */
+    public function getCompleteCacheFile();
     
     /**
      * Set the circuit path

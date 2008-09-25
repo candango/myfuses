@@ -203,6 +203,14 @@ class BasicCircuit implements Circuit {
         return $this->getApplication()->getPath() . $this->getPath();
     }
     
+    /**
+     * REturn the complete path for cache file
+     *
+     * @return string
+     */
+    public function getCompleteCacheFile() {
+        return $this->getApplication()->getParsedPath() . $this->getName() . ".circuit.myfuses.php";
+    }
     
     /**
      * Set the circuit path
