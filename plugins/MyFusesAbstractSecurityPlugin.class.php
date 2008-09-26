@@ -16,7 +16,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      *
      * @var string
      */
-    private static $authAction = "";
+    private static $authenticationAction = "";
     
     /**
      * Return application login action
@@ -43,8 +43,8 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      *
      * @return string
      */
-    private static function getAuthAction() {
-        return self::$authAction;
+    private static function getAuthenticationAction() {
+        return self::$authenticationAction;
     }
     
     /**
@@ -52,10 +52,10 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      *
      * @param string $authAction
      */
-    private static function setAuthAction( $authAction ) {
-        self::$authAction = $authAction;
+    private static function setAuthenticationAction( $authenticationAction ) {
+        self::$authenticationAction = $authenticationAction;
         MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
-                'goToAuthAction', $authAction );
+                'goToAuthenticationAction', $authenticationAction );
     }
     
 	public function run() {
@@ -89,7 +89,6 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
     }
 	
     public function configureSecurityManager( MyFusesSecurityManager $manager ) {
-            
         // getting login action
         $loginAction = $this->getParameter( 'LoginAction' );
         
@@ -97,16 +96,16 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
         self::setLoginAction( $loginAction );
         
-        $authAction = $this->getParameter( 'AuthAction' );
+        $authenticationAction = $this->getParameter( 'AuthenticationAction' );
         
-        $authAction = $authAction[ 0 ];
+        $authenticationAction = $authenticationAction[ 0 ];
         
-        self::setAuthAction( $authAction );
+        self::setAuthenticationAction( $authenticationAction );
         
         $currentAction = MyFuses::getInstance()->getRequest()->
             getFuseActionName();
         
-        if( $loginAction != $currentAction && $authAction != $currentAction ) {
+        if( $loginAction != $currentAction && $authenticationAction != $currentAction ) {
             if( !$manager->isAuthenticated() ) {
                 MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
                     'goToLoginAction' ) );
