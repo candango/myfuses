@@ -10,6 +10,12 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      */
     private static $loginAction = "";
     
+    /**
+     * Plugin listeners path
+     *
+     * @var array
+     */
+    private static $listenersPath = array( 'plugins/' );
     
     /**
      * Application authentication fuseaction
@@ -58,6 +64,26 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                 'goToAuthenticationAction', $authenticationAction );
     }
     
+    /**
+     * Return listeners path array
+     *
+     * @return array
+     */
+    public static function getListenersPath() {
+        return self::$listenersPath;
+    }
+    
+    /**
+     * Add one path to listeners path array if the path doesn't exists 
+     *
+     * @param string $path
+     */
+    public static function addListenerPath( $path ) {
+        if( !in_array( $path, self::$listenersPath ) ) {
+            self::$listenersPath[] = $path;    
+        }
+    }
+    
 	public function run() {
 		
 	    $this->checkSession();
@@ -70,24 +96,45 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
 	    
 	}
 	
+	/**
+	 * Verify if the session was started. If not start the session
+	 */
 	private function checkSession() {
         if( !isset( $_SESSION ) ) {
             session_start();
         }
 	}
 	
+	/**
+	 * Run pre process actions
+	 *
+	 */
     private function runPreProcess() {
         
         $manager = MyFusesAbstractSecurityManager::getInstance();
         
         $manager->createCredential();
         
+        $this->configurePlugin();
+        
         $this->configureSecurityManager( $manager );
         
         $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
         
     }
-	
+    
+	/**
+	 * Configure plugin reading the his parameters
+	 *
+	 */
+    private function configurePlugin() {
+         
+        foreach( $this->getParameter( 'ListenersPath' ) as $path ) {
+            self::addListenerPath( $path );
+        }
+        
+    }
+    
     public function configureSecurityManager( MyFusesSecurityManager $manager ) {
         // getting login action
         $loginAction = $this->getParameter( 'LoginAction' );
