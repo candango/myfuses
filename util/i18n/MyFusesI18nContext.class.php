@@ -51,11 +51,22 @@ class MyFusesI18nContext {
     
     public static function getExpression( $name, $locale=null ) {
     	
+    	if( is_null( MyFuses::getInstance()->getRequest() ) ) {
+    		$encoding = 'UTF-8';
+    	}
+    	else {
+    		$encoding = MyFuses::getInstance()->getRequest()->getApplication()->getCharacterEncoding();	
+    	}
+    	
     	if( is_null( $locale ) ) {
     		$locale = MyFuses::getApplication()->getLocale();	
     	}
     	
-    	return self::$context[ $locale ][ $name ];
+    	if( !isset( self::$context[ $locale ][ $name ] ) ) {
+    		return "Expression " .  $name . " not found.";
+    	}
+    	
+    	return html_entity_decode( self::$context[ $locale ][ $name ], ENT_NOQUOTES, $encoding );
     }
     
     public static function setExpression( $locale, $name, $value ) {
@@ -68,3 +79,11 @@ class MyFusesI18nContext {
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
+function get_myfuses_expresion( $name, $locale=null ) {
+	return MyFusesI18nContext::getExpression( $name, $locale );
+}
+
+function __( $name, $locale=null ) {
+	return get_myfuses_expresion( $name, $locale );
+}
