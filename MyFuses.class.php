@@ -229,12 +229,12 @@ class MyFuses {
             DIRECTORY_SEPARATOR . $pathStr . DIRECTORY_SEPARATOR );        
             
         // adding plugin paths
-        $this->addPluginPath( "plugins/" );
-        $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins/" );
+        $this->addPluginPath( "plugins" . DIRECTORY_SEPARATOR );
+        $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins" . DIRECTORY_SEPARATOR );
         
         // adding i18n paths
-        $this->addI18nPath( self::MYFUSES_ROOT_PATH . "i18n/" );
-        $this->addI18nPath( "i18n/" );
+        $this->addI18nPath( self::MYFUSES_ROOT_PATH . "i18n" . DIRECTORY_SEPARATOR );
+        $this->addI18nPath( "i18n" . DIRECTORY_SEPARATOR );
         
         
         // adding verb paths
@@ -755,6 +755,7 @@ class MyFuses {
      */
     public function doProcess() {
         try {
+        	
             MyFusesLifecycle::configureLocale();
             
             if( $this->isMemcacheEnabled() ) {
