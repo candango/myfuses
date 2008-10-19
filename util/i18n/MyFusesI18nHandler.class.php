@@ -80,7 +80,8 @@ abstract class MyFusesI18nHandler {
     /**
      * Method that execute all steps to configure i18n
      */
-    public function configure(){
+    public function configure() {
+    	
         $this->markTimeStamp();
         $this->setLocale();
         
@@ -131,7 +132,7 @@ abstract class MyFusesI18nHandler {
             }
             
         }
-        
+        //var_dump( MyFusesI18nContext::getContext() );die();
     }
     
     /**
@@ -140,7 +141,9 @@ abstract class MyFusesI18nHandler {
      * @param string $paht
      */
     private function digPath( $path ) {
-        if( file_exists( $path ) ) {
+        $appEncoding = MyFuses::getApplication()->getCharacterEncoding();
+    	
+    	if( file_exists( $path ) ) {
             $it = new RecursiveDirectoryIterator( $path );
             
             foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
@@ -153,6 +156,9 @@ abstract class MyFusesI18nHandler {
                     if( $localePath != $path ) {
                         if( file_exists( $localePath . "expression.xml" ) ) {
                             $doc = $this->loadFile( $localePath . "expression.xml" );
+                            
+                            $docEncoding = $this->getDocEncoding( $doc->asXML() );
+                            
                             foreach( $doc->expression as $expression ) {
                                 $name = "";
                                 foreach( $expression->attributes() as $key => $attr ) {
@@ -162,6 +168,8 @@ abstract class MyFusesI18nHandler {
                                 }
                                 
                                 if( $name != "" ) {
+                                	$expression = htmlentities( $expression, ENT_NOQUOTES, $docEncoding );
+                                	
                                     MyFusesI18nContext::setExpression( 
                                         $locale, $name, "" . $expression );
                                 }
@@ -172,6 +180,16 @@ abstract class MyFusesI18nHandler {
             }
             //var_dump( MyFusesI18nContext::getContext() );die();
         }
+    }
+    
+    public function getDocEncoding( $docXml ) {
+    	$encoding = "UTF-8";
+    	preg_match( '@encoding="([\w|-]+)"@', strtolower( $docXml ), $matches );
+        
+    	if( count( $matches ) > 1 ) {
+    		$encoding = strtoupper( $matches[ 1 ] );
+    	}
+    	return $encoding;
     }
     
     /**
