@@ -49,6 +49,15 @@ class MyFusesI18nContext {
     
     private static $context = array();
     
+    public static function getExpression( $name, $locale=null ) {
+    	
+    	if( is_null( $locale ) ) {
+    		$locale = MyFuses::getApplication()->getLocale();	
+    	}
+    	
+    	return self::$context[ $locale ][ $name ];
+    }
+    
     public static function setExpression( $locale, $name, $value ) {
         self::$context[ $locale ][ $name ] = $value;
     }
