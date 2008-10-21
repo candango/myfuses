@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <expressions>
-    <expression name="TEST_EXPRESSION">Isto asdfsdfs um teste.</expression>
+    <expression name="TEST_EXPRESSION">Esta é uma expressão de teste.</expression>
 </expressions>
