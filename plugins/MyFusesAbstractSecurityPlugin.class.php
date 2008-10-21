@@ -2,7 +2,7 @@
 require_once 'myfuses/util/security/MyFusesAbstractSecurityManager.class.php';
 
 abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
-	
+    
     /**
      * Application login fuseaction
      *
@@ -131,8 +131,6 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
 	 */
     private function configurePlugin() {
         
-        self::setAuthenticationAction( $authenticationAction );
-        
         foreach( $this->getParameter( 'ListenersPath' ) as $path ) {
             self::addListenerPath( $path );
         }
@@ -169,6 +167,10 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      */
     public function authenticate( MyFusesSecurityManager $manager ) {
         
+        MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
+                'goToIndexAction', 
+                $this->getApplication()->getDefaultFuseaction() );
+        
         // getting login action
         $loginAction = $this->getParameter( 'LoginAction' );
         
@@ -179,6 +181,8 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         $authenticationAction = $this->getParameter( 'AuthenticationAction' );
         
         $authenticationAction = $authenticationAction[ 0 ];
+        
+        self::setAuthenticationAction( $authenticationAction );
         
         $currentAction = MyFuses::getInstance()->getRequest()->
             getFuseActionName();
@@ -192,31 +196,21 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
         if( !$manager->isAuthenticated() ) {
             if( MyFuses::getInstance()->getRequest()->getFuseActionName() == 
-            $this->getAuthenticationAction() ){
+                $this->getAuthenticationAction() ) {
+                
                 unset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'AUTH_ERRORS' ] );
             
                 $error = false;
                 
                 foreach( $manager->getAuthenticationListeners() as $listner ) {
-                    var_dump( $listner );die();
+                    $listner->authenticate( $manager );
                 }
                 
-                if( $_POST[ $manager->getUserLoginField() ] == "" || 
-                    $_POST[ $manager->getUserLoginField() ] == "" ) {
-                    $_SESSION[ 'MYFUSES_SECURITY' ][ 'AUTH_ERRORS' ][] = "Invalid user name or password<br>";
-                    $error = true;    
-                } 
-                else {
-                    if( $_POST[ $manager->getUserLoginField() ] !== "flavio.garcia" 
-                        && $_POST[ $manager->getUserPasswordField() ] 
-                            !== "moloidez" ) {
-                        $_SESSION[ 'MYFUSES_SECURITY' ][ 'AUTH_ERRORS' ][] = "Username or password do not match<br>";
-                        $error = true;
-                    }    
-                }
-                
-                if( $error ) {
+                if( !$manager->isAuthenticated() ) {
                     MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToLoginAction' ) );
+                }
+                else {
+                    MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToIndexAction' ) );
                 }
             }
         }
