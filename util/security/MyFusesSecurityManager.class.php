@@ -49,7 +49,13 @@ interface MyFusesSecurityManager {
      * @return array Array of AuthenticationListeners
      */
     public function getSecutiyListeners();
-
+    
+    public function getUserLoginField();
+       
+    public function getUserPasswordField();
+    
+    public function setUserPasswordField( $userPasswordField );
+    
 }
 
 interface MyFusesSecuriyListener {

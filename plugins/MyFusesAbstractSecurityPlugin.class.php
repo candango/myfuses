@@ -119,6 +119,8 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
         $this->configureSecurityManager( $manager );
         
+        $this->authenticate( $manager );
+        
         $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
         
     }
@@ -158,6 +160,42 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                     'goToLoginAction' ) );
             }
         }
+    }
+    
+    /**
+     * Authenticating user
+     *
+     * @param MyFusesSecurityManager $manager
+     */
+    public function authenticate( MyFusesSecurityManager $manager ) {
+        
+        if( !$manager->isAuthenticated() ) {
+            if( MyFuses::getInstance()->getRequest()->getFuseActionName() == 
+            $this->getAuthenticationAction() ){
+                unset( $_SESSION[ 'AUTH_ERRORS' ] );
+            
+            $error = false;
+
+            if( $_POST[ $manager->getUserLoginField() ] == "" || 
+                $_POST[ $manager->getUserLoginField() ] == "" ) {
+                $_SESSION[ 'AUTH_ERRORS' ][] = "Invalid user name or password<br>";
+                $error = true;    
+            } 
+            else {
+                if( $_POST[ $manager->getUserLoginField() ] !== "flavio.garcia" 
+                    && $_POST[ $manager->getUserPasswordField() ] 
+                        !== "moloidez" ) {
+                    $_SESSION[ 'AUTH_ERRORS' ][] = "Username or password do not match<br>";
+                    $error = true;
+                }    
+            }
+            
+            if( $error ) {
+                MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToLoginAction' ) );
+            }
+            }
+        }
+        
     }
     
 }

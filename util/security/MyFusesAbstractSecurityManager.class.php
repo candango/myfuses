@@ -13,6 +13,20 @@ abstract class MyFusesAbstractSecurityManager
 
     private static $instance;
     
+    /**
+     * User login field name
+     *
+     * @var string
+     */
+    private $userLoginField = "userLogin";
+    
+    /**
+     * User password field name
+     *
+     * @var string
+     */
+    private $userPassword = "userPassword";
+    
     public function isAuthenticated() {
         
         $credential = $this->getCredential();
@@ -57,5 +71,20 @@ abstract class MyFusesAbstractSecurityManager
         
         return self::$instance;
     }
-
+    
+    public function getUserLoginField(){
+        return $this->userLoginField;
+    }
+    
+    public function setUserLoginField( $userLoginField ) {
+        $this->userLoginField = $userLoginField;
+    }
+    
+    public function getUserPasswordField(){
+        return $this->userPasswordField;
+    }
+    
+    public function setUserPasswordField( $userPasswordField ) {
+        $this->userPasswordField = $userPasswordField;
+    }
 } 
