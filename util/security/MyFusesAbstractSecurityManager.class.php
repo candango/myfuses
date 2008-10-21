@@ -10,7 +10,14 @@ abstract class MyFusesAbstractSecurityManager
      * @var array
      */
     private $securityListeners = array();
-
+    
+    /**
+     * Authentication Manager listeners
+     *
+     * @var array
+     */
+    private $authenticationListeners = array();
+    
     private static $instance;
     
     /**
@@ -39,7 +46,26 @@ abstract class MyFusesAbstractSecurityManager
             $listener->authorizationPerformed();
         }
     }
+    
+    /**
+     * Add one Authentication Listener to manager
+     *
+     * @param MyFusesAuthenticationListener $listener
+     */
+    public function addAuthenticationListener( 
+        MyFusesAuthenticationListener $listener ) {
+        $this->authenticationListeners[] = $listener;
+    }
 
+    /**
+     * Return all Authentication listeners registered
+     *
+     * @return array Array of AuthenticationListeners
+     */
+    public function getAuthenticationListeners() {
+        return $this->authenticationListeners;
+    }
+    
     /**
      * Add one Autentication Listener
      *
@@ -57,7 +83,7 @@ abstract class MyFusesAbstractSecurityManager
     public function getSecutiyListeners() {
         return $this->securityListeners;
     }
-
+    
     /**
      * Return new Basic Security Manager instance
      *
