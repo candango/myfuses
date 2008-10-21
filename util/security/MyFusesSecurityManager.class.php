@@ -28,7 +28,7 @@ interface MyFusesSecurityManager {
      * @return boolean
      */
     public function isAuthenticated();
-     
+    
     /**
      * Return true/fase if the credential is authorized
      *
