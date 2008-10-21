@@ -32,7 +32,7 @@ abstract class MyFusesAbstractSecurityManager
      *
      * @var string
      */
-    private $userPassword = "userPassword";
+    private $userPasswordField = "userPassword";
     
     public function isAuthenticated() {
         
@@ -112,5 +112,30 @@ abstract class MyFusesAbstractSecurityManager
     
     public function setUserPasswordField( $userPasswordField ) {
         $this->userPasswordField = $userPasswordField;
+    }
+    
+    public function getUserLoginInPost() {
+        var_dump( $_POST );
+        return $_POST[ $this->getUserLoginField() ];
+    }
+    
+    public function getUserLoginInGet() {
+        return $_GET[ $this->getUserLoginField() ];
+    }
+    
+    public function getUserLoginInRequest() {
+        return $_REQUEST[ $this->getUserLoginField() ];
+    }
+    
+    public function getUserPasswordInPost() {
+        return $_POST[ $this->getUserPasswordField() ];
+    }
+    
+    public function getUserPasswordInGet() {
+        return $_GET[ $this->getUserPasswordField() ];
+    }
+    
+    public function getUserPasswordInRequest() {
+        return $_REQUEST[ $this->getUserPasswordField() ];
     }
 } 

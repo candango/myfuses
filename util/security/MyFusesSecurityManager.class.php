@@ -2,7 +2,7 @@
 require_once "myfuses/util/security/MyFusesBasicCredential.class.php";
 
 interface MyFusesSecurityManager {
-
+    
     /**
      * This method creates a new credendtial
      */
@@ -70,6 +70,18 @@ interface MyFusesSecurityManager {
     public function getUserPasswordField();
     
     public function setUserPasswordField( $userPasswordField );
+    
+    public function getUserLoginInPost();
+    
+    public function getUserLoginInGet();
+    
+    public function getUserLoginInRequest();
+    
+    public function getUserPasswordInPost();
+    
+    public function getUserPasswordInGet();
+    
+    public function getUserPasswordInRequest();
     
 }
 
