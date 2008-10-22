@@ -204,10 +204,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      */
     public static function buildAction( Circuit $circuit, $name ) {
         
-        $action = new FuseAction( $circuit );
-        
         $circuitData = &$circuit->getData();
-            
+        
         foreach( $circuitData[ 'children' ] as $circuitDataChild ) {
             if( $circuitDataChild[ 'name' ] == 'fuseaction' ) {
                 // TODO throw exception here
@@ -217,7 +215,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 }    
             }
         }
-        
         
         if( is_null( $data ) ) {
             return false;
@@ -240,6 +237,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         $class = null;
         $path = null;
         
+        $customAttribute = array();
+        
         foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
             if ( isset( $actionParameterAttributes[ $attributeName ] ) ) {
                 // getting $name
@@ -248,8 +247,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             if( strpos( $attributeName, "_ns_"  ) !== false ) {
                 list( $namespace, $attrName ) = explode( "_ns_", 
                     $attributeName );
-                $action->setCustomAttribute( $namespace, 
-                    $attrName, $attribute );
+                $customAttribute[ $namespace ][ $attrName ] = $attribute;
             }
         }
         
@@ -265,6 +263,13 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         }
         else {
             $action = new $class( $circuit );
+        }
+        
+        foreach( $customAttribute as $namespace => $attributes ) {
+            foreach( $attributes as $attribute => $value ) {
+                $action->setCustomAttribute( $namespace, 
+                    $attribute, $value );
+            }
         }
         
         if( !is_null( $path ) ){
