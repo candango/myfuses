@@ -167,54 +167,62 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      */
     public function authenticate( MyFusesSecurityManager $manager ) {
         
-        MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
-                'goToIndexAction', 
-                $this->getApplication()->getDefaultFuseaction() );
-        
-        // getting login action
-        $loginAction = $this->getParameter( 'LoginAction' );
-        
-        $loginAction = $loginAction[ 0 ];
-        
-        self::setLoginAction( $loginAction );
-        
-        $authenticationAction = $this->getParameter( 'AuthenticationAction' );
-        
-        $authenticationAction = $authenticationAction[ 0 ];
-        
-        self::setAuthenticationAction( $authenticationAction );
-        
-        $currentAction = MyFuses::getInstance()->getRequest()->
-            getFuseActionName();
-        
-        if( $loginAction != $currentAction && $authenticationAction != $currentAction ) {
-            if( !$manager->isAuthenticated() ) {
-                MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
-                    'goToLoginAction' ) );
-            }
-        }
-        
-        if( !$manager->isAuthenticated() ) {
-            if( MyFuses::getInstance()->getRequest()->getFuseActionName() == 
-                $this->getAuthenticationAction() ) {
+        if( ( strtolower( MyFuses::getInstance()->getRequest()->getAction()->
+            getCustomAttribute( "security", "enabled" ) ) != "false" ) ) {
                 
-                unset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'AUTH_ERRORS' ] );
+            MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
+                    'goToIndexAction', 
+                    $this->getApplication()->getDefaultFuseaction() );
             
-                $error = false;
-                
-                foreach( $manager->getAuthenticationListeners() as $listner ) {
-                    $listner->authenticate( $manager );
-                }
-                
+            // getting login action
+            $loginAction = $this->getParameter( 'LoginAction' );
+            
+            $loginAction = $loginAction[ 0 ];
+            
+            self::setLoginAction( $loginAction );
+            
+            $authenticationAction = $this->getParameter( 
+                'AuthenticationAction' );
+            
+            $authenticationAction = $authenticationAction[ 0 ];
+            
+            self::setAuthenticationAction( $authenticationAction );
+            
+            $currentAction = MyFuses::getInstance()->getRequest()->
+                getFuseActionName();
+            
+            if( $loginAction != $currentAction && $authenticationAction != 
+                $currentAction ) {
                 if( !$manager->isAuthenticated() ) {
-                    MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToLoginAction' ) );
+                    MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
+                        'goToLoginAction' ) );
                 }
-                else {
-                    MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToIndexAction' ) );
+            }
+            
+            if( !$manager->isAuthenticated() ) {
+                if( MyFuses::getInstance()->getRequest()->getFuseActionName() == 
+                    $this->getAuthenticationAction() ) {
+                    
+                    unset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'AUTH_ERRORS' ] );
+                
+                    $error = false;
+                    
+                    foreach( $manager->getAuthenticationListeners() as 
+                        $listner ) {
+                        $listner->authenticate( $manager );
+                    }
+                    
+                    if( !$manager->isAuthenticated() ) {
+                        MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
+                            'goToLoginAction' ) );
+                    }
+                    else {
+                        MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
+                            'goToIndexAction' ) );
+                    }
                 }
             }
         }
-        
     }
     
 }
