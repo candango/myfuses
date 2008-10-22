@@ -115,7 +115,6 @@ abstract class MyFusesAbstractSecurityManager
     }
     
     public function getUserLoginInPost() {
-        var_dump( $_POST );
         return $_POST[ $this->getUserLoginField() ];
     }
     
