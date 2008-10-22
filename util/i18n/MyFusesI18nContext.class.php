@@ -84,6 +84,6 @@ function get_myfuses_expresion( $name, $locale=null ) {
 	return MyFusesI18nContext::getExpression( $name, $locale );
 }
 
-function __( $name, $locale=null ) {
+function myexp( $name, $locale=null ) {
 	return get_myfuses_expresion( $name, $locale );
 }
