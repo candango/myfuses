@@ -957,6 +957,19 @@ class MyFuses {
     
 }
 
+/**
+ * This is an alias function to MyFuses::getMySelfXfa method.
+ *
+ * @param string $xfaName
+ * @param boolean $initQuery
+ * @param boolean $showFuseactionVariable
+ * @return string
+ */
+function xfa( $xfaName, $initQuery = false, $showFuseactionVariable=true ) {
+    return MyFuses::getMySelfXfa( $xfaName, $initQuery, 
+        $showFuseactionVariable );
+}
+
 class MyFusesMemcacheServer {
     
     private $host;
