@@ -218,9 +218,11 @@ class MyFuses {
         $this->builder = new BasicMyFusesBuilder();
         $this->debugger = new MyFusesDebugger();
         
-        $pathStr = str_replace( array( DIRECTORY_SEPARATOR, ':' ), '_', 
+        $pathStr = str_replace( array( DIRECTORY_SEPARATOR, ':', '/' ), '_', 
             dirname( $_SERVER[ 'SCRIPT_FILENAME' ] ) );
         
+        $pathStr = str_replace( '__' , '_', $pathStr );
+            
         if( substr( $pathStr, 0, 1 ) == "_" ) {
             $pathStr = substr( $pathStr, 1, strlen( $pathStr ) );      
         }
