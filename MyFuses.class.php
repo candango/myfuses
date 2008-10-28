@@ -88,6 +88,9 @@ catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();
 }
 
+// cleaning file functions cache
+clearstatcache();
+
 /**
  * MyFuses  - MyFuses.class.php
  * 
