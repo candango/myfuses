@@ -49,6 +49,10 @@ class MyFusesI18nContext {
     
     private static $context = array();
     
+    private static $time;
+    
+    private static $store = false;
+    
     public static function getExpression( $name, $locale=null ) {
     	
     	if( is_null( MyFuses::getInstance()->getRequest() ) ) {
@@ -75,6 +79,26 @@ class MyFusesI18nContext {
     
     public static function getContext(){
         return self::$context;
+    }
+    
+    public static function setContext( $context ) {
+        self::$context = $context;
+    }
+    
+    public static function getTime() {
+        return self::$time;
+    }
+    
+    public static function setTime( $time ) {
+        self::$time = $time;
+    }
+    
+    public static function mustStore() {
+        return self::$store;
+    }
+    
+    public static function setStore( $store ) {
+        self::$store = $store;
     }
     
 }

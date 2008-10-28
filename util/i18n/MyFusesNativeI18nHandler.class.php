@@ -54,26 +54,30 @@ class MyFusesNativeI18nHandler extends MyFusesI18nHandler {
     }
     
     public function storeFiles() {
-        
-        $path = MyFuses::getApplication()->getParsedPath();
-        
-        $path = MyFusesFileHandler::sanitizePath( $path . 'i18n' );
-        
-        if( !file_exists( $path ) ) {
-            MyFusesFileHandler::createPath( $path );
+        if( MyFusesI18nContext::mustStore() ) {
+            $path = MyFuses::getApplication()->getParsedPath();
+            
+            $path = MyFusesFileHandler::sanitizePath( $path . 'i18n' );
+            
+            if( !file_exists( $path ) ) {
+                MyFusesFileHandler::createPath( $path );
+            }
+            
+            $fileName = $path . "locale.data.php";
+            
+            $data = "<?php\nreturn unserialize( '";
+    
+            $context = MyFusesI18nContext::getContext();
+            
+            $context[ 'last_load_time' ] = MyFusesI18nContext::getTime();
+            
+            $data .= str_replace("'","\'", 
+                serialize( $context ) );
+            
+            $data .= "' );";
+            
+            MyFusesFileHandler::writeFile( $fileName, $data );
         }
-        
-        $fileName = $path . "locale.data.php";
-        
-        $data = "<?php\nreturn unserialize( '";
-                
-        $data .= str_replace("'","\'", 
-            serialize( MyFusesI18nContext::getContext() ) );
-        
-        $data .= "' );";
-        
-        MyFusesFileHandler::writeFile( $fileName, $data );
-        
     }
         
 }

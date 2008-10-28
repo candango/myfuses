@@ -114,25 +114,86 @@ abstract class MyFusesI18nHandler {
         
         if( file_exists( $i18nFile ) ) {
             $i18nData = require $i18nFile;
+            
+            MyFusesI18nContext::setTime( $i18nData[ 'last_load_time' ] );
+            
+            unset( $i18nData[ 'last_load_time' ] );
+            
+            MyFusesI18nContext::setContext( $i18nData );
+        }
+        else {
+            MyFusesI18nContext::setStore( true );
         }
         
         MyFuses::getApplication()->getParsedPath();
         
+        if( $this->mustLoad() ) {
+            foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
+                
+                if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
+                    $this->digPath( $path );
+                }
+                else {
+                    foreach( MyFuses::getInstance()->getApplications() 
+                        as $key => $application ) {
+                        if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                            $this->digPath( $application->getPath() . $path );
+                        }
+                    }
+                }    
+            }
+            MyFusesI18nContext::setTime( time() );
+            MyFusesI18nContext::setStore( true );
+        }
+        //var_dump( MyFusesI18nContext::getContext() );die();
+    }
+    
+    private function mustLoad() {
+        
         foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
-            
             if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
-                $this->digPath( $path );
+                if( $this->checkPath( $path ) ) {
+                    return true;
+                }
             }
             else {
-                foreach( MyFuses::getInstance()->getApplications() as $key => $application ) {
+                foreach( MyFuses::getInstance()->getApplications() 
+                    as $key => $application ) {
                     if( $key != Application::DEFAULT_APPLICATION_NAME ) {
-                        $this->digPath( $application->getPath() . $path );
+                        if( $this->checkPath( $application->getPath() . 
+                            $path ) ) {
+                            return true;
+                        }
+                    }
+                }
+            }   
+        }
+        return false;
+    }
+    
+    private function checkPath( $path ) {
+        if( file_exists( $path ) ) {
+            $it = new RecursiveDirectoryIterator( $path );
+            
+            foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
+                if( $child->isDir() ) {
+                    $locale = $child->getBaseName();
+                    
+                    $localePath = MyFusesFileHandler::sanitizePath( 
+                        $child->getPath() . DIRECTORY_SEPARATOR . $locale );
+                    
+                    if( $localePath != $path ) {
+                        if( file_exists( $localePath . "expression.xml" ) ) {
+                            if( filectime( $localePath . "expression.xml" ) > 
+                                MyFusesI18nContext::getTime() ) {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
-            
         }
-        //var_dump( MyFusesI18nContext::getContext() );die();
+        return false;
     }
     
     /**
@@ -141,8 +202,6 @@ abstract class MyFusesI18nHandler {
      * @param string $paht
      */
     private function digPath( $path ) {
-        $appEncoding = MyFuses::getApplication()->getCharacterEncoding();
-    	
     	if( file_exists( $path ) ) {
             $it = new RecursiveDirectoryIterator( $path );
             
@@ -155,20 +214,24 @@ abstract class MyFusesI18nHandler {
                     
                     if( $localePath != $path ) {
                         if( file_exists( $localePath . "expression.xml" ) ) {
-                            $doc = $this->loadFile( $localePath . "expression.xml" );
+                            $doc = $this->loadFile( $localePath . 
+                                "expression.xml" );
                             
-                            $docEncoding = $this->getDocEncoding( $doc->asXML() );
+                            $docEncoding = $this->getDocEncoding( 
+                                $doc->asXML() );
                             
                             foreach( $doc->expression as $expression ) {
                                 $name = "";
-                                foreach( $expression->attributes() as $key => $attr ) {
+                                foreach( $expression->attributes() as $key => 
+                                    $attr ) {
                                     if( $key == 'name' ) {
                                         $name = "" . $attr;
                                     }    
                                 }
                                 
                                 if( $name != "" ) {
-                                	$expression = htmlentities( $expression, ENT_NOQUOTES, $docEncoding );
+                                	$expression = htmlentities( $expression, 
+                                	   ENT_NOQUOTES, $docEncoding );
                                 	
                                     MyFusesI18nContext::setExpression( 
                                         $locale, $name, "" . $expression );
@@ -178,7 +241,6 @@ abstract class MyFusesI18nHandler {
                     }
                 }
             }
-            //var_dump( MyFusesI18nContext::getContext() );die();
         }
     }
     
