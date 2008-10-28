@@ -67,7 +67,7 @@ class BasicApplication implements Application {
      *
      * @var string
      */
-    private $locale = "en_US";
+    private $locale = "en";
     
     /**
      * Flag that indicates that the application must be loaded
