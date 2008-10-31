@@ -176,7 +176,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         }
         
         
-        if( count( $data[ 'children' ] > 0 ) ) {
+        if( count( $data[ 'children' ] > 0 ) && !is_null( $data[ 'children' ] ) ) {
             foreach( $data[ 'children' ] as $child ) {
                 
                 switch( $child[ 'name' ] ) {
