@@ -115,8 +115,9 @@ class FuseRequest {
     public function getAction() {
         $action = null;
         
-        $action = $this->application->getCircuit( $this->circuitName )
-            ->getAction( $this->actionName );    
+        $circuit = $this->application->getCircuit( $this->circuitName );
+        
+        $action = $circuit->getAction( $this->actionName );    
         
         return $action;
     }

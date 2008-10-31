@@ -80,7 +80,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             $default = $this->getApplication()->isDefault();
             if( !$this->getApplication()->getController()->
                 isMemcacheEnabled() ) {
-                    
                 include $this->getApplication()->getCompleteCacheFile();
                 
                 // correcting cached application reference
@@ -88,7 +87,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                     $this->getApplication()->getController()->getApplication( 
                         $this->application->getName() ) );
                 $this->getApplication()->setLoader( $this );
-                
             }
             
             $this->getApplication()->setDefault( $default );
@@ -170,7 +168,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             if( !file_exists( $circuit->getCompleteCacheFile() ) ) {
                 $data = $this->doLoadCircuit( $circuit );
             }
-            else{
+            else {
+                include $circuit->getCompleteCacheFile();
                 if( $this->circuitWasModified( $name ) || 
                     $this->applicationWasModified() ) {
                     $data = $this->doLoadCircuit( $circuit );    
