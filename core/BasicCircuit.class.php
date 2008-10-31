@@ -440,10 +440,6 @@ class BasicCircuit implements Circuit {
      * @access public
      */
     public function getParentName() {
-        if( !is_null( $this->parent ) ) {
-            return $this->parent->getName();
-        }
-        
         return $this->parentName;
     }
     
@@ -469,13 +465,12 @@ class BasicCircuit implements Circuit {
      * @access public
      */
     public function getParent() {
-        if( !is_null( $this->parent ) ) {
-            $circuit = $this->parent;
-            
-            MyFusesLifecycle::seekCircuit( $circuit );
+        
+        if( $this->parentName != "") {
+            return $this->getApplication()->getCircuit( $this->parentName );
         }
         
-        return $this->parent;
+        return null;
     }
     
     /**
@@ -604,6 +599,13 @@ class BasicCircuit implements Circuit {
         $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . 
             "\" );\n";
         
+        $strOut .= "\$application = " . get_class( 
+            $this->getApplication()->getController() ) . 
+            "::getApplication( \"" . $this->getApplication()->getName() . 
+            "\" );\n";
+        
+        $strOut .= "\$application->addCircuit( \$circuit );\n";
+        
         foreach( $this->customAttributes as $namespace => $attributes ) {
             foreach( $attributes as $name => $value ) {
                 $strOut .= "\$circuit->setCustomAttribute( \"" . $namespace . 
@@ -611,7 +613,7 @@ class BasicCircuit implements Circuit {
             }
         }
             
-        $strOut .= "\$application->addCircuit( \$circuit );\n";
+        
         $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
             serialize( $this->getVerbPaths() ) ) . "\" );\n";
         $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
@@ -620,8 +622,8 @@ class BasicCircuit implements Circuit {
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
         
-        $strOut .= "\$circuit->setData( \"" . 
-            $this->getData() . "\" );\n";
+        $strOut .= "\$circuit->setData( \"" . addslashes( 
+            serialize( $this->getData() ) ) . "\" );\n";
             
         $strOut .= $this->getPreFuseActionCachedCode();
         

@@ -596,7 +596,7 @@ class BasicApplication implements Application {
         $this->circuits[ $circuit->getName() ] = $circuit;
         $circuit->setApplication( $this );
         // updating all circuits parents
-        $this->updateCircuitsParents();
+        //$this->updateCircuitsParents();
         
     }
     
