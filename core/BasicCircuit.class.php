@@ -620,6 +620,9 @@ class BasicCircuit implements Circuit {
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
         
+        $strOut .= "\$circuit->setData( \"" . 
+            $this->getData() . "\" );\n";
+            
         $strOut .= $this->getPreFuseActionCachedCode();
         
         $strOut .= $this->getPostFuseActionCachedCode();
