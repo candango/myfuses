@@ -1323,7 +1323,8 @@ class BasicApplication implements Application {
             $strOut .= "\$circuit->setPath( \"" . addslashes( $circuit->getPath() ) . 
                 "\" );\n";
             $strOut .= "\$circuit->setParentName( \"" . 
-                $circuit->getParentName() . "\" );\n\n";
+                $circuit->getParentName() . "\" );\n";
+            $strOut .= "\$application->addCircuit( \$circuit );\n\n";
         }
         
         return $strOut;
