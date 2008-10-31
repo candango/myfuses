@@ -139,7 +139,6 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
                 }
             }
         }*/
-        
     }
     
     
@@ -168,15 +167,20 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         }
         
         if( $circuit->getApplication()->getMode() === 'production' ) {
-            if( $this->circuitWasModified( $name ) || 
-                $this->applicationWasModified() ) {
-                $data = $this->doLoadCircuit( $circuit );    
+            if( !file_exists( $circuit->getCompleteCacheFile() ) ) {
+                $data = $this->doLoadCircuit( $circuit );
             }
-            else {
-                $circuit->setModified( false );
-            }    
+            else{
+                if( $this->circuitWasModified( $name ) || 
+                    $this->applicationWasModified() ) {
+                    $data = $this->doLoadCircuit( $circuit );    
+                }
+                else {
+                    $circuit->setModified( false );
+                }       
+            }
+             
         }
-        
         return $data;
     }
     
