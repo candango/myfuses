@@ -592,19 +592,10 @@ class BasicCircuit implements Circuit {
     }
     
     public function getCachedCode() {
-        $strOut = "\$circuit = new BasicCircuit();\n";
-        $strOut .= "\$circuit->setName( \"" . $this->getName() . "\" );\n";
-        $strOut .= "\$circuit->setPath( \"" . addslashes( $this->getPath() ) . 
-            "\" );\n";
-        $strOut .= "\$circuit->setFile( \"" . addslashes( $this->getFile() ) . 
-            "\" );\n";
-        
-        $strOut .= "\$application = " . get_class( 
+        $strOut .= "\$circuit = " . get_class( 
             $this->getApplication()->getController() ) . 
             "::getApplication( \"" . $this->getApplication()->getName() . 
-            "\" );\n";
-        
-        $strOut .= "\$application->addCircuit( \$circuit );\n";
+            "\" )->getCircuit(  \"" . $this->getName() . "\"  );\n";
         
         foreach( $this->customAttributes as $namespace => $attributes ) {
             foreach( $attributes as $name => $value ) {
@@ -612,7 +603,6 @@ class BasicCircuit implements Circuit {
                     "\", \"" . $name . "\", \"" . $value . "\" );\n";
             }
         }
-            
         
         $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
             serialize( $this->getVerbPaths() ) ) . "\" );\n";
@@ -622,8 +612,8 @@ class BasicCircuit implements Circuit {
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
         
-        $strOut .= "\$circuit->setData( \"" . addslashes( 
-            serialize( $this->getData() ) ) . "\" );\n";
+        $strOut .= "\$circuit->setData( unserialize( \"" . str_replace( '$', 
+            '\$', addslashes( serialize( $this->getData() ) ) ) . "\" ) );\n";
             
         $strOut .= $this->getPreFuseActionCachedCode();
         
