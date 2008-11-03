@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <expressions>
     <expression name="TEST_EXPRESSION">This is a test expression.</expression>
+    
+    <!-- Month expressions -->
+    
+    <expression name="MONTH_01">January</expression>
+    <expression name="MONTH_02">February</expression>
+    <expression name="MONTH_03">March</expression>
+    <expression name="MONTH_04">April</expression>
+    <expression name="MONTH_09">September</expression>
+    <expression name="MONTH_10">October</expression>
+    <expression name="MONTH_11">November</expression>
+    <expression name="MONTH_12">December</expression>
+    
 </expressions>
