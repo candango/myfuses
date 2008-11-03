@@ -170,6 +170,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
             }
             else {
                 include $circuit->getCompleteCacheFile();
+                $data = $circuit->getData();
                 if( $this->circuitWasModified( $name ) || 
                     $this->applicationWasModified() ) {
                     $data = $this->doLoadCircuit( $circuit );    
