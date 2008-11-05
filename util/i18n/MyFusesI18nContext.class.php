@@ -53,24 +53,48 @@ class MyFusesI18nContext {
     
     private static $store = false;
     
-    public static function getExpression( $name, $locale=null ) {
+    public static function getExpression( $name, $params=null ) {
     	
     	if( is_null( MyFuses::getInstance()->getRequest() ) ) {
     		$encoding = 'UTF-8';
     	}
     	else {
-    		$encoding = MyFuses::getInstance()->getRequest()->getApplication()->getCharacterEncoding();	
+    		$encoding = MyFuses::getInstance()->getRequest()->
+    		  getApplication()->getCharacterEncoding();	
     	}
     	
-    	if( is_null( $locale ) ) {
-    		$locale = MyFuses::getApplication()->getLocale();	
+    	$locale = "";
+    	
+    	$replace = null;
+    	
+    	if( is_null( $params ) ) {
+    	    $locale = MyFuses::getApplication()->getLocale();
     	}
+    	else {
+    	    if( isset( $params[ 'locale' ] ) ) { 
+    	        $locale = $params[ 'locale' ];
+    	    }
+    	    else {
+    	        $locale = MyFuses::getApplication()->getLocale();
+    	    }
+    	    
+    	    if( isset( $params[ 'replace' ] ) ) {
+    	        $replace = $params[ 'replace' ];
+    	    }
+    	}    	
     	
     	if( !isset( self::$context[ $locale ][ $name ] ) ) {
     		return "Expression " .  $name . " not found.";
     	}
     	
-    	return html_entity_decode( self::$context[ $locale ][ $name ], ENT_NOQUOTES, $encoding );
+    	$expression = html_entity_decode( self::$context[ $locale ][ $name ], 
+    	   ENT_NOQUOTES, $encoding ); 
+        
+    	if( !is_null( $replace ) ) {
+    	    $expression = vsprintf( $expression, $replace );
+    	}
+    	
+    	return $expression; 
     }
     
     public static function setExpression( $locale, $name, $value ) {
@@ -104,10 +128,10 @@ class MyFusesI18nContext {
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
-function get_myfuses_expresion( $name, $locale=null ) {
-	return MyFusesI18nContext::getExpression( $name, $locale );
+function get_myfuses_expresion( $name, $params=null ) {
+	return MyFusesI18nContext::getExpression( $name, $params );
 }
 
-function myexp( $name, $locale=null ) {
-	return get_myfuses_expresion( $name, $locale );
+function myexp( $name, $params=null ) {
+	return MyFusesI18nContext::getExpression( $name, $params );
 }
