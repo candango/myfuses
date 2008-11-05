@@ -217,9 +217,6 @@ abstract class MyFusesI18nHandler {
                             $doc = $this->loadFile( $localePath . 
                                 "expressions.xml" );
                             
-                            $docEncoding = $this->getDocEncoding( 
-                                $doc->asXML() );
-                            
                             foreach( $doc->expression as $expression ) {
                                 $name = "";
                                 foreach( $expression->attributes() as $key => 
@@ -231,7 +228,7 @@ abstract class MyFusesI18nHandler {
                                 
                                 if( $name != "" ) {
                                 	$expression = htmlentities( $expression, 
-                                	   ENT_NOQUOTES, $docEncoding );
+                                	   ENT_NOQUOTES, 'UTF-8' );
                                 	
                                     MyFusesI18nContext::setExpression( 
                                         $locale, $name, "" . $expression );
@@ -242,16 +239,6 @@ abstract class MyFusesI18nHandler {
                 }
             }
         }
-    }
-    
-    public function getDocEncoding( $docXml ) {
-    	$encoding = "UTF-8";
-    	preg_match( '@encoding="([\w|-]+)"@', strtolower( $docXml ), $matches );
-        
-    	if( count( $matches ) > 1 ) {
-    		$encoding = strtoupper( $matches[ 1 ] );
-    	}
-    	return $encoding;
     }
     
     /**
