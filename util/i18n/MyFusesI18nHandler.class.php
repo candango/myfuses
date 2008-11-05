@@ -183,8 +183,8 @@ abstract class MyFusesI18nHandler {
                         $child->getPath() . DIRECTORY_SEPARATOR . $locale );
                     
                     if( $localePath != $path ) {
-                        if( file_exists( $localePath . "expression.xml" ) ) {
-                            if( filectime( $localePath . "expression.xml" ) > 
+                        if( file_exists( $localePath . "expressions.xml" ) ) {
+                            if( filectime( $localePath . "expressions.xml" ) > 
                                 MyFusesI18nContext::getTime() ) {
                                 return true;
                             }
@@ -213,9 +213,9 @@ abstract class MyFusesI18nHandler {
                         $child->getPath() . DIRECTORY_SEPARATOR . $locale );
                     
                     if( $localePath != $path ) {
-                        if( file_exists( $localePath . "expression.xml" ) ) {
+                        if( file_exists( $localePath . "expressions.xml" ) ) {
                             $doc = $this->loadFile( $localePath . 
-                                "expression.xml" );
+                                "expressions.xml" );
                             
                             $docEncoding = $this->getDocEncoding( 
                                 $doc->asXML() );
