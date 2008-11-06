@@ -81,7 +81,7 @@ class DoVerb extends ParameterizedVerb {
         
         $actionNameX = explode( '.', $actionName );
         
-        $app = $this->getAction()->getCircuit()->getApplication()->getName();
+        $app = "";
         
         if( count( $actionNameX ) > 2 ) {
             list( $app, $circuit, $action ) = $actionNameX;
@@ -110,7 +110,7 @@ class DoVerb extends ParameterizedVerb {
     public function getData() {
         $data = parent::getData();
         $app = $this->getAction()->getCircuit()->getApplication()->getName();
-        $data[ "attributes" ][ "action" ] = ( $this->appName != $app ? 
+        $data[ "attributes" ][ "action" ] = ( $this->appName != "" ? 
             $this->appName . "." : "" ) .  $this->circuitToBeExecutedName . 
             "." . $this->actionToBeExecutedName;
         return $data;
@@ -160,14 +160,17 @@ class DoVerb extends ParameterizedVerb {
      * @return string
      */
     public function getRealParsedCode( $commented, $identLevel ) {
-        InvokeVerb::clearClassCall();        
-        $completeActionName = $this->appName . "." . 
+        InvokeVerb::clearClassCall();
+        $appName = $this->appName == "" ? 
+            $this->getAction()->getCircuit()->getApplication()->getName() : 
+            $this->appName;
+        $completeActionName = $appName . "." . 
             $this->circuitToBeExecutedName . "." . 
             $this->actionToBeExecutedName; 
             
         try {
             $action =  MyFuses::getInstance()->getApplication( 
-                $this->appName )->getCircuit( 
+                $appName )->getCircuit( 
 	            $this->circuitToBeExecutedName )->
 	            getAction( $this->actionToBeExecutedName );
         }
