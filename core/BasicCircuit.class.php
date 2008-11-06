@@ -337,11 +337,6 @@ class BasicCircuit implements Circuit {
     		return $this->actions[ $name ];
     	}
     	
-    	if( BasicMyFusesBuilder::buildAction( $this, 
-    	   $name ) ) {
-    	   return $this->actions[ $name ];
-    	}
-    	
     	$params = array( "actionName" => $name, "circuit" => &$this , 
     	    "application" => $this->getApplication() );
     	throw new MyFusesFuseActionException( $params, 
@@ -614,10 +609,12 @@ class BasicCircuit implements Circuit {
         
         $strOut .= "\$circuit->setData( unserialize( \"" . str_replace( '$', 
             '\$', addslashes( serialize( $this->getData() ) ) ) . "\" ) );\n";
-            
+        
         $strOut .= $this->getPreFuseActionCachedCode();
         
         $strOut .= $this->getPostFuseActionCachedCode();
+        
+        $strOut .= $this->getActionsCachedCode();
         
         return $strOut;
     }

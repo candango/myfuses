@@ -658,12 +658,8 @@ class BasicApplication implements Application {
                     MyFusesCircuitException::NON_EXISTENT_CIRCUIT );
     	}
     	
-    	if( $circuit->getName() ==  'MYFUSES_GLOBAL_CIRCUIT' ) {
-    	    $circuit->setLoaded( true );
-    	}
+    	MyFusesLifecycle::checkCircuit( $circuit );
     	
-    	MyFusesLifecycle::seekCircuit( $circuit );
-        
         return $circuit;
     }
 
@@ -1249,6 +1245,9 @@ class BasicApplication implements Application {
         $strOut .= "\$application->setFile( \"" . addslashes( $this->getFile() ) . "\" );\n";
         
         $strOut .= "\$application->setLastLoadTime( " . $this->getLastLoadTime() . " );\n";
+        
+        $strOut .= "\$application->setLocale( \"" . $this->getLocale() . "\" );\n";
+        
         $strOut .= "\$application->setLoader( new " . get_class( $this->getLoader() ) . "() );\n";
         
         /*if( $this->isDefault() ) {
@@ -1302,6 +1301,8 @@ class BasicApplication implements Application {
             
         $strOut .= $this->getCircuitsCachedCode();
         
+        $strOut .= $this->getGlobalFuseactionCode();
+        
         $strOut .= $this->getClassesCacheCode();
         
         $strOut .= $this->getPluginsCacheCode();
@@ -1318,14 +1319,28 @@ class BasicApplication implements Application {
     private function getCircuitsCachedCode() {
         $strOut = "";        
         foreach( $this->circuits as $circuit ) {
-            $strOut .= "\$circuit = new BasicCircuit();\n";
-            $strOut .= "\$circuit->setName( \"" . $circuit->getName() . "\" );\n";
-            $strOut .= "\$circuit->setPath( \"" . addslashes( $circuit->getPath() ) . 
-                "\" );\n";
-            $strOut .= "\$circuit->setParentName( \"" . 
-                $circuit->getParentName() . "\" );\n";
-            $strOut .= "\$application->addCircuit( \$circuit );\n\n";
+            if( $circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT' ) {
+                $strOut .= "\$circuit = new BasicCircuit();\n";
+                $strOut .= "\$circuit->setName( \"" . $circuit->getName() . "\" );\n";
+                $strOut .= "\$circuit->setPath( \"" . addslashes( $circuit->getPath() ) . 
+                    "\" );\n";
+                $strOut .= "\$circuit->setParentName( \"" . 
+                    $circuit->getParentName() . "\" );\n";
+                $strOut .= "\$application->addCircuit( \$circuit );\n\n";
+            }
         }
+        
+        return $strOut;
+    }
+    
+    private function getGlobalFuseactionCode() {
+        $strOut = str_replace( '$circuit = MyFuses::getApplication( "' . 
+            $this->getName() . '" )->getCircuit(  "MYFUSES_GLOBAL_CIRCUIT"  );', 
+            "\$circuit = new BasicCircuit();\n\$circuit->setName( " . 
+            "\"MYFUSES_GLOBAL_CIRCUIT\" );", $this->getCircuit( 
+            'MYFUSES_GLOBAL_CIRCUIT' )->getCachedCode() );
+            
+        $strOut .= "\$application->addCircuit( \$circuit );\n\n";
         
         return $strOut;
     }

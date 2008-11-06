@@ -257,14 +257,16 @@ abstract class MyFusesLifecycle {
         
     }
     
-    public static function seekCircuit( Circuit $circuit ) {
-        if( !is_null( $circuit->getApplication()->getController()->
-            getCurrentPhase() ) ) {
-            if( !$circuit->isLoaded() ) {
-                $circuit->setLoaded( true );
-                $circuit->setData( $circuit->getApplication()->getLoader()->
-                    loadCircuit( $circuit ) );
-                BasicMyFusesBuilder::buildCircuit( $circuit );
+    public static function checkCircuit( Circuit $circuit ) {
+        if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) { 
+            if( !is_null( $circuit->getApplication()->getController()->
+                getCurrentPhase() ) ) {
+                if( !$circuit->isLoaded() ) {
+                    $circuit->setLoaded( true );
+                    $circuit->setData( $circuit->getApplication()->getLoader()->
+                        loadCircuit( $circuit ) );
+                    BasicMyFusesBuilder::buildCircuit( $circuit );
+                }
             }
         }
     }

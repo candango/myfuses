@@ -183,6 +183,7 @@ abstract class AbstractVerb implements Verb {
      * @return Verb
      */
     public static function getInstance( &$data, CircuitAction $action = null ) {
+        
         //$data = stripslashes( $data );
         
         //$data = unserialize( $data );
@@ -207,6 +208,7 @@ abstract class AbstractVerb implements Verb {
 	        return $verb;
         }
         else {
+            
             if( $action->getCircuit()->verbPathExists( 
                 @$data[ "namespace" ] ) ) {
                 
@@ -242,7 +244,8 @@ abstract class AbstractVerb implements Verb {
                 
                 if( !is_file( $path. $className . ".class.php" ) ) {
                     $params = $action->getErrorParams();
-	                $params[ "verbName" ] = $data[ "name" ]; 
+	                $params[ "verbName" ] = $data[ "name" ];
+	                var_dump( $data );die(); 
 	                    throw new MyFusesVerbException( $params, 
 	                        MyFusesVerbException::NON_EXISTENT_VERB );
                 }

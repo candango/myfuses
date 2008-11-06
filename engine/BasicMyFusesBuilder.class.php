@@ -180,10 +180,10 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             foreach( $data[ 'children' ] as $child ) {
                 
                 switch( $child[ 'name' ] ) {
-                    /*case "fuseaction":
+                    case "fuseaction":
                     case "action":
-                        $this->buildAction( $circuit, $child );
-                        break;*/
+                        self::buildAction( $circuit, $child );
+                        break;
                     case "prefuseaction":
                     case "postfuseaction":
                         self::buildGlobalAction( $circuit, $child );
@@ -202,19 +202,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param Circuit $circuit
      * @param SimpleXMLElement $parentNode
      */
-    public static function buildAction( Circuit $circuit, $name ) {
-        
-        $circuitData = &$circuit->getData();
-        
-        foreach( $circuitData[ 'children' ] as $circuitDataChild ) {
-            if( $circuitDataChild[ 'name' ] == 'fuseaction' ) {
-                // TODO throw exception here
-                if( $circuitDataChild[ 'attributes' ][ 'name' ] == $name ) {
-                    $data = $circuitDataChild;
-                    break;
-                }    
-            }
-        }
+    public static function buildAction( Circuit $circuit, $data ) {
         
         if( is_null( $data ) ) {
             return false;
@@ -253,7 +241,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         if( !is_null( $path ) ) {
             if( !MyFusesFileHandler::isAbsolutePath( $path ) ) {
-                $path = $this->getApplication()->getPath() . $path;
+                $path = $circuit->getApplication()->getPath() . $path;
             }
             require_once $path;    
         }

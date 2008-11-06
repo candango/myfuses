@@ -110,7 +110,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
     public function &getCircuit() {
         $circuit = $this->circtuit;
         
-        MyFusesLifecycle::seekCircuit( $circuit );
+        MyFusesLifecycle::checkCircuit( $circuit );
         
         return $this->circtuit;
     }
