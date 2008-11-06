@@ -1,7 +1,7 @@
 <?php
 class DataToXmlVerb extends AbstractVerb {
     
-    private $name;
+    private $xmlName;
     
     private $value;
     
@@ -11,12 +11,12 @@ class DataToXmlVerb extends AbstractVerb {
     
     private $clean = false;
     
-    public function getName() {
-        return $name;
+    public function getXmlName() {
+        return $this->xmlName;
     }
     
-    public function setName( $name ) {
-        $this->name = $name;
+    public function setXmlName( $xmlName ) {
+        $this->xmlName = $xmlName;
     }
     
     public function getValue(){
@@ -51,6 +51,36 @@ class DataToXmlVerb extends AbstractVerb {
         $this->root = $root;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        $data[ "namespace" ] = "data"; 
+        
+        if( is_null( $this->getXmlName() ) ) {
+            $data[ "attributes" ][ "name" ] = $this->getXmlName();
+        }
+        
+        if( !is_null( $this->getValue() ) ) {
+            $data[ "attributes" ][ "value" ] = $this->getValue();
+        }
+        
+        if( !is_null( $this->isClean() ) ) {
+            $data[ "attributes" ][ "clean" ] = $this->isClean() ? 
+                "true" : "false";
+        }
+        
+        if( !is_null( $this->isDie() ) ) {
+            $data[ "attributes" ][ "die" ] = $this->isDie() ? 
+                "true" : "false";
+        }
+        
+        if( !is_null( $this->getRoot() ) ) {
+            $data[ "attributes" ][ "root" ] = $this->getRoot();
+        }
+        
+        return $data;
+    }
+    
     /**
      * Set verb data
      * 
@@ -59,9 +89,9 @@ class DataToXmlVerb extends AbstractVerb {
     public function setData( $data ) {
         
         parent::setData( $data );
-        
+
         if( isset( $data[ "attributes" ][ "name" ] ) ) {
-            $this->setName( $data[ "attributes" ][ "name" ] );
+            $this->setXmlName( $data[ "attributes" ][ "name" ] );
         }
         
         if( isset( $data[ "attributes" ][ "value" ] ) ) {
@@ -94,7 +124,7 @@ class DataToXmlVerb extends AbstractVerb {
         
         $strOut .= str_repeat( "\t", $identLevel );
         
-        if( is_null( $this->getName() ) ) {
+        if( is_null( $this->getXmlName() ) ) {
             
             if( $this->isClean() ) {
                 $strOut .= str_repeat( "\t", $identLevel );
@@ -107,7 +137,7 @@ class DataToXmlVerb extends AbstractVerb {
             if( $this->isDie() ) {
                 $strOut .= str_repeat( "\t", $identLevel );
                 $strOut .= "die();\n";
-            }    
+            }
         }
         
         return $strOut;

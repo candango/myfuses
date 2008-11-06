@@ -41,6 +41,30 @@ class DataFromXmlVerb extends AbstractVerb {
         $this->xfa = $xfa;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        $data[ "namespace" ] = "data"; 
+        
+        if( !is_null( $this->getVarName() ) ) {
+            $data[ "attributes" ][ "name" ] = $this->getVarName();
+        }
+        
+        if( !is_null( $this->getValue() ) ) {
+            $data[ "attributes" ][ "value" ] = $this->getValue();
+        }
+        
+        if( !is_null( $this->getUrl() ) ) {
+            $data[ "attributes" ][ "url" ] = $this->getUrl();
+        }
+        
+        if( !is_null( $this->getXfa() ) ) {
+            $data[ "attributes" ][ "xfa" ] = $this->getXfa();
+        }
+        
+        return $data;
+    }
+    
     /**
      * Set verb data
      * 

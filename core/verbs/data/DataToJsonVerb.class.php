@@ -51,6 +51,32 @@ class DataToJsonVerb extends AbstractVerb {
         $this->root = $root;
     }
     
+    public function getData() {
+        $data = parent::getData();
+        
+        $data[ "namespace" ] = "data"; 
+        
+        if( !is_null( $this->getValue() ) ) {
+            $data[ "attributes" ][ "value" ] = $this->getValue();
+        }
+        
+        if( !is_null( $this->isClean() ) ) {
+            $data[ "attributes" ][ "clean" ] = $this->isClean() ? 
+                "true" : "false";
+        }
+        
+        if( !is_null( $this->isDie() ) ) {
+            $data[ "attributes" ][ "die" ] = $this->isDie() ? 
+                "true" : "false";
+        }
+        
+        if( !is_null( $this->getRoot() ) ) {
+            $data[ "attributes" ][ "root" ] = $this->getRoot();
+        }
+        
+        return $data;
+    }
+    
     /**
      * Set verb data
      * 
@@ -59,10 +85,6 @@ class DataToJsonVerb extends AbstractVerb {
     public function setData( $data ) {
         
         parent::setData( $data );
-        
-        if( isset( $data[ "attributes" ][ "name" ] ) ) {
-            $this->setName( $data[ "attributes" ][ "name" ] );
-        }
         
         if( isset( $data[ "attributes" ][ "value" ] ) ) {
             $this->setValue( $data[ "attributes" ][ "value" ] );
