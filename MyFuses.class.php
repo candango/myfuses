@@ -684,9 +684,7 @@ class MyFuses {
             
     		$strParse .= "\$strContent = \"text/html; charset=\" . " . $controllerName . 
     			"::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
-    
-	    	$strParse .= "\$strContent = \"<meta http-equiv=\\\"Content-Type\\\" content=\\\" . \$strContent . \\\">\";\n";
-			
+    		
 	   		$strParse .= "header( \"Content-Type: \" . \$strContent );\n\n";
             
             foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
