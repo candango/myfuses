@@ -1334,7 +1334,8 @@ class BasicApplication implements Application {
     }
     
     private function getGlobalFuseactionCode() {
-        $strOut = str_replace( '$circuit = MyFuses::getApplication( "' . 
+        $strOut = str_replace( '$circuit = ' . $this->getControllerClass() . 
+            '::getApplication( "' . 
             $this->getName() . '" )->getCircuit(  "MYFUSES_GLOBAL_CIRCUIT"  );', 
             "\$circuit = new BasicCircuit();\n\$circuit->setName( " . 
             "\"MYFUSES_GLOBAL_CIRCUIT\" );", $this->getCircuit( 
