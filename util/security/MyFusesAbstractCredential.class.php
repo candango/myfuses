@@ -29,7 +29,7 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      *
      * @var int
      */
-    private $timeExpire = 5;
+    private $timeExpire = 900;
     
     /**
      * Credential autenticated flag
@@ -57,12 +57,12 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     }
     
     /**
-     * Set an attribute value
+     * Add an attribute value
      *
      * @param string $attributeName
      * @param mixed $attributeValue
      */
-    public function setAttribute( $attributeName, $attributeValue ){
+    public function addAttribute( $attributeName, $attributeValue ){
         $this->attributes[ $attributeName ] = $attributeValue;
     }
     

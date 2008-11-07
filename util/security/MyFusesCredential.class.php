@@ -1,7 +1,7 @@
 <?php
 interface MyFusesCredential {
 
-    public function setAttribute( $attributeName, $attributeValue );
+    public function addAttribute( $attributeName, $attributeValue );
     
     public function getAttribute( $attributeName );
 
