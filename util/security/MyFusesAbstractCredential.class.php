@@ -4,18 +4,11 @@ require_once "myfuses/util/security/MyFusesCredential.class.php";
 class MyFusesAbstractCredential implements MyFusesCredential {
     
     /**
-     * Credential name
+     * Credential attributes
      *
-     * @var string
+     * @var array
      */
-    private $name;
-    
-    /**
-     * Credential password
-     *
-     * @var string
-     */
-    private $password;
+    private $attributes = array();
     
     /**
      * Credential roles
@@ -54,39 +47,23 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     }
     
     /**
-     * Return credential name
+     * Return an attribute value
      *
-     * @return string
+     * @param String $attributeName
+     * @return mixed
      */
-    public function getName() {
-        return $name;
+    public function getAttribute( $attributeName ) {
+        return $this->attributes[ $attributeName ];
     }
     
     /**
-     * Set credential name
+     * Set an attribute value
      *
-     * @param string $name
+     * @param string $attributeName
+     * @param mixed $attributeValue
      */
-    public function setName( $name ){
-        $this->name = $name;
-    }
-    
-    /**
-     * Return credential password
-     *
-     * @return string
-     */
-    public function getPassword() {
-        return $this->password;
-    }
-    
-    /**
-     * Set credential password
-     *
-     * @param string $password
-     */
-    public function setPassword( $password ){
-        $this->password = $password;
+    public function setAttribute( $attributeName, $attributeValue ){
+        $this->attributes[ $attributeName ] = $attributeValue;
     }
     
     /**
