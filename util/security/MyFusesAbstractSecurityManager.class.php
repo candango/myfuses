@@ -137,4 +137,9 @@ abstract class MyFusesAbstractSecurityManager
     public function getUserPasswordInRequest() {
         return $_REQUEST[ $this->getUserPasswordField() ];
     }
+    
+    public function logout() {
+        session_destroy();
+        MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToIndexAction' ) );
+    }
 } 

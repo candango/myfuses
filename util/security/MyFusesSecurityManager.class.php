@@ -83,6 +83,8 @@ interface MyFusesSecurityManager {
     
     public function getUserPasswordInRequest();
     
+    public function logout();
+    
 }
 
 interface MyFusesAuthenticationListener {
