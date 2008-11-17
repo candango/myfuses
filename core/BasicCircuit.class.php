@@ -587,7 +587,7 @@ class BasicCircuit implements Circuit {
     }
     
     public function getCachedCode() {
-        $strOut .= "\$circuit = " . get_class( 
+        $strOut = "\$circuit = " . get_class( 
             $this->getApplication()->getController() ) . 
             "::getApplication( \"" . $this->getApplication()->getName() . 
             "\" )->getCircuit(  \"" . $this->getName() . "\"  );\n";
