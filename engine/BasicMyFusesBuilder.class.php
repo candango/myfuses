@@ -66,13 +66,15 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             //$application->getLoader()->destroyCachedApplicationData();
         }
         else{
-            if( count( $data[ 'application' ][ 'children' ] ) ) {
-                foreach( $data[ 'application' ][ 'children' ] as $child ) {
-                    switch( $child[ 'name' ] ) {
-                        case "globalfuseactions":
-                            self::buildGlobalFuseActions( $application, $child );
-                            break;    
-                    }            
+            if( isset( $data[ 'application' ][ 'children' ] ) ) {
+                if( count( $data[ 'application' ][ 'children' ] ) ) {
+                    foreach( $data[ 'application' ][ 'children' ] as $child ) {
+                        switch( $child[ 'name' ] ) {
+                            case "globalfuseactions":
+                                self::buildGlobalFuseActions( $application, $child );
+                                break;    
+                        }            
+                    }
                 }
             }
         }
