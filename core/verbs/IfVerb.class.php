@@ -107,15 +107,14 @@ class IfVerb extends AbstractVerb {
         
         if( isset( $data[ "children" ] ) ) {
 	        if( count( $data[ "children" ] ) ) {
-	            
 	            foreach( $data[ "children" ] as $child ) {
-	                
 	                $type = $child[ "name" ];
 	                
-	                if ( count( $child[ "children" ] ) ) {
-	                    $this->setIfVerbs( $type, $child[ 'children' ] );    
+	                if( isset( $child[ "children" ] ) ){
+	                    if ( count( $child[ "children" ] ) ) {
+    	                    $this->setIfVerbs( $type, $child[ 'children' ] );    
+    	                }
 	                }
-	                
 	            }
 	        }    
         }
