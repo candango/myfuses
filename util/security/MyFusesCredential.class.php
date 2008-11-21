@@ -8,10 +8,14 @@ interface MyFusesCredential {
     public function addRole( $role );
 
     public function getRoles();
-
+    
+    public function hasRoles( $roles );
+    
     public function setRoles( $roles );
 
     public function isExpired();
+    
+    public function setExpireTime( $time );
     
     /**
      * Returns if the credential is athenticated

@@ -84,6 +84,20 @@ class MyFusesAbstractCredential implements MyFusesCredential {
         return $this->roles;
     }
     
+    public function hasRoles( $roles ) {
+        $roleX = explode( ',', $roles );
+        
+        foreach( $roleX as $role ) {
+            foreach( $this->getRoles() as $roleMe ) {
+                if( $role == $roleMe ) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
     /**
      * Set to credential an array of roles
      *
@@ -102,6 +116,10 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     
     public function getExpireDate( $format = "m/d/Y h:i:s" ) {
         return date( $format, $this->createTime + $this->timeExpire );
+    }
+    
+    public function setExpireTime( $time ) {
+        $this->timeExpire = $time;
     }
     
     /**
