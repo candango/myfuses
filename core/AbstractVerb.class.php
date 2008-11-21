@@ -244,8 +244,7 @@ abstract class AbstractVerb implements Verb {
                 
                 if( !is_file( $path. $className . ".class.php" ) ) {
                     $params = $action->getErrorParams();
-	                $params[ "verbName" ] = $data[ "name" ];
-	                var_dump( $data );die(); 
+	                $params[ "verbName" ] = $data[ "name" ]; 
 	                    throw new MyFusesVerbException( $params, 
 	                        MyFusesVerbException::NON_EXISTENT_VERB );
                 }
