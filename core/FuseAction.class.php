@@ -81,6 +81,13 @@ class FuseAction extends AbstractAction implements CircuitAction {
     private $path;
     
     /**
+     * Flag that points if circuit is default in fuseaction
+     *
+     * @var boolean
+     */
+    private $default = false;
+    
+    /**
      * Call prefuseaction flag
      *
      * @var boolean
@@ -351,6 +358,25 @@ class FuseAction extends AbstractAction implements CircuitAction {
         }
         
         return $strOut;
+    }
+    
+    /**
+     * Return if the action is default in circuit
+     *
+     * @return boolean
+     */
+    public function isDefault() {
+        return $this->default;
+    }
+    
+    /**
+     * Set default flag in action. This flag points if the action is default in
+     * circuit.
+     *
+     * @param boolean $default
+     */
+    public function setDefault( $default ) {
+        $this->default = $default;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

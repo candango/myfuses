@@ -84,6 +84,21 @@ interface CircuitAction extends Action {
     public function getCompleteName();
     
     /**
+     * Return if the action is default in circuit
+     *
+     * @return boolean
+     */
+    public function isDefault();
+    
+    /**
+     * Set default flag in action. This flag points if the action is default in
+     * circuit.
+     *
+     * @param boolean $default
+     */
+    public function setDefault( $default );
+    
+    /**
      * Enter description here...
      *
      * @param Verb $verb
