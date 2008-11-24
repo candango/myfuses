@@ -893,8 +893,48 @@ class MyFuses {
     public static function getMySelfXfa( $xfaName, $initQuery = false, 
         $showFuseactionVariable=true ) {
         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
-            $link = self::getMySelf( $showFuseactionVariable ) . 
-                implode( "/", explode( ".", self::getXfa( $xfaName ) ) );
+            
+            $xfaX = explode( ".", self::getXfa( $xfaName ) );
+            
+            $link = "";
+            
+            if( count( $xfaX ) == 1 ) {
+                $link = self::getMySelf( $showFuseactionVariable ) . 
+                    implode( "/", explode( ".", $xfaX ) );
+            }
+            else {
+                try {
+                    
+                    $ciruit = MyFuses::getApplication()->getCircuit( 
+                        $xfaX[ 0 ] );
+                    
+                    try {
+                        $action = $ciruit->getAction( $xfaX[ 1 ] );
+                        
+                        if( $ciruit->getName() . "." . $action->getName() == 
+                            MyFuses::getApplication()->
+                            getDefaultFuseaction() ) {
+                            $link = self::getSelf();
+                        }
+                        else if( $action->isDefault() ) {
+                             $link = self::getMySelf( $showFuseactionVariable ) . $xfaX[ 0 ];   
+                        }
+                        else {
+                            $link = self::getMySelf( $showFuseactionVariable ) . 
+                                implode( "/", $xfaX );
+                        }
+                    }
+                    catch ( MyFusesFuseActionException $mffae ) {
+                        $link = self::getMySelf( $showFuseactionVariable ) . 
+                            implode( "/", $xfaX );
+                    }
+                }
+                catch( MyFusesCircuitException $mfce ) {
+                    $link = self::getMySelf( $showFuseactionVariable ) . 
+                        implode( "/", $xfaX );
+                }
+            }
+            
             if( $initQuery ) {
                 $link .= "?";
             }
