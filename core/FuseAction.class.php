@@ -339,6 +339,9 @@ class FuseAction extends AbstractAction implements CircuitAction {
             }
         }
         
+        $strOut .= "\$action->setDefault( " . ( 
+            $this->isDefault()? "true" : "false" ) . " );\n";
+        
         $strOut .= $this->getVerbsCachedCode();
         return $strOut;
     }
