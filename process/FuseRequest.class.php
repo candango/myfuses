@@ -231,7 +231,7 @@ class FuseRequest {
                 catch ( MyFusesApplicationException $mfae ){
                     $this->setExtraParams( $path );
                     return $this->getApplication()->getName() . "." . 
-                        $this->getApplication()->getFuseactionVariable();  
+                        $this->getApplication()->getDefaultFuseaction();  
                 }
                 
             }
@@ -315,7 +315,7 @@ class FuseRequest {
                 catch( MyFusesApplicationException $mfae ){
                     $this->setExtraParams( $path );
                     return $this->getApplication()->getName() . "." . 
-                        $this->getApplication()->getFuseactionVariable();
+                        $this->getApplication()->getDefaultFuseaction();
                 }
                 
             }
