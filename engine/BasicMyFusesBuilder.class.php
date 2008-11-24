@@ -210,11 +210,11 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             return false;
         }
         
-        // TODO implement class and namespace options
         $actionParameterAttributes = array(
             "name" => "name",
             "class" => "class",
-            "path" => "path"
+            "path" => "path",
+            "default" => "default"
         );
         
         $parameterAttributes = array(
@@ -226,6 +226,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         $class = null;
         $path = null;
+        
+        $default = null;
         
         $customAttribute = array();
         
@@ -267,6 +269,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         }
         
         $action->setName( $name );
+        
+        $action->setDefault( $default );
         
         $circuit->addAction( $action );
         

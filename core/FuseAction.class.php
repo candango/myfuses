@@ -376,7 +376,22 @@ class FuseAction extends AbstractAction implements CircuitAction {
      * @param boolean $default
      */
     public function setDefault( $default ) {
-        $this->default = $default;
+        if( is_null( $default ) ) {
+            $this->default = false;
+        }
+        else {
+            if( is_bool( $this->default ) ) {
+                $this->default = $default;
+            }
+            else {
+                if( strtolower( $this->default ) == 'true' ) {
+                    $this->default = true;
+                }
+                else {
+                    $this->default = false;
+                }
+            }
+        }
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
