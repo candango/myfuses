@@ -63,6 +63,9 @@ class FuseRequest {
             
             $path = str_replace( $root, "", $_SERVER[ 'REDIRECT_URL' ] );
             
+            // FIXME Very very strange. Must research more about this.
+            $path = str_replace( 'myfuses.xml', 'myfuses', $path );
+            
             if( substr( $path, -1 ) == "/" ) {
                 $path = substr( $path, 0, strlen( $path ) - 1 );
             }
@@ -194,7 +197,6 @@ class FuseRequest {
      * @return unknown
      */
     public function resolvePath( $path ) {
-        
         $resolvedPath;
         
         $fuseactionVariable = $this->getApplication()->getFuseactionVariable();
@@ -225,6 +227,7 @@ class FuseRequest {
             catch( MyFusesCircuitException $mfce ) {
                 try{
                     $application = MyFuses::getApplication( $path[ 0 ] );
+                    
                     return $application->getName() . "." . 
                         $application->getDefaultFuseaction();    
                 }
