@@ -32,6 +32,13 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     private $timeExpire = 900;
     
     /**
+     * Navigation time left
+     *
+     * @var int
+     */
+    private $navigationTimeLeft = 0;
+    
+    /**
      * Credential autenticated flag
      *
      * @var boolean
@@ -112,6 +119,14 @@ class MyFusesAbstractCredential implements MyFusesCredential {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Increase the navigation lime left
+     *
+     */
+    public function increaseNavigationTime() {
+        $this->navigationTimeLeft += $this->timeExpire;
     }
     
     public function getExpireDate( $format = "m/d/Y h:i:s" ) {

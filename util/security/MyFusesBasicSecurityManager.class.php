@@ -16,6 +16,9 @@ class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
                 $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = 
                     new MyFusesBasicCredential();
             }
+            else {
+                $credential->increaseNavigationTime();
+            }
         }
     }
     
