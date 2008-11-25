@@ -2,8 +2,8 @@
 /**
  * MyFusesAbstractSecurityPlugin  - MyFusesAbstractSecurityPlugin.class.php
  * 
- * Plugin that controls all authentication and authorization flow 
- * over an application.
+ * Plugin that controls all authentication and authorization flow over an 
+ * application.
  * 
  * PHP version 5
  * 
@@ -20,18 +20,18 @@
  * This product includes software developed by the Fusebox Corporation 
  * (http://www.fusebox.org/).
  * 
- * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
- * Fusebox" part .
+ * The Original Code is myFuses "a Candango implementation of Fusebox 
+ * Corporation Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2008.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Goncalves Garcia.
  *
  * @category   plugins
  * @package    myfuses.plugins
- * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -43,14 +43,14 @@ require_once 'myfuses/util/security/MyFusesAbstractSecurityManager.class.php';
 /**
  * MyFusesAbstractSecurityPlugin  - MyFusesAbstractSecurityPlugin.class.php
  * 
- * Plugin that controls all authentication and authorization flow 
- * over an application.
+ * Plugin that controls all authentication and authorization flow over an 
+ * application.
  * 
  * PHP version 5
  *
  * @category   plugins
  * @package    myfuses.plugins
- * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -65,6 +65,13 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      * @var string
      */
     private static $loginAction = "";
+    
+    /**
+     * Action that plugin will redirect when susseful login ends
+     *
+     * @var string
+     */
+    private static $nextAction = "";
     
     /**
      * Plugin listeners path
@@ -98,6 +105,26 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         self::$loginAction = $loginAction;
         MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
                 'goToLoginAction', $loginAction );
+    }
+    
+    /**
+     * Return next action
+     *
+     * @return string
+     */
+    private static function getNextAction() {
+        return self::$nextAction;
+    }
+    
+    /**
+     * Set next action
+     *
+     * @param string $nextAction
+     */
+    private static function setNextAction( $nextAction ) {
+        self::$nextAction = $nextAction;
+        MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
+                'goToNextAction', $nextAction );
     }
     
     /**
@@ -229,6 +256,18 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
             MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
                     'goToIndexAction', 
                     $this->getApplication()->getDefaultFuseaction() );
+            // getting next action
+            
+            $nextAction = $this->getParameter( 'NextAction' );
+            
+            if( count( $nextAction ) ) {
+                $nextAction = $nextAction[ 0 ];
+            }
+            else {
+                $nextAction = $this->getApplication()->getDefaultFuseaction();
+            }
+            
+            self::setNextAction( $nextAction );
             
             // getting login action
             $loginAction = $this->getParameter( 'LoginAction' );
@@ -274,7 +313,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                     }
                     else {
                         MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
-                            'goToIndexAction' ) );
+                            'goToNextAction' ) );
                     }
                 }
             }
