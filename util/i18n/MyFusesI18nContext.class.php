@@ -17,7 +17,7 @@
  * The Original Code is Candango Fusebox Implementation part .
  * 
  * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2008.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2008.
  * All Rights Reserved.
  * 
  * Contributor(s): Flavio Goncalves Garcia.
@@ -126,7 +126,6 @@ class MyFusesI18nContext {
     }
     
 }
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 function get_myfuses_expresion( $name, $params=null ) {
 	return MyFusesI18nContext::getExpression( $name, $params );
@@ -135,3 +134,4 @@ function get_myfuses_expresion( $name, $params=null ) {
 function myexp( $name, $params=null ) {
 	return MyFusesI18nContext::getExpression( $name, $params );
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
