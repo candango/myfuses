@@ -16,15 +16,15 @@
  * 
  * The Original Code is Candango Fusebox Implementation part .
  * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2005 - 2006.
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2008.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Goncalves Garcia.
  *
  * @category   i18n
  * @package    myfuses.util.i18n
- * @author     Flavio Goncalves Garcia <flavio.garcia@candango.com>
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -38,7 +38,7 @@
  *
  * @category   i18n
  * @package    myfuses.util.i18n
- * @author     Flavio Goncalves Garcia <flavio.garcia@candango.com>
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
