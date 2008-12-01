@@ -65,6 +65,8 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
      */
     public function loadApplication() {
         
+        $locale = $this->getApplication()->getLocale();
+        
         foreach( $this->getApplicationLoadListeners() as $listener ) {
             $listener->loadInitialized( $this->getApplication() );
         }
@@ -115,6 +117,10 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader {
         foreach( $this->getApplicationLoadListeners() as $listener ) {
             $listener->loadPerformed( $this, 
                 $this->applicationData );
+        }
+        
+        if( $this->getApplication()->getLocale() != $locale ) {
+            $this->getApplication()->setLocale( $locale );
         }
         
         /*if( $this->getApplication()->getMode() === 'production' ) {
