@@ -83,6 +83,8 @@ try {
         "util/i18n/MyFusesI18nHandler.class.php" );
     MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
         "util/i18n/MyFusesNativeI18nHandler.class.php" );
+    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
+        "util/paging/MyFusesPagingHandler.class.php" );
 }
 catch( MyFusesMissingCoreFileException $mfmcfe ) {
     $mfmcfe->breakProcess();
@@ -203,7 +205,9 @@ class MyFuses {
     private $parsedPath;
     
     private $applicationClass = "BasicApplication";
-
+    
+    private $responseType = "text/html";
+    
     /**
      * I18n type flag. Default native.
      *
@@ -402,6 +406,14 @@ class MyFuses {
     
     protected function setApplicationClass( $appClass ) {
         $this->applicationClass = $appClass;
+    }
+
+    public function getResponseType() {
+        return $this->responseType;
+    }
+    
+    public function setResponseType( $response ) {
+        $this->responseType = $response;
     }
     
     public function createApplication( 
@@ -680,10 +692,8 @@ class MyFuses {
             }
             //end parsing pre process plugins
             
-            
-            
-    		$strParse .= "\$strContent = \"text/html; charset=\" . " . $controllerName . 
-    			"::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
+           $strParse .= "\$strContent = \"" . $this->getResponseType() . "; charset=\" . " . $controllerName . 
+                "::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
     		
 	   		$strParse .= "header( \"Content-Type: \" . \$strContent );\n\n";
             
