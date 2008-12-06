@@ -16,4 +16,12 @@
     <expression name="MONTH_11">November</expression>
     <expression name="MONTH_12">December</expression>
     
+    <expression name="DAY_OF_WHEEK_01">Sunday</expression>
+    <expression name="DAY_OF_WHEEK_02">Segunda Feira</expression>
+    <expression name="DAY_OF_WHEEK_03">Terça Feira</expression>
+    <expression name="DAY_OF_WHEEK_04">Quarta Feira</expression>
+    <expression name="DAY_OF_WHEEK_05">Quinta Feira</expression>
+    <expression name="DAY_OF_WHEEK_06">Sexta Feira</expression>
+    <expression name="DAY_OF_WHEEK_07">Saturday</expression>
+    
 </expressions>
