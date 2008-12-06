@@ -30,7 +30,7 @@
  * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
  * @copyright  Copyright (c) 2004 - 2005 iFLUX Group <http://www.iflux.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    CVS: $Id: IfluxPagingHandler.class.php,v 1.1 2008/01/24 13:03:43 86559109100 Exp $
+ * @version    CVS: $Id: MyFusesPagingHandler.class.php,v 1.2 2008/12/06 15:24:07 00357272170 Exp $
  * @link       *
  * @see        *
  * @since      File available since Release 0.0.1
@@ -38,256 +38,324 @@
  */
 class MyFusesPagingHandler {
     
-    private $_queryCount;
-    private $_regsPerPage;
-    private $_pagesPerBlocks;
-    private $_currentPage;
-    private $_urlVariable;
+    private static $queryCount;
+    private static $regsPerPage;
+    private static $pagesPerBlocks;
+    private static $currentPage;
+    private static $urlVariable;
     
-    private $_urlQueryString;
-    private $_href;
+    private static $urlQueryString;
+    private static $href;
     
-    private $_pageCount;
-    private $_regsInLastPage;
+    private static $pageCount;
+    private static $regsInLastPage;
     
-    private $_blockCount;
-    private $_pagesInLastBlock;
-    
-    
-    private $_currentFirtsReg;
-    private $_currentLastReg;
-    
-    private $_currentBlock;
-    
-    private $_currentFirtsPage;
-    private $_currentLastPage;
+    private static $blockCount;
+    private static $pagesInLastBlock;
     
     
-    public static function doPagination( $queryCount, $regsPerPage, $pagesPerBlocks, $currentPage = 1, $urlVariable = 'pag' ) {
-       
-        if ( is_null( $currentPage ) ){
+    private static $currentFirtsReg;
+    private static $currentLastReg;
+    
+    private static $currentBlock;
+    
+    private static $currentFirtsPage;
+    private static $currentLastPage;
+    
+    private static $paginationVariable;
+    
+    public static function getPaginationVariable() {
+        return self::$paginationVariable;
+    }
+    
+    public static function doPagination( $queryCount, $regsPerPage, 
+        $pagesPerBlocks, $xfa, $currentPage = 1, $urlVariable = 'pag' ) {
+        
+        self::$paginationVariable = $urlVariable;
+        
+        if ( is_null( $currentPage ) ) {
             $currentPage = 1;
         }
         
         // setting initial properties 
-        $this->_queryCount = $queryCount;
-        $this->_regsPerPage = $regsPerPage;
-        $this->_pagesPerBlocks = $pagesPerBlocks;
-        $this->_currentPage = $currentPage;
-        $this->_urlVariable = $urlVariable;
+        self::$queryCount = $queryCount;
+        self::$regsPerPage = $regsPerPage;
+        self::$pagesPerBlocks = $pagesPerBlocks;
+        self::$currentPage = $currentPage;
+        self::$urlVariable = $urlVariable;
+        
         
         // TODO more href handler needed
         // definining href
-        if ( !( strpos(  $_SERVER[ 'QUERY_STRING' ], $urlVariable ) === false ) ) {
-            $qStrPos = 0;
-            $vurlQueryString = explode( "&" , $_SERVER[ 'QUERY_STRING' ] );
-            for( $i=0; $i < count( $vurlQueryString ); $i++ ) {
-                if ( !( strpos( $vurlQueryString[ $i ], $urlVariable ) === false ) ) {
-                    $qStrPos = $i;
-                    $i = count( $vurlQueryString );
-                }
+        
+        // Removing page indicator and fuseaction variable
+        $fuseactionVar = MyFuses::getApplication()->getFuseactionVariable();
+        
+        $qStrPos = 0;
+        $qFuseactionVarPos = 0;
+        $vurlQueryString = explode( "&" , $_SERVER[ 'QUERY_STRING' ] );
+        for( $i=0; $i < count( $vurlQueryString ); $i++ ) {
+            if ( !( strpos( $vurlQueryString[ $i ], $urlVariable ) === false ) ) {
+                $qStrPos = $i;
             }
-            $this->_urlQueryString = str_replace( $vurlQueryString[ $qStrPos ] . "&" , "" , $_SERVER['QUERY_STRING'] ) ;
-        }
-        else {
-            $this->_urlQueryString = $_SERVER['QUERY_STRING'];
-        }
-        
-        while( substr( $this->_urlQueryString, strlen( $this->_urlQueryString ) - 1, 1 ) == '&'  ) {
-            $this->_urlQueryString = substr( $this->_urlQueryString, 0 , strlen( $this->_urlQueryString ) - 1 );
+            if ( !( strpos( $vurlQueryString[ $i ], MyFuses::getApplication()->getFuseactionVariable() ) === false ) ) {
+                $qFuseactionVarPos = $i;
+            }
         }
         
-        if ( ( substr( $this->_urlQueryString, strlen( $this->_urlQueryString ) - 1, 1 ) == '&' ) || ( strlen( $this->_urlQueryString ) == 0 ) ) {
-            $this->_urlQueryString .= $this->_urlVariable . '=' ;
+        self::$urlQueryString = str_replace( array( $vurlQueryString[ $qStrPos ] . "&", $vurlQueryString[ $qFuseactionVarPos ] . "&" )  , "" , $_SERVER['QUERY_STRING'] . "&" );
+        //END Removing page indicator and fuseaction variable
+        
+        // Adding +'s into querystring
+        self::$urlQueryString = str_replace( "%20"  , "+" , self::$urlQueryString ) ;
+        
+        while( substr( self::$urlQueryString, strlen( self::$urlQueryString ) - 1, 1 ) == '&'  ) {
+            self::$urlQueryString = substr( self::$urlQueryString, 0 , strlen( self::$urlQueryString ) - 1 );
+        }
+        
+        if ( ( substr( self::$urlQueryString, strlen( self::$urlQueryString ) - 1, 1 ) == '&' ) || ( strlen( self::$urlQueryString ) == 0 ) ) {
+            self::$urlQueryString .= self::$urlVariable . '=' ;
         }
         else{
-            $this->_urlQueryString .=  '&' . $this->_urlVariable . '=' ;
+            self::$urlQueryString .=  '&' . self::$urlVariable . '=' ;
         }
         
-        $this->_href = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?" . $this->_urlQueryString;
+        self::$href = MyFuses::getMySelfXfa( $xfa ) . "&" . self::$urlQueryString;
         
         // setting page count
         if( $queryCount == 0 ){
-            $this->_pageCount = 1;
+            self::$pageCount = 1;
         }
         else {
-            $this->_pageCount = (int) ( $this->_queryCount / $this->_regsPerPage ) + 
-                ( ( $this->_queryCount % $this->_regsPerPage ) > 0 ? 1 : 0 );
+            self::$pageCount = (int) ( self::$queryCount / self::$regsPerPage ) + 
+                ( ( self::$queryCount % self::$regsPerPage ) > 0 ? 1 : 0 );
         }
         
-        if ( $this->_pageCount < $this->_currentPage || $this->_currentPage == 0 ) {
-            $this->_currentPage = $this->_pageCount; 
+        if ( self::$pageCount < self::$currentPage || self::$currentPage == 0 ) {
+            self::$currentPage = self::$pageCount; 
         }
         
         // setting registers in last page
-        $this->_regsInLastPage = ( int ) 
-            ( ( $this->_queryCount % $this->_regsPerPage ) > 0 ? ( $this->_queryCount % $this->_regsPerPage ) : 
-                $this->_regsPerPage );
+        self::$regsInLastPage = ( int ) 
+            ( ( self::$queryCount % self::$regsPerPage ) > 0 ? ( self::$queryCount % self::$regsPerPage ) : 
+                self::$regsPerPage );
         
         // setting block count
-        $this->_blockCount = (int) ( $this->_pageCount / $this->_pagesPerBlocks ) + 
-            ( ( $this->_pageCount % $this->_pagesPerBlocks ) > 0 ? 1 : 0 );
+        self::$blockCount = (int) ( self::$pageCount / self::$pagesPerBlocks ) + 
+            ( ( self::$pageCount % self::$pagesPerBlocks ) > 0 ? 1 : 0 );
         
         // setting block count
-        if ( $this->_pageCount <  $this->_pagesPerBlocks ) {
-            $this->_pagesInLastBlock = $this->_pageCount;
+        if ( self::$pageCount <  self::$pagesPerBlocks ) {
+            self::$pagesInLastBlock = self::$pageCount;
         }
         else {
-            $this->_pagesInLastBlock = (int) 
-                ( ( $this->_pageCount % $this->_pagesPerBlocks ) > 0 ? ( $this->_pageCount % $this->_pagesPerBlocks ) : 
-                    $this->_pagesPerBlocks );
+            self::$pagesInLastBlock = (int) 
+                ( ( self::$pageCount % self::$pagesPerBlocks ) > 0 ? ( self::$pageCount % self::$pagesPerBlocks ) : 
+                    self::$pagesPerBlocks );
         }
         
         // setting current first register
-        $this->_currentFirtsReg = ( ( $this->_currentPage * $this->_regsPerPage ) + 1 ) - $this->_regsPerPage;
+        self::$currentFirtsReg = ( ( self::$currentPage * self::$regsPerPage ) + 1 ) - self::$regsPerPage;
         // setting current last register
-        if ( $this->_currentPage == $this->_pageCount ) {
-            $this->_currentLastReg = $this->_currentFirtsReg + ( $this->_regsInLastPage - 1 );
+        if ( self::$currentPage == self::$pageCount ) {
+            self::$currentLastReg = self::$currentFirtsReg + ( self::$regsInLastPage - 1 );
         }
         else {
-            $this->_currentLastReg = ( $this->_currentPage * $this->_regsPerPage );
+            self::$currentLastReg = ( self::$currentPage * self::$regsPerPage );
         }
         
         
         // setting current block
-        if ( $this->_currentPage <= $this->_pagesPerBlocks ) {
-            $this->_currentBlock = 1;
+        if ( self::$currentPage <= self::$pagesPerBlocks ) {
+            self::$currentBlock = 1;
         }
         else {
-            $this->_currentBlock = (int) ( $this->_currentPage / $this->_pagesPerBlocks ) + 
-                ( ( $this->_currentPage % $this->_pagesPerBlocks ) > 0 ? 1 : 0 );
+            self::$currentBlock = (int) ( self::$currentPage / self::$pagesPerBlocks ) + 
+                ( ( self::$currentPage % self::$pagesPerBlocks ) > 0 ? 1 : 0 );
         }
         
         // setting current first page
-        $this->_currentFirtsPage = ( ( $this->_currentBlock * $this->_pagesPerBlocks ) + 1 ) - $this->_pagesPerBlocks;
+        self::$currentFirtsPage = ( ( self::$currentBlock * self::$pagesPerBlocks ) + 1 ) - self::$pagesPerBlocks;
         // setting current last register
-        if ( $this->_currentBlock == $this->_blockCount ) {
-            $this->_currentLastPage = $this->_currentFirtsPage + ( $this->_pagesInLastBlock - 1 );
+        if ( self::$currentBlock == self::$blockCount ) {
+            self::$currentLastPage = self::$currentFirtsPage + ( self::$pagesInLastBlock - 1 );
         }
         else {
-            $this->_currentLastPage = ( $this->_currentBlock * $this->_pagesPerBlocks );
+            self::$currentLastPage = ( self::$currentBlock * self::$pagesPerBlocks );
+        }
+    }
+       
+    public static function getLinks( $firstPage = 'First Page', 
+        $lastPage = 'Last Page', $previousBlock = '<<', 
+        $nextBlock = '>>', $previousPage = '<', $nextPage = '>' ) {    
+        
+        if( self::getCurrentPage() > 1 ) {
+            $links[] = self::getFirstPageLink( $firstPage );
         }
         
+        if( self::getCurrentBlock() > 1 ) {
+            $links[] = self::getPreviousBlockLink( $previousBlock );    
+        }
+        
+        if( self::getCurrentPage() > 1 ) {
+            $links[] = self::getPreviousPageLink( $previousPage );    
+        }
+        
+        foreach( self::getLinkArray() as $link ) {
+            $links[] = $link;
+        }
+        
+        if( self::getCurrentPage() < self::getPageCount() ) {
+            $links[] = self::getNextPageLink( $nextPage );    
+        }
+        
+        if( self::getCurrentBlock() < self::getBlockCount() ) {
+            $links[] = self::getNextBlockLink( $nextBlock );    
+        }
+        
+        if( self::getCurrentPage() < self::getPageCount() ) {
+            $links[] = self::getLastPageLink( $lastPage );
+        }
+        
+        return $links;
     }
     
     
     
-    function getLink( $page ) {
-        if( $page == $this->_currentPage ) {
+    private static function getLink( $page ) {
+        if( $page == self::$currentPage ) {
             return $page;
         }
         else{
-            return '<a href="' . $this->_href. $page . '&" >' . $page . '</a>';
+            return '<a href="' . self::$href. $page . '&" >' . $page . '</a>';
         }
     }
     
-    function getQueryCount() {
-        return $this->_queryCount;
+    public static function getQueryCount() {
+        return self::$queryCount;
     }
     
-    function getRegsPerPage(){
-        return $this->_regsPerPage;
+    public static function getRegsPerPage(){
+        return self::$regsPerPage;
     }
     
-    function getPagesPerBlocks(){
-        return $this->_pagesPerBlocks;
+    public static function getPagesPerBlocks(){
+        return self::$pagesPerBlocks;
     }
     
-    function getCurrentPage(){
-        return $this->_currentPage;
+    public static function getCurrentPage(){
+        return self::$currentPage;
     }
     
-    function getUrlVariable(){
-        return $this->_urlVariable;
+    public static function getUrlVariable(){
+        return self::$urlVariable;
     }
     
-    function getQueryString(){
-        return $this->_urlQueryString;
+    public static function getQueryString(){
+        return self::$urlQueryString;
     }
     
-    function getHref(){
-        return $this->_href;
+    public static function getHref(){
+        return self::$href;
     }
     
-    function getPageCount(){
-        return $this->_pageCount;
+    public static function getPageCount(){
+        return self::$pageCount;
     }
     
-    function getRegsInLastPage(){
-        return $this->_regsInLastPage;
+    public static function getRegsInLastPage(){
+        return self::$regsInLastPage;
     }
     
-    function getBlockCount(){
-        return $this->_blockCount;
+    public static function getBlockCount(){
+        return self::$blockCount;
     }
     
-    function getPagesInLastBlock(){
-        return $this->_pagesInLastBlock;
+    public static function getPagesInLastBlock(){
+        return self::$pagesInLastBlock;
     }
     
-    function getCurrentFirtsReg(){
-        return $this->_currentFirtsReg;
+    public static function getCurrentFirstReg(){
+        return self::$currentFirtsReg;
     }
     
-    function getCurrentLastReg(){
-        return $this->_currentLastReg;
+    public static function getCurrentLastReg(){
+        return self::$currentLastReg;
     }
     
-    function getCurrentBlock(){
-        return $this->_currentBlock;
+    public static function getCurrentBlock(){
+        return self::$currentBlock;
     }
     
-    function getCurrentFirtsPage(){
-        return $this->_currentFirtsPage;
+    public static function getCurrentFirstPage(){
+        return self::$currentFirtsPage;
     }
     
-    function getCurrentLastPage(){
-        return $this->_currentLastPage;
+    public static function getCurrentLastPage(){
+        return self::$currentLastPage;
     }
     
-    function getLinkArray() {
+    public static function getLinkArray() {
         $linkArray = array();
-        for ( $i = ( $this->_currentFirtsPage - 1 ); $i < $this->_currentLastPage; $i++ ) {
+        for ( $i = ( self::$currentFirtsPage - 1 ); $i < self::$currentLastPage; $i++ ) {
             
-            $linkArray[ count( $linkArray ) ] = $this->getLink( $i + 1 );
+            $linkArray[ count( $linkArray ) ] = self::getLink( $i + 1 );
             
         }
         return $linkArray;
     }
     
-    function getFirstPageLink( $label ) {
-        if ( $this->_currentPage == 1 ) {
+    public static function getFirstPageLink( $label ) {
+        if ( self::$currentPage == 1 ) {
             return $label;
         }
         else{
-            return '<a href="' . $this->_href. '1&" >' . $label . '</a>';
+            return '<a href="' . self::$href. '1&" >' . $label . '</a>';
         }
     }
     
-    function getPreviousBlockLink( $label ) {
-        if ( $this->_currentBlock == 1 ) {
+    public static function getPreviousBlockLink( $label ) {
+        if ( self::$currentBlock == 1 ) {
             return $label;
         }
         else{
-            return '<a href="' . $this->_href. ( $this->_currentFirtsPage - 1 ) . '&" >' . $label . '</a>';
+            return '<a href="' . self::$href. ( self::$currentFirtsPage - 1 ) . '&" >' . $label . '</a>';
         }
     }
     
-    function getLastPageLink( $label ) {
-        if ( $this->_currentPage == $this->_pageCount ) {
+    public static function getLastPageLink( $label ) {
+        if ( self::$currentPage == self::$pageCount ) {
             return $label;
         }
         else{
-            return '<a href="' . $this->_href. $this->_pageCount . '&" >' . $label . '</a>';
+            return '<a href="' . self::$href. self::$pageCount . '&" >' . $label . '</a>';
         }
     }
     
-    function getNextBlockLink( $label ) {
-        if ( $this->_currentBlock == $this->_blockCount ) {
+    public static function getPreviousPageLink( $label ) {
+        if ( self::$currentPage == 1 ) {
             return $label;
         }
         else{
-            return '<a href="' . $this->_href. ( $this->_currentLastPage + 1 ) . '&" >' . $label . '</a>';
+            return '<a href="' . self::$href. ( self::$pageCount - 1 ) . '&" >' . $label . '</a>';
+        }
+    }
+    
+    public static function getNextPageLink( $label ) {
+        if ( self::$currentPage > self::$pageCount ) {
+            return $label;
+        }
+        else{
+            return '<a href="' . self::$href. ( self::$pageCount + 1 ) . '&" >' . $label . '</a>';
+        }
+    }
+    
+    public static function getNextBlockLink( $label ) {
+        if ( self::$currentBlock == self::$blockCount ) {
+            return $label;
+        }
+        else{
+            return '<a href="' . self::$href. ( self::$currentLastPage + 1 ) . '&" >' . $label . '</a>';
         }
     }
     
