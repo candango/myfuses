@@ -1,6 +1,6 @@
 <?php
 /**
- * MyFuses  - MyFuses.class.php
+ * MyFuses - MyFuses.class.php
  * 
  * This is MyFuses a Candango Opensource Group a implementation of Fusebox 
  * Corporation Fusebox framework. The MyFuses is used as Iflux Framework 
@@ -24,16 +24,16 @@
  * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Goncalves Garcia.
  *
  * @category   controller
  * @package    myfuses
- * @author     Flávio Gonçalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
@@ -94,7 +94,7 @@ catch( MyFusesMissingCoreFileException $mfmcfe ) {
 clearstatcache();
 
 /**
- * MyFuses  - MyFuses.class.php
+ * MyFuses - MyFuses.class.php
  * 
  * This is MyFuses a Candango Opensource Group a implementation of Fusebox 
  * Corporation Fusebox framework. The MyFuses is used as Iflux Framework 
@@ -104,9 +104,9 @@ clearstatcache();
  *
  * @category   controller
  * @package    myfuses
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
- * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
- * @link http://www.candango.org/myfuses
+ * @author     Flavio Goncalves Garcia <fpiraz@gmail.com>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
  * @since      Revision 17
