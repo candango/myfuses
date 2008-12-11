@@ -21,7 +21,7 @@
  * This product includes software developed by the Fusebox Corporation 
  * (http://www.fusebox.org/).
  * 
- * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
+ * The Original Code is myFuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
@@ -104,9 +104,9 @@ clearstatcache();
  *
  * @category   controller
  * @package    myfuses
- * @author     Flavio Goncalves Garcia <fpiraz@gmail.com>
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
- * @link       http://www.candango.org/myfuses
+ * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
  * @since      Revision 17
