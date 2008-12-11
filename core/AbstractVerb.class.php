@@ -70,6 +70,7 @@ abstract class AbstractVerb implements Verb {
             "myfuses:invoke" => "InvokeVerb",
             "myfuses:loop" => "LoopVerb",
             "myfuses:relocate" => "RelocateVerb",
+            "myfuses:response" => "ResponseVerb",
             "myfuses:set" => "SetVerb",
             "myfuses:switch" => "SwitchVerb",
             "myfuses:xfa" => "XfaVerb");
@@ -244,8 +245,8 @@ abstract class AbstractVerb implements Verb {
                 
                 if( !is_file( $path. $className . ".class.php" ) ) {
                     $params = $action->getErrorParams();
-	                $params[ "verbName" ] = $data[ "name" ]; 
-	                    throw new MyFusesVerbException( $params, 
+	                $params[ "verbName" ] = $data[ "name" ];
+	                   throw new MyFusesVerbException( $params, 
 	                        MyFusesVerbException::NON_EXISTENT_VERB );
                 }
                 
