@@ -1,10 +1,10 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
-
 /**
  * MyFusesPagingHandler - MyFusesPagingHandler.class.php
  *
  * Handles Pagination
+ * 
+ * PHP version 5
  *
  * The contents of this file are subject to the Mozilla Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -19,22 +19,40 @@
  * The Original Code is Iflux Paging Handler class part of Iflux Framework .
  * 
  * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2004 - 2005.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
+ * Portions created by Luiz Fernando Siroteau Serique Júnior are Copyright 
+ * (C) 2006 - 2009.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
- *                 Luiz Fernando Siroteau Serique Júnior
+ * Contributor(s): Flavio Goncalves Garcia.
+ *                 Luiz Fernando Siroteau Serique Junior
  *
- * @category   iflux
- * @package    iflux.util
- * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
- * @copyright  Copyright (c) 2004 - 2005 iFLUX Group <http://www.iflux.org/>
+ * @category   controller
+ * @package    myfuses
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @author     Luiz Fernando Siroteau Serique Junior <marcelo.serique at gmail.com>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    CVS: $Id: MyFusesPagingHandler.class.php,v 1.2 2008/12/06 15:24:07 00357272170 Exp $
- * @link       *
- * @see        *
- * @since      File available since Release 0.0.1
- * @deprecated *
+ * @version    SVN: $Id: MyFuses.class.php 642 2008-12-06 12:22:15Z flavio.garcia $
+ */
+
+/**
+ * MyFusesPagingHandler - MyFusesPagingHandler.class.php
+ *
+ * Handles Pagination
+ * 
+ * PHP version 5
+ *
+ * @category   paging
+ * @package    myfuses.util.paging
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @author     Luiz Fernando Siroteau Serique Junior <marcelo.serique at gmail.com>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @link http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Revision: 642 $
+ * @since      Revision 17
  */
 class MyFusesPagingHandler {
     
@@ -337,7 +355,7 @@ class MyFusesPagingHandler {
             return $label;
         }
         else{
-            return '<a href="' . self::$href. ( self::$pageCount - 1 ) . '&" >' . $label . '</a>';
+            return '<a href="' . self::$href. ( self::$currentPage - 1 ) . '&" >' . $label . '</a>';
         }
     }
     
@@ -346,7 +364,7 @@ class MyFusesPagingHandler {
             return $label;
         }
         else{
-            return '<a href="' . self::$href. ( self::$pageCount + 1 ) . '&" >' . $label . '</a>';
+            return '<a href="' . self::$href. ( self::$currentPage + 1 ) . '&" >' . $label . '</a>';
         }
     }
     
@@ -360,3 +378,4 @@ class MyFusesPagingHandler {
     }
     
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
