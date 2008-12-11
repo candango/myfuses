@@ -855,6 +855,27 @@ class MyFuses {
         return $self;
     }
     
+    public static function getRootUrl() {
+        
+        $rootUrl = "http://" . $_SERVER[ 'HTTP_HOST' ];
+        
+        if( substr( $rootUrl, -1 ) != "/" ) {
+            $rootUrl .= "/";
+        }
+        
+        $scriptNameX = explode( "/", $_SERVER[ 'SCRIPT_NAME' ] );
+        
+        $pos = ( count( $scriptNameX ) - 1 );
+        
+        unset( $scriptNameX[ 0 ] );
+        unset( $scriptNameX[ $pos ] );
+        
+        $rootUrl = $rootUrl . implode( "/", $scriptNameX ) . "/"; 
+        
+        return $rootUrl;
+        
+    }
+    
     public static function getSelf() {
         $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
         
