@@ -47,7 +47,6 @@
  */
 class MyFusesFileOperationException extends MyFusesException {
     
-    
     const OPEN_FILE = 1;
     
     const LOCK_FILE = 2;
@@ -55,6 +54,8 @@ class MyFusesFileOperationException extends MyFusesException {
     const LOCK_EX_FILE = 3;
     
     const WRITE_FILE = 4;
+    
+    const INCLUDE_FILE = 5;
     
     public function __construct( $file, $operation ) {
     	
@@ -79,6 +80,11 @@ class MyFusesFileOperationException extends MyFusesException {
                 'msg' => 'Could not write in file __FILE__.',
                 'detail' => '"Could not wirite in file <b>"__FILE__"</b> ' .
                     ' founded in directory <b>__DIR__</b>. Check permission.'
+            ),
+            self::INCLUDE_FILE => array(
+                'msg' => 'Could not include the file __FILE__.',
+                'detail' => '"Could not include the file <b>"__FILE__"</b> ' .
+                    ' founded in directory <b>__DIR__</b>. Check if file exists.'
             )
         );
         

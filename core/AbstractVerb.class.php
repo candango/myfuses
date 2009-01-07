@@ -371,9 +371,16 @@ abstract class AbstractVerb implements Verb {
 	}
 	
 	protected function getIncludeFileString( $fileName ) {
-	    $strOut = "MyFusesContext::includeFile( " . 
+	    $strOut = "if( file_exists( " . 
+	       $fileName . " ) ) { \n";
+		$strOut .= "    MyFusesContext::includeFile( " . 
 	       $fileName . " );\n\n";
-        $strOut .= self::getContextRestoreString();
+        $strOut .= "    " . self::getContextRestoreString();
+        $strOut .= "}\nelse {\n";
+        $strOut .= "    throw new MyFusesFileOperationException( " .  
+        	$fileName . ", MyFusesFileOperationException::INCLUDE_FILE );\n";
+        $strOut .= "}\n\n";
+         
         return $strOut;
 	}
 	
