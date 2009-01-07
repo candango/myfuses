@@ -121,8 +121,9 @@ class IncludeVerb extends ParameterizedVerb {
         
         $strOut = str_repeat( "\t", $identLevel );
         
-        $strOut .= $this->getIncludeFileString( $fileCall . ". \"" . 
-            DIRECTORY_SEPARATOR . $this->getFile() . "\"" );
+        $strOut .= $this->getIncludeFileString( $fileCall . "." . 
+            " DIRECTORY_SEPARATOR . \"" . $this->getFile() . "\"" );
+        
         return $strOut;
     }
 
