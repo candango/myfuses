@@ -237,7 +237,6 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                     
                     $manager->addAuthenticationListener( new $listener() );
                 }
-                
             }
         }
         
@@ -325,7 +324,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
             	if( $currentAction == $this->getAuthenticationAction() ||
             	    $currentAction == $this->getLoginAction() ) {
                     MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
-                        'NextAction' ) );
+                        'goToNextAction' ) );
                 }
             }
         }
