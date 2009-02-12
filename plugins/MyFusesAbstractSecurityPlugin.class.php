@@ -317,6 +317,17 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                     }
                 }
             }
+            else {
+            	
+            	$currentAction = 
+            	   MyFuses::getInstance()->getRequest()->getFuseActionName();
+            	
+            	if( $currentAction == $this->getAuthenticationAction() ||
+            	    $currentAction == $this->getLoginAction() ) {
+                    MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
+                        'NextAction' ) );
+                }
+            }
         }
     }
     
