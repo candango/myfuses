@@ -18,6 +18,13 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     private $roles = array();
     
     /**
+     * Credential circuits allowed
+     * 
+     * @var array
+     */
+    private $circuits = array();
+    
+    /**
      * Credential create time
      *
      * @var int
@@ -153,6 +160,66 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      */
     public function setAuthenticated( $authenticated ) {
         $this->authenticated = $authenticated;
+    }
+    
+    /**
+     * Add one circuit to the credencial
+     * 
+     * @param $circuit
+     */
+    public function addCircuit( $circuit ) {
+    	if( !isset( $this->circuits[ $circuit ] ) ) {
+    		$this->circuits[ $circuit ] = array();
+    	}
+    }
+    
+    /**
+     * Add one action to the credencial
+     * 
+     * @param $circuit
+     * @param $action
+     */
+    public function addAction( $circuit, $action ) {
+        $actionExists = false;
+    	if( isset( $this->circuits[ $circuit ] ) ) {
+            foreach( $this->circuits[ $circuit ] as $actionRegistered ) {
+            	if( $actionRegistered == $action ) {
+            		$actionExists = true;
+            	}
+            }
+        }
+        
+        if( !$actionExists ) {
+            $this->circuits[ $circuit ][] = $action;
+        }
+    }
+    
+    /**
+     * Verifies if the credential is allowed to access the given circuit
+     * 
+     * @param $circuit
+     * @return boolean
+     */
+    public function isAllowedCircuit( $circuit ) {
+    	if( isset( $this->circuits[ $circuit ] ) ) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    
+    /**
+     * Verifies if the credential is allowed to access the given circuit action
+     * 
+     * @param $circuit
+     * @param $action
+     * @return boolean
+     */
+    public function isAllowedAction( $circuit, $action ) {
+        if( isset( $this->circuits[ $circuit ][ $action ] ) ) {
+            return true;
+        }
+        return false;
     }
     
 }
