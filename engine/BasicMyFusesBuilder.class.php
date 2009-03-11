@@ -1,6 +1,5 @@
 <?php
-MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-    "engine/MyFusesBuilder.class.php" );
+require_once MyFuses::MYFUSES_ROOT_PATH . "engine/MyFusesBuilder.class.php";
 
 /**
  * Interface that defines one My Fuses Loader

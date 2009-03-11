@@ -982,14 +982,14 @@ class MyFuses {
      * @param $file
      * @return void
      */
-    public static function includeCoreFile( $file ) {
+    /*public static function includeCoreFile( $file ) {
         if ( file_exists( $file ) ) {
             require_once $file;
         }
         else {
             throw new MyFusesMissingCoreFileException( $file );
         }
-    }
+    }*/
     
     public static function sendToUrl( $url ) {
         if( !headers_sent() ) {

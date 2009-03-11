@@ -38,8 +38,7 @@
  * @version    SVN: $Id$
  */
 
-MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-    "core/Plugin.class.php" );  
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/Plugin.class.php";  
 
 /**
  * AbstractPlugin  - AbstractPlugin.class.php
