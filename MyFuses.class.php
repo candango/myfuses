@@ -42,53 +42,30 @@ define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
 require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
 
-try {
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/ICacheable.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/IParseable.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "core/BasicApplication.class.php" );
-    
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "engine/MyFusesApplicationLoaderListener.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "engine/AbstractMyFusesLoader.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "engine/loaders/XmlMyFusesLoader.class.php" );
-    
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "engine/MyFusesApplicationBuilderListener.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "engine/BasicMyFusesBuilder.class.php" );
-    
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "process/FuseRequest.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "process/MyFusesLifecycle.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "process/MyFusesDebugger.class.php" );
-    
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/context/MyFusesContext.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/file/MyFusesFileHandler.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/data/MyFusesDataUtil.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/data/MyFusesJsonUtil.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/data/MyFusesXmlUtil.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/i18n/MyFusesI18nHandler.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/i18n/MyFusesNativeI18nHandler.class.php" );
-    MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . 
-        "util/paging/MyFusesPagingHandler.class.php" );
-}
-catch( MyFusesMissingCoreFileException $mfmcfe ) {
-    $mfmcfe->breakProcess();
-}
+
+require_once MYFUSES_ROOT_PATH . "core/ICacheable.class.php";
+require_once MYFUSES_ROOT_PATH . "core/IParseable.class.php";
+require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
+
+require_once MYFUSES_ROOT_PATH . "engine/MyFusesApplicationLoaderListener.class.php";
+require_once MYFUSES_ROOT_PATH . "engine/AbstractMyFusesLoader.class.php";
+require_once MYFUSES_ROOT_PATH . "engine/loaders/XmlMyFusesLoader.class.php";
+
+require_once MYFUSES_ROOT_PATH . "engine/MyFusesApplicationBuilderListener.class.php";
+require_once MYFUSES_ROOT_PATH . "engine/BasicMyFusesBuilder.class.php";
+
+require_once MYFUSES_ROOT_PATH . "process/FuseRequest.class.php";
+require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.class.php";
+require_once MYFUSES_ROOT_PATH . "process/MyFusesDebugger.class.php";
+
+require_once MYFUSES_ROOT_PATH . "util/context/MyFusesContext.class.php";
+require_once MYFUSES_ROOT_PATH . "util/file/MyFusesFileHandler.class.php";
+require_once MYFUSES_ROOT_PATH . "util/data/MyFusesDataUtil.class.php";
+require_once MYFUSES_ROOT_PATH . "util/data/MyFusesJsonUtil.class.php";
+require_once MYFUSES_ROOT_PATH . "util/data/MyFusesXmlUtil.class.php";
+require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesI18nHandler.class.php";
+require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesNativeI18nHandler.class.php";
+require_once MYFUSES_ROOT_PATH . "util/paging/MyFusesPagingHandler.class.php";
 
 // cleaning file functions cache
 clearstatcache();

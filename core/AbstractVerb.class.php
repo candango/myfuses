@@ -192,10 +192,10 @@ abstract class AbstractVerb implements Verb {
         if ( isset( self::$verbTypes[ @$data[ "namespace" ] . ":" . 
             $data[ "name" ] ] ) ) {
             
-            MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH . "core" . 
+            require_once MyFuses::MYFUSES_ROOT_PATH . "core" . 
                 DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
                 self::$verbTypes[ $data[ "namespace" ] . ":" . 
-                    $data[ "name" ] ] . ".class.php" );
+                    $data[ "name" ] ] . ".class.php";
             
 	        $verb = new self::$verbTypes[ $data[ "namespace" ] . ":" . 
                     $data[ "name" ] ]();

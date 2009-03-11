@@ -173,22 +173,16 @@ abstract class MyFusesI18nHandler {
     
     private function checkPath( $path ) {
         if( file_exists( $path ) ) {
-            $it = new RecursiveDirectoryIterator( $path );
             
-            foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
-                if( $child->isDir() ) {
-                    $locale = $child->getBaseName();
-                    
-                    $localePath = MyFusesFileHandler::sanitizePath( 
-                        $child->getPath() . DIRECTORY_SEPARATOR . $locale );
-                    
-                    if( $localePath != $path ) {
-                        if( file_exists( $localePath . "expressions.xml" ) ) {
-                            if( filectime( $localePath . "expressions.xml" ) > 
-                                MyFusesI18nContext::getTime() ) {
-                                return true;
-                            }
-                        }
+            $dir = dir( $path );
+            
+            while (false !== ( $subdir = $dir->read() ) ) {
+                $localePath = MyFusesFileHandler::sanitizePath( 
+                    $path . $subdir );
+                if( file_exists( $localePath . "expressions.xml" ) ) {
+                    if( filectime( $localePath . "expressions.xml" ) > 
+                        MyFusesI18nContext::getTime() ) {
+                        return true;
                     }
                 }
             }
