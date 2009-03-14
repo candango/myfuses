@@ -1,6 +1,8 @@
 <?php
 require_once "myfuses/core/Application.class.php";
+require_once "myfuses/process/MyFusesLifecycle.class.php";
 
+require_once "myfuses/util/Common.classes.php";
 
 class MyFuses {
 	
@@ -43,7 +45,17 @@ class MyFuses {
             return $this->applications[ $name ];
         }
     }
+    
+    public function getApplications() { 
+        return $this->applications;
+    }
 	
+    public function doProcess() {
+        
+        MyFusesLifecycle::storeApplications( $this );
+        
+    }
+    
 	/**
      * Returns one instance of MyFuses. Only one instance is creted per requrest.
      * MyFuses is implemmented using the singleton pattern.
