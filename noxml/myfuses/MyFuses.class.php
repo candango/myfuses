@@ -1,4 +1,6 @@
 <?php
+require_once "myfuses/core/Application.class.php";
+
 
 class MyFuses {
 	
@@ -18,9 +20,29 @@ class MyFuses {
 	private static $instance;
 	
 	
-	public function createApplication() {
-		
+	public function createApplication( 
+        $name = Application::DEFAULT_APPLICATION_NAME ) {
+            
+        $application = new BasicApplication();
+        
+        $application->setName( $name );
+        
+        $this->addApplication( $application );
+        
+        return $application;
 	}
+
+	public function addApplication( Application $application ) {
+	    $this->applications[ $application->getName() ] = $application; 
+	}
+	
+    public function getApplication( 
+        $name = Application::DEFAULT_APPLICATION_NAME ) { 
+        
+        if( isset( $this->applications[ $name ] ) ) {
+            return $this->applications[ $name ];
+        }
+    }
 	
 	/**
      * Returns one instance of MyFuses. Only one instance is creted per requrest.
