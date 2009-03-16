@@ -10,10 +10,20 @@ abstract class MyFusesLifecycle {
         
     }
     
-    
-    public static function storeApplication( $application ) {
+    public static function storeApplication( Application $application ) {
         
-        $parsedDir = MyFusesFileHandler::sanitizePath( DIRECTORY_SEPARATOR . "tpm" );
+    	//TODO use real parse dir
+        $storeDir = MyFusesFileHandler::sanitizePath( DIRECTORY_SEPARATOR . "tmp" );
+        
+        $storeDir = MyFusesFileHandler::sanitizePath( $storeDir . $application->getName() );
+        
+        $storeFile = $storeDir . $application->getName() . ".myfsues.php";
+        
+        $serializedApp = "<?php\nreturn '" . serialize( $application ) . "';\n\n";
+        
+        MyFusesFileHandler::createPath( $storeDir );
+        
+        MyFusesFileHandler::writeFile( $storeFile, $serializedApp );
         
     }
     
