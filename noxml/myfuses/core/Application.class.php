@@ -16,9 +16,18 @@ interface Application {
 	
 	public function setName( $name ); 
 	
-	public function setPath();
+	public function getPath();
 	
-	public function getPath( $path );
+	public function setPath( $path );
+	
+	/**
+	 * Return the parsed path.
+	 * 
+	 * @return string
+	 */
+	public function getParsedPath();
+	
+	public function getParsedApplicationFile();
 	
 }
 
@@ -46,14 +55,25 @@ abstract class AbstractApplication implements Application {
 		$this->name = $name;
 	}
 	
-	public function setPath() {
+	public function getPath() {
         return $this->path;
 	}
     
-    public function getPath( $path ) {
-    	
+    public function setPath( $path ) {
+    	$this->path = $path;
     }
 	
+    public function getParsedPath() {
+    	return MyFusesFileHandler::sanitizePath( 
+    	   MyFuses::getInstance()->getRootParsedPath() . 
+    	   $this->getName() );
+    }
+    
+    public function getParsedApplicationFile() { 
+    	return $this->getParsedPath() . $this->getName() . 
+    	   MyFuses::getInstance()->getStoredApplicationExtension();
+    }
+    
 }
 
 class BasicApplication extends AbstractApplication {
