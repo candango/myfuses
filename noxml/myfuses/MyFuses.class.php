@@ -34,6 +34,11 @@ class MyFuses {
             $application = new BasicApplication();
 	        
 	        $application->setName( $name );
+	        
+	        $application->setPath( 
+	           dirname( str_replace( "/", DIRECTORY_SEPARATOR, 
+	           $_SERVER[ 'SCRIPT_FILENAME' ] ) ) );
+	        
         }
         
         $this->addApplication( $application );
@@ -41,25 +46,78 @@ class MyFuses {
         return $application;
     }
 
+    /**
+     * Add one application to controller
+     *
+     * @param Application $application
+     */
     public function addApplication( Application $application ) {
-    	$this->applications[ $application->getName() ] = $application; 
+        if( count( $this->applications ) == 0 ) {
+            $application->setDefault( true );
+        }
+        
+        $this->applications[ $application->getName() ] = $application;
+        
+        if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
+            if( $application->isDefault() ) {
+                if( isset( $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ] ) ) {
+                    $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ]->setDefault( 
+                        false );
+                }
+                $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
+                    &$this->applications[ $application->getName() ];
+            }
+                
+        }
     }
     
+    /**
+     * Returns an existing application
+     *
+     * @param string $name
+     * @return Application
+     */
     public function getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) { 
-        
+        	
         if( isset( $this->applications[ $name ] ) ) {
             return $this->applications[ $name ];
         }
     }
     
-    public function getApplications() { 
+    /**
+     * Returns an array of registered applications
+     *
+     * @return array
+     */
+    public function &getApplications() { 
         return $this->applications;
     }
     
     public function doProcess() {
         
+    	MyFusesLifecycle::executeProcess( $this );
+    	
         MyFusesLifecycle::storeApplications( $this );
+        
+        
+        
+        /*$path = $this->getApplication( "TestApp" )->getPath();
+        
+        $file = $path . "../myfuses.xml";
+        
+        if( file_exists( $file ) ) {
+        	
+        	if (! ($xmlparser = xml_parser_create()) ){ 
+                die ("Cannot create parser");
+        	}
+        	
+            var_dump( $xmlparser );	
+        }*/
+        
+        
         
     }
     
