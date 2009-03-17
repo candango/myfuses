@@ -98,26 +98,13 @@ class MyFuses {
     
     public function doProcess() {
         
+    	MyFusesLifecycle::loadApplications( $this );
+    	
+        MyFusesLifecycle::createRequest( $this );
+    	
     	MyFusesLifecycle::executeProcess( $this );
     	
         MyFusesLifecycle::storeApplications( $this );
-        
-        
-        
-        /*$path = $this->getApplication( "TestApp" )->getPath();
-        
-        $file = $path . "../myfuses.xml";
-        
-        if( file_exists( $file ) ) {
-        	
-        	if (! ($xmlparser = xml_parser_create()) ){ 
-                die ("Cannot create parser");
-        	}
-        	
-            var_dump( $xmlparser );	
-        }*/
-        
-        
         
     }
     
