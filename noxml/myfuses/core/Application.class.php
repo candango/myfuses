@@ -116,6 +116,24 @@ interface Application {
 	
 	public function getParsedApplicationFile();
 	
+	#####################
+    // COLLECTION METHODS
+    #####################
+    
+	public function getCircuitReferences();
+	
+	public function getCircuitReference( $name );
+	
+	public function addCircuitReference( CircuitReference $reference );
+	
+	#########################
+    // END COLLECTION METHODS
+    #########################
+	
+	##################
+    // PROCESS METHODS
+    ##################
+	
 	/**
      * Returns if the application is started or not
      * 
@@ -147,8 +165,13 @@ interface Application {
 	 */
 	public function firePostProcess();
 	
+	######################
+    // END PROCESS METHODS
+    ######################
 	
-	// PROPERTIES DIFINED IN myfuses.xml
+	#################################
+	// METHODS DIFINED IN myfuses.xml
+	#################################
 	
 	/**
      * Return application locale
@@ -316,9 +339,9 @@ interface Application {
      */
     public function setTools( $tools );
     
-    public function setParameter( $name, $value );
-    
-	// END PROPERTIES DIFINED IN myfuses.xml
+    #####################################
+	// END METHODS DIFINED IN myfuses.xml
+	#####################################
 	
 }
 
@@ -349,13 +372,6 @@ abstract class AbstractApplication implements Application {
      */
     private $default = false;
 	
-    /**
-     * Application started state
-     * 
-     * @var boolean
-     */
-    private $started = false;
-    
 	/**
      * Application name
      * 
@@ -370,9 +386,42 @@ abstract class AbstractApplication implements Application {
 	 */
 	private $path;
 	
+	########################
+    // COLLECTION PROPERTIES
+    ########################
+    
+    private $circuitReferences = array();
+    
+    ############################
+    // END COLLECTION PROPERTIES
+    ############################
+	
+	#####################
+    // PROCESS PROPERTIES
+    #####################
+	
+	/**
+     * Application started state
+     * 
+     * @var boolean
+     */
+    private $started = false;
+	
+    /**
+     * Application start time. The time this application was initialized at
+     * the first time.
+     * 
+     * @var int
+     */
 	private $startTime;
 	
+	#########################
+    // END PROCESS PROPERTIES
+    #########################
+    
+	####################################
 	// PROPERTIES DIFINED IN myfuses.xml
+	####################################
 	
 	/**
      * Application locale. English locale is seted by default.
@@ -501,8 +550,17 @@ abstract class AbstractApplication implements Application {
      * @var string
      */
     private $characterEncoding = "UTF-8";
-	
+    
+    /**
+     * Application tools flag
+     *
+     * @var boolean
+     */
+    private $tools = false;
+    
+	########################################
     // END PROPERTIES DIFINED IN myfuses.xml
+    ########################################
     
 	/**
 	 * Default constructor
@@ -576,6 +634,30 @@ abstract class AbstractApplication implements Application {
     	   MyFuses::getInstance()->getStoredApplicationExtension();
     }
     
+    #####################
+    // COLLECTION METHODS
+    #####################
+    
+    public function getCircuitReferences() {
+    	return $this->circuitReferences;
+    }
+    
+    public function getCircuitReference( $name ) {
+        return $this->circuitReferences[ $name ];
+    }
+    
+    public function addCircuitReference( CircuitReference $reference ) {
+    	$this->circuitReferences[ $reference->getName() ] = $reference;
+    }
+    
+    #########################
+    // END COLLECTION METHODS
+    #########################
+    
+    ##################
+    // PROCESS METHODS
+    ##################
+    
     /**
      * Returns if the application is started or not
      * 
@@ -619,14 +701,13 @@ abstract class AbstractApplication implements Application {
     	// fire some action
     }
     
-    /**
-     * Application tools flag
-     *
-     * @var boolean
-     */
-    private $tools = false;
+    ######################
+    // END PROCESS METHODS
+    ######################
     
-    // PROPERTIES DIFINED IN myfuses.xml
+    #################################
+    // METHODS DIFINED IN myfuses.xml
+    #################################
     
     /**
      * Return application locale
@@ -958,9 +1039,8 @@ abstract class AbstractApplication implements Application {
     }
     
     /**
-     * Set application tools flag
-     *
-     * @param boolean $tools
+     * (non-PHPdoc)
+     * @see myfuses/core/Application#setTools()
      */
     public function setTools( $tools ) {
         if( is_bool( $tools ) ) {
@@ -976,37 +1056,9 @@ abstract class AbstractApplication implements Application {
         }
     }
     
-    public function setParameter( $name, $value ) {
-    	
-        $applicationParameters = array(
-            "fuseactionVariable" => "setFuseactionVariable",
-            "defaultFuseaction" => "setDefaultFuseaction",
-            "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
-            "debug" => "setDebug",
-            "tools" => "setTools",
-            "mode" => "setMode",
-            "strictMode" => "setStrictMode",
-            "password" => "setPassword",
-            "parseWithComments" => "setParsedWithComments",
-            "conditionalParse" => "setConditionalParse",
-            "allowLexicon" => "setLexiconAllowed",
-            "ignoreBadGrammar" => "setBadGrammarIgnored",
-            "useAssertions" => "setAssertionsUsed",
-            "scriptLanguage" => "setScriptLanguage",
-            "scriptFileDelimiter" => "setScriptFileDelimiter",
-            "maskedFileDelimiters" => "setMaskedFileDelimiters",
-            "characterEncoding" => "setCharacterEncoding"
-        );
-        
-        
-        // putting into $application
-        if( isset( $applicationParameters[ $name ] ) ) {
-            $this->$applicationParameters[ $name ]( $value );
-        }
-         
-    }
-    
-    // END PROPERTIES DIFINED IN myfuses.xml
+    #####################################
+    // END METHODS DIFINED IN myfuses.xml
+    #####################################
     
 }
 
