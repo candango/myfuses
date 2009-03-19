@@ -79,6 +79,8 @@ class MyFuses {
      */
     protected $applications = array();
     
+    protected $request;
+    
     protected $storedApplicationExtension = ".application.myfuses.php";
     
     /**
@@ -149,6 +151,14 @@ class MyFuses {
         if( isset( $this->applications[ $name ] ) ) {
             return $this->applications[ $name ];
         }
+    }
+    
+    public function getRequest() {
+    	return $this->request;
+    }
+    
+    public function setRequest( MyFusesRequest $request ) {
+    	$this->request = $request;
     }
     
     /**
