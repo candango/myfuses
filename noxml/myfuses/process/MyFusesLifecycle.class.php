@@ -21,7 +21,14 @@ abstract class MyFusesLifecycle {
     
 	public static function createRequest( MyFuses $controller ) {
 		
+		$request = new MyFusesRequest();
 		
+	    $request->setApplication( $controller->getApplication() );
+	    
+	    $request->setDefaultFuseaction( $controller->getApplication()->getDefaultFuseaction() );
+	    $request->setFuseactionVariable( $controller->getApplication()->getFuseactionVariable() );
+	    
+		$controller->setRequest( $request );
 		
 	}
 	
