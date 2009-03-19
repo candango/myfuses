@@ -9,6 +9,9 @@ interface MyFusesLoader {
 	 */
     public function setApplicationParameter( Application $application, 
         $name, $value );
+        
+    public function addApplicationReference( Application $application, 
+       CircuitReference $reference );
 }
 
 abstract class MyFusesAbstractLoader implements MyFusesLoader {
@@ -45,6 +48,11 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
             $application->$applicationParameters[ $name ]( $value );
         }
 	}
+	
+	public function addApplicationReference( Application $application, 
+       CircuitReference $reference ) {
+       $application->addReference( $reference );
+    }
 	
 }
 
@@ -119,9 +127,31 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
         	
         	foreach( $attribs as $key => $value ) {
         		
+        		$name = "";
+        		
+        		$path = "";
+        		
+        		$parent = "";
+        		
+        	    if( isset( $attribs[ 'alias' ] ) ) {
+                    $reference->setName( $attribs[ 'alias' ] );
+                }
+        		
+        		if( isset( $attribs[ 'name' ] ) ) {
+        			$reference->setName( $attribs[ 'name' ] );
+        		}
+        		
+        		if( isset( $attribs[ 'path' ] ) ) {
+        			$reference->setPath( $attribs[ 'path' ] );
+        		}
+        		
+        	    if( isset( $attribs[ 'parent' ] ) ) {
+        	    	$reference->setParent( $attribs[ 'parent' ] );
+                }
+                
         	}
         	
-            //$this->application->setParameter( $attribs[ 'name' ], $attribs[ 'value' ] );
+        	$this->addApplicationReference( $this->application, $reference );
         }
         
         if( $this->path === array( "myfuses", "parameters", "parameter" ) ) {

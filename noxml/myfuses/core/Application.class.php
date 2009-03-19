@@ -120,11 +120,11 @@ interface Application {
     // COLLECTION METHODS
     #####################
     
-	public function getCircuitReferences();
+	public function getReferences();
 	
-	public function getCircuitReference( $name );
+	public function getReference( $name );
 	
-	public function addCircuitReference( CircuitReference $reference );
+	public function addReference( CircuitReference $reference );
 	
 	#########################
     // END COLLECTION METHODS
@@ -390,7 +390,7 @@ abstract class AbstractApplication implements Application {
     // COLLECTION PROPERTIES
     ########################
     
-    private $circuitReferences = array();
+    private $references = array();
     
     ############################
     // END COLLECTION PROPERTIES
@@ -638,16 +638,16 @@ abstract class AbstractApplication implements Application {
     // COLLECTION METHODS
     #####################
     
-    public function getCircuitReferences() {
-    	return $this->circuitReferences;
+    public function getReferences() {
+    	return $this->references;
     }
     
-    public function getCircuitReference( $name ) {
-        return $this->circuitReferences[ $name ];
+    public function getReference( $name ) {
+        return $this->references[ $name ];
     }
     
-    public function addCircuitReference( CircuitReference $reference ) {
-    	$this->circuitReferences[ $reference->getName() ] = $reference;
+    public function addReference( CircuitReference $reference ) {
+    	$this->references[ $reference->getName() ] = $reference;
     }
     
     #########################
