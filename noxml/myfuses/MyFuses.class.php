@@ -2,6 +2,10 @@
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
 require_once "myfuses/core/Application.class.php";
+require_once "myfuses/core/Circuit.class.php";
+
+require_once "myfuses/engine/MyFusesLoader.class.php";
+
 require_once "myfuses/process/MyFusesLifecycle.class.php";
 
 require_once "myfuses/util/Common.classes.php";
