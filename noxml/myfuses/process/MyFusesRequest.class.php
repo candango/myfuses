@@ -80,16 +80,19 @@ class MyFusesRequest {
     
 }
 
-interface MyFusesRouter {
+interface MyFusesRequestRouter {
 	
-	public function resolveRequest( MyFusesRequest $request );
+	public function grab( MyFusesRequest $request );
 	
+	public function resolve( MyFusesRequest $request );
+	
+	public function release( MyFusesRequest $request );
 }
 
 
-abstract class MyFusesAbstractRouter implements MyFusesRouter {
+abstract class MyFusesAbstractRequestRouter implements MyFusesRequestRouter {
 	
-	public function resolveRequest( MyFusesRequest $request ) {
+	public function grab( MyFusesRequest $request ) {
 		
 		$fuseactionVariable = $request->getFuseactionVariable();
 		
@@ -108,8 +111,15 @@ abstract class MyFusesAbstractRouter implements MyFusesRouter {
         }
 	}
 	
+	public function resolve( MyFusesRequest $request ) {
+		
+	}
+
+	public function release( MyFusesRequest $request ) {
+		
+	}
 }
 
-class MyFusesBasicRouter extends MyFusesAbstractRouter {
+class MyFusesBasicRequestRouter extends MyFusesAbstractRequestRouter {
     	
 }

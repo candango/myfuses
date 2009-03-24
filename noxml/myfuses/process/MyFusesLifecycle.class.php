@@ -26,13 +26,16 @@ abstract class MyFusesLifecycle {
 	    $request->setApplication( $controller->getApplication() );
 	    
 	    $request->setDefaultFuseaction( $controller->getApplication()->getDefaultFuseaction() );
+	    
 	    $request->setFuseactionVariable( $controller->getApplication()->getFuseactionVariable() );
 	    
-		
-		
-		$router = new MyFusesBasicRouter();
+		$router = new MyFusesBasicRequestRouter();
 
-		$router->resolveRequest( $request );
+		$router->grab( $request );
+		
+		$router->resolve( $request );
+		
+		$router->release( $request );
 		
 		$controller->setRequest( $request );
 	}
