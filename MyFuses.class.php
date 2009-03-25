@@ -717,7 +717,7 @@ class MyFuses {
             }
             //end parsing post process plugins
             
-            $strParse .= "} catch ( Exception \$e ) {\n}";
+            $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n}";
             
             
             

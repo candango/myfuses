@@ -186,7 +186,7 @@ class MyFusesProcessException extends Exception {
 	
 }
 
-/*class MyFusesFuseactionException extends Exception {
+class MyFusesFuseactionException extends Exception {
 	
-}*/
+}
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

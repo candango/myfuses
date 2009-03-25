@@ -283,7 +283,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
                     $strOut .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
                     $strOut .= "\t\$plugin->run();\n}\n\n";
                 }
-                $strOut .= "} catch ( Exception \$e ) {\n}\n";
+                $strOut .= 
+                    "} catch ( MyFusesFuseActionException \$mfae ) {\n}\n";
                 //end parsing post fuseaction plugins
             }
         }
