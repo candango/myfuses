@@ -177,7 +177,7 @@ class DoVerb extends ParameterizedVerb {
         catch ( MyFusesCircuitException $mfce ) {
             $mfce->breakProcess();
         }
-        catch ( MyFusesFuseActionException $mffae ) {
+        catch ( MyFusesActionException $mffae ) {
             $mffae->breakProcess();
         }
         
