@@ -3,7 +3,7 @@
  * Enter description here...
  *
  */
-class MyFusesFuseActionException extends MyFusesException {
+class MyFusesActionException extends MyFusesException {
     
     /**
      * Non-existent circuit contant <br>

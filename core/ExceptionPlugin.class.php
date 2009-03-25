@@ -58,7 +58,7 @@ MyFuses::includeCoreFile( MyFuses::MYFUSES_ROOT_PATH .
  * @version    SVN: $Revision: 331 $
  * @since      Revision 17
  */
-abstract class ExceptionPlugin extends Exception implements Plugin{
+abstract class ExceptionPlugin implements Plugin{
     
     /**
      * Plugin name

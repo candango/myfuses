@@ -12,7 +12,7 @@ require_once MYFUSES_ROOT_PATH .
     "exception/MyFusesCircuitException.class.php";
     
 require_once MYFUSES_ROOT_PATH . 
-    "exception/MyFusesFuseActionException.class.php";
+    "exception/MyFusesActionException.class.php";
 
 require_once MYFUSES_ROOT_PATH . 
     "exception/MyFusesVerbException.class.php";
@@ -181,4 +181,12 @@ abstract class MyFusesException extends Exception {
         return $out;
     }
 }
+
+class MyFusesProcessException extends Exception {
+	
+}
+
+/*class MyFusesFuseactionException extends Exception {
+	
+}*/
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

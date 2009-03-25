@@ -330,7 +330,7 @@ class BasicCircuit implements Circuit {
      *
      * @param string $name
      * @return FuseAction
-     * @throws MyFusesFuseActionException
+     * @throws MyFusesActionException
      */
     public function getAction( $name ) {
         if( isset( $this->actions[ $name ] ) ) {
@@ -339,8 +339,8 @@ class BasicCircuit implements Circuit {
     	
     	$params = array( "actionName" => $name, "circuit" => &$this , 
     	    "application" => $this->getApplication() );
-    	throw new MyFusesFuseActionException( $params, 
-    	    MyFusesFuseActionException::NON_EXISTENT_FUSEACTION );
+    	throw new MyFusesActionException( $params, 
+    	    MyFusesActionException::NON_EXISTENT_FUSEACTION );
         
     }
     

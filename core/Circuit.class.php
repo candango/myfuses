@@ -206,7 +206,7 @@ interface Circuit extends ICacheable {
      *
      * @param string $name
      * @return FuseAction
-     * @throws MyFusesFuseActionException
+     * @throws MyFusesActionException
      */
     public function getAction( $name );
     

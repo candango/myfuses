@@ -216,6 +216,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
             if( $this->getName() != "prefuseaction" && 
                 $this->getName() != "postfuseaction" ) {
                 
+                $strOut .= "try {\n\n";
+                	
                 $strOut .= $myFusesString . "->setCurrentProperties( \"" . 
                         MyFusesLifecycle::PRE_FUSEACTION_PHASE . "\", "  . 
                         $actionString . " );\n\n";    
@@ -281,6 +283,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
                     $strOut .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
                     $strOut .= "\t\$plugin->run();\n}\n\n";
                 }
+                $strOut .= "} catch ( Exception \$e ) {\n}\n";
                 //end parsing post fuseaction plugins
             }
         }
