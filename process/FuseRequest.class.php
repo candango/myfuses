@@ -254,7 +254,7 @@ class FuseRequest {
                     return $circuit->getApplication()->getName() . "." . 
                             $resolvedPath . "." . $action->getName();
                 }
-                catch ( MyFusesFuseActionException $mffae ) {
+                catch ( MyFusesActionException $mffae ) {
                     foreach( $circuit->getActions() as $action ) {
                         if( $action->isDefault() ) {
                             $this->setExtraParams( array_slice( 
@@ -289,7 +289,7 @@ class FuseRequest {
                                 
                                 return $resolvedPath . "." . $action->getName();
                             }
-                            catch ( MyFusesFuseActionException $mffae ) {
+                            catch ( MyFusesActionException $mffae ) {
                                 foreach( $circuit->getActions() as $action ) {
                                     if( $action->isDefault() ) {
                                         $this->setExtraParams( array_slice( 

@@ -651,6 +651,8 @@ class MyFuses {
             
             $strParse = "";
 	        
+            $strParse .= "try {\n";
+            
             $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
 		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  . 
                 $actionString . " );\n\n";
@@ -714,6 +716,10 @@ class MyFuses {
                 $strParse .= "\t\$plugin->run();\n}\n\n";
             }
             //end parsing post process plugins
+            
+            $strParse .= "} catch ( Exception \$e ) {\n}";
+            
+            
             
             $this->createApplicationPath( $application );
             
@@ -932,7 +938,7 @@ class MyFuses {
                                 implode( "/", $xfaX );
                         }
                     }
-                    catch ( MyFusesFuseActionException $mffae ) {
+                    catch ( MyFusesActionException $mffae ) {
                         $link = self::getMySelf( $showFuseactionVariable ) . 
                             implode( "/", $xfaX );
                     }
