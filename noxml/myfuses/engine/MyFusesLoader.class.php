@@ -58,36 +58,14 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
 
 class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
-    private $parser;
-    
-    private $path = array();
-    
-    /**
-     * 
-     * @var Application
-     */
-    private $application;
-    
-    public function __construct() {
-        
-        if( !( $this->parser = xml_parser_create() ) ) { 
-            die ("Cannot create parser");
-        }
-        
-        xml_set_object( $this->parser, $this );
-        
-        xml_set_element_handler( $this->parser, "startTag", "endTag" );
-
-        //xml_set_character_data_handler( $this->parser, "tagContents" );
-
-        xml_parser_set_option( $this->parser, XML_OPTION_CASE_FOLDING, 0 );
-        
-    }
-    
     public function loadApplication( Application $application ) {
         
-        $this->application = $application;
-        
+    	$appMethods = array( 
+            "circuits" => "loadCircuits", 
+            "classes" => "loadClasses",
+            "parameters" => "loadParameters"
+        );
+    	
         $path = $application->getPath();
         
         $file = $path . "myfuses.xml";
@@ -96,15 +74,71 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
             
             $data = MyFusesFileHandler::readFile( $file );
             
-            if ( ! xml_parse( $this->parser, $data ) ) {
-                $reason = xml_error_string( xml_get_error_code( $xmlparser ) );
-                $reason .= xml_get_current_line_number( $xmlparser );
-                die( $reason );
-            }
-            
+            try {
+	            // FIXME put no warning modifier in SimpleXMLElement call
+	            $rootNode = @new SimpleXMLElement( $data );
+
+	            foreach ( $rootNode as $key => $node ) {
+	                if( isset( $appMethods[ strtolower( $key ) ] ) ) {
+	                    $this->$appMethods[ 
+	                       strtolower( $key ) ]( $application, $node );
+	                }
+	            }
+	        }
+	        catch ( Exception $e ) {
+	            // FIXME handle error
+	            echo "<b>" . $application->getPath() . "<b><br>";
+	            die( $e->getMessage() );    
+	        }
+	            
         }
         
         $this->application = null;
+    }
+    
+    private function loadCircuits( Application $application, 
+        SimpleXMLElement $node ) {
+    	
+        if( count( $node->children() ) ) {
+            foreach( $node->children() as $key => $child ) {
+	            if( $key == 'circuit' ) {
+	            	$this->loadCircuit( $application, $child );
+	            }
+            }
+        }
+    }
+    
+    private function loadCircuit( Application $application, 
+        SimpleXMLElement $node ) {
+    	
+        $referenceMethods = array( 
+            "name" => "setName", 
+            "alias" => "setName",
+            "path" => "setPath",
+            "parent" => "setParent"
+        );
+        	
+        $reference = new BasicCircuitReference();
+        	
+        foreach( $node->attributes() as $key => $attribute ) {
+        	if( isset( $referenceMethods[ strtolower( $key ) ] ) ) {
+                $reference->$referenceMethods[ 
+                    strtolower( $key ) ](   "" . $attribute );
+            }
+        }
+        
+        $application->addReference( $reference );
+        
+    }
+    
+    private function loadClasses( Application $application, 
+        SimpleXMLElement $node ) {
+        	
+    }
+    
+    private function loadParameters( Application $application, 
+        SimpleXMLElement $node ) {
+            
     }
     
     private function startTag($parser, $name, $attribs) {

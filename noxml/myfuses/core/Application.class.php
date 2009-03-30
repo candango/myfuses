@@ -647,6 +647,7 @@ abstract class AbstractApplication implements Application {
     }
     
     public function addReference( CircuitReference $reference ) {
+    	// TODO Reference without name and path must throw a exception
     	$this->references[ $reference->getName() ] = $reference;
     }
     
