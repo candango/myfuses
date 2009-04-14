@@ -1,4 +1,58 @@
 <?php
+/**
+ * MyFusesXmlLoader - MyFusesXmlLoader.class.php
+ * 
+ * MyFuses XML loader can load all xml metadata and transform in myFuses data
+ * structures.
+ * 
+ * PHP version 5
+ * 
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ * 
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ * 
+ * This product includes software developed by the Fusebox Corporation 
+ * (http://www.fusebox.org/).
+ * 
+ * The Original Code is myFuses "a Candango implementation of Fusebox Corporation 
+ * Fusebox" part .
+ * 
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
+ * All Rights Reserved.
+ * 
+ * Contributor(s): Flavio Goncalves Garcia.
+ *
+ * @category   engine
+ * @package    myfuses.engine.loaders
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @link       http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Id: MyFuses.class.php 662 2009-03-11 04:30:31Z flavio.garcia $
+ */
+
+/**
+ * MyFuses XML loader can load all xml metadata and transform in myFuses data
+ * structures.
+ * 
+ * PHP version 5
+ *
+ * @category   engine
+ * @package    myfuses.engine.loaders
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @link http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Revision: 662 $
+ * @since      Revision 17
+ */
 class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
     public function loadApplication( Application $application ) {
@@ -81,75 +135,25 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
     private function loadParameters( Application $application, 
         SimpleXMLElement $node ) {
-            
+        
+        foreach( $node as $parameter ) {
+            $name = "";
+            $value = "";
+	        foreach( $parameter->attributes() as $_key => $_value ) {
+	            if( strtolower( $_key ) === "name" ) {
+	            	$name = "" . $_value;
+	            }
+	            
+	            if( strtolower( $_key ) === "value" ) {
+                    $value = "" . $_value;
+                }
+	        }
+
+	        $this->setApplicationParameter( $application, $name, $value );
+	        
+        }
+        
     }
     
-    private function startTag($parser, $name, $attribs) {
-        
-        $this->path[] = $name;
-        
-        /*foreach( $this->path as $deph => $element ) {
-            if( $deph == 0 ) {
-                
-                $this->item =& $this->item[ $element ];
-            }
-            else {
-                $this->item =& $this->item["children"][ $element ];
-            }
-        }*/
-        
-        if( $this->path === array( "myfuses", "circuits", "circuit" ) ) {
-        	
-        	$reference = new BasicCircuitReference();
-        	
-        	foreach( $attribs as $key => $value ) {
-        		
-        		$name = "";
-        		
-        		$path = "";
-        		
-        		$parent = "";
-        		
-        	    if( isset( $attribs[ 'alias' ] ) ) {
-                    $reference->setName( $attribs[ 'alias' ] );
-                }
-        		
-        		if( isset( $attribs[ 'name' ] ) ) {
-        			$reference->setName( $attribs[ 'name' ] );
-        		}
-        		
-        		if( isset( $attribs[ 'path' ] ) ) {
-        			$reference->setPath( $attribs[ 'path' ] );
-        		}
-        		
-        	    if( isset( $attribs[ 'parent' ] ) ) {
-        	    	$reference->setParent( $attribs[ 'parent' ] );
-                }
-                
-        	}
-        	
-        	$this->addApplicationReference( $this->application, $reference );
-        }
-        
-        if( $this->path === array( "myfuses", "parameters", "parameter" ) ) {
-            $this->setApplicationParameter( $this->application, 
-                $attribs[ 'name' ], $attribs[ 'value' ] );
-        }
-        
-        /*$this->item[ "name" ] = $name;
-        $this->item[ "namespace" ] = "myfuses";
-        
-        $this->item[ "attributes" ] = array();
-        
-        if (is_array($attribs)) {
-          foreach( $attribs as $key => $val ) {
-            $this->item[ "attributes" ][ $key ] =  "" . $val ;
-          }
-        }*/
-    }
-
-    private function endTag($parser, $name) {
-        array_pop( $this->path );
-    }
     
 }

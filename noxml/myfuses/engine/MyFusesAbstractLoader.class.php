@@ -27,7 +27,6 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
             "characterEncoding" => "setCharacterEncoding"
         );
         
-        
         // putting into $application
         if( isset( $applicationParameters[ $name ] ) ) {
             $application->$applicationParameters[ $name ]( $value );
