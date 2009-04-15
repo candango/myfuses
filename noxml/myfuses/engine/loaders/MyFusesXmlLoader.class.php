@@ -55,6 +55,10 @@
  */
 class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
+	/**
+	 * (non-PHPdoc)
+	 * @see engine/MyFusesLoader#loadApplication()
+	 */
     public function loadApplication( Application $application ) {
         
     	$appMethods = array( 
@@ -130,7 +134,37 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
     private function loadClasses( Application $application, 
         SimpleXMLElement $node ) {
+        
+        if( count( $node->children() ) ) {
+            foreach( $node->children() as $key => $child ) {
+                if( $key == 'class' ) {
+                    $this->loadClass( $application, $child );
+                }
+            }
+        }
         	
+    }
+    
+    private function loadClass( Application $application, 
+        SimpleXMLElement $node ) {
+        
+        $definitionMethods = array( 
+            "name" => "setName", 
+            "alias" => "setName",
+            "path" => "setPath",
+            "classpath" => "setPath"
+        );
+            
+        $definition = new BasicClassDefinition();
+            
+        foreach( $node->attributes() as $key => $attribute ) {
+            if( isset( $definitionMethods[ strtolower( $key ) ] ) ) {
+                $definition->$definitionMethods[ 
+                    strtolower( $key ) ](   "" . $attribute );
+            }
+        }
+        
+        $application->addClass( $definition );
     }
     
     private function loadParameters( Application $application, 

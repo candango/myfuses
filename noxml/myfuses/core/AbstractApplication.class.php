@@ -26,7 +26,7 @@
  * Corporation Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2009.
  * All Rights Reserved.
  * 
  * Contributor(s): Flavio Gonçalves Garcia.
@@ -83,6 +83,8 @@ abstract class AbstractApplication implements Application {
     ########################
     
     private $references = array();
+    
+    private $classes = array();
     
     ############################
     // END COLLECTION PROPERTIES
@@ -341,6 +343,18 @@ abstract class AbstractApplication implements Application {
     public function addReference( CircuitReference $reference ) {
     	// TODO Reference without name and path must throw a exception
     	$this->references[ $reference->getName() ] = $reference;
+    }
+    
+    public function getClasses() {
+        return $this->classes;
+    }
+    
+    public function getClass( $name ){
+    	return $this->classes[ $name ];
+    }
+    
+    public function addClass( ClassDefinition  $definition ) {
+    	$this->classes[ $definition->getName() ] = $definition;
     }
     
     #########################

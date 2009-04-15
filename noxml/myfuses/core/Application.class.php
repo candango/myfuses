@@ -127,6 +127,12 @@ interface Application {
 	
 	public function addReference( CircuitReference $reference );
 	
+	public function getClasses();
+    
+    public function getClass( $name );
+    
+    public function addClass( ClassDefinition  $definition );
+	
 	#########################
     // END COLLECTION METHODS
     #########################
