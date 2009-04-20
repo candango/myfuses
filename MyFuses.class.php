@@ -717,7 +717,21 @@ class MyFuses {
             }
             //end parsing post process plugins
             
-            $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n}";
+            $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n";
+
+            if( count( $application->getPlugins( 
+                Plugin::PROCESS_ERROR_PHASE ) ) ) {
+                $pluginsStr = $controllerName . 
+                    "::getInstance()->getApplication( \"" . 
+                    $application->getName() . "\" )->getPlugins(" .
+                    " \"" . Plugin::PROCESS_ERROR_PHASE . "\" )";
+                $strParse .= "\tforeach( " . $pluginsStr . " as \$plugin ) {\n";
+                $strParse .= "\t\t\$plugin->handle( \$mpe );\n\t}\n";
+                $strParse .= "\tforeach( MyFusesContext::getContext() as " . 
+                    " \$key => \$value ) {global \$\$value;}\n\n";
+            }
+            
+            $strParse .= "}";
             
             
             
