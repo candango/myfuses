@@ -55,6 +55,14 @@
  */
 interface Plugin extends IParseable, ICacheable {
     
+	/**
+     * Fuseaction exception fase constant<br>
+     * Value "fuseactionException"
+     * 
+     * @var string
+     */
+    const FUSEACTION_EXCEPTION_PHASE = "fuseactionException";
+	
     /**
      * Pre process fase constant<br>
      * Value "preProcess"
