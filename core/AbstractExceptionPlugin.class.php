@@ -38,8 +38,10 @@
  * @version    SVN: $Id: AbstractPlugin.class.php 331 2008-02-29 20:23:26Z piraz $
  */
 
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/ExceptionPlugin.class.php";  
+
 /**
- * ExceptionPlugin  - AbstractPlugin.class.php
+ * AbstractPlugin  - AbstractPlugin.class.php
  * 
  * This is a functional abstract MyFuses plugin implementation. One concrete
  * Plugin must extends this class.
@@ -55,9 +57,12 @@
  * @version    SVN: $Revision: 331 $
  * @since      Revision 17
  */
-interface ExceptionPlugin extends Plugin{
+abstract class AbstractExceptionPlugin extends AbstractPlugin 
+    implements ExceptionPlugin{
     
-    public function handle( MyFusesRuntimeExeption $exception );
-    
+    public function run() {
+    	
+    }
+    	
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

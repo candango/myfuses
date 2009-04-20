@@ -1,5 +1,6 @@
 <?php
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractPlugin.class.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractExceptionPlugin.class.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractVerb.class.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/Application.class.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/ClassDefinition.class.php";
