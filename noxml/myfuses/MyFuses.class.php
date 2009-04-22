@@ -40,6 +40,8 @@
  */
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
+require_once "myfuses/exception/MyFusesException.class.php";
+
 require_once "myfuses/core/Application.class.php";
 require_once "myfuses/core/Circuit.class.php";
 require_once "myfuses/core/CircuitReference.class.php";
@@ -173,14 +175,20 @@ class MyFuses {
     }
     
     public function doProcess() {
-        
-    	MyFusesLifecycle::loadApplications( $this );
-    	
-        MyFusesLifecycle::createRequest( $this );
-    	
-    	MyFusesLifecycle::executeProcess( $this );
-    	
-        MyFusesLifecycle::storeApplications( $this );
+    	try {
+	    	MyFusesLifecycle::loadApplications( $this );
+	    	
+	        MyFusesLifecycle::createRequest( $this );
+	    	
+	    	MyFusesLifecycle::executeProcess( $this );
+	    	
+	        MyFusesLifecycle::storeApplications( $this );
+		}
+		catch( MyFusesException $mfe ) {
+		
+		    var_dump( $mfe->getTrace() );die();
+		
+		}
         
     }
     

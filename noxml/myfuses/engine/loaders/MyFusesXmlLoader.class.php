@@ -69,7 +69,7 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
     	
         $path = $application->getPath();
         
-        $file = $path . "myfuses.xml";
+        $file = $path . "myfuses.xml1";
         
         if( file_exists( $file ) ) {
             
@@ -92,6 +92,23 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
 	            die( $e->getMessage() );    
 	        }
 	            
+        }
+        else {
+        	
+        	$exception = new MyFusesException( "Could not find the " . 
+        	   "application \"" . $application->getName() . "\" file." );
+        	
+        	$exception->setType( 
+        	   MyFusesException::MYFUSES_APPLICATION_FILE_DOENST_EXISTS_TYPE );
+        	
+            $exception->setDescription( "MyFuses can't find the application " . 
+                "descriptor file. Check the directory \"" . 
+                $application->getPath() . "\" and check if even myfuses.xml" . 
+                " or fusebox.xml files exists." );
+               
+        	var_dump( $exception );die();
+        	
+            throw new MyFusesException();
         }
         
         $this->application = null;

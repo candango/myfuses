@@ -70,13 +70,6 @@ abstract class AbstractClassDefinition implements ClassDefinition {
     private $path;
     
     /**
-     * Application where the class will be used
-     *
-     * @var Application
-     */
-    private $application;
-    
-    /**
      * Return the class name
      *
      * @return string
@@ -121,24 +114,6 @@ abstract class AbstractClassDefinition implements ClassDefinition {
     public function getCompletePath() {
         //return $this->getApplication()->getPath() . $this->getPath();
         return $this->getPath();
-    }
-    
-    /**
-     * Get the Class Definition Application
-     * 
-     * @return Application
-     */
-    public function getApplication() {
-        return $this->application;
-    }
-
-    /**
-     * Set the Class Definition Application
-     *
-     * @param Application $application
-     */
-    public function setApplication( Application $application ) {
-        $this->application = $application;
     }
     
 }
