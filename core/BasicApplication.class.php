@@ -361,6 +361,8 @@ class BasicApplication implements Application {
         $this->plugins[ MyFusesLifecycle::POST_FUSEACTION_PHASE ] = array();
         $this->plugins[ MyFusesLifecycle::POST_PROCESS_PHASE ] = array();
         $this->plugins[ MyFusesLifecycle::PROCESS_ERROR_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::FUSEACTION_EXCEPTION_PHASE ] = 
+            array();
     }
     
     /**

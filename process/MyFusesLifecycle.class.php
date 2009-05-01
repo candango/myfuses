@@ -110,6 +110,14 @@ abstract class MyFusesLifecycle {
     const PROCESS_ERROR_PHASE = "processError";
     
     /**
+     * Fuseaction exception fase constant<br>
+     * Value "fuseactionException"
+     * 
+     * @var string
+     */
+    const FUSEACTION_EXCEPTION_PHASE = "fuseactionException";
+    
+    /**
      * Lifecycle Phase
      *
      * @var string
