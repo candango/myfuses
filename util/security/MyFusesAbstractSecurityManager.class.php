@@ -18,6 +18,13 @@ abstract class MyFusesAbstractSecurityManager
      */
     private $authenticationListeners = array();
     
+    /**
+     * Authorization Manager listeners
+     *
+     * @var array
+     */
+    private $authorizationListeners = array(); 
+    
     private static $instance;
     
     /**
@@ -56,7 +63,17 @@ abstract class MyFusesAbstractSecurityManager
         MyFusesAuthenticationListener $listener ) {
         $this->authenticationListeners[] = $listener;
     }
-
+    
+    /**
+     * Add one Authorization Listener to manager
+     *
+     * @param MyFusesAuthorizationListener $listener
+     */
+    public function addAuthorizationListener( 
+        MyFusesAuthorizationListener $listener ) {
+        $this->authorizationListeners[] = $listener;
+    }
+    
     /**
      * Return all Authentication listeners registered
      *
