@@ -20,7 +20,7 @@
  * This product includes software developed by the Fusebox Corporation 
  * (http://www.fusebox.org/).
  * 
- * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
+ * The Original Code is myFuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
