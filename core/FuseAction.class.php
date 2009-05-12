@@ -226,7 +226,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
                 if( count( $this->getCircuit()->getApplication()->getPlugins( 
                     Plugin::PRE_FUSEACTION_PHASE ) ) ) {
                     $pluginsStr = $controllerClass . 
-                        "::getInstance()::getApplication( \"" . 
+                        "::getInstance()->getApplication( \"" . 
                         $application->getName() . "\" )->getPlugins(" .
                         " \"" . Plugin::PRE_FUSEACTION_PHASE . "\" )";
                     $strOut .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
