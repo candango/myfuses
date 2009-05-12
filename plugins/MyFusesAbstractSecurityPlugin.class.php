@@ -226,6 +226,9 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         $authenticationListeners = $this->getParameter( 
             'AuthenticationListener' );
         
+        $authorizationListeners = $this->getParameter( 
+            'AuthorizationListener' );
+        
         foreach( $this->getListenersPath() as $path ) {
             if( !MyFusesFileHandler::isAbsolutePath( $path ) ) {
                 $path = $this->getApplication()->getPath() . $path;
@@ -238,6 +241,15 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                     $manager->addAuthenticationListener( new $listener() );
                 }
             }
+            
+            foreach( $authorizationListeners as $listener ) {
+                if( file_exists( $path . $listener . ".class.php" ) ) {
+                    require_once $path . $listener . ".class.php";
+                    
+                    $manager->addAuthorizationListener( new $listener() );
+                }
+            }
+            
         }
         
     }
