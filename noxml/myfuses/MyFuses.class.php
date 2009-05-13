@@ -186,7 +186,7 @@ class MyFuses {
 		}
 		catch( MyFusesException $mfe ) {
 		
-		    var_dump( $mfe->getTrace() );die();
+		    $mfe->breakProcess();
 		
 		}
         
