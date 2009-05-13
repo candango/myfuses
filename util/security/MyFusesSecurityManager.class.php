@@ -45,6 +45,13 @@ interface MyFusesSecurityManager {
         $listener );
     
     /**
+     * Return all authentication listeners registered
+     *
+     * @return array Array of AuthenticationListeners
+     */
+    public function getAuthenticationListeners();
+        
+    /**
      * Add one Authorization Listener to manager
      *
      * @param MyFusesAuthenticationListener $listener
@@ -53,11 +60,11 @@ interface MyFusesSecurityManager {
         $listener );
         
     /**
-     * Return all authentication listeners registered
+     * Return all Authorization listeners registered
      *
-     * @return array Array of AuthenticationListeners
+     * @return array Array of AuthorizationListeners
      */
-    public function getAuthenticationListeners();
+    public function getAuthorizationListeners();
         
     /**
      * Add one Autentication Listener
@@ -105,6 +112,8 @@ interface MyFusesAuthenticationListener {
 
 interface MyFusesAuthorizationListener {
     
+	public function authorize( MyFusesSecurityManager $manager );
+	
     public function authorizationPerformed( MyFusesSecurityManager $manager );
     
 }

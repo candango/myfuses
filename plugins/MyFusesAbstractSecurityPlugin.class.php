@@ -175,6 +175,9 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
             case Plugin::PRE_PROCESS_PHASE:
                 $this->runPreProcess();
                 break;
+            case Plugin::PRE_FUSEACTION_PHASE:
+            	$this->runPreFuseaction();
+                break;
         }
 	    
 	}
@@ -206,6 +209,19 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
         $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
         
+    }
+    
+    /**
+     * Run pre process fuseaction
+     *
+     */
+    private function runPreFuseaction() {
+    	$manager = MyFusesAbstractSecurityManager::getInstance();
+    	
+    	foreach( $manager->getAuthorizationListeners() as $listner ) {
+    		$listner->authorize( $manager );
+    	}
+    	
     }
     
 	/**
