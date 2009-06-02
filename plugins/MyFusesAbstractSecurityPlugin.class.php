@@ -218,8 +218,10 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
     private function runPreFuseaction() {
     	$manager = MyFusesAbstractSecurityManager::getInstance();
     	
-    	foreach( $manager->getAuthorizationListeners() as $listner ) {
-    		$listner->authorize( $manager );
+    	if( $manager->isAuthenticated() ) {
+    	    foreach( $manager->getAuthorizationListeners() as $listner ) {
+	    		$listner->authorize( $manager );
+	    	}
     	}
     	
     }
