@@ -42,7 +42,6 @@ abstract class MyFusesAbstractSecurityManager
     private $userPasswordField = "userPassword";
     
     public function isAuthenticated() {
-        
         $credential = $this->getCredential();
         
         return $credential->isAuthenticated();
@@ -165,16 +164,16 @@ abstract class MyFusesAbstractSecurityManager
     }
     
     public function getMessage( $type, $name ) {
-    	return isset( $_SESSION[ 'MYFUSES_SECURITY' ][ $type ][ $name ] ) ? 
-    	   $_SESSION[ 'MYFUSES_SECURITY' ][ $type ][ $name ] : ""; 
+    	return isset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'MESSAGES' ][ strtoupper( $type ) ][ strtoupper( $name ) ] ) ? 
+    	   $_SESSION[ 'MYFUSES_SECURITY' ][ 'MESSAGES' ][ strtoupper( $type ) ][ strtoupper( $name ) ] : ""; 
     }
     
     public function setMessage( $type, $name, $message ) {
-    	$_SESSION[ 'MYFUSES_SECURITY' ][ $type ][ $name ] = $message;
+    	$_SESSION[ 'MYFUSES_SECURITY' ][ 'MESSAGES' ][ strtoupper( $type ) ][ strtoupper( $name ) ] = $message;
     }
     
     public function clearMessages() {
-    	unset( $_SESSION[ 'MYFUSES_SECURITY' ] );
+    	unset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'MESSAGES' ] );
     }
     
     public function logout() {
