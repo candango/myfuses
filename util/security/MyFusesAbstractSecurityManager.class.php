@@ -164,6 +164,19 @@ abstract class MyFusesAbstractSecurityManager
         return $_REQUEST[ $this->getUserPasswordField() ];
     }
     
+    public function getMessage( $type, $name ) {
+    	return isset( $_SESSION[ 'MYFUSES_SECURITY' ][ $type ][ $name ] ) ? 
+    	   $_SESSION[ 'MYFUSES_SECURITY' ][ $type ][ $name ] : ""; 
+    }
+    
+    public function setMessage( $type, $name, $message ) {
+    	$_SESSION[ 'MYFUSES_SECURITY' ][ $type ][ $name ] = $message;
+    }
+    
+    public function clearMessages() {
+    	unset( $_SESSION[ 'MYFUSES_SECURITY' ] );
+    }
+    
     public function logout() {
         session_destroy();
         MyFuses::sendToUrl( MyFuses::getMySelfXfa( 'goToIndexAction' ) );

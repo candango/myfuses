@@ -3,6 +3,12 @@ require_once "myfuses/util/security/MyFusesBasicCredential.class.php";
 
 interface MyFusesSecurityManager {
     
+	const MESSAGE_INFO = "INFOS";
+	
+	const MESSAGE_ERROR = "ERROS";
+	
+	const MESSAGE_AUTH_ERROR = "AUTH_ERRORS";
+	
     /**
      * This method creates a new credendtial
      */
@@ -97,6 +103,12 @@ interface MyFusesSecurityManager {
     public function getUserPasswordInGet();
     
     public function getUserPasswordInRequest();
+    
+    public function getMessage( $type, $name );
+    
+    public function setMessage( $type, $name, $message );
+    
+    public function clearMessages();
     
     public function logout();
     

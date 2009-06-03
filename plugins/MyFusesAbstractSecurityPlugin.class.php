@@ -327,7 +327,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                 if( MyFuses::getInstance()->getRequest()->getFuseActionName() == 
                     $this->getAuthenticationAction() ) {
                     
-                    unset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'AUTH_ERRORS' ] );
+                    $manager->clearMessages();
                 
                     $error = false;
                     
