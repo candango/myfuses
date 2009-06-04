@@ -371,6 +371,10 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      */
     public function authenticate( MyFusesSecurityManager $manager ) {
         
+    	MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
+                    'goToIndexAction', 
+                    $this->getApplication()->getDefaultFuseaction() );
+    	
     	// getting next action
         $nextAction = self::getNextAction();
     	
@@ -386,12 +390,14 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         $currentAction = MyFuses::getInstance()->getRequest()->
             getFuseActionName();
         
+        if( $logoutAction == $currentAction ) {
+        	if( $manager->isAuthenticated() ) {
+        		$manager->logout();
+        	}
+        }
+            
         if( ( strtolower( MyFuses::getInstance()->getRequest()->getAction()->
             getCustomAttribute( "security", "enabled" ) ) != "false" ) ) {
-                
-            MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
-                    'goToIndexAction', 
-                    $this->getApplication()->getDefaultFuseaction() );
             
             if( $loginAction != $currentAction && $authenticationAction != 
                 $currentAction ) {
