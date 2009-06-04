@@ -394,6 +394,10 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         	if( $manager->isAuthenticated() ) {
         		$manager->logout();
         	}
+        	else {
+        		MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
+                    'goToLoginAction' ) );
+        	}
         }
             
         if( ( strtolower( MyFuses::getInstance()->getRequest()->getAction()->
