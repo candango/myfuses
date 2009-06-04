@@ -196,37 +196,38 @@ abstract class MyFusesI18nHandler {
      * @param string $paht
      */
     private function digPath( $path ) {
-    	if( file_exists( $path ) ) {
-            $it = new RecursiveDirectoryIterator( $path );
+    	
+        if( file_exists( $path ) ) {
             
-            foreach ( new RecursiveIteratorIterator($it, 1) as $child ) {
-                if( $child->isDir() ) {
-                    $locale = $child->getBaseName();
+            $dir = dir( $path );
+            
+            while (false !== ( $subdir = $dir->read() ) ) {
+                $localePath = MyFusesFileHandler::sanitizePath( 
+                    $path . $subdir );
+                
+                $locale = $subdir;
                     
-                    $localePath = MyFusesFileHandler::sanitizePath( 
-                        $child->getPath() . DIRECTORY_SEPARATOR . $locale );
-                    
-                    if( $localePath != $path ) {
-                        if( file_exists( $localePath . "expressions.xml" ) ) {
-                            $doc = $this->loadFile( $localePath . 
+                if( file_exists( $localePath . "expressions.xml" ) ) {
+                    if( filectime( $localePath . "expressions.xml" ) > 
+                        MyFusesI18nContext::getTime() ) {
+                        $doc = $this->loadFile( $localePath . 
                                 "expressions.xml" );
                             
-                            foreach( $doc->expression as $expression ) {
-                                $name = "";
-                                foreach( $expression->attributes() as $key => 
-                                    $attr ) {
-                                    if( $key == 'name' ) {
-                                        $name = "" . $attr;
-                                    }    
-                                }
+                        foreach( $doc->expression as $expression ) {
+                            $name = "";
+                            foreach( $expression->attributes() as $key => 
+                                $attr ) {
+                                if( $key == 'name' ) {
+                                    $name = "" . $attr;
+                                }    
+                            }
                                 
-                                if( $name != "" ) {
-                                	$expression = htmlentities( $expression, 
-                                	   ENT_NOQUOTES, 'UTF-8' );
-                                	
-                                    MyFusesI18nContext::setExpression( 
-                                        $locale, $name, "" . $expression );
-                                }
+                            if( $name != "" ) {
+                                $expression = htmlentities( $expression, 
+                                    ENT_NOQUOTES, 'UTF-8' );
+                                    
+                                MyFusesI18nContext::setExpression( 
+                                    $locale, $name, "" . $expression );
                             }
                         }
                     }
