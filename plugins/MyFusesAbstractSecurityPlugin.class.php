@@ -67,6 +67,13 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
     private static $loginAction = "";
     
     /**
+     * Application logout fuseaction
+     *
+     * @var string
+     */
+    private static $logoutAction = "";
+    
+    /**
      * Action that plugin will redirect when susseful login ends
      *
      * @var string
@@ -105,6 +112,26 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         self::$loginAction = $loginAction;
         MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
                 'goToLoginAction', $loginAction );
+    }
+    
+    /**
+     * Return application logout action
+     *
+     * @return string
+     */
+    private static function getLogoutAction() {
+        return self::$logoutAction;
+    }
+    
+    /**
+     * Set application logout action
+     *
+     * @param string $logoutAction
+     */
+    private static function setLogoutAction( $logoutAction ) {
+        self::$logoutAction = $logoutAction;
+        MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
+                'goToLogoutAction', $logoutAction );
     }
     
     /**
@@ -238,9 +265,16 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
     }
     
+    /**
+     * Configure the security manager plugin
+     * 
+     * @param $manager
+     */
     public function configureSecurityManager( 
         MyFusesSecurityManager $manager ) {
         
+        $this->configureParameters( $manager );
+        	
         $authenticationListeners = $this->getParameter( 
             'AuthenticationListener' );
         
@@ -273,11 +307,84 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
     }
     
     /**
+     * Configure all plugins plugins parameters
+     * 
+     * @param $manager
+     */
+    public function configureParameters( MyFusesSecurityManager $manager ) {
+    	
+    	// getting next action
+        $nextAction = $this->getParameter( 'NextAction' );
+            
+        if( count( $nextAction ) ) {
+            $nextAction = $nextAction[ 0 ];
+        }
+        else {
+            $nextAction = $this->getApplication()->getDefaultFuseaction();
+        }
+            
+        self::setNextAction( $nextAction );
+        
+        // getting login action
+        $loginAction = $this->getParameter( 'LoginAction' );
+
+        if( count( $loginAction ) ) {
+            $loginAction = $loginAction[ 0 ];
+        }
+        else {
+            $loginAction = $this->getApplication()->getDefaultFuseaction();
+        }
+        
+        self::setLoginAction( $loginAction );
+        
+        // getting logout action
+        $logoutAction = $this->getParameter( 'LogoutAction' );
+
+        if( count( $logoutAction ) ) {
+            $logoutAction = $logoutAction[ 0 ];
+        }
+        else {
+            $logoutAction = "";
+        }
+        
+        self::setLogoutAction( $logoutAction );
+        
+        // getting login action    
+        $authenticationAction = $this->getParameter( 
+            'AuthenticationAction' );
+
+        if( count( $logoutAction ) ) {
+            $authenticationAction = $authenticationAction[ 0 ];
+        }
+        else {
+            $authenticationAction = "";
+        }
+            
+        self::setAuthenticationAction( $authenticationAction );
+    }
+    
+    
+    /**
      * Authenticating user
      *
      * @param MyFusesSecurityManager $manager
      */
     public function authenticate( MyFusesSecurityManager $manager ) {
+        
+    	// getting next action
+        $nextAction = self::getNextAction();
+    	
+        // getting login action
+        $loginAction = self::getLoginAction();
+        
+        // getting logout action
+        $logoutAction = self::getLogoutAction();
+        
+        // getting login action    
+        $authenticationAction = self::getAuthenticationAction();
+            
+        $currentAction = MyFuses::getInstance()->getRequest()->
+            getFuseActionName();
         
         if( ( strtolower( MyFuses::getInstance()->getRequest()->getAction()->
             getCustomAttribute( "security", "enabled" ) ) != "false" ) ) {
@@ -285,35 +392,6 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
             MyFuses::getInstance()->getRequest()->getAction()->addXFA( 
                     'goToIndexAction', 
                     $this->getApplication()->getDefaultFuseaction() );
-            // getting next action
-            
-            $nextAction = $this->getParameter( 'NextAction' );
-            
-            if( count( $nextAction ) ) {
-                $nextAction = $nextAction[ 0 ];
-            }
-            else {
-                $nextAction = $this->getApplication()->getDefaultFuseaction();
-            }
-            
-            self::setNextAction( $nextAction );
-            
-            // getting login action
-            $loginAction = $this->getParameter( 'LoginAction' );
-            
-            $loginAction = $loginAction[ 0 ];
-            
-            self::setLoginAction( $loginAction );
-            
-            $authenticationAction = $this->getParameter( 
-                'AuthenticationAction' );
-            
-            $authenticationAction = $authenticationAction[ 0 ];
-            
-            self::setAuthenticationAction( $authenticationAction );
-            
-            $currentAction = MyFuses::getInstance()->getRequest()->
-                getFuseActionName();
             
             if( $loginAction != $currentAction && $authenticationAction != 
                 $currentAction ) {
