@@ -301,11 +301,12 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         $action->setName( $data[ 'name' ] );
         
-        
-        if( count( $data[ 'children' ] ) > 0 ) {
-            foreach( $data[ 'children' ] as $child ) {
-                self::buildVerb( $action, $child );
-            }
+        if( isset( $data[ 'children' ] ) ) {
+            if( count( $data[ 'children' ] ) > 0 ) {
+	            foreach( $data[ 'children' ] as $child ) {
+	                self::buildVerb( $action, $child );
+	            }
+	        }
         }
         
         if( isset( $globalActionMethods[ $action->getName() ] ) ) {
