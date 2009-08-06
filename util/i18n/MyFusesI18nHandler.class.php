@@ -16,11 +16,11 @@
  * 
  * The Original Code is Candango Fusebox Implementation part .
  * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2008.
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2008.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Goncalves Garcia.
  *
  * @category   i18n
  * @package    myfuses.util.i18n
@@ -180,7 +180,7 @@ abstract class MyFusesI18nHandler {
                 $localePath = MyFusesFileHandler::sanitizePath( 
                     $path . $subdir );
                 if( file_exists( $localePath . "expressions.xml" ) ) {
-                    if( filectime( $localePath . "expressions.xml" ) > 
+                    if( fileatime( $localePath . "expressions.xml" ) > 
                         MyFusesI18nContext::getTime() ) {
                         return true;
                     }
@@ -208,7 +208,7 @@ abstract class MyFusesI18nHandler {
                 $locale = $subdir;
                     
                 if( file_exists( $localePath . "expressions.xml" ) ) {
-                    if( filectime( $localePath . "expressions.xml" ) > 
+                    if( fileatime( $localePath . "expressions.xml" ) > 
                         MyFusesI18nContext::getTime() ) {
                         $doc = $this->loadFile( $localePath . 
                                 "expressions.xml" );
