@@ -128,6 +128,7 @@ abstract class MyFusesI18nHandler {
         MyFuses::getApplication()->getParsedPath();
         
         if( $this->mustLoad() ) {
+            var_dump( "must load" );
             foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
                 
                 if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
@@ -180,7 +181,7 @@ abstract class MyFusesI18nHandler {
                 $localePath = MyFusesFileHandler::sanitizePath( 
                     $path . $subdir );
                 if( file_exists( $localePath . "expressions.xml" ) ) {
-                    if( fileatime( $localePath . "expressions.xml" ) > 
+                    if( filemtime( $localePath . "expressions.xml" ) > 
                         MyFusesI18nContext::getTime() ) {
                         return true;
                     }
@@ -208,7 +209,7 @@ abstract class MyFusesI18nHandler {
                 $locale = $subdir;
                     
                 if( file_exists( $localePath . "expressions.xml" ) ) {
-                    if( fileatime( $localePath . "expressions.xml" ) > 
+                    if( filemtime( $localePath . "expressions.xml" ) > 
                         MyFusesI18nContext::getTime() ) {
                         $doc = $this->loadFile( $localePath . 
                                 "expressions.xml" );

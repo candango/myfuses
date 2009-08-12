@@ -76,7 +76,7 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
     
     public function applicationWasModified() {
         $this->chooseApplicationFile();
-        if( filectime( $this->getApplication()->getCompleteFile() ) > 
+        if( filemtime( $this->getApplication()->getCompleteFile() ) > 
             $this->getApplication()->getLastLoadTime() ) {
             return true;
         }
@@ -94,7 +94,7 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
             $data[ 'circuits' ][ $name ][ 'attributes' ][ 'path' ] . 
             $data[ 'circuits' ][ $name ][ 'attributes' ][ 'file' ];
         
-        if( filectime( $file ) > 
+        if( filemtime( $file ) > 
             $data[ 'circuits' ][ $name ][ 'attributes' ][ 'lastloadtime' ] ) {
             return true;
         }
