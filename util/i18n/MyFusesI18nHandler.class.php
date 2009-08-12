@@ -128,7 +128,6 @@ abstract class MyFusesI18nHandler {
         MyFuses::getApplication()->getParsedPath();
         
         if( $this->mustLoad() ) {
-            var_dump( "must load" );
             foreach( MyFuses::getInstance()->getI18nPaths() as $path ) {
                 
                 if( MyFusesFileHandler::isAbsolutePath( $path ) ) {
