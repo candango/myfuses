@@ -21,8 +21,8 @@
  * This product includes software developed by the Fusebox Corporation 
  * (http://www.fusebox.org/).
  * 
- * The Original Code is myFuses "a Candango implementation of Fusebox Corporation 
- * Fusebox" part .
+ * The Original Code is myFuses "a Candango implementation of Fusebox 
+ * Corporation Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
  * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
@@ -1092,4 +1092,28 @@ class MyFusesMemcacheServer {
             $this->isPersistent() );
     }
 }
+
+/**
+ * Creating security functions
+ */
+
+/**
+ * This function returns if the security credential is authenticated
+ * 
+ * @return boolean Returns if the security credential is authenticated
+ */
+function myfuses_security_is_authenticated() {
+    
+    if( class_exists( "MyFusesAbstractSecurityManager" ) ) {
+        $manager = MyFusesAbstractSecurityManager::getInstance();
+        
+        $credential = $manager->getCredential();
+        
+        return $credential->isAuthenticated();    
+    }
+    
+    return true;
+    
+}
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
