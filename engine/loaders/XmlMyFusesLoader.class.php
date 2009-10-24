@@ -142,10 +142,15 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
                 MyFusesFileOperationException::OPEN_FILE );
         }
         
-        if ( !flock( $fp, LOCK_SH ) ) {
-            throw new MyFusesFileOperationException( 
-                $this->getApplication()->getCompleteFile(), 
-                MyFusesFileOperationException::LOCK_FILE );
+        
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
+            if ( !flock( $fp, LOCK_SH ) ) {
+                throw new MyFusesFileOperationException( 
+                    $this->getApplication()->getCompleteFile(), 
+                    MyFusesFileOperationException::LOCK_FILE );
+            }        
         }
         
         MyFuses::getInstance()->getDebugger()->registerEvent( 
@@ -203,10 +208,13 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
             throw new MyFusesFileOperationException( 
                 $circuitFile, MyFusesFileOperationException::OPEN_FILE );
         }
-        
-        if ( !flock( $fp, LOCK_SH ) ) {
-            throw new MyFusesFileOperationException( 
-                $circuitFile, MyFusesFileOperationException::LOCK_FILE );
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
+            if ( !flock( $fp, LOCK_SH ) ) {
+                throw new MyFusesFileOperationException( 
+                    $circuitFile, MyFusesFileOperationException::LOCK_FILE );
+            }  
         }
         
         $fileCode = fread( $fp, filesize( $circuitFile ) );

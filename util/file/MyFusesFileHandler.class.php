@@ -20,7 +20,7 @@
  * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2005 - 2006.
  * All Rights Reserved.
  * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * Contributor(s): Flavio Goncalves Garcia.
  *
  * @category   file
  * @package    myfuses.util.file
@@ -147,12 +147,16 @@ class MyFusesFileHandler {
      */
     public static function writeFile( $file, $string ) {
     	$fp = fopen( $file,"w" );
-		        
-        if ( !flock($fp,LOCK_EX) ) {
-            throw new MyFusesFileOperationException( $file, 
-                MyFusesFileOperationException::LOCK_EX_FILE );
+
+    	// FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
+            if ( !flock($fp,LOCK_EX) ) {
+                throw new MyFusesFileOperationException( $file, 
+                    MyFusesFileOperationException::LOCK_EX_FILE );
+            }  
         }
-        
+    	
         if ( !fwrite($fp, $string) ) {
             throw new MyFusesFileOperationException( $file, 
                 MyFusesFileOperationException::WRITE_FILE );
@@ -174,9 +178,13 @@ class MyFusesFileHandler {
                 MyFusesFileOperationException::OPEN_FILE );
         }
         
-        if ( !flock( $fp, LOCK_SH ) ) {
-            throw new MyFusesFileOperationException( $file, 
-                MyFusesFileOperationException::LOCK_FILE );
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
+            if ( !flock( $fp, LOCK_SH ) ) {
+                throw new MyFusesFileOperationException( $file, 
+                    MyFusesFileOperationException::LOCK_FILE );
+            }  
         }
         
         $fileCode = fread( $fp, filesize( $file ) );
