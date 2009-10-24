@@ -880,7 +880,11 @@ class MyFuses {
             $self .= "/";
         }
         
-        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
+            MyFuses::getInstance()->getApplication()->allowRewrite() && 
+            !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
             $self1 = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
             if( substr( $self1, -1 ) != "/" ) {
                 $self1 .= "/";
@@ -900,7 +904,11 @@ class MyFuses {
     }
     
     public static function getMySelf( $showFuseactionVariable=true ) {
-        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
+            MyFuses::getInstance()->getApplication()->allowRewrite() && 
+            !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
             $mySelf = self::getSelf();
             if( $showFuseactionVariable ) {
                 $mySelf .= self::getInstance()->getRequest()->
@@ -920,7 +928,11 @@ class MyFuses {
     
     public static function getMySelfXfa( $xfaName, $initQuery = false, 
         $showFuseactionVariable=true ) {
-        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) ) {
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
+            MyFuses::getInstance()->getApplication()->allowRewrite() && 
+            !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
             
             $xfaX = explode( ".", self::getXfa( $xfaName ) );
             
