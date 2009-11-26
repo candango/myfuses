@@ -153,7 +153,7 @@ class MyFusesFileHandler {
      * @param string $file The file name
      * @param string $string The string to be writed
      */
-    public static function writeFile( $file, $string ) {
+    public static function writeFile( $file, $text ) {
         $fp = fopen( $file,"w" );
                 
         /*if ( !flock($fp,LOCK_EX) ) {
@@ -161,7 +161,7 @@ class MyFusesFileHandler {
                 MyFusesFileOperationException::LOCK_EX_FILE );
         }*/
         
-        if ( !fwrite($fp, $string) ) {
+        if ( !fwrite($fp, $text) ) {
             throw new MyFusesFileOperationException( $file, 
                 MyFusesFileOperationException::WRITE_FILE );
         }
