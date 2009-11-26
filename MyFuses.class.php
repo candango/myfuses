@@ -36,7 +36,7 @@
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 662 2009-03-11 04:30:31Z flavio.garcia $
+ * @version    SVN: $Id$
  */
  
 /**
@@ -62,8 +62,55 @@
  * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 662 $
+ * @version    SVN: $Revision$
  * @since      Revision 17
  */
 class MyFuses {
+    
+    /**
+     * The MYFUSES_ROOT_PATH constant defines de framework root path and 
+     * helps map other important directories like parsed path and 
+     * application path.
+     * 
+     * @var string The myFuses root path
+     */
+    const MYFUSES_ROOT_PATH = MYFUSES_ROOT_PATH;
+    
+    /**
+     * Registered applications in the controller
+     * 
+     * @var array Array of registered applications
+     */
+    protected $applications = array();
+    
+    /**
+     * Unique instance to be created in process. MyFuses is implemmented using
+     * the singleton pattern.
+     *
+     * @var MyFuses
+     */
+    private static $instance;
+    
+    /**
+     * Default constructor. It is to implement singleton pattern.
+     */
+    private function __construct() {}
+    
+    /**
+     * Returns one instance of MyFuses. Only one instance is creted per requrest.
+     * MyFuses is implemmented using the singleton pattern.
+     * 
+     * @return MyFuses
+     * @static 
+     */
+    public static function getInstance() {
+        
+        if( is_null( self::$instance ) ) {
+            self::$instance = new MyFuses();
+        }
+        
+        return self::$instance; 
+    }
+    
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
