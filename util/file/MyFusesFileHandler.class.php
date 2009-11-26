@@ -29,7 +29,7 @@
  * @copyright  Copyright (c) 2006 - 2010 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFusesFileHandler.class.php 487 2008-06-02 17:21:05Z luiz.marcelo $
+ * @version    SVN: $Id$
  */
  
 /**
@@ -43,7 +43,7 @@
  * @copyright  Copyright (c) 2006 - 2010 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 487 $
+ * @version    SVN: $Revision$
  * @since      Revision 125
  */
 class MyFusesFileHandler {
