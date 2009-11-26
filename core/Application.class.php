@@ -61,5 +61,46 @@ interface Application {
      */
     const DEFAULT_APPLICATION_NAME = "default";
     
+    /**
+     * Returns if the application is default or not
+     * 
+     * @return boolean
+     */
+    public function isDefault();
+    
+    /**
+     * Set if the application is default or not
+     * 
+     * @param boolean $default
+     */
+    public function setDefault( $default );
+    
+    /**
+     * Returns the application name
+     *
+     * @return string
+     */
+    public function getName();
+    
+    /**
+     * Sets the application name
+     *
+     * @param string $name
+     */
+    public function setName( $name );
+    
+    /**
+     * Returns the application path
+     *
+     * @return string
+     */
+    public function getPath();
+    
+    /**
+     * Sets the application path
+     *
+     * @param string $path
+     */
+    public function setPath( $path );
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
