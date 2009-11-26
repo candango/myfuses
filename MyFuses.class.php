@@ -1,4 +1,4 @@
-<?php
+<?php   
 /**
  * MyFuses - MyFuses.class.php
  * 
@@ -47,6 +47,12 @@
  */
  define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
  
+require_once MYFUSES_ROOT_PATH . "core/Application.class.php";
+
+require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.class.php";
+
+require_once MYFUSES_ROOT_PATH . "util/file/MyFusesFileHandler.class.php";
+ 
  /**
  * MyFuses - MyFuses.class.php
  * 
@@ -92,9 +98,67 @@ class MyFuses {
     private static $instance;
     
     /**
+     * The stored application file extension
+     * 
+     * @var String
+     */
+    protected $storedApplicationFileExtension = ".application.myfuses.php";
+    
+    /**
      * Default constructor. It is to implement singleton pattern.
      */
     private function __construct() {}
+    
+    /**
+     * Add one application to controller
+     *
+     * @param Application $application
+     */
+    public function addApplication( Application $application ) {
+        if( count( $this->applications ) == 0 ) {
+            $application->setDefault( true );
+        }
+        
+        $this->applications[ $application->getName() ] = $application;
+        
+        if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
+            if( $application->isDefault() ) {
+                if( isset( $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ] ) ) {
+                    $this->applications[ 
+                    Application::DEFAULT_APPLICATION_NAME ]->setDefault( 
+                        false );
+                }
+                $this->applications[ Application::DEFAULT_APPLICATION_NAME ] =
+                    &$this->applications[ $application->getName() ];
+            }  
+        }
+    }
+    
+    /**
+     * Create one application by a given name
+     * 
+     * @return Application
+     */
+    public function createApplication( $name = 
+        Application::DEFAULT_APPLICATION_NAME ) {
+
+        $application = MyFusesLifecycle::restoreApplication( $name );
+        
+        if( $application === null ) {
+            $application = new BasicApplication();
+            
+            $application->setName( $name );
+            
+            $application->setPath( 
+               dirname( str_replace( "/", DIRECTORY_SEPARATOR, 
+               $_SERVER[ 'SCRIPT_FILENAME' ] ) ) );
+        }
+        
+        $this->addApplication( $application );
+        
+        return $application;
+    }
     
     /**
      * Returns one instance of MyFuses. Only one instance is creted per requrest.
@@ -104,7 +168,6 @@ class MyFuses {
      * @static 
      */
     public static function getInstance() {
-        
         if( is_null( self::$instance ) ) {
             self::$instance = new MyFuses();
         }
@@ -112,5 +175,31 @@ class MyFuses {
         return self::$instance; 
     }
     
+    /**
+     * Return the root path where the parsed files stored
+     * 
+     * @return String
+     */
+    public function getParsedRootPath() {
+        $rootParsedPath = "";
+        
+        if( file_exists( MYFUSES_ROOT_PATH . "parsed" ) && 
+            is_readable( MYFUSES_ROOT_PATH . "parsed" ) ) {
+            return MyFusesFileHandler::sanitizePath( 
+                MYFUSES_ROOT_PATH . "parsed" );
+        }
+        else {
+            return DIRECTORY_SEPARATOR . "tmp" . DIRECTORY_SEPARATOR;
+        }
+    }
+    
+    /**
+     * Returns the file extension of the stored application file
+     * 
+     * @return String
+     */
+    public function getStoredApplicationFileExtension() {
+        return $this->storedApplicationFileExtension;
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
