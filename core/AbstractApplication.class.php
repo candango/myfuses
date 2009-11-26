@@ -1,10 +1,11 @@
 <?php
 /**
- * Application  - Application.class.php
+ * AbstractApplication - Application.class.php
  * 
- * In this file are difined the basic applications infrastructure with 
- * Application interface AbstactApplication that implements the basic features
- * demanded Application and the BasicApplication an AbstractApplication child. 
+ * This is an abstract implementation of Application interface. This class
+ * implements all required methods required by his interface and need to be
+ * extended by a concrete class to enable his instantiating. Extend this class
+ * insted implement Application inteface will save you a lot of work.
  * 
  * PHP version 5
  * 
@@ -38,12 +39,11 @@
  * @version    SVN: $Id:Application.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
-require_once MYFUSES_ROOT_PATH . "core/AbstractApplication.class.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
-
 /**
- * This is the MyFuses application interface. Defines how an application must
- * be implemented.
+ * This is an abstract implementation of Application interface. This class
+ * implements all required methods required by his interface and need to be
+ * extended by a concrete class to enable his instantiating. Extend this class
+ * insted implement Application inteface will save you a lot of work.
  * 
  * PHP version 5
  *
@@ -53,57 +53,83 @@ require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
  * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
- * @since      Revision 23
+ * @since      Revision 664
  */
-interface Application {
-
+abstract class AbstractApplication implements Application {
+    
     /**
-     * Default applicatication name
-     * 
-     * @var string The application default name
+     * Default application flag
+     *
+     * @var boolean
      */
-    const DEFAULT_APPLICATION_NAME = "default";
+    private $default = false;
+    
+    /**
+     * Application name
+     * 
+     * @var string
+     */
+    private $name;
+    
+    /**
+     * Application path
+     * 
+     * @var string
+     */
+    private $path;
     
     /**
      * Returns if the application is default or not
      * 
      * @return boolean
      */
-    public function isDefault();
+    public function isDefault(){
+        return $this->default;
+    }
     
     /**
      * Set if the application is default or not
      * 
      * @param boolean $default
      */
-    public function setDefault( $default );
+    public function setDefault( $default ) {
+        $this->default = $default;
+    }
     
     /**
      * Returns the application name
      *
      * @return string
      */
-    public function getName();
+    public function getName() {
+        return $this->name;
+    }
     
     /**
      * Sets the application name
      *
      * @param string $name
      */
-    public function setName( $name );
+    public function setName( $name ) {
+        $this->name = $name;
+    }
     
     /**
      * Returns the application path
      *
      * @return string
      */
-    public function getPath();
+    public function getPath() {
+        return $this->path;
+    }
     
     /**
      * Sets the application path
      *
      * @param string $path
      */
-    public function setPath( $path );
+    public function setPath( $path ) {
+        $this->path = MyFusesFileHandler::sanitizePath( $path );
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -1,10 +1,9 @@
 <?php
 /**
- * Application  - Application.class.php
+ * BasicApplication  - Application.class.php
  * 
- * In this file are difined the basic applications infrastructure with 
- * Application interface AbstactApplication that implements the basic features
- * demanded Application and the BasicApplication an AbstractApplication child. 
+ * This is the basic MyFuses application class. MyFuses will use this class by
+ * default when he needs to handle application entities.
  * 
  * PHP version 5
  * 
@@ -33,17 +32,14 @@
  * @category   controller
  * @package    myfuses.core
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id:Application.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
-require_once MYFUSES_ROOT_PATH . "core/AbstractApplication.class.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
-
 /**
- * This is the MyFuses application interface. Defines how an application must
- * be implemented.
+ * This is the basic MyFuses application class. MyFuses will use this class by
+ * default when he needs to handle application entities.
  * 
  * PHP version 5
  *
@@ -53,57 +49,7 @@ require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
  * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
- * @since      Revision 23
+ * @since      Revision 460
  */
-interface Application {
-
-    /**
-     * Default applicatication name
-     * 
-     * @var string The application default name
-     */
-    const DEFAULT_APPLICATION_NAME = "default";
-    
-    /**
-     * Returns if the application is default or not
-     * 
-     * @return boolean
-     */
-    public function isDefault();
-    
-    /**
-     * Set if the application is default or not
-     * 
-     * @param boolean $default
-     */
-    public function setDefault( $default );
-    
-    /**
-     * Returns the application name
-     *
-     * @return string
-     */
-    public function getName();
-    
-    /**
-     * Sets the application name
-     *
-     * @param string $name
-     */
-    public function setName( $name );
-    
-    /**
-     * Returns the application path
-     *
-     * @return string
-     */
-    public function getPath();
-    
-    /**
-     * Sets the application path
-     *
-     * @param string $path
-     */
-    public function setPath( $path );
-}
+class BasicApplication extends AbstractApplication {}
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
