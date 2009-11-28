@@ -105,5 +105,28 @@ interface Application {
      * @param string $path
      */
     public function setPath( $path );
+    
+    /**
+     * Add one reference to application
+     * 
+     * @param $reference The circuit reference
+     */
+    public function addReference( CircuitReference $reference );
+    
+    /**
+     * Return all circuit references registered in the application
+     * 
+     * @return array An array of CircuitReferences
+     */
+    public function getReferences();
+    
+    /**
+     * Return one circui reference if registered
+     * 
+     * @param $name The name of circuit
+     * @return CircuitReference
+     */
+    public function getReference( $name );
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

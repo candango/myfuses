@@ -79,57 +79,83 @@ abstract class AbstractApplication implements Application {
     private $path;
     
     /**
-     * Returns if the application is default or not
+     * Application circuit references loaded or created in the application 
      * 
-     * @return boolean
+     * @var CircuitReference
+     */
+    private $references = array();
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#isDefault()
      */
     public function isDefault(){
         return $this->default;
     }
     
     /**
-     * Set if the application is default or not
-     * 
-     * @param boolean $default
+     * (non-PHPdoc)
+     * @see core/Application#setDefault()
      */
     public function setDefault( $default ) {
         $this->default = $default;
     }
     
     /**
-     * Returns the application name
-     *
-     * @return string
+     * (non-PHPdoc)
+     * @see core/Application#getName()
      */
     public function getName() {
         return $this->name;
     }
     
     /**
-     * Sets the application name
-     *
-     * @param string $name
+     * (non-PHPdoc)
+     * @see core/Application#setName()
      */
     public function setName( $name ) {
         $this->name = $name;
     }
     
     /**
-     * Returns the application path
-     *
-     * @return string
+     * (non-PHPdoc)
+     * @see core/Application#getPath()
      */
     public function getPath() {
         return $this->path;
     }
     
     /**
-     * Sets the application path
-     *
-     * @param string $path
+     * (non-PHPdoc)
+     * @see core/Application#setPath()
      */
     public function setPath( $path ) {
         $this->path = MyFusesFileHandler::sanitizePath( $path );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getReferences()
+     */
+    public function getReferences() {
+        return $this->references;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getReference()
+     */
+    public function getReference( $name ) {
+        return $this->references[ $name ];
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#addReference()
+     */
+    public function addReference( CircuitReference $reference ) {
+        // TODO Reference without name and path must throw a exception
+        $this->references[ $reference->getName() ] = $reference;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -1,6 +1,6 @@
 <?php
 /**
- * BasicApplication  - Application.class.php
+ * BasicApplication  - BasicApplication.class.php
  * 
  * This is the basic MyFuses application class. MyFuses will use this class by
  * default when he needs to handle application entities.
