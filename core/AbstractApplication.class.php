@@ -135,6 +135,15 @@ abstract class AbstractApplication implements Application {
     
     /**
      * (non-PHPdoc)
+     * @see core/Application#addReference()
+     */
+    public function addReference( CircuitReference $reference ) {
+        // TODO Reference without name and path must throw a exception
+        $this->references[ $reference->getName() ] = $reference;
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see core/Application#getReferences()
      */
     public function getReferences() {
@@ -147,15 +156,6 @@ abstract class AbstractApplication implements Application {
      */
     public function getReference( $name ) {
         return $this->references[ $name ];
-    }
-    
-    /**
-     * (non-PHPdoc)
-     * @see core/Application#addReference()
-     */
-    public function addReference( CircuitReference $reference ) {
-        // TODO Reference without name and path must throw a exception
-        $this->references[ $reference->getName() ] = $reference;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
