@@ -57,7 +57,7 @@ require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.class.php";
 // Including uitlities parts
 require_once MYFUSES_ROOT_PATH . "util/file/MyFusesFileHandler.class.php";
  
- /**
+/**
  * MyFuses - MyFuses.class.php
  * 
  * This is MyFuses a Candango Opensource Group a implementation of Fusebox 
@@ -162,6 +162,49 @@ class MyFuses {
         $this->addApplication( $application );
         
         return $application;
+    }
+    
+    /**
+     * Returns an existing application by a given name if exists
+     *
+     * @param string $name
+     * @return Application The application founded
+     */
+    public function getApplication( 
+        $name = Application::DEFAULT_APPLICATION_NAME ) { 
+        if( isset( $this->applications[ $name ] ) ) {
+            return $this->applications[ $name ];
+        }
+    }
+    
+    /**
+     * Returns an array of all applications registered in the controller
+     *
+     * @return array An array of applications
+     */
+    public function &getApplications() { 
+        return $this->applications;
+    }
+    
+    /**
+     * Execute the myFuses process
+     */
+    public function doProcess() {
+        try {
+            MyFusesLifecycle::loadApplications( $this );
+            
+            MyFusesLifecycle::createRequest( $this );
+            
+            MyFusesLifecycle::executeProcess( $this );
+            
+            MyFusesLifecycle::storeApplications( $this );
+        }
+        catch( MyFusesException $mfe ) {
+        
+            $mfe->breakProcess();
+        
+        }
+        
     }
     
     /**
