@@ -2,8 +2,14 @@
 <projectDescription>
 	<name>myfuses</name>
 	<comment></comment>
-	
+	<projects>
+	</projects>
 	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.dltk.core.scriptbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.wst.validation.validationbuilder</name>
 			<arguments>
