@@ -50,6 +50,10 @@
 // Including core parts
 require_once MYFUSES_ROOT_PATH . "core/Application.class.php";
 require_once MYFUSES_ROOT_PATH . "core/CircuitReference.class.php";
+require_once MYFUSES_ROOT_PATH . "core/ClassDefinition.class.php";
+
+// Including engine parts
+require_once MYFUSES_ROOT_PATH . "engine/MyFusesLoader.class.php";
 
 // Including myfuses parts
 require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.class.php";
