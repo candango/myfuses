@@ -121,12 +121,34 @@ interface Application {
     public function getReferences();
     
     /**
-     * Return one circui reference if registered
+     * Return one circuit reference if registered
      * 
      * @param $name The name of circuit
      * @return CircuitReference
      */
     public function getReference( $name );
+    
+    /**
+     * Add one class definition to application
+     * 
+     * @param $definition One class definition
+     */
+    public function addClass( ClassDefinition  $definition );
+    
+    /**
+     * Return all class defintions registered in applications
+     * 
+     * @return array An array of ClassDefinitions
+     */
+    public function getClasses();
+    
+    /**
+     * Return one class definition by a given name
+     * 
+     * @param $name
+     * @return ClassDefinition
+     */
+    public function getClass( $name );
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

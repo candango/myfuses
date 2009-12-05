@@ -81,9 +81,16 @@ abstract class AbstractApplication implements Application {
     /**
      * Application circuit references loaded or created in the application 
      * 
-     * @var CircuitReference
+     * @var array An array of CircuitReferences
      */
     private $references = array();
+    
+    /**
+     * Class definitions loaded or created in the application
+     * 
+     * @var array An array of ClassDefinitions
+     */
+    private $classes = array();
     
     /**
      * (non-PHPdoc)
@@ -156,6 +163,30 @@ abstract class AbstractApplication implements Application {
      */
     public function getReference( $name ) {
         return $this->references[ $name ];
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#addClass()
+     */
+    public function addClass( ClassDefinition  $definition ) {
+        $this->classes[ $definition->getName() ] = $definition;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getClasses()
+     */
+    public function getClasses() {
+        return $this->classes;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getClass()
+     */
+    public function getClass( $name ){
+        return $this->classes[ $name ];
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
