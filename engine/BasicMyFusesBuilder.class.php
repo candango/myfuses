@@ -493,7 +493,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     }
     
     
-    protected protected function buildFase( Application $application, &$data ) {
+    protected function buildFase( Application $application, &$data ) {
         
         $faseParams = array(
             'name' => 'name',
