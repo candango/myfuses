@@ -106,6 +106,20 @@ interface Application {
      */
     public function setPath( $path );
     
+    /**
+     * Return the parsed path.
+     * 
+     * @return string
+     */
+    public function getParsedPath();
+    
+    /**
+     * Return the parsed application file path
+     * 
+     * @return string
+     */
+    public function getParsedApplicationFile();
+    
     #####################
     // COLLECTION METHODS
     #####################

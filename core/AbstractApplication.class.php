@@ -261,6 +261,13 @@ abstract class AbstractApplication implements Application {
     ########################################
     
     /**
+     * Default constructor
+     */
+    public function __construct() {
+        $this->startTime = time();
+    }
+    
+    /**
      * (non-PHPdoc)
      * @see core/Application#isDefault()
      */
@@ -306,6 +313,25 @@ abstract class AbstractApplication implements Application {
      */
     public function setPath( $path ) {
         $this->path = MyFusesFileHandler::sanitizePath( $path );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getParsedPath()
+     */
+    public function getParsedPath() {
+        return MyFusesFileHandler::sanitizePath( 
+           MyFuses::getInstance()->getParsedRootPath() . 
+           $this->getName() );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getParsedApplicationFile()
+     */
+    public function getParsedApplicationFile() { 
+        return $this->getParsedPath() . $this->getName() . 
+           MyFuses::getInstance()->getStoredApplicationFileExtension();
     }
     
     #####################
@@ -371,6 +397,9 @@ abstract class AbstractApplication implements Application {
      * @see noxml/myfuses/core/Application#isStarted()
      */
     public function isStarted() {
+        if( is_null( $this->startTime ) || $this->startTime < 1 ) {
+            return false;   
+        }
         return $this->started;
     }
     
