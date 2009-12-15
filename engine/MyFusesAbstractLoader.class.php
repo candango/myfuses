@@ -9,7 +9,7 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
 	   $name, $value ) {
 	   
 	   $applicationParameters = array(
-            /*"fuseactionVariable" => "setFuseactionVariable",
+            "fuseactionVariable" => "setFuseactionVariable",
             "defaultFuseaction" => "setDefaultFuseaction",
             "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
             "debug" => "setDebug",
@@ -25,7 +25,7 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
             "scriptLanguage" => "setScriptLanguage",
             "scriptFileDelimiter" => "setScriptFileDelimiter",
             "maskedFileDelimiters" => "setMaskedFileDelimiters",
-            "characterEncoding" => "setCharacterEncoding"*/
+            "characterEncoding" => "setCharacterEncoding"
         );
         
         // putting into $application
