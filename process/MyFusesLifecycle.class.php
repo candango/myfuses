@@ -104,16 +104,16 @@ abstract class MyFusesLifecycle {
 	}
 	
 	public static function executeProcess( MyFuses $controller ) {
-		/*$application = $controller->getApplication();
+		$application = $controller->getApplication();
 		
 		if( !$application->isStarted() ) {
-			$application->fireApplicationStart();
 			$application->setStarted( true );
+			$application->fireApplicationStart();
 		}
 		
 		$application->firePreProcess();
 		
-		$application->firePostProcess();*/
+		$application->firePostProcess();
 	}
 	
 	/**
@@ -122,13 +122,13 @@ abstract class MyFusesLifecycle {
 	 * @param $application
 	 */
     public static function storeApplication( Application $application ) {
-        /*$serializedApp = "<?php\nreturn unserialize( '" . 
+        $serializedApp = "<?php\nreturn unserialize( '" . 
            serialize( $application ) . "' );\n\n";
         
         MyFusesFileHandler::createPath( $application->getParsedPath() );
         
         MyFusesFileHandler::writeFile( 
-            $application->getParsedApplicationFile(), $serializedApp );*/
+            $application->getParsedApplicationFile(), $serializedApp );
     }
 	
     /**
@@ -157,9 +157,7 @@ abstract class MyFusesLifecycle {
            MyFuses::getInstance()->getStoredApplicationFileExtension();
     	
     	if( file_exists( $applicationFile ) ) {
-    		
     		return include $applicationFile;
-    		
     	}
     	
     	return null;
