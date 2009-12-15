@@ -98,6 +98,27 @@ abstract class AbstractApplication implements Application {
     // END COLLECTION PROPERTIES
     ############################
     
+    #####################
+    // PROCESS PROPERTIES
+    #####################
+    /**
+     * Application started state
+     * 
+     * @var boolean
+     */
+    private $started = false;
+    
+    /**
+     * Application start time. The time this application was initialized at
+     * the first time.
+     * 
+     * @var int
+     */
+    private $startTime;
+    #########################
+    // END PROCESS PROPERTIES
+    #########################
+    
     ####################################
     // PROPERTIES DIFINED IN myfuses.xml
     ####################################
@@ -341,6 +362,60 @@ abstract class AbstractApplication implements Application {
     #########################
     // END COLLECTION METHODS
     #########################
+    
+    ##################
+    // PROCESS METHODS
+    ##################
+    /**
+     * (non-PHPdoc)
+     * @see noxml/myfuses/core/Application#isStarted()
+     */
+    public function isStarted() {
+        return $this->started;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see noxml/myfuses/core/Application#setStarted()
+     */
+    public function setStarted( $started ) {
+        $this->started = $started;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see noxml/myfuses/core/Application#getStartTime()
+     */
+    public function getStartTime() {
+        return $this->startTime;    
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see noxml/myfuses/core/Application#fireApplicationStart()
+     */
+    public function fireApplicationStart() {
+        // fire some action
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see noxml/myfuses/core/Application#firePreProcess()
+     */
+    public function firePreProcess() {
+        // fire some action
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see noxml/myfuses/core/Application#firePostProcess()
+     */
+    public function firePostProcess() {
+        // fire some action
+    }
+    ######################
+    // END PROCESS METHODS
+    ######################
     
     #################################
     // METHODS DIFINED IN myfuses.xml

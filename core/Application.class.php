@@ -156,6 +156,48 @@ interface Application {
     // END COLLECTION METHODS
     #########################
     
+    ##################
+    // PROCESS METHODS
+    ##################
+    /**
+     * Returns if the application is started or not
+     * 
+     * @return boolean
+     */
+    public function isStarted();
+    
+    /**
+     * Set if the application is started or not
+     * 
+     * @param boolean $started
+     */
+    public function setStarted( $started );
+    
+    /**
+     * Returns the time that application started(the first run)
+     * 
+     * @return int
+     */
+    public function getStartTime();
+    
+    /**
+     * Will fire the onApplicationStart event
+     */
+    public function fireApplicationStart();
+    
+    /**
+     * Will fire the onPreProcess event
+     */
+    public function firePreProcess();
+    
+    /**
+     * Will fire the onPostProcess event
+     */
+    public function firePostProcess();
+    ######################
+    // END PROCESS METHODS
+    ######################
+    
     #################################
     // METHODS DIFINED IN myfuses.xml
     #################################
