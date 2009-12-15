@@ -106,6 +106,9 @@ interface Application {
      */
     public function setPath( $path );
     
+    #####################
+    // COLLECTION METHODS
+    #####################
     /**
      * Add one reference to application
      * 
@@ -149,6 +152,180 @@ interface Application {
      * @return ClassDefinition
      */
     public function getClass( $name );
+    #########################
+    // END COLLECTION METHODS
+    #########################
     
+    #################################
+    // METHODS DIFINED IN myfuses.xml
+    #################################
+    /**
+     * Return application locale
+     *
+     * @return string
+     */
+    public function getLocale();
+    
+    /**
+     * Set application locale
+     *
+     * @param string $locale
+     */
+    public function setLocale( $locale );
+    
+    /**
+     * Return if the degug is alowed
+     *
+     * @return boolean
+     */
+    public function isDebugAllowed();
+    
+    /**
+     * Set application debug flag
+     *
+     * @param boolean $debug
+     */
+    public function setDebug( $debug );
+    
+    /**
+     * Return the fuseaction variable
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getFuseactionVariable();
+    
+    /**
+     * Set the fusaction variable
+     * 
+     * @param string $fuseactionVariable
+     * @access public
+     */
+    public function setFuseactionVariable( $fuseactionVariable );
+    
+    /**
+     * Return the default fuseaction
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getDefaultFuseaction();
+    
+    /**
+     * Set the defautl fuseaction
+     * 
+     * @param string $fuseactionVariable
+     * @access public
+     */
+    public function setDefaultFuseaction( $defaultFuseaction );
+    
+    /**
+     * Return precedence form or url
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getPrecedenceFormOrUrl();
+    
+    /**
+     * Set precedence form or url
+     * 
+     * @param string $precedenceFormOrUrl
+     * @access public
+     */
+    public function setPrecedenceFormOrUrl( $precedenceFormOrUrl );
+    
+    /**
+     * Return the application mode
+     * 
+     * @return string
+     * @access public 
+     */
+    public function getMode();
+    
+    /**
+     * Set the application mode
+     * 
+     * @param string $mode
+     * @access public
+     */
+    public function setMode( $mode );
+    
+    /**
+     * Return the fusebox sctricMode
+     * 
+     * @return boolean
+     * @access public 
+     */
+    public function isStrictMode();
+    
+    /**
+     * Set the fusebox strictMode
+     * 
+     * @param boolean $strictMode
+     * @access public
+     */
+    public function setStrictMode( $strictMode );
+    
+    /**
+     * Return application password
+     * 
+     * @return string
+     * @access public
+     */
+    public function getPassword();
+    
+    /**
+     * Set the application password
+     * 
+     * @param $password
+     * @access public
+     */
+    public function setPassword( $password );
+    
+    /**
+     * Return if application must be parsed with comments
+     * 
+     * @return boolean
+     */
+    public function isParsedWithComments();
+    
+    /**
+     * Set if application must be parsed with comments
+     *
+     * @param boolean $parsedWithComments
+     */
+    public function setParsedWithComments( $parsedWithComments );
+    
+    /**
+     * Return if application is using conditional parse
+     * 
+     * @return boolean
+     */
+    public function isConditionalParse();
+    
+    /**
+     * Set if application is using conditional parse
+     * 
+     * @param boolean $conditionalParse
+     */
+    public function setConditionalParse( $conditionalParse );
+    
+    /**
+     * Return if the tools application is allowed
+     *
+     * @return boolean
+     */
+    public function isToolsAllowed();
+    
+    /**
+     * Set application tools flag
+     *
+     * @param boolean $tools
+     */
+    public function setTools( $tools );
+    #####################################
+    // END METHODS DIFINED IN myfuses.xml
+    #####################################
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

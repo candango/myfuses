@@ -78,6 +78,9 @@ abstract class AbstractApplication implements Application {
      */
     private $path;
     
+    ########################
+    // COLLECTION PROPERTIES
+    ########################
     /**
      * Application circuit references loaded or created in the application 
      * 
@@ -91,6 +94,150 @@ abstract class AbstractApplication implements Application {
      * @var array An array of ClassDefinitions
      */
     private $classes = array();
+    ############################
+    // END COLLECTION PROPERTIES
+    ############################
+    
+    ####################################
+    // PROPERTIES DIFINED IN myfuses.xml
+    ####################################
+    /**
+     * Application locale. English locale is seted by default.
+     *
+     * @var string
+     */
+    private $locale = "en";
+    
+    /**
+     * Application debug flag
+     *
+     * @var boolean
+     */
+    private $debug = false;
+    
+    /**
+     * Fuseaction variable
+     * 
+     * @var string
+     */
+    private $fuseactionVariable = "fuseaction";
+
+    /**
+     * Default fuseaction
+     * 
+     * @var string
+     */
+    private $defaultFuseaction;
+    
+    /**
+     * Precedence form or url
+     * 
+     * @var string
+     * @deprecated 
+     */
+    private $precedenceFormOrUrl;
+    
+    /**
+     * Execution mode
+     * 
+     * @var string
+     */
+    private $mode;
+    
+    /**
+     * Fusebox strictMode
+     * 
+     * @var boolean
+     */
+    private $strictMode = false;
+    
+    /**
+     * Appliaction password
+     * 
+     * @var string
+     */
+    private $password;
+    
+    /**
+     * Flag that indicates that the application 
+     * must be parsed with comments
+     * 
+     * @var boolean
+     */
+    private $parsedWithComments;
+    
+    /**
+     * Flag that indicates that the application 
+     * must be parsed using conditional method
+     * 
+     * @var boolean
+     * @deprecated
+     */
+    private $conditionalParse;
+    
+    /**
+     * Flag that indicates that the application 
+     * has lexicon allowed
+     * 
+     * @var boolean
+     * @deprecated
+     */
+    private $lexiconAllowed;
+    
+    /**
+     * Flag that indicates that the application 
+     * has lexicon allowed
+     * 
+     * @var boolean
+     * @deprecated
+     */
+    private $badGrammarIgnored;
+    
+    /**
+     * Flag that indicates that the application 
+     * use assertions
+     * 
+     * @var boolean
+     */
+    private $assertionsUsed;
+    
+    /**
+     * Application script language
+     * 
+     * @var string
+     */
+    private $scriptLanguage = "php5";
+    
+    /**
+     * Application script file delimiter
+     * 
+     * @var string
+     */
+    private $scriptFileDelimiter = "php";
+    
+    /**
+     * Application masked file delimiters
+     * 
+     * @var array
+     */
+    private $maskedFileDelimiters;
+    
+    /**
+     * Application character encoding
+     * 
+     * @var string
+     */
+    private $characterEncoding = "UTF-8";
+    
+    /**
+     * Application tools flag
+     *
+     * @var boolean
+     */
+    private $tools = false;
+    ########################################
+    // END PROPERTIES DIFINED IN myfuses.xml
+    ########################################
     
     /**
      * (non-PHPdoc)
@@ -140,6 +287,9 @@ abstract class AbstractApplication implements Application {
         $this->path = MyFusesFileHandler::sanitizePath( $path );
     }
     
+    #####################
+    // COLLECTION METHODS
+    #####################
     /**
      * (non-PHPdoc)
      * @see core/Application#addReference()
@@ -188,5 +338,333 @@ abstract class AbstractApplication implements Application {
     public function getClass( $name ){
         return $this->classes[ $name ];
     }
+    #########################
+    // END COLLECTION METHODS
+    #########################
+    
+    #################################
+    // METHODS DIFINED IN myfuses.xml
+    #################################
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getLocale()
+     */
+    public function getLocale() {
+        return $this->locale;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setLocale()
+     */
+    public function setLocale( $locale ) {
+        $this->locale = $locale;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#isDebugAllowed()
+     */
+    public function isDebugAllowed() {
+        return $this->debug;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setDebug()
+     */
+    public function setDebug( $debug ) {
+        if( is_bool( $debug ) ) {
+            $this->debug = $debug;    
+        }
+        else {
+            if( $debug == "true" ) {
+                $this->debug = true;
+            }
+            else {
+                $this->debug = false;
+            }
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getFuseactionVariable()
+     */
+    public function getFuseactionVariable() {
+        return $this->fuseactionVariable;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setFuseactionVariable()
+     */
+    public function setFuseactionVariable( $fuseactionVariable ) {
+        $this->fuseactionVariable = $fuseactionVariable;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getDefaultFuseaction()
+     */
+    public function getDefaultFuseaction() {
+        return $this->defaultFuseaction;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setDefaultFuseaction()
+     */
+    public function setDefaultFuseaction( $defaultFuseaction ) {
+        $this->defaultFuseaction = $defaultFuseaction;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getPrecedenceFormOrUrl()
+     */
+    public function getPrecedenceFormOrUrl() {
+        return $this->precedenceFormOrUrl;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setPrecedenceFormOrUrl()
+     */
+    public function setPrecedenceFormOrUrl( $precedenceFormOrUrl ) {
+        $this->precedenceFormOrUrl = $precedenceFormOrUrl;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getMode()
+     */
+    public function getMode() {
+        return $this->mode;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setMode()
+     */
+    public function setMode( $mode ) {
+        $this->mode = $mode;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#isStrictMode()
+     */
+    public function isStrictMode() {
+        return $this->strictMode;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setStrictMode()
+     */
+    public function setStrictMode( $strictMode ) {
+        if( is_bool( $strictMode ) ) {
+            $this->strictMode = $strictMode;    
+        }
+        else {
+            if( $strictMode == "true" ) {
+                $this->strictMode = true;
+            }
+            else {
+                $this->strictMode = false;
+            }
+        }       
+        
+    }    
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getPassword()
+     */
+    public function getPassword() {
+        return $this->password;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setPassword()
+     */
+    public function setPassword( $password ) {
+        $this->password = $password;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#isParsedWithComments()
+     */
+    public function isParsedWithComments() {
+        return $this->parsedWithComments;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setParsedWithComments()
+     */
+    public function setParsedWithComments( $parsedWithComments ) {
+        if( is_bool( $parsedWithComments ) ) {
+            $this->parsedWithComments = $parsedWithComments;    
+        }
+        else {
+            if( $parsedWithComments == "true" ) {
+                $this->parsedWithComments = true;
+            }
+            else {
+                $this->parsedWithComments = false;
+            }
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#isConditionalParse()
+     */
+    public function isConditionalParse() {
+        return $this->conditionalParse;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setConditionalParse()
+     */
+    public function setConditionalParse( $conditionalParse ) {
+        if( is_bool( $conditionalParse ) ) {
+            $this->conditionalParse = (boolean) $conditionalParse;    
+        }
+        else {
+            if( $conditionalParse == "true" ) {
+                $this->conditionalParse = true;
+            }
+            else {
+                $this->conditionalParse = false;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * @return unknown_type
+     */
+    public function isLexiconAllowed() {
+        return $this->lexiconAllowed;
+    }
+    
+    public function setLexiconAllowed( $lexiconAllowed ) {
+        if( is_bool( $lexiconAllowed ) ) {
+            $this->lexiconAllowed = (boolean) $lexiconAllowed;    
+        }
+        else {
+            if( $lexiconAllowed == "true" ) {
+                $this->lexiconAllowed = true;
+            }
+            else {
+                $this->lexiconAllowed = false;
+            }
+        }
+    }
+    
+    public function isBadGrammarIgnored() {
+        return $this->badGrammarIgnored;
+    }
+    
+    public function setBadGrammarIgnored( $badGrammarIgnored ) {
+        if( is_bool( $badGrammarIgnored ) ) {
+            $this->badGrammarIgnored = (boolean) $badGrammarIgnored;    
+        }
+        else {
+            if( $badGrammarIgnored == "true" ) {
+                $this->badGrammarIgnored = true;
+            }
+            else {
+                $this->badGrammarIgnored = false;
+            }
+        }
+    }
+
+    public function isAssertionsUsed() {
+        return $this->assertionsUsed;
+    }
+    
+    public function setAssertionsUsed( $assertionsUsed ) {
+        if( is_bool( $assertionsUsed ) ) {
+            $this->assertionsUsed = (boolean) $assertionsUsed;    
+        }
+        else {
+            if( $assertionsUsed == "true" ) {
+                $this->assertionsUsed = true;
+            }
+            else {
+                $this->assertionsUsed = false;
+            }
+        }
+    }
+    
+    public function getScriptLanguage() {
+        return $this->scriptLanguage;
+    }
+
+    public function setScriptLanguage( $scriptLanguage ) {
+        $this->scriptLanguage = $scriptLanguage;
+    }
+    
+    
+    public function getScriptFileDelimiter() {
+        return $this->scriptFileDelimiter;
+    }
+    
+    public function setScriptFileDelimiter( $scriptFileDelimiter ) {
+        $this->scriptFileDelimiter = $scriptFileDelimiter;
+    }
+    
+    public function getMaskedFileDelimiters() {
+        return $this->maskedFileDelimiters;
+    }
+    
+    public function setMaskedFileDelimiters( $maskedFileDelimiters ) {
+        return $this->maskedFileDelimiters = explode( ",", $maskedFileDelimiters );
+    }
+    
+    public function getCharacterEncoding() {
+        return $this->characterEncoding;
+    }
+    
+    public function setCharacterEncoding( $characterEncoding ) {
+        $this->characterEncoding = strtoupper( $characterEncoding );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#isToolsAllowed()
+     */
+    public function isToolsAllowed(){
+        return $this->tools; 
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setTools()
+     */
+    public function setTools( $tools ) {
+        if( is_bool( $tools ) ) {
+            $this->tools = $tools;    
+        }
+        else {
+            if( $tools == "true" ) {
+                $this->tools = true;
+            }
+            else {
+                $this->tools = false;
+            }
+        }
+    }
+    #####################################
+    // END METHODS DIFINED IN myfuses.xml
+    #####################################
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
