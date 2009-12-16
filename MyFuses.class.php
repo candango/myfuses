@@ -55,7 +55,9 @@ require_once MYFUSES_ROOT_PATH . "core/ClassDefinition.class.php";
 // Including engine parts
 require_once MYFUSES_ROOT_PATH . "engine/MyFusesLoader.class.php";
 
-// Including myfuses parts
+// Including process parts
+require_once MYFUSES_ROOT_PATH . "process/MyFusesRequestRouter.class.php";
+require_once MYFUSES_ROOT_PATH . "process/MyFusesRequest.class.php";
 require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.class.php";
 
 // Including uitlities parts
@@ -96,6 +98,13 @@ class MyFuses {
      * @var array Array of registered applications
      */
     protected $applications = array();
+    
+    /**
+     * The request resolved by the process
+     * 
+     * @var MyFusesRequest
+     */
+    protected $request;
     
     /**
      * Unique instance to be created in process. MyFuses is implemmented using
@@ -188,6 +197,24 @@ class MyFuses {
      */
     public function &getApplications() { 
         return $this->applications;
+    }
+    
+    /**
+     * Return the request registed in controller
+     * 
+     * @return MyFusesRequest
+     */
+    public function getRequest() {
+        return $this->request;
+    }
+    
+    /**
+     * Set on request in the controller
+     * 
+     * @param MyFusesRequest $request
+     */
+    public function setRequest( MyFusesRequest $request ) {
+        $this->request = $request;
     }
     
     /**
