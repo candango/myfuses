@@ -84,7 +84,7 @@ abstract class MyFusesLifecycle {
     }
     
 	public static function createRequest( MyFuses $controller ) {
-		/*$request = new MyFusesRequest();
+		$request = new MyFusesRequest();
 		
 	    $request->setApplication( $controller->getApplication() );
 	    
@@ -100,7 +100,7 @@ abstract class MyFusesLifecycle {
 		
 		$router->release( $request );
 		
-		$controller->setRequest( $request );*/
+		$controller->setRequest( $request );
 	}
 	
 	public static function executeProcess( MyFuses $controller ) {
