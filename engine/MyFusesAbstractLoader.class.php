@@ -8,18 +8,24 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
      */
     public function loadApplication( Application &$application ) {
         
-        // Getting properties that developers can change in the bootstrap
-        $default = $application->isDefault();
-        $locale = $application->getLocale();
+        if( $this->isApplicationParsed( $application ) ) {
+            // Getting properties that developers can change in the bootstrap
+            $default = $application->isDefault();
+            $locale = $application->getLocale();
+            
+            $this->includeApplicationParsedFile( $application );
+            
+            // Setting properties defined by developers in the bootstrap
+            $application->setDefault( $default );
+            $application->setLocale( $locale );
+            
+            // Fixing application reference in myfuses
+            MyFuses::getInstance()->addApplication( $application );
+        }
         
-        $this->includeApplicationParsedFile( $application );
         
-        // Setting properties defined by developers in the bootstrap
-        $application->setDefault( $default );
-        $application->setLocale( $locale );
         
-        // Fixing application reference in myfuses
-        MyFuses::getInstance()->addApplication( $application );
+        
         
         $data = $this->getApplicationData( $application );
         
@@ -127,6 +133,16 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
     private function includeApplicationParsedFile( Application &$application ) {
         // TODO Check if parsed application file exists
         $application = include $application->getParsedApplicationFile();   
+    }
+    
+    /**
+     * Returns if the application parsed file exists
+     * 
+     * @param $application
+     * @return unknown_type
+     */
+    private function isApplicationParsed( Application $application ) {
+        return is_file( $application->getParsedApplicationFile() );
     }
     
 }
