@@ -64,7 +64,7 @@ abstract class MyFusesLifecycle {
      * 
      * @param $application
      */
-    public static function loadApplication( Application $application ) {
+    public static function loadApplication( Application &$application ) {
         $loader = new MyFusesXmlLoader();
         
         $loader->loadApplication( $application );
