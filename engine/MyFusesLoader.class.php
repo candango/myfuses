@@ -103,7 +103,7 @@ interface MyFusesLoader {
      * 
      * @param $application The application to be loaded
      */
-    public function loadApplication( Application $application );
+    public function loadApplication( Application &$application );
     
     /**
      * Return one array of mapped data from one application

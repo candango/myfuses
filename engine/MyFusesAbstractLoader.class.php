@@ -6,9 +6,26 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
      * (non-PHPdoc)
      * @see engine/MyFusesLoader#loadApplication()
      */
-    public function loadApplication( Application $application ) {
+    public function loadApplication( Application &$application ) {
+        
+        // Getting properties that developers can change in the bootstrap
+        $default = $application->isDefault();
+        $locale = $application->getLocale();
+        
+        $this->includeApplicationParsedFile( $application );
+        
+        // Setting properties defined by developers in the bootstrap
+        $application->setDefault( $default );
+        $application->setLocale( $locale );
+        
+        // Fixing application reference in myfuses
+        MyFuses::getInstance()->addApplication( $application );
         
         $data = $this->getApplicationData( $application );
+        
+        
+        
+        //var_dump( $data );
         
         /*$appMethods = array( 
             "circuits" => "loadCircuits", 
@@ -102,5 +119,15 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
        $application->addReference( $reference );
     }
 	
+    /**
+     * Include the appliation cache file to restore the cache
+     * 
+     * @param $application
+     */
+    private function includeApplicationParsedFile( Application &$application ) {
+        // TODO Check if parsed application file exists
+        $application = include $application->getParsedApplicationFile();   
+    }
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
