@@ -31,8 +31,8 @@
  *
  * @category   engine
  * @package    myfuses.engine.loaders
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @author     Flavio Goncalves Garcia <flavio dot garcia at candango dot org>
+ * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id: MyFuses.class.php 662 2009-03-11 04:30:31Z flavio.garcia $
@@ -46,8 +46,8 @@
  *
  * @category   engine
  * @package    myfuses.engine.loaders
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @author     Flavio Goncalves Garcia <flavio dot garcia at candango dot org>
+ * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision: 662 $
@@ -55,61 +55,82 @@
  */
 class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
-	/**
-	 * (non-PHPdoc)
-	 * @see engine/MyFusesLoader#loadApplication()
-	 */
-    public function loadApplication( Application $application ) {
-        
-    	$appMethods = array( 
-            "circuits" => "loadCircuits", 
-            "classes" => "loadClasses",
-            "parameters" => "loadParameters"
-        );
-    	
-        $path = $application->getPath();
-        
-        $file = $path . "myfuses.xml";
-        
-        if( file_exists( $file ) ) {
-            
-            $data = MyFusesFileHandler::readFile( $file );
-            
-            try {
-	            // FIXME put no warning modifier in SimpleXMLElement call
-	            $rootNode = @new SimpleXMLElement( $data );
-
-	            foreach ( $rootNode as $key => $node ) {
-	                if( isset( $appMethods[ strtolower( $key ) ] ) ) {
-	                    $this->$appMethods[ 
-	                       strtolower( $key ) ]( $application, $node );
-	                }
-	            }
-	        }
-	        catch ( Exception $e ) {
-	            // FIXME handle error
-	            echo "<b>" . $application->getPath() . "<b><br>";
-	            die( $e->getMessage() );    
-	        }
-	            
-        }
-        else {
-        	$exception = new MyFusesException( "Could not find the " . 
-        	   "application \"" . $application->getName() . "\" file." );
-        	
-        	$exception->setType( 
-        	   MyFusesException::MYFUSES_APPLICATION_FILE_DOENST_EXISTS_TYPE );
-        	
-            $exception->setDescription( "MyFuses can't find the application " . 
-                "descriptor file. Check the directory \"" . 
-                $application->getPath() . "\" and see if even myfuses.xml" . 
-                " or fusebox.xml files exists." );
-            
-            throw $exception;
-        }
-        
-        $this->application = null;
+    /**
+     * This constant contains the name of application file descriptor used in 
+     * the Fusebox framework. This constant is used to maintain compatibility.
+     * 
+     * @var string
+     */
+    const FUSEBOX_APP_FILE = "fusebox.xml";
+    
+    /**
+     * This constant contains the name of application file descriptor used in 
+     * the Fusebox framework but the extension is php. This constant is used 
+     * to maintain compatibility.
+     * 
+     * @var string
+     */
+    const FUSEBOX_APP_PHP_FILE = "fusebox.xml.php";
+	
+    /**
+     * This constant contains the name of application file descriptor used by
+     * default in the myFuses framework.
+     * 
+     * @var string
+     */
+    const MYFUSES_APP_FILE = "myfuses.xml";
+    
+    /**
+     * This constant contains the name of application file descriptor used in 
+     * the myFuses framework but the extension is php.
+     * 
+     * @var string
+     */
+    const MYFUSES_APP_PHP_FILE = "myfuses.xml.php";
+    
+    /**
+     * (non-PHPdoc)
+     * @see engine/MyFusesLoader#getApplicationData()
+     */
+    public function getApplicationData( Application $application ) {
+        // TODO if the result of choose application file is false 
+        // throw exception
+        $result = $this->chooseApplicationFile( $application ); 
     }
+    
+    /**
+     * Fill the application with the name of the application descriptor file
+     * founded in the application root path. MyFuses descriptor files has
+     * priority over fusebox files.
+     * 
+     * @param $application The application verified
+     * @return boolean
+     */
+    public function chooseApplicationFile( Application $application ) {
+        
+        if( is_file( $application->getPath() . self::MYFUSES_APP_FILE ) ) {
+            $application->setFile( self::MYFUSES_APP_FILE );
+            return true;
+        }
+        
+        if ( is_file( $application->getPath() . self::MYFUSES_APP_PHP_FILE ) ) {
+            $application->setFile( self::MYFUSES_APP_PHP_FILE );
+            return true;
+        }
+        
+        if ( is_file( $application->getPath() . self::FUSEBOX_APP_FILE ) ) {
+            $application->setFile( self::FUSEBOX_APP_FILE );
+            return true;
+        }
+        
+        if ( is_file( $application->getPath() . self::FUSEBOX_APP_PHP_FILE ) ) {
+            $application->setFile( self::FUSEBOX_APP_PHP_FILE );
+            return true;
+        }
+        
+        return false;
+    }
+    
     
     private function loadCircuits( Application $application, 
         SimpleXMLElement $node ) {
@@ -197,9 +218,9 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
                 }
 	        }
 
-	        $this->setApplicationParameter( $application, $name, $value );
-	        
+	        $this->setApplicationParameter( $application, $name, $value );    
         }
-        
     }
+    
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

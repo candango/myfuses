@@ -2,7 +2,16 @@
 /**
  * MyFusesLoader - MyFusesLoader.class.php
  * 
- * This interface defines one myFuses loader.
+ * MyFuses need to load the application data to process the user request sent 
+ * to the controller. There is two ways to do that task: loading xml descriptor
+ * files(myfuses.xml and circuit.xml) or reading the application directory
+ * structure. This interface defines all methods needed in the myFuses load 
+ * process phase. 
+ * In this file is difined the basic myFuses loader infrastructure with 
+ * MyFusesLoader interface. The AbstactMyFusesLoader class implements the basic
+ * features demanded by MyFusesLoader and other concrete interfaces like 
+ * MyFusesXmlLoader and MyFusesDirectoryLoader will be provided to do more 
+ * specific tasks.
  * 
  * PHP version 5
  * 
@@ -42,7 +51,18 @@ require_once MYFUSES_ROOT_PATH . "engine/loaders/MyFusesXmlLoader.class.php";
 /**
  * MyFusesLoader - MyFusesLoader.class.php
  * 
- * This interface defines one myFuses loader.
+ * MyFusesLoader - MyFusesLoader.class.php
+ * 
+ * MyFuses need to load the application data to process the user request sent 
+ * to the controller. There is two ways to do that task: loading xml descriptor
+ * files(myfuses.xml and circuit.xml) or reading the application directory
+ * structure. This interface defines all methods needed in the myFuses load 
+ * process phase. 
+ * In this file is difined the basic myFuses loader infrastructure with 
+ * MyFusesLoader interface. The AbstactMyFusesLoader class implements the basic
+ * features demanded by MyFusesLoader and other concrete interfaces like 
+ * MyFusesXmlLoader and MyFusesDirectoryLoader will be provided to do more 
+ * specific tasks.
  * 
  * PHP version 5
  *
@@ -84,4 +104,14 @@ interface MyFusesLoader {
      * @param $application The application to be loaded
      */
     public function loadApplication( Application $application );
+    
+    /**
+     * Return one array of mapped data from one application
+     * 
+     * @param $application The application to be mapped 
+     * @return array One array of mapped data from the application
+     */
+    public function getApplicationData( Application $application );
+    
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

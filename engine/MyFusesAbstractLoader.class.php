@@ -1,6 +1,65 @@
 <?php
 abstract class MyFusesAbstractLoader implements MyFusesLoader {
 	
+    
+    /**
+     * (non-PHPdoc)
+     * @see engine/MyFusesLoader#loadApplication()
+     */
+    public function loadApplication( Application $application ) {
+        
+        $data = $this->getApplicationData( $application );
+        
+        /*$appMethods = array( 
+            "circuits" => "loadCircuits", 
+            "classes" => "loadClasses",
+            "parameters" => "loadParameters"
+        );
+        
+        $path = $application->getPath();
+        
+        $file = $path . "myfuses.xml";
+        
+        if( file_exists( $file ) ) {
+            
+            $data = MyFusesFileHandler::readFile( $file );
+            
+            try {
+                // FIXME put no warning modifier in SimpleXMLElement call
+                $rootNode = @new SimpleXMLElement( $data );
+
+                foreach ( $rootNode as $key => $node ) {
+                    if( isset( $appMethods[ strtolower( $key ) ] ) ) {
+                        $this->$appMethods[ 
+                           strtolower( $key ) ]( $application, $node );
+                    }
+                }
+            }
+            catch ( Exception $e ) {
+                // FIXME handle error
+                echo "<b>" . $application->getPath() . "<b><br>";
+                die( $e->getMessage() );    
+            }
+                
+        }
+        else {
+            $exception = new MyFusesException( "Could not find the " . 
+               "application \"" . $application->getName() . "\" file." );
+            
+            $exception->setType( 
+               MyFusesException::MYFUSES_APPLICATION_FILE_DOENST_EXISTS_TYPE );
+            
+            $exception->setDescription( "MyFuses can't find the application " . 
+                "descriptor file. Check the directory \"" . 
+                $application->getPath() . "\" and see if even myfuses.xml" . 
+                " or fusebox.xml files exists." );
+            
+            throw $exception;
+        }
+        
+        $this->application = null;*/
+    }
+    
 	/**
 	 * (non-PHPdoc)
 	 * @see myfuses/engine/MyFusesLoader#setApplicationParameter()
@@ -34,9 +93,14 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
         }
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see engine/MyFusesLoader#addApplicationReference()
+	 */
 	public function addApplicationReference( Application $application, 
        CircuitReference $reference ) {
        $application->addReference( $reference );
     }
 	
 }
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
