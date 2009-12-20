@@ -35,7 +35,7 @@
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 662 2009-03-11 04:30:31Z flavio.garcia $
+ * @version    SVN: $Id$
  */
 
 /**
@@ -50,7 +50,7 @@
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 662 $
+ * @version    SVN: $Revision$
  * @since      Revision 17
  */
 class MyFusesXmlLoader extends MyFusesAbstractLoader {
@@ -93,7 +93,7 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
      * @see engine/MyFusesLoader#getApplicationData()
      */
     public function getApplicationData( Application $application ) {
-        // TODO if the result of choose application file is false 
+        // TODO if the result of choose application file is false
         // throw exception
         $result = $this->chooseApplicationFile( $application ); 
     }
@@ -222,5 +222,58 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
         }
     }
     
+    /**
+     * This function digs the descriptor file and build an array of meta data
+     * that will be used by the abastract loader.
+     * 
+     * @param $name
+     * @param $node
+     * @return array An array of strings
+     */
+    public static function getDataFromXML( $name, SimpleXMLElement $node ) {
+        $nameX = explode( "_ns_", $name );
+        
+        if( count( $nameX ) > 1 ) {
+            $data[ "name" ] = $nameX[ 1 ];
+            $data[ "namespace" ] = $nameX[ 0 ];
+        }
+        else {
+            $data[ "name" ] = $name;
+            $data[ "namespace" ] = "myfuses";
+        }
+        
+        if( count( $node->getDocNamespaces( true ) ) ) {
+            $data[ "docNamespaces" ] = $node->getDocNamespaces( true );
+            
+            foreach( $data[ "docNamespaces" ] as $namespace => $value ) {
+                foreach( $node->attributes( $namespace, true ) as 
+                    $name => $attribute ) {
+                    $data[ "namespaceattributes" ][ $namespace ][ $name ] = 
+                        "" . $attribute;
+                }
+            }
+        }
+        
+        foreach( $node->attributes() as $key => $attribute ) {
+            $data[ "attributes" ][ $key ] =  "" . $attribute ;
+        }
+        
+        if( count( $node->children() ) ) {
+            foreach( $node->children() as $key => $child ) {
+                // PoG StYlEzZz
+                $xml = preg_replace( 
+                    "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
+                    $child->asXML() );
+                $xml = preg_replace( 
+                    "@(\w+|\d+):(\w+|\d+)([=])@", "$1_ns_$2$3", $xml );
+                $child = new SimpleXMLElement( preg_replace( 
+                    "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
+                    $xml ) );
+                $data[ "children" ][] = self::getDataFromXML( $key, $child );    
+            }
+        }
+        
+        return $data;
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
