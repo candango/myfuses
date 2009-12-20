@@ -93,6 +93,20 @@ interface Application {
     public function setName( $name );
     
     /**
+     * Returns the application file
+     *
+     * @return string
+     */
+    public function getFile();
+    
+    /**
+     * Sets the application file
+     *
+     * @param string $path
+     */
+    public function setFile( $file );
+    
+    /**
      * Returns the application path
      *
      * @return string

@@ -72,6 +72,13 @@ abstract class AbstractApplication implements Application {
     private $name;
     
     /**
+     * Application descritor file
+     * 
+     * @var string
+     */
+    private $file;
+    
+    /**
      * Application path
      * 
      * @var string
@@ -297,6 +304,22 @@ abstract class AbstractApplication implements Application {
      */
     public function setName( $name ) {
         $this->name = $name;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getFile()
+     */
+    public function getFile() {
+        return $this->file;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setFile()
+     */
+    public function setFile( $file ) {
+        $this->file = $file;
     }
     
     /**
