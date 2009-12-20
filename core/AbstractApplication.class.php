@@ -324,6 +324,14 @@ abstract class AbstractApplication implements Application {
     
     /**
      * (non-PHPdoc)
+     * @see core/Application#getCompleteFile()
+     */
+    public function getCompleteFile() {
+        return $this->path . $this->file;
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see core/Application#getPath()
      */
     public function getPath() {

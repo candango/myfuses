@@ -107,6 +107,14 @@ interface Application {
     public function setFile( $file );
     
     /**
+     * Return the complete application file path. The concatenation of 
+     * application path and application file
+     * 
+     * @return string
+     */
+    public function getCompleteFile();
+    
+    /**
      * Returns the application path
      *
      * @return string
