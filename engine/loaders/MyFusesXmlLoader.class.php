@@ -96,6 +96,14 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
         // TODO if the result of choose application file is false
         // throw exception
         $result = $this->chooseApplicationFile( $application ); 
+        
+        $rootNode = $this->loadApplicationFile( $application );
+        
+        $data = self::getDataFromXml( "myfuses", $rootNode );
+        
+        $data[ 'file' ] = $application->getFile();
+        
+        return $data;
     }
     
     /**
@@ -131,6 +139,37 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
         return false;
     }
     
+    /**
+     * Load the application file and returns one SimpleXMLElement with the xml
+     * document structure
+     * 
+     * @param Application $application
+     * @return SimpleXMLElement The root elemet
+     */
+    private function loadApplicationFile( Application $application ) {
+        
+        $fileCode = MyFusesFileHandler::readFile( 
+            $application->getCompleteFile() );
+        
+        /*MyFuses::getInstance()->getDebugger()->registerEvent( 
+            new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
+                "Getting Application file \"" . 
+                $this->getApplication()->getCompleteFile() . "\"" ) );*/
+        
+        try {
+            // FIXME put no warning modifier in SimpleXMLElement call
+            $rootNode = @new SimpleXMLElement( $fileCode );    
+        }
+        catch ( Exception $e ) {
+            // FIXME handle error
+            echo "<b>" . $this->getApplication()->
+                getCompleteFile() . "<b><br>";
+            die( $e->getMessage() );    
+        }
+        
+        return $rootNode;
+        
+    }
     
     private function loadCircuits( Application $application, 
         SimpleXMLElement $node ) {
