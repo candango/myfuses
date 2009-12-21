@@ -5,7 +5,7 @@
  * MyFuses framework organize one application in circuits. All functionality and
  * logic is stored in circuits as Fuseactions. Normaly one circuit will 
  * represent one business entity of the application. Circuits can be called as
- * one application module. Why not?
+ * one application module, why not?
  * In this file is difined the basic circuits infrastructure with Circuit 
  * interface. The AbstactCircuit class implements the basic features demanded by
  * Circuit and the BasicCircuit is the implementable class.

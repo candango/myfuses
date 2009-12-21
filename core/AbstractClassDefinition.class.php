@@ -56,7 +56,7 @@
  * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
- * @since      Revision 23
+ * @since      Revision 749
  */
 abstract class AbstractClassDefinition implements ClassDefinition {
     
