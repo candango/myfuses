@@ -135,13 +135,21 @@ class MyFuses {
         if( count( $this->applications ) == 0 ) {
             $application->setDefault( true );
         }
+        else {
+            if( $application->getName() == 
+                $this->getApplication()->getName() ) {
+                $application->setDefault( true );
+            }
+        }
         
         $this->applications[ $application->getName() ] = $application;
         
         if( Application::DEFAULT_APPLICATION_NAME != $application->getName() ) {
             if( $application->isDefault() ) {
                 if( isset( $this->applications[ 
-                    Application::DEFAULT_APPLICATION_NAME ] ) ) {
+                    Application::DEFAULT_APPLICATION_NAME ] ) && 
+                    ( $application->getName() != 
+                    $this->getApplication()->getName() ) ) {
                     $this->applications[ 
                     Application::DEFAULT_APPLICATION_NAME ]->setDefault( 
                         false );
@@ -157,7 +165,7 @@ class MyFuses {
      * 
      * @return Application
      */
-    public function createApplication( $name = 
+    public function &createApplication( $name = 
         Application::DEFAULT_APPLICATION_NAME ) {
 
         $application = MyFusesLifecycle::restoreApplication( $name );
@@ -174,7 +182,7 @@ class MyFuses {
         
         $this->addApplication( $application );
         
-        return $application;
+        return $this->getApplication( $name );
     }
     
     /**
@@ -183,7 +191,7 @@ class MyFuses {
      * @param string $name
      * @return Application The application founded
      */
-    public function getApplication( 
+    public function &getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) { 
         if( isset( $this->applications[ $name ] ) ) {
             return $this->applications[ $name ];
