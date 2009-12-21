@@ -51,7 +51,7 @@
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
- * @since      Revision 17
+ * @since      Revision 125
  */
 class MyFusesXmlLoader extends MyFusesAbstractLoader {
     

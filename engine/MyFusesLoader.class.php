@@ -51,8 +51,6 @@ require_once MYFUSES_ROOT_PATH . "engine/loaders/MyFusesXmlLoader.class.php";
 /**
  * MyFusesLoader - MyFusesLoader.class.php
  * 
- * MyFusesLoader - MyFusesLoader.class.php
- * 
  * MyFuses need to load the application data to process the user request sent 
  * to the controller. There is two ways to do that task: loading xml descriptor
  * files(myfuses.xml and circuit.xml) or reading the application directory
@@ -73,7 +71,7 @@ require_once MYFUSES_ROOT_PATH . "engine/loaders/MyFusesXmlLoader.class.php";
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
- * @since      Revision 17
+ * @since      Revision 20
  */
 interface MyFusesLoader {
 	
