@@ -165,7 +165,7 @@ class MyFuses {
      * 
      * @return Application
      */
-    public function &createApplication( $name = 
+    public function createApplication( $name = 
         Application::DEFAULT_APPLICATION_NAME ) {
 
         $application = MyFusesLifecycle::restoreApplication( $name );
@@ -191,7 +191,7 @@ class MyFuses {
      * @param string $name
      * @return Application The application founded
      */
-    public function &getApplication( 
+    public function getApplication( 
         $name = Application::DEFAULT_APPLICATION_NAME ) { 
         if( isset( $this->applications[ $name ] ) ) {
             return $this->applications[ $name ];
