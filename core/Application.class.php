@@ -58,11 +58,25 @@ require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
 interface Application {
 
     /**
-     * Default applicatication name
+     * Default application name
      * 
      * @var string The application default name
      */
     const DEFAULT_APPLICATION_NAME = "default";
+    
+    /**
+     * The application development mode
+     * 
+     * @var string
+     */
+    const DEVELOPMENT_MODE = "development";
+    
+    /**
+     * The production development mode
+     * 
+     * @var string
+     */
+    const PRODUCTION_MODE = "production";
     
     /**
      * Returns if the application is default or not
