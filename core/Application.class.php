@@ -142,6 +142,20 @@ interface Application {
      */
     public function getParsedApplicationFile();
     
+    /**
+     * Return the application last load time
+     *
+     * @return integer
+     */
+    public function getLastLoadTime();
+    
+    /**
+     * Sets the application last load time
+     * 
+     * @param integer $lastLoadTime
+     */
+    public function setLastLoadTime( $lastLoadTime );
+    
     #####################
     // COLLECTION METHODS
     #####################

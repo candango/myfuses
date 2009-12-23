@@ -85,6 +85,13 @@ abstract class AbstractApplication implements Application {
      */
     private $path;
     
+    /**
+     * Last time that the application was loaded
+     *
+     * @var integer
+     */
+    private $lastLoadTime = 0;
+    
     ########################
     // COLLECTION PROPERTIES
     ########################
@@ -363,6 +370,22 @@ abstract class AbstractApplication implements Application {
     public function getParsedApplicationFile() { 
         return $this->getParsedPath() . $this->getName() . 
            MyFuses::getInstance()->getStoredApplicationFileExtension();
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getLastLoadTime()
+     */
+    public function getLastLoadTime() {
+        return $this->lastLoadTime;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setLastLoadTime()
+     */
+    public function setLastLoadTime( $lastLoadTime ) {
+        $this->lastLoadTime = $lastLoadTime;
     }
     
     #####################
