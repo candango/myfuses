@@ -33,7 +33,7 @@
  *
  * @category   loader
  * @package    myfuses.loader
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @author     Flavio Goncalves Garcia <flavio dot garcia at candango dot org>
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -41,8 +41,6 @@
  */
 
 /**
- * MyFusesAbstractLoader - MyFusesAbstractLoader.class.php
- * 
  * This is an abstract implementation of MyFusesLoader interface. This class
  * implements all required methods required by his interface and need to be
  * extended by a concrete class to enable his instantiating. Extend this class
@@ -52,7 +50,7 @@
  *
  * @category   loader
  * @package    myfuses.loader
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @author     Flavio Goncalves Garcia <flavio dot garcia at candango dot org>
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -67,6 +65,8 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
      * @see engine/MyFusesLoader#loadApplication()
      */
     public function loadApplication( Application &$application ) {
+        
+        $assembler = new MyFusesBasicAssembler();
         
         if( $this->isApplicationParsed( $application ) ) {
             // Getting properties that developers can change in the bootstrap
@@ -83,13 +83,9 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
             MyFuses::getInstance()->addApplication( $application );
         }
         
-        
-        
-        
-        
         $data = $this->getApplicationData( $application );
         
-        
+        $assembler->assemblyApplication( $application, $data );
         
         //var_dump( $data );
         
@@ -145,39 +141,6 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
     
 	/**
 	 * (non-PHPdoc)
-	 * @see myfuses/engine/MyFusesLoader#setApplicationParameter()
-	 */
-	public function setApplicationParameter( Application $application, 
-	   $name, $value ) {
-	   
-	   $applicationParameters = array(
-            "fuseactionVariable" => "setFuseactionVariable",
-            "defaultFuseaction" => "setDefaultFuseaction",
-            "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
-            "debug" => "setDebug",
-            "tools" => "setTools",
-            "mode" => "setMode",
-            "strictMode" => "setStrictMode",
-            "password" => "setPassword",
-            "parseWithComments" => "setParsedWithComments",
-            "conditionalParse" => "setConditionalParse",
-            "allowLexicon" => "setLexiconAllowed",
-            "ignoreBadGrammar" => "setBadGrammarIgnored",
-            "useAssertions" => "setAssertionsUsed",
-            "scriptLanguage" => "setScriptLanguage",
-            "scriptFileDelimiter" => "setScriptFileDelimiter",
-            "maskedFileDelimiters" => "setMaskedFileDelimiters",
-            "characterEncoding" => "setCharacterEncoding"
-        );
-        
-        // putting into $application
-        if( isset( $applicationParameters[ $name ] ) ) {
-            $application->$applicationParameters[ $name ]( $value );
-        }
-	}
-	
-	/**
-	 * (non-PHPdoc)
 	 * @see engine/MyFusesLoader#addApplicationReference()
 	 */
 	public function addApplicationReference( Application $application, 
@@ -192,6 +155,8 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
      */
     private function includeApplicationParsedFile( Application &$application ) {
         // TODO Check if parsed application file exists
+        
+        
         $application = include $application->getParsedApplicationFile();   
     }
     
