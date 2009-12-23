@@ -32,25 +32,27 @@
  * Fusebox" part .
  * 
  * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
  * All Rights Reserved.
  * 
  * Contributor(s): Flavio Goncalves Garcia.
  *
  * @category   loader
  * @package    myfuses.loader
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @author     Flavio Goncalves Garcia <flavio dot garcia at candango dot org>
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
+
 require_once MYFUSES_ROOT_PATH . "engine/MyFusesAbstractLoader.class.php";
 require_once MYFUSES_ROOT_PATH . "engine/loaders/MyFusesXmlLoader.class.php";
 
+require_once MYFUSES_ROOT_PATH . "engine/MyFusesAssembler.class.php";
+
+
 /**
- * MyFusesLoader - MyFusesLoader.class.php
- * 
  * MyFuses need to load the application data to process the user request sent 
  * to the controller. There is two ways to do that task: loading xml descriptor
  * files(myfuses.xml and circuit.xml) or reading the application directory
@@ -65,8 +67,8 @@ require_once MYFUSES_ROOT_PATH . "engine/loaders/MyFusesXmlLoader.class.php";
  * PHP version 5
  *
  * @category   loader
- * @package    myfuses.loader
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @package    myfuses.engine
+ * @author     Flavio Goncalves Garcia <flavio dot garcia at candango dot org>
  * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
@@ -74,17 +76,7 @@ require_once MYFUSES_ROOT_PATH . "engine/loaders/MyFusesXmlLoader.class.php";
  * @since      Revision 20
  */
 interface MyFusesLoader {
-	
-	/**
-	 * Set one parameter in one application.
-	 * 
-	 * @param $application The application where the parameter will be seted
-	 * @param $name The parameter name
-	 * @param $value The parameter value
-	 */
-    public function setApplicationParameter( Application $application, 
-        $name, $value );
-        
+	    
     /**
      * Add one circuit reference in one appliaction.
      * 
