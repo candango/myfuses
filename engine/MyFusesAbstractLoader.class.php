@@ -65,78 +65,60 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
      * @see engine/MyFusesLoader#loadApplication()
      */
     public function loadApplication( Application &$application ) {
-        
-        $assembler = new MyFusesBasicAssembler();
+        // Getting properties that developers can change in the bootstrap
+        $default = $application->isDefault();
+        $locale = $application->getLocale();
         
         if( $this->isApplicationParsed( $application ) ) {
-            // Getting properties that developers can change in the bootstrap
-            $default = $application->isDefault();
-            $locale = $application->getLocale();
-            
             $this->includeApplicationParsedFile( $application );
             
             // Setting properties defined by developers in the bootstrap
             $application->setDefault( $default );
-            $application->setLocale( $locale );
             
             // Fixing application reference in myfuses
             MyFuses::getInstance()->addApplication( $application );
+            
+            // if not production the application is in development mode
+            if( $application->getMode() == Application::PRODUCTION_MODE ) {
+                if( $this->isApplicationModified( $application ) ) {
+                    $this->fireLoadApplication( $application );    
+                }
+            }
+            else {
+                $this->fireLoadApplication( $application );    
+            }
+        }
+        else {
+            $this->fireLoadApplication( $application );
         }
         
+        // Setting the real locale
+        if( $application->getLocale() != $locale ) {
+            $application->setLocale( $locale );    
+        }
+    }
+    
+    /**
+     * Returns if the application was modified
+     * 
+     * @param $application
+     * @return boolean
+     */
+    abstract public function isApplicationModified( Application $application );
+    
+    /**
+     * Execute the real application load
+     * 
+     * @param $application The application to be loaded
+     */
+    protected function fireLoadApplication( Application &$application ) {
         $data = $this->getApplicationData( $application );
+        
+        $assembler = new MyFusesBasicAssembler();
         
         $assembler->assemblyApplication( $application, $data );
         
-        //var_dump( $data );
-        
-        /*$appMethods = array( 
-            "circuits" => "loadCircuits", 
-            "classes" => "loadClasses",
-            "parameters" => "loadParameters"
-        );
-        
-        $path = $application->getPath();
-        
-        $file = $path . "myfuses.xml";
-        
-        if( file_exists( $file ) ) {
-            
-            $data = MyFusesFileHandler::readFile( $file );
-            
-            try {
-                // FIXME put no warning modifier in SimpleXMLElement call
-                $rootNode = @new SimpleXMLElement( $data );
-
-                foreach ( $rootNode as $key => $node ) {
-                    if( isset( $appMethods[ strtolower( $key ) ] ) ) {
-                        $this->$appMethods[ 
-                           strtolower( $key ) ]( $application, $node );
-                    }
-                }
-            }
-            catch ( Exception $e ) {
-                // FIXME handle error
-                echo "<b>" . $application->getPath() . "<b><br>";
-                die( $e->getMessage() );    
-            }
-                
-        }
-        else {
-            $exception = new MyFusesException( "Could not find the " . 
-               "application \"" . $application->getName() . "\" file." );
-            
-            $exception->setType( 
-               MyFusesException::MYFUSES_APPLICATION_FILE_DOENST_EXISTS_TYPE );
-            
-            $exception->setDescription( "MyFuses can't find the application " . 
-                "descriptor file. Check the directory \"" . 
-                $application->getPath() . "\" and see if even myfuses.xml" . 
-                " or fusebox.xml files exists." );
-            
-            throw $exception;
-        }
-        
-        $this->application = null;*/
+        $application->setLastLoadTime( time() );
     }
     
 	/**

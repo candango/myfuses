@@ -90,6 +90,18 @@ class MyFusesXmlLoader extends MyFusesAbstractLoader {
     
     /**
      * (non-PHPdoc)
+     * @see engine/MyFusesAbstractLoader#applicationWasModified()
+     */
+    public function isApplicationModified( Application $application ) {
+        if( filemtime( $application->getCompleteFile() ) > 
+            $application->getLastLoadTime() ) {
+            return true;
+        }
+        return false; 
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see engine/MyFusesLoader#getApplicationData()
      */
     public function getApplicationData( Application $application ) {
