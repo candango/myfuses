@@ -936,15 +936,19 @@ class MyFuses {
             $link = "";
             
             if( count( $xfaX ) == 1 ) {
-                $link = self::getMySelf( $showFuseactionVariable ) . 
-                    implode( "/", explode( ".", $xfaX ) );
+                if( $xfaX[ 0 ] == "" ) {
+                    $link = self::getRootUrl();
+                }
+                else {
+                    $link = self::getMySelf( $showFuseactionVariable ) . 
+                        implode( "/", explode( ".", $xfaX ) );    
+                }
             }
             else {
                 try {
                     
                     $ciruit = MyFuses::getApplication()->getCircuit( 
                         $xfaX[ 0 ] );
-                    
                     try {
                         $action = $ciruit->getAction( $xfaX[ 1 ] );
                         
@@ -982,6 +986,7 @@ class MyFuses {
                 $link .= "&";
             }    
         }
+        
         return $link;
     }
     
