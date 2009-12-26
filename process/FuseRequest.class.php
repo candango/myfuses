@@ -59,9 +59,8 @@ class FuseRequest {
         // FIXME Fixing an error occoured with CGI GATWAYS. 
         // FIXME Sppressing redirect with CGI!!!
         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
-            $this->getApplication()->allowRewrite() && 
-            !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
-            
+            $this->getApplication()->allowRewrite() ) {
+                
             $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
             
             $path = str_replace( $root, "", $_SERVER[ 'REDIRECT_URL' ] );
@@ -113,6 +112,8 @@ class FuseRequest {
         
         list( $this->circuitName, $this->actionName ) = 
         	explode( '.', $this->validFuseactionName );
+        	
+        
     }
     
     /**
