@@ -116,6 +116,13 @@ class MyFuses {
     private static $instance;
     
     /**
+     * Path used to search the plugin to be included
+     *
+     * @var array
+     */
+    private $pluginPaths = array();
+    
+    /**
      * The stored application file extension
      * 
      * @var String
@@ -125,7 +132,12 @@ class MyFuses {
     /**
      * Default constructor. It is to implement singleton pattern.
      */
-    private function __construct() {}
+    private function __construct() {
+        // adding plugin paths
+        $this->addPluginPath( "plugins" . DIRECTORY_SEPARATOR );
+        $this->addPluginPath( self::MYFUSES_ROOT_PATH . "plugins" . 
+            DIRECTORY_SEPARATOR );
+    }
     
     /**
      * Add one application to controller
@@ -227,6 +239,15 @@ class MyFuses {
     }
     
     /**
+     * Return all plugin paths
+     *
+     * @return array
+     */
+    public function getPluginPaths() {
+        return $this->pluginPaths;
+    }
+    
+    /**
      * Execute the myFuses process
      */
     public function doProcess() {
@@ -240,9 +261,7 @@ class MyFuses {
             MyFusesLifecycle::storeApplications( $this );
         }
         catch( MyFusesException $mfe ) {
-        
             $mfe->breakProcess();
-        
         }
         
     }
