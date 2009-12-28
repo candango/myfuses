@@ -60,6 +60,62 @@
 abstract class MyFusesLifecycle {
     
     /**
+     * Process phase constant<br>
+     * value "process"
+     *
+     * @var string
+     */
+    const PROCESS_PHASE = "process";
+    
+    /**
+     * Pre process fase constant<br>
+     * Value "preProcess"
+     * 
+     * @var string
+     */
+    const PRE_PROCESS_PHASE = "preProcess";
+    
+    /**
+     * Pre fuseaction fase constant<br>
+     * Value "preFuseaction"
+     * 
+     * @var string
+     */
+    const PRE_FUSEACTION_PHASE = "preFuseaction";
+    
+    /**
+     * Post fuseaction fase constant<br>
+     * Value "postFuseaction"
+     * 
+     * @var string
+     */
+    const POST_FUSEACTION_PHASE = "postFuseaction";
+    
+    /**
+     * Post process fase constant<br>
+     * Value "postProcess"
+     * 
+     * @var string
+     */
+    const POST_PROCESS_PHASE = "postProcess";
+    
+    /**
+     * Process error fase constant<br>
+     * Value "processError"
+     * 
+     * @var string
+     */
+    const PROCESS_ERROR_PHASE = "processError";
+    
+    /**
+     * Fuseaction exception fase constant<br>
+     * Value "fuseactionException"
+     * 
+     * @var string
+     */
+    const FUSEACTION_EXCEPTION_PHASE = "fuseactionException";
+    
+    /**
      * Load myfuses.xml and all circuit.xml's of the given application
      * 
      * @param $application
