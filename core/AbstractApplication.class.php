@@ -108,6 +108,13 @@ abstract class AbstractApplication implements Application {
      * @var array An array of ClassDefinitions
      */
     private $classes = array();
+    
+    /**
+     * Plugins loaded or created in the application
+     *
+     * @var array An array of Plugins
+     */
+    private $plugins;
     ############################
     // END COLLECTION PROPERTIES
     ############################
@@ -275,10 +282,19 @@ abstract class AbstractApplication implements Application {
     ########################################
     
     /**
-     * Default constructor
+     * Default constructor. Sets the application start time and the plugins 
+     * phase arrays.
      */
     public function __construct() {
         $this->startTime = time();
+        
+        $this->plugins[ MyFusesLifecycle::PRE_PROCESS_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::PRE_FUSEACTION_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::POST_FUSEACTION_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::POST_PROCESS_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::PROCESS_ERROR_PHASE ] = array();
+        $this->plugins[ MyFusesLifecycle::FUSEACTION_EXCEPTION_PHASE ] = 
+            array();
     }
     
     /**
@@ -439,6 +455,34 @@ abstract class AbstractApplication implements Application {
     public function getClass( $name ){
         return $this->classes[ $name ];
     }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#addPlugin()
+     */
+    public function addPlugin( Plugin $plugin ) {
+        $index = count( $this->plugins[ $plugin->getPhase() ] );
+        $this->plugins[ $plugin->getPhase() ][ $index ] = $plugin;
+        $plugin->setApplication( $this );
+        $plugin->setIndex( $index );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getPlugins()
+     */
+    public function &getPlugins( $phase ) {
+        return $this->plugins[ $phase ];
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setPlugins()
+     */
+    public function setPlugins( $phase, $plugins ) {
+        $this->plugins[ $phase ] = $plugins;
+    }
+    
     #########################
     // END COLLECTION METHODS
     #########################

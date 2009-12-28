@@ -216,6 +216,31 @@ interface Application {
      * @return ClassDefinition
      */
     public function getClass( $name );
+    
+    /**
+     * TODO add index parameter
+     * Add one plugin in a ginven fase
+     * 
+     * @param Plugin $plugin
+     */
+    public function addPlugin( Plugin $plugin );
+    
+    /**
+     * Return all plugins of a given fase
+     * 
+     * @param string $fase
+     * @return array
+     */
+    public function &getPlugins( $phase );
+    
+    /**
+     * Set all plugins of a given fase
+     * 
+     * @param string $fase
+     * @param array $plugins
+     */
+    public function setPlugins( $phase, $plugins );
+    
     #########################
     // END COLLECTION METHODS
     #########################
