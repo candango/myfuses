@@ -469,6 +469,28 @@ abstract class AbstractApplication implements Application {
     
     /**
      * (non-PHPdoc)
+     * @see core/Application#clearPlugins()
+     */
+    public function clearPlugins( $phase = null ) {
+        if( is_null( $phase ) ) {
+
+            foreach( $this->plugins as $phaseName => $phase ) {
+                foreach( $phase as $plugin ) {
+                    $plugin->clearApplication();
+                }
+                $this->plugins[ $phaseName ] = array();
+            }
+        }
+        else {
+            foreach( $this->plugins[ $fase ] as $plugin ) {
+                $plugin->clearApplication();
+            }
+            $this->plugins[ $fase ] = array();    
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see core/Application#getPlugins()
      */
     public function &getPlugins( $phase ) {

@@ -226,6 +226,14 @@ interface Application {
     public function addPlugin( Plugin $plugin );
     
     /**
+     * Clear all plugins registered in one phase. If the phase is null all 
+     * phases is cleared.
+     * 
+     * @param string $fase
+     */
+    public function clearPlugins( $phase = null );
+    
+    /**
      * Return all plugins of a given fase
      * 
      * @param string $fase
