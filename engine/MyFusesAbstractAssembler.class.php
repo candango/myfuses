@@ -69,7 +69,8 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
         $methods = array( 
             "circuits" => "assemblyCircuitReferences", 
             "classes" => "assemblyClasses",
-            "parameters" => "assemblyParameters"
+            "parameters" => "assemblyParameters",
+            "plugins" => "assemblyPlugins"
         );
         
         foreach( $data[ 'children' ] as $child ) {
@@ -82,7 +83,7 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
     }
     
     /**
-     * Assembly in one give application all circuit references using the data
+     * Assembly in the give application all circuit references using the data
      * created by the loader.
      * 
      * @param $application
@@ -205,6 +206,66 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
         if( isset( $applicationParameters[ $name ] ) ) {
             $application->$applicationParameters[ $name ]( $value );
         }
+    }
+    
+    /**
+     * Assembly in the give application all plugins using the data created by 
+     * the loader.
+     * 
+     * @param $application
+     * @param $data
+     */
+    private function assemblyPlugins( Application $application, $data ) {
+        $application->clearPlugins();
+        if( count( $data[ 'children' ] ) ) {
+            foreach( $data[ 'children' ] as $child ) {
+                self::buildFase( $application, $child );
+            }
+        }
+    }
+    
+    private function buildFase( Application $application, $data ) {
+        
+        $faseParams = array(
+            'name' => 'name',
+            'path' => 'path',
+            'template' => 'file',
+            'file' => 'file'
+        );
+            
+        $phase = $data[ 'attributes' ][ 'name' ]; 
+        
+        if( isset( $data[ 'children' ] ) ) {
+            if( count( $data[ 'children' ] ) ) {
+                foreach( $data[ 'children' ] as $child ) {
+                    $name = "";
+                    $path = "";
+                    $file = "";
+                    
+                    foreach( $child[ 'attributes' ] as 
+                        $attributeName => $attribute ) {
+                        $$faseParams[ $attributeName ] = $attribute;
+                    }
+                    
+                    $paramters = array();
+                    
+                    if( isset( $child[ 'children' ] ) ) {
+                        foreach( $child[ 'children' ] as $key => $paramChild ) {
+                            if( strtolower( $paramChild[ 'name' ] ) == 'parameter' ) {
+                                $param = array( 
+                                    'name' => $paramChild[ 'attributes' ][ 'name' ], 
+                                    'value' => $paramChild[ 'attributes' ][ 'value' ] );
+                                $paramters[] = $param;
+                            }
+                        }
+                    }
+                    
+                    ProcessPlugin::getInstance( $application, 
+                        $phase, $name, $path, $file, $paramters );
+                }
+            }
+        }
+        
     }
     
 }

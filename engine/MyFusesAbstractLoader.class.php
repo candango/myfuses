@@ -138,6 +138,7 @@ abstract class MyFusesAbstractLoader implements MyFusesLoader {
     private function includeApplicationParsedFile( Application &$application ) {
         // TODO Check if parsed application file exists
         
+        include $application->getDependenciesFile();
         
         $application = include $application->getParsedApplicationFile();   
     }
