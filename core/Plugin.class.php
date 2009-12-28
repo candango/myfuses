@@ -46,6 +46,8 @@
  * @version    SVN: $Id: Plugin.class.php 702 2009-04-20 17:49:15Z flavio.garcia $
  */
 
+require_once MYFUSES_ROOT_PATH . "core/ProcessPlugin.class.php";
+
 /**
  * Plugin  - Plugin.class.php
  * 
