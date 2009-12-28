@@ -239,7 +239,17 @@ class MyFuses {
     }
     
     /**
-     * Return all plugin paths
+     * Add one plugin path. MyFuses will be search plugins in this paths if
+     * no path was informed. 
+     *
+     * @param string $path
+     */
+    protected function addPluginPath( $path ) {
+        $this->pluginPaths[] = $path;
+    }
+    
+    /**
+     * Return all plugin paths registed
      *
      * @return array
      */
