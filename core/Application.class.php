@@ -157,6 +157,14 @@ interface Application {
     public function getParsedApplicationFile();
     
     /**
+     * Return the applciation dependencies file with all php files that must be
+     * included before the application parsed file restore.
+     * 
+     * @return string
+     */
+    public function getDependenciesFile();
+    
+    /**
      * Return the application last load time
      *
      * @return integer
@@ -466,5 +474,12 @@ interface Application {
     #####################################
     // END METHODS DIFINED IN myfuses.xml
     #####################################
+    
+    /**
+     * Return one string with all application dependencies includes.
+     * 
+     * @return string
+     */
+    public function getDependencies();
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

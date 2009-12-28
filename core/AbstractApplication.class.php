@@ -388,6 +388,11 @@ abstract class AbstractApplication implements Application {
            MyFuses::getInstance()->getStoredApplicationFileExtension();
     }
     
+    public function getDependenciesFile() {
+        return $this->getParsedPath() . $this->getName() . ".deps" .
+            MyFuses::getInstance()->getStoredApplicationFileExtension();
+    } 
+    
     /**
      * (non-PHPdoc)
      * @see core/Application#getLastLoadTime()
@@ -473,7 +478,6 @@ abstract class AbstractApplication implements Application {
      */
     public function clearPlugins( $phase = null ) {
         if( is_null( $phase ) ) {
-
             foreach( $this->plugins as $phaseName => $phase ) {
                 foreach( $phase as $plugin ) {
                     $plugin->clearApplication();
@@ -890,5 +894,20 @@ abstract class AbstractApplication implements Application {
     #####################################
     // END METHODS DIFINED IN myfuses.xml
     #####################################
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getApplicationDependencies()
+     */
+    public function getDependencies() {
+        $out = "<?php\n";
+        foreach( $this->plugins as $phaseName => $phase ) {
+            foreach( $phase as $plugin ) {
+                $out .= "require_once '" . $plugin->getPath() . 
+                    $plugin->getFile() . "';\n";
+            }
+        }
+        return $out;
+    }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

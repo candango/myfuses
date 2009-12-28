@@ -183,6 +183,9 @@ abstract class MyFusesLifecycle {
         
         MyFusesFileHandler::createPath( $application->getParsedPath() );
         
+        MyFusesFileHandler::writeFile( $application->getDependenciesFile(), 
+            $application->getDependencies() );
+        
         MyFusesFileHandler::writeFile( 
             $application->getParsedApplicationFile(), $serializedApp );
     }

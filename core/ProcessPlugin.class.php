@@ -327,7 +327,7 @@ abstract class ProcessPlugin implements Plugin {
         
         // FIXME handle missing file include exception
         if( $path == "" ) {
-            foreach( $application->getController()->getPluginPaths() as 
+            foreach( MyFuses::getInstance()->getPluginPaths() as 
                 $path ) {
                 
                 $tmpPath = "";
