@@ -96,6 +96,13 @@ abstract class AbstractApplication implements Application {
     // COLLECTION PROPERTIES
     ########################
     /**
+     * Application circuits
+     *
+     * @var array
+     */
+    private $circuits = array();
+    
+    /**
      * Application circuit references loaded or created in the application 
      * 
      * @var array An array of CircuitReferences
@@ -412,6 +419,92 @@ abstract class AbstractApplication implements Application {
     #####################
     // COLLECTION METHODS
     #####################
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#addCircuit()
+     */
+    public function addCircuit( Circuit $circuit ) {
+        $this->circuits[ $circuit->getName() ] = $circuit;
+        $circuit->setApplication( $this );
+        // updating all circuits parents
+        //$this->updateCircuitsParents();
+        
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#updateCircuitsParents()
+     */
+    public function updateCircuitsParents() {
+        foreach( $this->circuits as $circuit ) {
+            if( $circuit->getParentName() != "" ) {
+                try {
+                    if( !is_null( $this->getCircuit( 
+                        $circuit->getParentName() ) ) ) {
+                         
+                        $circuit->setParent( $this->getCircuit( 
+                            $circuit->getParentName() ) );
+                    }
+                }
+                catch ( MyFusesCircuitException $mfe ) {
+                    // TODO think about that
+                    //$mfe->breakProcess();
+                    return;
+                }
+            }
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#hasCircuit()
+     */
+    public function hasCircuit( $name ) {
+        if( isset( $this->circuits[ $name ] ) ) {
+           return true;
+        }
+        return false;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getCircuit()
+     */
+    public function getCircuit( $name ) {
+        
+        $circuit = null;
+        
+        if( isset( $this->circuits[ $name ] ) ) {
+            $circuit = $this->circuits[ $name ];
+        }
+        
+        if( is_null( $circuit ) ) {
+            $params = array( "circuitName" => $name, "application" => &$this );
+                throw new MyFusesCircuitException( $params, 
+                    MyFusesCircuitException::NON_EXISTENT_CIRCUIT );
+        }
+        
+        MyFusesLifecycle::checkCircuit( $circuit );
+        
+        return $circuit;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#getCircits()
+     */
+    public function getCircits() {
+        return $this->circuits;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see core/Application#setCircuits()
+     */
+    public function setCircuits( $circuits ) {
+        $this->circuits = $circuits;
+    }
+    
     /**
      * (non-PHPdoc)
      * @see core/Application#addReference()

@@ -182,6 +182,52 @@ interface Application {
     // COLLECTION METHODS
     #####################
     /**
+     * Add a circuit to application
+     *
+     * @param Circuit $circuit
+     */
+    public function addCircuit( Circuit $circuit );
+    
+    /**
+     * Update or link the circuits whith this parents
+     * 
+     * @access public
+     */
+    public function updateCircuitsParents();
+    
+    /**
+     * Verifies if application has a circuit
+     * 
+     * @param string $name
+     * @return boolean
+     */
+    public function hasCircuit( $name );
+    
+    /**
+     * Return a circuit by a given name
+     *
+     * @param string $name
+     * @return Circuit
+     */
+    public function getCircuit( $name );
+
+    /**
+     * Return all application circuits
+     *
+     * @return array
+     * @access public
+     */
+    public function getCircits();
+
+    /**
+     * Set the applciation circuits
+     *
+     * @param array $circuits
+     * @access public
+     */
+    public function setCircuits( $circuits );
+    
+    /**
      * Add one reference to application
      * 
      * @param $reference The circuit reference
