@@ -91,6 +91,48 @@ interface Circuit {
     const PRIVATE_ACCESS = 3;
     
     /**
+     * Return the circuit access
+     *
+     * @return integer
+     */
+    public function getAccess();
+    
+    /**
+     * Return circuit access name
+     *
+     * @return string
+     */
+    public function getAccessName();
+    
+    /**
+     * Set the circuit access
+     *
+     * @param integer $access
+     */
+    public function setAccess( $access = Circuit::PUBLIC_ACCESS );
+    
+    /**
+     * Set the circuit access using a string
+     *
+     * @param string $access
+     */
+    public function setAccessByName( $accessName = "public" );
+    
+    /**
+     * Return circuit application
+     *
+     * @return Application
+     */
+    public function getApplication();
+    
+    /**
+     * Set circuit application
+     * 
+     * @param Application $application
+     */
+    public function setApplication( Application &$application );
+    
+    /**
      * Returns the circuit name
      * 
      * @return string
@@ -118,5 +160,74 @@ interface Circuit {
 	 */
 	public function setPath( $path );
 	
+	/**
+     * Return the circuit complete path
+     *
+     * @return string
+     */
+    public function getCompletePath();
+    
+    /**
+     * REturn the complete path for cache file
+     *
+     * @return string
+     */
+    public function getCompleteCacheFile();
+	
+    /**
+     * Return the circuit complete file
+     * 
+     * complete path + file
+     *
+     * @return string
+     */
+    public function getCompleteFile();
+    
+    /**
+     * Return the circuit file
+     *
+     * @return string
+     */
+    public function getFile();
+    
+    /**
+     * Set the circuit file
+     *
+     * @param string $file
+     */
+    public function setFile( $file );
+    
+    /**
+     * Return circuit verb paths
+     *
+     * @return array
+     */
+    public function getVerbPaths();
+    
+    /**
+     * Return one verb path
+     *
+     * @param string $name
+     * @return string
+     */
+    public function getVerbPath( $name );
+    
+    /**
+     * Set circui verb paths
+     *
+     * @param array $verbPaths
+     */
+    public function setVerbPaths( $verbPaths );
+    
+    /**
+     * Return if a given verbPath exists
+     * 
+     * @param string $verbPath
+     * @return boolean
+     */
+    public function verbPathExists( $verbPath );
+    
+    
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

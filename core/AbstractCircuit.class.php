@@ -5,7 +5,7 @@
  * This is an abstract implementation of Circuit interface. This class
  * implements all required methods required by his interface and need to be
  * extended by a concrete class to enable his instantiating. Extend this class
- * insted implement Circtui inteface and you will save you a lot of work.
+ * insted implement Circuit inteface and you will save you a lot of work.
  *  
  * PHP version 5
  * 
@@ -44,7 +44,7 @@
  * This is an abstract implementation of Circuit interface. This class
  * implements all required methods required by his interface and need to be
  * extended by a concrete class to enable his instantiating. Extend this class
- * insted implement Circtui inteface and you will save you a lot of work.
+ * insted implement Circuit inteface and you will save you a lot of work.
  * 
  * PHP version 5
  *
@@ -58,6 +58,20 @@
  */
 abstract class AbstractCircuit implements Circuit {
 	
+    /**
+     * Circuit access type
+     *
+     * @var integer
+     */
+    private $access;
+    
+    /**
+     * Circuit application reference
+     *
+     * @var Application
+     */
+    private $application;
+    
 	/**
      * Circuit name
      * 
@@ -71,6 +85,83 @@ abstract class AbstractCircuit implements Circuit {
      * @var String
      */
 	private $path;
+	
+	/**
+	 * The circuit file
+	 * 
+	 * @var String
+	 */
+	private $file;
+	
+	/**
+	 * The paths that is possible find one verb
+	 * 
+	 * @var array An array of strings
+	 */
+	private $verbPaths = array();
+	
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getAccess()
+     */
+    public function getAccess(){
+        return $this->access;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getAccessName()
+     */
+    public function getAccessName(){
+        switch ( $this->getAccess() ) {
+            case self::PUBLIC_ACCESS :
+                return "public";
+            case self::INTERNAL_ACCESS :
+                return "internal";
+            case self::PRIVATE_ACCESS :
+                return "private";
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#setAccess()
+     */
+    public function setAccess( $access = Circuit::PUBLIC_ACCESS ) {
+        $this->access = $access; 
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#setAccessByString()
+     */
+    public function setAccessByName( $accessName = "public" ) {
+        if( $accessName == "" ){
+            $accessName = "public";
+        }
+            
+        $accessList = array(
+            "public" => self::PUBLIC_ACCESS,
+            "internal" => self::INTERNAL_ACCESS
+        );
+        $this->setAccess( $accessList[ $accessName ] );
+    }
+	
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getApplication()
+     */
+    public function getApplication() {
+        return $this->application;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#setApplication()
+     */
+    public function setApplication( Application &$application ) {
+        $this->application = &$application;
+    }
 	
 	/**
 	 * (non-PHPdoc)
@@ -102,6 +193,87 @@ abstract class AbstractCircuit implements Circuit {
 	 */
     public function setPath( $path ) {
     	$this->path = $path;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getCompletePath()
+     */
+    public function getCompletePath() {
+        return $this->getApplication()->getPath() . $this->getPath();
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getCompleteCacheFile()
+     */
+    public function getCompleteCacheFile() {
+        return $this->getApplication()->getParsedPath() . $this->getName() . 
+            ".circuit.myfuses.php";
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getCompleteFile()
+     */
+    public function getCompleteFile() {
+        return $this->getCompletePath() . $this->getFile();
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getFile()
+     */
+    public function getFile() {
+        return $this->file;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#setFile()
+     */
+    public function setFile( $file ) {
+        $this->file = $file;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getVerbPaths()
+     */
+    public function getVerbPaths() {
+        return $this->verbPaths;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getVerbPath()
+     */
+    public function getVerbPath( $name ) {
+        return $this->verbPaths[ $name ];
+    }
+    
+    /**
+     * TODO I think this method is for the old store/restore way. With the ... 
+     * serialization don't need to do that.
+     * (non-PHPdoc)
+     * @see core/Circuit#setVerbPaths()
+     */
+    public function setVerbPaths( $verbPaths ) {
+        $verbPaths = unserialize( $verbPaths );
+        foreach( $verbPaths as $key => $path ) {
+            $verbPaths[ $key ] = preg_replace_callback( 
+                '@{([\$?\w+][\:\:\w+\(\)]*[->\w+\(\)]*)}@', 
+                array( $this, 'evalExpression' ), $path );
+        }
+        $this->verbPaths = $verbPaths;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#verbPathExists()
+     */
+    public function verbPathExists( $verbPath ) {
+        return isset( $this->verbPaths[ $verbPath ] );
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
