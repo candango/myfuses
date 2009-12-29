@@ -70,6 +70,7 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
             "circuits" => "assemblyCircuitReferences", 
             "classes" => "assemblyClasses",
             "parameters" => "assemblyParameters",
+            "globalfuseactions" => "assemblyGlobalFuseActions",
             "plugins" => "assemblyPlugins"
         );
         
@@ -206,6 +207,55 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
         if( isset( $applicationParameters[ $name ] ) ) {
             $application->$applicationParameters[ $name ]( $value );
         }
+    }
+    
+    /**
+     * Build global fuseaction
+     *
+     * @param $application
+     * @param $data
+     */
+    protected function assemblyGlobalFuseActions( Application $application, 
+        $data ) {
+        
+        $globalActionMethods = array(
+            "preprocess" => "getPreProcessFuseAction",
+            "postprocess" => "getPostProcessFuseAction"
+        );   
+        
+        $circuit = new BasicCircuit();
+        
+        $circuit->setName( "MYFUSES_GLOBAL_CIRCUIT" );
+        
+        $circuit->setPath( $application->getPath() );
+        
+        $circuit->setAccess( Circuit::INTERNAL_ACCESS );
+        
+        $application->addCircuit( $circuit );
+        
+        /*if( count( $data[ 'children' ] ) > 0 ) {
+            foreach( $data[ 'children' ] as $child ) {    
+                $action = new FuseAction( $circuit );
+                
+                $action->setName( str_replace( "get", "", 
+                    $globalActionMethods[ $child[ 'name' ] ] ) );
+                    
+                if( isset( $child[ 'children' ] ) ) {
+                    if( count( $child[ 'children' ] ) ) {
+                        foreach( $child[ 'children' ] as $actionChild ) {
+                            self::buildVerb( $action, $actionChild );
+                        }
+                    }
+                }
+                
+                $circuit->addAction( $action );
+            }
+        }
+        
+        if( isset( $globalActionMethods[ $action->getName() ] ) ) {
+            $circuit->getApplication()->$globalActionMethods[ 
+                $action->getName() ]( $action );
+        }*/
     }
     
     /**
