@@ -67,6 +67,30 @@ require_once MYFUSES_ROOT_PATH . "core/BasicCircuit.class.php";
 interface Circuit {
     
     /**
+     * Public Access Constant.<br>
+     * Value 1
+     * 
+     * @var int
+     */
+    const PUBLIC_ACCESS = 1;
+    
+    /**
+     * Internal Access Constant.<br>
+     * Value 2
+     * 
+     * @var int
+     */
+    const INTERNAL_ACCESS = 2;
+    
+    /**
+     * Private Access Constant.<br>
+     * Value 3
+     * 
+     * @var int
+     */
+    const PRIVATE_ACCESS = 3;
+    
+    /**
      * Returns the circuit name
      * 
      * @return string
