@@ -99,33 +99,28 @@ interface CircuitAction extends Action {
     public function setDefault( $default );
     
     /**
-     * Enter description here...
+     * Add one verb into circuit action
      *
      * @param Verb $verb
      */
     public function addVerb( Verb $verb );
     
     /**
-     * Enter description here...
+     * Return all verbs registered in the circuit action
      *
-     * @param string $name
-     */
-    public function getVerb( $name );
-    
-    /**
-     * Enter description here...
-     *
+     * @return array An array of Verb
      */
     public function &getVerbs();
     
     /**
-     * Enter description here...
-     *
+     * Return all XFA's registred in the circuit action
+     * 
+     * @return array An array of string
      */
-    public function getXFAs();
+    public function getXfas();
     
     /**
-     * Enter description here...
+     * Add one xfa into circui action
      *
      * @param string $name
      * @param string $value
@@ -133,16 +128,18 @@ interface CircuitAction extends Action {
     public function addXFA( $name, $value );
     
     /**
-     * 
+     * TODO Check if this method is necessary
      */
     public function wasCalledByDo();
     
     /**
-     * 
+     * TODO Check if this method is necessary
      */
     public function setCalledByDo( $calledByDo );
     
-    
+    /**
+     * TODO Check if this method is necessary
+     */
     public function getErrorParams();
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
