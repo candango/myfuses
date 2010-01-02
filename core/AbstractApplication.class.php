@@ -994,12 +994,24 @@ abstract class AbstractApplication implements Application {
      */
     public function getDependencies() {
         $out = "<?php\n";
+        
+        $pluginsOut = "";
+        
         foreach( $this->plugins as $phaseName => $phase ) {
             foreach( $phase as $plugin ) {
-                $out .= "require_once '" . $plugin->getPath() . 
+                $pluginsOut .= "require_once '" . $plugin->getPath() . 
                     $plugin->getFile() . "';\n";
             }
         }
+        
+        if( $pluginsOut != "" ) {
+            if( $this->isParsedWithComments() ) {
+                $out .= "/* Plugins Dependencies*/\n";    
+            }
+        }
+        
+        $out .= $pluginsOut;
+        
         return $out;
     }
 }
