@@ -128,6 +128,14 @@ interface CircuitAction extends Action {
     public function addXFA( $name, $value );
     
     /**
+     * Return one xfa by a given name
+     * 
+     * @param $name
+     * @return string
+     */
+    public function getXfa( $name );
+    
+    /**
      * TODO Check if this method is necessary
      */
     public function wasCalledByDo();
