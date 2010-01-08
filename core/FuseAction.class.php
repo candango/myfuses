@@ -38,8 +38,8 @@
  * @version    SVN: $Id$
  */
 
-require_once "myfuses/core/AbstractAction.class.php";
-require_once "myfuses/core/CircuitAction.class.php";
+require_once MYFUSES_ROOT_PATH . "core/AbstractAction.class.php";
+require_once MYFUSES_ROOT_PATH . "core/CircuitAction.class.php";
 
 /**
  * FuseAction  - FuseAction.class.php
@@ -111,10 +111,41 @@ class FuseAction extends AbstractAction implements CircuitAction {
     
     /**
      * (non-PHPdoc)
+     * @see core/CircuitAction#isDefault()
+     */
+    public function isDefault() {
+        return $this->default;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/CircuitAction#setDefault()
+     */
+    public function setDefault( $default ) {
+        if( is_null( $default ) ) {
+            $this->default = false;
+        }
+        else {
+            if( is_bool( $this->default ) ) {
+                $this->default = $default;
+            }
+            else {
+                if( strtolower( $this->default ) == 'true' ) {
+                    $this->default = true;
+                }
+                else {
+                    $this->default = false;
+                }
+            }
+        }
+    }
+    
+    /**
+     * (non-PHPdoc)
      * @see core/CircuitAction#getCircuit()
      */
     public function &getCircuit() {
-        $circuit = $this->circtuit;
+        $circuit = $this->circuit;
         
         MyFusesLifecycle::checkCircuit( $circuit );
         
@@ -126,7 +157,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
      * @see core/CircuitAction#setCircuit()
      */
     public function setCircuit( Circuit &$circuit ) {
-        $this->circtuit = &$circuit;
+        $this->circuit = &$circuit;
     }
     
     /**
@@ -195,6 +226,14 @@ class FuseAction extends AbstractAction implements CircuitAction {
         // FIXME CircuitAction must have a name
         $params[ 'actionName' ] = $this->getName();
         return $params;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Action#doAction()
+     */
+    public function doAction() {
+    
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

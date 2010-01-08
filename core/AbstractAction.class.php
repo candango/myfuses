@@ -37,7 +37,8 @@
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
-require_once "myfuses/core/Action.class.php";
+
+require_once MYFUSES_ROOT_PATH . "core/Action.class.php";
 
 /**
  * AbstractAction  - AbstractAction.class.php

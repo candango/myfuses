@@ -38,9 +38,7 @@
  * @version    SVN: $Id$
  */
 
-require_once "myfuses/core/Action.class.php";
-require_once "myfuses/core/Circuit.class.php";
-require_once "myfuses/core/Verb.class.php";
+require_once MYFUSES_ROOT_PATH . "core/Action.class.php";
 
 /**
  * CircuitAction  - CircuitAction.class.php

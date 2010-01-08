@@ -52,6 +52,7 @@ require_once MYFUSES_ROOT_PATH . "core/Application.class.php";
 require_once MYFUSES_ROOT_PATH . "core/Circuit.class.php";
 require_once MYFUSES_ROOT_PATH . "core/CircuitReference.class.php";
 require_once MYFUSES_ROOT_PATH . "core/ClassDefinition.class.php";
+require_once MYFUSES_ROOT_PATH . "core/FuseAction.class.php";
 require_once MYFUSES_ROOT_PATH . "core/Plugin.class.php";
 
 // Including engine parts

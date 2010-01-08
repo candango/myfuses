@@ -39,8 +39,6 @@
  * @version    SVN: $Id$
  */
 
-require_once "myfuses/core/IParseable.class.php";
-
 /**
  * Action - Action.class.php
  * 
