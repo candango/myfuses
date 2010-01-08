@@ -233,7 +233,7 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
         
         $application->addCircuit( $circuit );
         
-        /*if( count( $data[ 'children' ] ) > 0 ) {
+        if( count( $data[ 'children' ] ) > 0 ) {
             foreach( $data[ 'children' ] as $child ) {    
                 $action = new FuseAction( $circuit );
                 
@@ -247,15 +247,14 @@ abstract class MyFusesAbstractAssembler implements MyFusesAssembler {
                         }
                     }
                 }
-                
-                $circuit->addAction( $action );
+                $circuit->addFuseaction( $action );
             }
         }
         
         if( isset( $globalActionMethods[ $action->getName() ] ) ) {
             $circuit->getApplication()->$globalActionMethods[ 
                 $action->getName() ]( $action );
-        }*/
+        }
     }
     
     /**
