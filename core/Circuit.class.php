@@ -227,7 +227,36 @@ interface Circuit {
      */
     public function verbPathExists( $verbPath );
     
+    /**
+     * Add one circuit fuseaction to circuit
+     * 
+     * @param Action $action
+     */
+    public function addFuseaction( CircuitAction $action );
     
+    /**
+     * Return one circuit fuseaction by his given name
+     *
+     * @param string $name
+     * @return CircuitAction
+     */
+    public function getFuseaction( $name );
+    
+    /**
+     * Returns if the circuit has one fuseaction registered with the same
+     * given name.
+     * 
+     * @param $name
+     * @return boolean
+     */
+    public function hasFuseaction( $name );
+    
+    /**
+     * Return all fuseactions registered in the application
+     * 
+     * @return array An array of circuit actions
+     */
+    public function getFuseactions();
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -100,6 +100,13 @@ abstract class AbstractCircuit implements Circuit {
 	 */
 	private $verbPaths = array();
 	
+	/**
+	 * The circuit's circuitactions collection
+	 * 
+	 * @var array An array of fuseactions
+	 */
+	private $fuseactions = array();
+	
     /**
      * (non-PHPdoc)
      * @see core/Circuit#getAccess()
@@ -274,6 +281,46 @@ abstract class AbstractCircuit implements Circuit {
      */
     public function verbPathExists( $verbPath ) {
         return isset( $this->verbPaths[ $verbPath ] );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#addFuseaction()
+     */
+    public function addFuseaction( CircuitAction $action ) {
+         $this->fuseactions[ $action->getName() ] = $action;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getFuseaction()
+     */
+    public function getFuseaction( $name ) {
+        if( isset( $this->fuseactions[ $name ] ) ) {
+            return $this->fuseactions[ $name ];
+        }
+        
+        $params = array( "actionName" => $name, "circuit" => &$this , 
+            "application" => $this->getApplication() );
+        throw new MyFusesActionException( $params, 
+            MyFusesActionException::NON_EXISTENT_FUSEACTION );
+        
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#hasFuseaction()
+     */
+    public function hasFuseaction( $name ) {
+       return isset( $this->fuseactions[ $name ] ); 
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getFuseactions()
+     */
+    public function getFuseactions() {
+        return $this->fuseactions;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
