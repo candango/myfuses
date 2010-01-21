@@ -25,6 +25,7 @@
 <!ATTLIST fuseaction
 	name CDATA #REQUIRED
 	permissions CDATA #IMPLIED
+	default (true | false | yes | no) "false"
 	class CDATA #IMPLIED
 	access (internal | public | private) #IMPLIED
 >
