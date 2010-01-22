@@ -65,6 +65,13 @@ class IncludeVerb extends ParameterizedVerb {
     private $file;
     
     /**
+     * The circuit name
+     * 
+     * @var string
+     */
+    private $circuitName;
+    
+    /**
      * Return the verb file
      *
      * @return string
@@ -82,6 +89,24 @@ class IncludeVerb extends ParameterizedVerb {
         $this->file = $file;
     }
     
+    /**
+     * Return the circuit name
+     *
+     * @return string
+     */
+    public function getCircuitName() {
+        return $this->circuitName;
+    }
+    
+    /**
+     * Set the circuit circuitName
+     *
+     * @param string $circuitName
+     */
+    public function setCircuitName( $circuitName ) {
+        $this->circuitName = $circuitName;
+    }
+    
     public function getData() {
         $data = parent::getData();
         $data[ "attributes" ][ "file" ] = $this->getFile();
@@ -89,6 +114,7 @@ class IncludeVerb extends ParameterizedVerb {
     }
     
     public function setData( $data ) {
+        
         parent::setData( $data );
         $file = "";
         if( isset( $data[ "attributes" ][ "file" ] ) ) {
@@ -99,7 +125,23 @@ class IncludeVerb extends ParameterizedVerb {
             $file = $data[ "attributes" ][ "template" ];
         }
         
+        // TODO check if the file name have the php extension 
+        $fileX = explode( ".", $file );
+        
+        
+        if( $fileX[ count($fileX) - 1 ] ) {
+            $file .= ".php";
+        }
+        
         $this->setFile( $file );
+        
+        $circuitName = "";
+        if( isset( $data[ "attributes" ][ "circuit" ] ) ) {
+            $circuitName = $data[ "attributes" ][ "circuit" ];
+        }
+        
+        $this->setCircuitName( $circuitName );
+        
     }
     
 	/**
@@ -110,7 +152,14 @@ class IncludeVerb extends ParameterizedVerb {
     public function getRealParsedCode( $commented, $identLevel ) {
         $appName = $this->getAction()->getCircuit()->
             getApplication()->getName();
-        $circuitName = $this->getAction()->getCircuit()->getName();
+            
+        if( $this->getCircuitName() != "" ) {
+            $circuitName = $this->getCircuitName();    
+        }
+        else {
+            $circuitName = $this->getAction()->getCircuit()->getName();
+        }
+        
         
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
