@@ -88,6 +88,13 @@ class BasicCircuit implements Circuit {
     private $access;
     
     /**
+     * Circuit permissions paramter
+     * 
+     * @var string
+     */
+    private $permissions = "";
+    
+    /**
      * Cicuit actions
      *
      * @var array
@@ -314,6 +321,22 @@ class BasicCircuit implements Circuit {
             "internal" => self::INTERNAL_ACCESS
         );
         $this->setAccess( $accessList[ $accessString ] );
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getPermissions()
+     */
+    public function getPermissions() {
+        return $this->permissions;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#setPermissions()
+     */
+    public function setPermissions( $permissions ) {
+        $this->permissions = $permissions;
     }
     
     /**
@@ -602,6 +625,8 @@ class BasicCircuit implements Circuit {
         $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
             serialize( $this->getVerbPaths() ) ) . "\" );\n";
         $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
+        $strOut .= "\$circuit->setPermissions( " . $this->getPermissions() . 
+            " );\n";
         $strOut .= "\$circuit->setLastLoadTime( " . 
             $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 

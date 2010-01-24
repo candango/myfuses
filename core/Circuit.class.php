@@ -195,6 +195,20 @@ interface Circuit extends ICacheable {
     public function setAccessByString( $accessString = "public" );
     
     /**
+     * Return the pemissions parameter
+     * 
+     * @return string
+     */
+    public function getPermissions();
+    
+    /**
+     * Set the circuit permissions parameter
+     * 
+     * @param $permissions
+     */
+    public function setPermissions( $permissions );
+    
+    /**
      * Add one action to circuit
      * 
      * @param Action $action
