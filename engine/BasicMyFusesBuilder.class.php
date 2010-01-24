@@ -143,12 +143,15 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         
         $circuitParameterAttributes = array(
             "access" => "access",
+            "permissions" => "permissions",
             "file" => "file"
         );
         
         $access = "";
         
         $file = "";
+        
+        $permissions = "";
         
         if( isset( $data[ 'attributes' ] ) ) {
             foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
@@ -163,6 +166,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         $circuit->setFile( $file );
         
         $circuit->setAccessByString( $access );
+        
+        $circuit->setPermissions( $permissions );
         
         if( isset( $data['docNamespaces'] ) ) {
             $circuit->setVerbPaths( serialize( $data['docNamespaces'] ) );

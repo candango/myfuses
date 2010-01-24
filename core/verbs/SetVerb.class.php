@@ -59,6 +59,8 @@ class SetVerb extends AbstractVerb {
     
     private $value;
     
+    private $evaluate = false;
+    
     public function getVariableName() {
         return $this->variableName;
     }
@@ -75,11 +77,23 @@ class SetVerb extends AbstractVerb {
         $this->value = $value;
     }
     
+    public function isEvaluate() {
+        return $this->evaluate;
+    }
+    
+    public function setEvaluate( $evaluate ) {
+        $this->evaluate = $evaluate;
+    } 
+    
     public function getData() {
         $data = parent::getData();
         
         if( !is_null( $this->getVariableName() ) ){
             $data[ "attributes" ][ "name" ] = $this->getVariableName();    
+        }
+        
+        if( $this->isEvaluate() ){
+            $data[ "attributes" ][ "evaluate" ] = "true";
         }
         
         $data[ "attributes" ][ "value" ] = $this->getValue();
@@ -94,6 +108,12 @@ class SetVerb extends AbstractVerb {
             $this->setVariableName( $data[ "attributes" ][ "name" ] );    
         }
         
+        if( isset( $data[ "attributes" ][ "evaluate" ] ) ) {
+            if( $data[ "attributes" ][ "evaluate" ] == 'true' ) {
+                $this->setVariableName( true );    
+            }
+        }
+        
         $this->setValue( $data[ "attributes" ][ "value" ] );
     }
 
@@ -105,13 +125,23 @@ class SetVerb extends AbstractVerb {
     public function getParsedCode( $commented, $identLevel ) {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         $strOut .= str_repeat( "\t", $identLevel );
+        
+        // resolving evaluate parameter
+        $value = "";
+        if( $this->isEvaluate() ) {
+            $value = "#" . $this->getValue() . "#";
+        }
+        else {
+            $value = $this->getValue();
+        }
+        
         if( is_null( $this->getVariableName() ) ) {
             $strOut .= MyFusesContext::sanitizeHashedString( "\"" . 
-                $this->getValue() . "\"" ) . ";\n";
+                $value . "\"" ) . ";\n";
         }
         else{
             $strOut .= self::getVariableSetString( $this->getVariableName(), 
-                $this->getValue() );    
+                $value );    
         }
         
         return $strOut; 
