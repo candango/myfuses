@@ -625,8 +625,8 @@ class BasicCircuit implements Circuit {
         $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
             serialize( $this->getVerbPaths() ) ) . "\" );\n";
         $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
-        $strOut .= "\$circuit->setPermissions( " . $this->getPermissions() . 
-            " );\n";
+        $strOut .= "\$circuit->setPermissions( \"" . $this->getPermissions() . 
+            "\" );\n";
         $strOut .= "\$circuit->setLastLoadTime( " . 
             $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 
