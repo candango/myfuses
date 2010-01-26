@@ -72,6 +72,13 @@ class IncludeVerb extends ParameterizedVerb {
     private $circuitName;
     
     /**
+     * The include content variable
+     * 
+     * @var string
+     */
+    private $contentVariable;
+    
+    /**
      * Return the verb file
      *
      * @return string
@@ -107,14 +114,37 @@ class IncludeVerb extends ParameterizedVerb {
         $this->circuitName = $circuitName;
     }
     
+    /**
+     * Return the content variable
+     *
+     * @return string
+     */
+    public function getContentVariable() {
+        return $this->contentVariable;
+    }
+    
+    /**
+     * Set the content variable
+     *
+     * @param string $contentVariable
+     */
+    public function setContentVariable( $contentVariable ) {
+        $this->contentVariable = $contentVariable;
+    }
+    
     public function getData() {
         $data = parent::getData();
         $data[ "attributes" ][ "file" ] = $this->getFile();
+        
+        if( !is_null( $this->getContentVariable() ) ) {
+            $data[ "attributes" ][ "contentvariable" ] = 
+                $this->getContentVariable();
+        }
+        
         return $data;
     }
     
     public function setData( $data ) {
-        
         parent::setData( $data );
         $file = "";
         if( isset( $data[ "attributes" ][ "file" ] ) ) {
@@ -123,6 +153,11 @@ class IncludeVerb extends ParameterizedVerb {
         
         if( isset( $data[ "attributes" ][ "template" ] ) ) {
             $file = $data[ "attributes" ][ "template" ];
+        }
+        
+        if( isset( $data[ "attributes" ][ "contentvariable" ] ) ) {
+            $this->setContentVariable( 
+                $data[ "attributes" ][ "contentvariable" ] );
         }
         
         // TODO check if the file name have the php extension 
@@ -171,7 +206,8 @@ class IncludeVerb extends ParameterizedVerb {
         $strOut = str_repeat( "\t", $identLevel );
         
         $strOut .= $this->getIncludeFileString( $fileCall . "." . 
-            " DIRECTORY_SEPARATOR . \"" . $this->getFile() . "\"" );
+            " DIRECTORY_SEPARATOR . \"" . $this->getFile() . "\"", 
+            $this->getContentVariable() );
         
         return $strOut;
     }
