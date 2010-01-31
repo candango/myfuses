@@ -195,5 +195,27 @@ class MyFusesFileHandler {
         return $fileCode;
     }
     
+    /**
+     * Validate one file and check if has the given extension
+     * 
+     * @param $file
+     * @param $extension
+     * @return boolean
+     */
+    public static function hasExtension( $file, $extension ) {
+        // TODO check if the file name have the php extension 
+        $fileX = explode( ".", $file );
+        
+        if( count($fileX) < 1 ) {
+            return false;
+        }
+        
+        if( $fileX[ count($fileX) - 1 ] != $extension ) {
+            return false;
+        }
+        
+        return true;
+    }
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

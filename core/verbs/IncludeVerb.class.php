@@ -160,11 +160,7 @@ class IncludeVerb extends ParameterizedVerb {
                 $data[ "attributes" ][ "contentvariable" ] );
         }
         
-        // TODO check if the file name have the php extension 
-        $fileX = explode( ".", $file );
-        
-        
-        if( $fileX[ count($fileX) - 1 ] ) {
+        if( !MyFusesFileHandler::hasExtension( $file, "php" ) ) {
             $file .= ".php";
         }
         
