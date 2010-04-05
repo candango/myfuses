@@ -171,10 +171,16 @@ class IfVerb extends AbstractVerb {
 	    
 	    $trueOccour = false;
 	    
+	    $strCondition = str_replace( array( "OR", "oR", "Or", "or"  ), "||",  
+	        $this->getCondition() );
+	    
+	    $strCondition = str_replace( array( "AND", "AnD", "ANd", "aND", "anD", "aNd", "and"  ), "&&",  
+            $this->getCondition() );
+	    
 	    if( count( $this->trueVerbs ) ) {
 	        $strOut .= str_repeat( "\t", $identLevel );
 	        
-	        $strOut .= "if( " . $this->getCondition() . " ) {\n";
+	        $strOut .= "if( " . $strCondition . " ) {\n";
 		    
 		    foreach(  $this->trueVerbs as $verb ) {
 		        $strOut .= $verb->getParsedCode( $commented, $identLevel + 1 );
