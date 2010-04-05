@@ -86,6 +86,13 @@ class FuseAction extends AbstractAction implements CircuitAction {
      * @var boolean
      */
     private $default = false;
+
+    /**
+     * FuseAction permissions paramter
+     * 
+     * @var string
+     */
+    private $permissions = "";
     
     /**
      * Call prefuseaction flag
@@ -413,6 +420,22 @@ class FuseAction extends AbstractAction implements CircuitAction {
                 }
             }
         }
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#getPermissions()
+     */
+    public function getPermissions() {
+        return $this->permissions;
+    }
+    
+    /**
+     * (non-PHPdoc)
+     * @see core/Circuit#setPermissions()
+     */
+    public function setPermissions( $permissions ) {
+        $this->permissions = $permissions;
     }
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

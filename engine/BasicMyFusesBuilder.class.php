@@ -218,7 +218,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             "name" => "name",
             "class" => "class",
             "path" => "path",
-            "default" => "default"
+            "default" => "default",
+            "permissions" => "permissions"
         );
         
         $parameterAttributes = array(
@@ -232,6 +233,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         $path = null;
         
         $default = null;
+        
+        $permissions = "";
         
         $customAttribute = array();
         
@@ -275,6 +278,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         $action->setName( $name );
         
         $action->setDefault( $default );
+        
+        $action->setPermissions( $permissions );
         
         $circuit->addAction( $action );
         

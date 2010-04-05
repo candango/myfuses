@@ -99,6 +99,20 @@ interface CircuitAction extends Action {
     public function setDefault( $default );
     
     /**
+     * Return the pemissions parameter
+     * 
+     * @return string
+     */
+    public function getPermissions();
+    
+    /**
+     * Set the circuit action permissions parameter
+     * 
+     * @param $permissions
+     */
+    public function setPermissions( $permissions );
+    
+    /**
      * Enter description here...
      *
      * @param Verb $verb
