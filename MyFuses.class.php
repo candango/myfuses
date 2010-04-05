@@ -592,7 +592,7 @@ class MyFuses {
             }
         }
         
-        foreach( $application->getCircits() as $circuit ) {
+        foreach( $application->getCircuits() as $circuit ) {
             if( $circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT" ) {
                 if( $circuit->isLoaded() ) {
                       
