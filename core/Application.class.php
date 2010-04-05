@@ -262,7 +262,7 @@ interface Application extends ICacheable {
      * @return array
      * @access public
      */
-    public function getCircits();
+    public function getCircuits();
 
     /**
      * Set the applciation circuits

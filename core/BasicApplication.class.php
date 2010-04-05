@@ -671,7 +671,7 @@ class BasicApplication implements Application {
      * @return array
      * @access public
      */
-    public function getCircits() {
+    public function getCircuits() {
     	return $this->circuits;
     }
 
