@@ -90,9 +90,6 @@ class MyFusesJsonUtil {
         }
         
         if ( is_array( $data ) ) { // objects will also fall here
-            if( !isset( $data[ 'data_type' ] ) ){
-                $data[ 'data_type' ] =  "array";
-            }
             foreach ( $data as &$item ) {
                 $item = self::jsonPrepare( $item );
             }
