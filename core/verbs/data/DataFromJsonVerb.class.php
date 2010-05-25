@@ -120,9 +120,13 @@ class DataFromJsonVerb extends AbstractVerb {
             }
         }
         else {
-            $strValue = "MyFusesJsonUtil::fromJson( \"" . 
-                $this->getValue() . "\" )" ;
+        	$strOut .= "\$value = MyFusesJsonUtil::fromJson( \"" . 
+                $this->getValue() . "\" );\n";
+        	
+            $strValue = "#\$value#" ;
         }
+        
+        $strOut .= str_repeat( "\t", $identLevel );
         
         $strOut .= self::getVariableSetString( $this->getVarName(), 
             $strValue );
