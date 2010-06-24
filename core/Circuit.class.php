@@ -2,14 +2,8 @@
 /**
  * Circuit - Circuit.class.php
  * 
- * MyFuses framework organize one application in circuits. All functionality and
- * logic is stored in circuits as Fuseactions. Normaly one circuit will 
- * represent one business entity of the application. Circuits can be called as
- * one application module, why not?
- * In this file is difined the basic circuits infrastructure with Circuit 
- * interface. The AbstactCircuit class implements the basic features demanded by
- * Circuit and the BasicCircuit is the implementable class.
- *  
+ * MyFuses Circuit interface
+ * 
  * PHP version 5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -28,43 +22,39 @@
  * The Original Code is MyFuses "a Candango implementation of Fusebox 
  * Corporation Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flavio Gonçalves Garcia are Copyright (C) 2006 - 2006.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flavio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
- * @link       http://www.candango.org/myfuses
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: ClassDefinition.class.php 379 2008-04-14 03:04:45Z flavio.garcia $
+ * @version    SVN: $Id:Circuit.class.php 23 2007-01-04 13:26:33Z piraz $
  */
-require_once MYFUSES_ROOT_PATH . "core/AbstractCircuit.class.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicCircuit.class.php";
+
+require_once "myfuses/core/Application.class.php";
+require_once "myfuses/core/CircuitAction.class.php";
 
 /**
- * MyFuses framework organize one application in circuits. All functionality and
- * logic is stored in circuits as Fuseactions. Normaly one circuit will 
- * represent one business entity of the application. Circuits can be called as
- * one application module. Why not?
- * In this file is difined the basic circuits infrastructure with Circuit 
- * interface. The AbstactCircuit class implements the basic features demanded by
- * Circuit and the BasicCircuit is the implementable class.
+ * Circuit - Circuit.class.php
+ * 
+ * MyFuses Circuit interface
  * 
  * PHP version 5
- *
+ * 
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
  * @since      Revision 48
  */
-interface Circuit {
+interface Circuit extends ICacheable {
     
     /**
      * Public Access Constant.<br>
@@ -84,46 +74,18 @@ interface Circuit {
     
     /**
      * Private Access Constant.<br>
-     * Value 3
+     * Value 2
      * 
      * @var int
      */
     const PRIVATE_ACCESS = 3;
     
     /**
-     * Return the circuit access
-     *
-     * @return integer
-     */
-    public function getAccess();
-    
-    /**
-     * Return circuit access name
-     *
-     * @return string
-     */
-    public function getAccessName();
-    
-    /**
-     * Set the circuit access
-     *
-     * @param integer $access
-     */
-    public function setAccess( $access = Circuit::PUBLIC_ACCESS );
-    
-    /**
-     * Set the circuit access using a string
-     *
-     * @param string $access
-     */
-    public function setAccessByName( $accessName = "public" );
-    
-    /**
      * Return circuit application
      *
      * @return Application
      */
-    public function getApplication();
+    public function &getApplication();
     
     /**
      * Set circuit application
@@ -133,34 +95,27 @@ interface Circuit {
     public function setApplication( Application &$application );
     
     /**
-     * Returns the circuit name
-     * 
+     * Return the circuit name
+     *
      * @return string
      */
-	public function getName();
-	
-	/**
-	 * Sets the circuit name
-	 * 
-	 * @param $name The circuit name to be seted
-	 */
-	public function setName( $name ); 
-	
-	/**
-	 * Returns the circuit path 
-	 * 
-	 * @return string
-	 */
-	public function getPath();
-	
-	/**
-	 * Sets the circuit path
-	 * 
-	 * @param $path The circuit path to be seted
-	 */
-	public function setPath( $path );
-	
-	/**
+    public function getName();
+    
+    /**
+     * Set the circuit name
+     *
+     * @param string $name
+     */
+    public function setName( $name );
+    
+    /**
+     * Return the circuit path
+     *
+     * @return string
+     */
+    public function getPath();
+    
+    /**
      * Return the circuit complete path
      *
      * @return string
@@ -173,29 +128,13 @@ interface Circuit {
      * @return string
      */
     public function getCompleteCacheFile();
-	
-    /**
-     * Return the circuit complete file
-     * 
-     * complete path + file
-     *
-     * @return string
-     */
-    public function getCompleteFile();
     
     /**
-     * Return the circuit file
+     * Set the circuit path
      *
-     * @return string
+     * @param string $path
      */
-    public function getFile();
-    
-    /**
-     * Set the circuit file
-     *
-     * @param string $file
-     */
-    public function setFile( $file );
+    public function setPath( $path );
     
     /**
      * Return circuit verb paths
@@ -228,35 +167,217 @@ interface Circuit {
     public function verbPathExists( $verbPath );
     
     /**
-     * Add one circuit fuseaction to circuit
+     * Return the circuit access
+     *
+     * @return integer
+     */
+    public function getAccess();
+    
+    /**
+     * Return circuit access name
+     *
+     * @return string
+     */
+    public function getAccessName();
+    
+    /**
+     * Set the circuit access
+     *
+     * @param integer $access
+     */
+    public function setAccess( $access = Circuit::PUBLIC_ACCESS );
+    
+	/**
+     * Set the circuit access using a string
+     *
+     * @param string $access
+     */
+    public function setAccessByString( $accessString = "public" );
+    
+    /**
+     * Return the pemissions parameter
+     * 
+     * @return string
+     */
+    public function getPermissions();
+    
+    /**
+     * Set the circuit permissions parameter
+     * 
+     * @param $permissions
+     */
+    public function setPermissions( $permissions );
+    
+    /**
+     * Add one action to circuit
      * 
      * @param Action $action
      */
-    public function addFuseaction( CircuitAction $action );
+    public function addAction( Action $action );
     
     /**
-     * Return one circuit fuseaction by his given name
+     * Return one Circuit by name
      *
      * @param string $name
+     * @return FuseAction
+     * @throws MyFusesActionException
+     */
+    public function getAction( $name );
+    
+    /**
+     * 
+     */
+    public function hasAction( $name );
+    
+    public function getActions();
+    
+    /**
+     * Enter description here...
+     *
      * @return CircuitAction
      */
-    public function getFuseaction( $name );
+    public function getPreFuseAction();
+    
+	/**
+	 * Enter description here...
+	 *
+	 * @param CircuitAction $action
+	 */
+	public function setPreFuseAction( CircuitAction $action );
+    
+	public function unsetPreFuseAction();
+	
+	/**
+	 * Enter description here...
+	 *
+	 * @return CircuitAction
+	 */
+	public function getPostFuseAction();
+    
+	/**
+	 * Enter description here...
+	 *
+	 * @param CircuitAction $action
+	 */
+	public function setPostFuseAction( CircuitAction $action );
+    
+    public function unsetPostFuseAction();
+	
+    /**
+     * Return the circuit complete file
+     * 
+     * complete path + file
+     *
+     * @return string
+     */
+    public function getCompleteFile();
+	
+    /**
+     * Return the circuit file
+     *
+     * @return string
+     */
+    public function getFile();
     
     /**
-     * Returns if the circuit has one fuseaction registered with the same
-     * given name.
+     * Set the circuit file
+     *
+     * @param string $file
+     */
+    public function setFile( $file );
+    
+	/**
+     * Return the application parent name
+     *
+     * @return string
+     * @access public
+     */
+    public function getParentName();
+    
+    /**
+     * Set the applciation parent name.<br>
+     * When parent name is seted the parent reference is seted to null.
      * 
-     * @param $name
+     * @param string $parentName
+     * @access public
+     */
+    public function setParentName( $parentName );
+    
+    /**
+     * Return the application parent
+     * 
+     * @return Circuit
+     * @access public
+     */
+    public function getParent();
+    
+    /**
+     * Set the application parent
+     * 
+     * @param Circuit $parent
+     * @access public
+     */
+    public function setParent( Circuit $parent );
+    
+    /**
+     * Return the circuit last load time
+     *
+     * @return integer
+     * @access public
+     */
+    public function getLastLoadTime();
+    
+    /**
+     * Sets the circuit last load time
+     * 
+     * @param integer $lastLoadTime
+     * @access public
+     */
+    public function setLastLoadTime( $lastLoadTime );
+    
+    public function isModified();
+    
+    public function isLoaded();
+    
+    public function setLoaded( $loaded );
+    
+    public function setModified( $modified );
+    
+    /**
+     * Return if circuit was built
+     *
      * @return boolean
      */
-    public function hasFuseaction( $name );
+    public function wasBuilt();
     
     /**
-     * Return all fuseactions registered in the application
-     * 
-     * @return array An array of circuit actions
+     * Return the circuit cache data
+     *
+     * @return array
      */
-    public function getFuseactions();
+    public function getData();
+    
+    /**
+     * Set circuit cache data
+     *
+     * @param array $data
+     */
+    public function setData( $data );
+    
+    /**
+     * Set circuit built status
+     *
+     * @param boolean $built
+     */
+    public function setBuilt( $built );
+    
+    public function setCustomAttribute( $namespace, $name, $value );
+    
+    public function getCustomAttribute( $namespace, $name );
+    
+    public function getCustomAttributes( $namespace );
+    
+    public function getErrorParams();
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

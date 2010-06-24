@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<expressions>
+    
+    <!-- Expressões de Mês -->
+    
+    <expression name="MONTH_01">Janeiro</expression>
+    <expression name="MONTH_02">Fevereiro</expression>
+    <expression name="MONTH_03">Março</expression>
+    <expression name="MONTH_04">Abril</expression>
+    <expression name="MONTH_05">Maio</expression>
+    <expression name="MONTH_06">Junho</expression>
+    <expression name="MONTH_07">Julho</expression>
+    <expression name="MONTH_08">Agosto</expression>
+    <expression name="MONTH_09">Setembro</expression>
+    <expression name="MONTH_10">Outubro</expression>
+    <expression name="MONTH_11">Novembro</expression>
+    <expression name="MONTH_12">Dezembro</expression>
+    
+    <expression name="DAY_OF_WHEEK_01">Domingo</expression>
+    <expression name="DAY_OF_WHEEK_02">Segunda Feira</expression>
+    <expression name="DAY_OF_WHEEK_03">Terça Feira</expression>
+    <expression name="DAY_OF_WHEEK_04">Quarta Feira</expression>
+    <expression name="DAY_OF_WHEEK_05">Quinta Feira</expression>
+    <expression name="DAY_OF_WHEEK_06">Sexta Feira</expression>
+    <expression name="DAY_OF_WHEEK_07">Sábado</expression>
+    
+</expressions>

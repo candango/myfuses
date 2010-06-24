@@ -1,9 +1,9 @@
 <?php
 /**
- * CircuitAction  - CircuitAction.class.php
+ * AbstractAction  - AbstractAction.class.php
  * 
- * This Action interface defines some circuit methods. This is the base 
- * interface for the Fuseacion class.
+ * This Action interface defines some circuit methods. This is the base interface
+ * for Fuseacion.
  * 
  * PHP version 5
  * 
@@ -23,35 +23,37 @@
  * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
 
-require_once MYFUSES_ROOT_PATH . "core/Action.class.php";
+require_once "myfuses/core/Action.class.php";
+require_once "myfuses/core/Circuit.class.php";
+require_once "myfuses/core/Verb.class.php";
 
 /**
- * CircuitAction  - CircuitAction.class.php
+ * AbstractAction  - AbstractAction.class.php
  * 
- * This Action interface defines some circuit methods. This is the base 
- * interface for the Fuseacion class.
+ * This Action interface defines some circuit methods. This is the base interface
+ * for Fuseacion.
  * 
  * PHP version 5
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
@@ -97,28 +99,47 @@ interface CircuitAction extends Action {
     public function setDefault( $default );
     
     /**
-     * Add one verb into circuit action
+     * Return the pemissions parameter
+     * 
+     * @return string
+     */
+    public function getPermissions();
+    
+    /**
+     * Set the circuit action permissions parameter
+     * 
+     * @param $permissions
+     */
+    public function setPermissions( $permissions );
+    
+    /**
+     * Enter description here...
      *
      * @param Verb $verb
      */
     public function addVerb( Verb $verb );
     
     /**
-     * Return all verbs registered in the circuit action
+     * Enter description here...
      *
-     * @return array An array of Verb
+     * @param string $name
+     */
+    public function getVerb( $name );
+    
+    /**
+     * Enter description here...
+     *
      */
     public function &getVerbs();
     
     /**
-     * Return all XFA's registred in the circuit action
-     * 
-     * @return array An array of string
+     * Enter description here...
+     *
      */
-    public function getXfas();
+    public function getXFAs();
     
     /**
-     * Add one xfa into circui action
+     * Enter description here...
      *
      * @param string $name
      * @param string $value
@@ -126,26 +147,16 @@ interface CircuitAction extends Action {
     public function addXFA( $name, $value );
     
     /**
-     * Return one xfa by a given name
      * 
-     * @param $name
-     * @return string
-     */
-    public function getXfa( $name );
-    
-    /**
-     * TODO Check if this method is necessary
      */
     public function wasCalledByDo();
     
     /**
-     * TODO Check if this method is necessary
+     * 
      */
     public function setCalledByDo( $calledByDo );
     
-    /**
-     * TODO Check if this method is necessary
-     */
+    
     public function getErrorParams();
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

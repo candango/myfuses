@@ -1,10 +1,8 @@
 <?php
 /**
- * MyFuses - MyFuses.class.php
+ * MyFusesLifecycle - MyFusesLifecycle.class.php
  * 
- * This is MyFuses a Candango Opensource Group a implementation of Fusebox 
- * Corporation Fusebox framework. The MyFuses is used as Iflux Framework 
- * Main Controller.
+ * The MyFuses Lifecycle controls all phases of application and request process.
  * 
  * PHP version 5
  * 
@@ -21,43 +19,47 @@
  * This product includes software developed by the Fusebox Corporation 
  * (http://www.fusebox.org/).
  * 
- * The Original Code is myFuses "a Candango implementation of Fusebox Corporation 
+ * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flávio Gonçalves Garcia.
  *
- * @category   controller
- * @package    myfuses
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
+ * @category   process
+ * @package    process
+ * @author     Flávio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: MyFuses.class.php 747 2009-11-28 19:08:29Z flavio.garcia $
+ * @version    SVN: $Id: MyFuses.class.php 405 2008-04-20 02:53:35Z piraz $
  */
 
 /**
- * MyFuses - MyFuses.class.php
+ * MyFusesLifecycle - MyFusesLifecycle.class.php
  * 
- * This is MyFuses a Candango Opensource Group a implementation of Fusebox 
- * Corporation Fusebox framework. The MyFuses is used as Iflux Framework 
- * Main Controller.
+ * The MyFuses Lifecycle controls all phases of application and request process.
  * 
  * PHP version 5
  *
- * @category   controller
- * @package    myfuses
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Open Source Group
+ * @category   process
+ * @package    process
+ * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 747 $
+ * @version    SVN: $Revision: 405 $
  * @since      Revision 17
  */
 abstract class MyFusesLifecycle {
+    
+    const LOAD_PHASE = "load";
+    
+    const BUILD_PHASE = "build";
+    
+    const STORE_PHASE = "store";
     
     /**
      * Process phase constant<br>
@@ -116,110 +118,165 @@ abstract class MyFusesLifecycle {
     const FUSEACTION_EXCEPTION_PHASE = "fuseactionException";
     
     /**
-     * Load myfuses.xml and all circuit.xml's of the given application
-     * 
-     * @param $application
+     * Lifecycle Phase
+     *
+     * @var string
      */
-    public static function loadApplication( Application &$application ) {
-        $loader = new MyFusesXmlLoader();
-        
-        $loader->loadApplication( $application );
-    }
+    private static $phase;
     
     /**
-     * Load all aplication registered in the controller
-     * 
-     * @param $controller
+     * Lifecycle circuit
+     *
+     * @var Circuit
      */
-    public static function loadApplications( MyFuses $controller ) {
-        foreach( $controller->getApplications() as $index => $application ) {
+    private static $circuit;
+    
+    /**
+     * Lifecycle action
+     *
+     * @var CircuitAction
+     */
+    private static $action;
+    
+    public static function configureLocale() {
+        
+        $handler = MyFusesI18nHandler::getInstance();
+        
+        $handler->configure();
+        /*
+        MyFusesI18nHandler::markTimeStamp();
+        
+        MyFusesI18nHandler::setLocale();
+        
+        MyFusesI18nHandler::loadFiles();
+        
+        $locale = MyFuses::getApplication()->getLocale();
+        
+        bindtextdomain( "myfuses", 
+            MyFuses::getApplication()->getParsedPath() . "i18n" );
+        
+        textdomain( "myfuses" );*/
+        
+    }
+    
+    public static function storeLocale() {
+        $handler = MyFusesI18nHandler::getInstance();
+        
+        $handler->storeFiles();
+        
+    }
+    
+    /*public static function configureApplications() {
+        foreach( MyFuses::getInstance()->getApplications() as 
+            $index => $application ) {
             if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                self::loadApplication( $application );	
+                self::configureApplication( $application );
             }
         }
     }
     
-	public static function createRequest( MyFuses $controller ) {
-		$request = new MyFusesRequest();
-		
-	    $request->setApplication( $controller->getApplication() );
-	    
-	    $request->setDefaultFuseaction( $controller->getApplication()->getDefaultFuseaction() );
-	    
-	    $request->setFuseactionVariable( $controller->getApplication()->getFuseactionVariable() );
-	    
-		$router = new MyFusesBasicRequestRouter();
+    public static function configureApplication( Application $application ) {}*/
+    
+    
+    
+    /**
+     * Return the current lifecycle phase
+     *
+     * @return string
+     */
+    public static function getPhase(){
+        return self::$phase;
+    }
+    
+    /**
+     * Set the current lifecycle phase
+     *
+     * @param string $phase
+     */
+    public static function setPhase( $phase ){
+        self::$phase = $phase;
+    }
+    
+    /**
+     * Return the current lifecycle action
+     *
+     * @return CircuitAction
+     */
+    public static function getAction() {
+        return self::$action;
+    }
+    
+    /**
+     * Set the current lifecycle action
+     *
+     * @param CircuitAction $circuit
+     */
+    public static function setAction( CircuitAction $action ) {
+        self::$action = $action;
+    }
+    
+    /**
+     * Load all registered applications 
+     */
+    public static function loadApplications() {
+        foreach( MyFuses::getInstance()->getApplications() as 
+            $key => $application ) {
+             if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                 self::loadApplication( $application );
+             }     
+         } 
+    }
+    
+    /**
+     * Load one application
+     *
+     * @param Application $application
+     */
+    public static function loadApplication( Application $application ) {
+        $application->getLoader()->loadApplication();
+    }
+    
+    /**
+     * Builds all applications registered
+     */
+    public static function buildApplications() {
+        foreach( MyFuses::getInstance()->getApplications() as 
+            $key => $application ) {
+            if( $key != Application::DEFAULT_APPLICATION_NAME ) {
+                BasicMyFusesBuilder::buildApplication( $application );
+             }
+         }
+    }
+    
+    public static function enableTools() {
+        
+        if( MyFuses::getApplication()->isToolsAllowed() ) {
+            $appReference[ 'path' ] = MyFuses::MYFUSES_ROOT_PATH . 
+            "myfuses_tools/";
+            
+            MyFuses::getInstance()->createApplication( "myfuses", 
+                $appReference );
 
-		$router->grab( $request );
-		
-		$router->resolve( $request );
-		
-		$router->release( $request );
-		
-		$controller->setRequest( $request );
-	}
-	
-	public static function executeProcess( MyFuses $controller ) {
-		$application = $controller->getApplication();
-		
-		if( !$application->isStarted() ) {
-			$application->setStarted( true );
-			$application->fireApplicationStart();
-		}
-		
-		$application->firePreProcess();
-		
-		$application->firePostProcess();
-	}
-	
-	/**
-	 * Stores one application in his parsed file
-	 * 
-	 * @param $application
-	 */
-    public static function storeApplication( Application $application ) {
-        $serializedApp = "<?php\nreturn unserialize( '" . 
-           serialize( $application ) . "' );\n\n";
-        
-        MyFusesFileHandler::createPath( $application->getParsedPath() );
-        
-        MyFusesFileHandler::writeFile( $application->getDependenciesFile(), 
-            $application->getDependencies() );
-        
-        MyFusesFileHandler::writeFile( 
-            $application->getParsedApplicationFile(), $serializedApp );
-    }
-	
-    /**
-     * Stores all applications registered in the controller
-     * 
-     * @param $controller
-     */
-    public static function storeApplications( MyFuses $controller ) {
-        foreach( $controller->getApplications() as $index => $application ) {
-            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                self::storeApplication( $application );
-            }
+            self::loadApplication( MyFuses::getApplication( 'myfuses' ) );
+            
+            BasicMyFusesBuilder::buildApplication( 
+                MyFuses::getApplication( 'myfuses' ) );
         }
+        
     }
     
-    /**
-     * Restores application from stored file if exists
-     * 
-     * @param $applicationName
-     * @return Application The stored application
-     */
-    public static function restoreApplication( $applicationName ) {
-    	$applicationFile = MyFusesFileHandler::sanitizePath( 
-           MyFuses::getInstance()->getParsedRootPath() . 
-           $applicationName ) . $applicationName . 
-           MyFuses::getInstance()->getStoredApplicationFileExtension();
-    	
-    	if( file_exists( $applicationFile ) ) {
-    		return include $applicationFile;
-    	}
-    	
-    	return null;
+    public static function checkCircuit( Circuit $circuit ) {
+        if( $circuit->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) { 
+            if( !is_null( $circuit->getApplication()->getController()->
+                getCurrentPhase() ) ) {
+                if( !$circuit->isLoaded() ) {
+                    $circuit->setLoaded( true );
+                    $circuit->setData( $circuit->getApplication()->getLoader()->
+                        loadCircuit( $circuit ) );
+                    BasicMyFusesBuilder::buildCircuit( $circuit );
+                }
+            }
+        }
     }
     
 }

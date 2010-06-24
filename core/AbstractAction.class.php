@@ -23,22 +23,21 @@
  * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
-
-require_once MYFUSES_ROOT_PATH . "core/Action.class.php";
+require_once "myfuses/core/Action.class.php";
 
 /**
  * AbstractAction  - AbstractAction.class.php
@@ -50,8 +49,8 @@ require_once MYFUSES_ROOT_PATH . "core/Action.class.php";
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
@@ -74,33 +73,27 @@ abstract class AbstractAction implements Action {
     protected $customAttributes = array();
     
     /**
-     * (non-PHPdoc)
-     * @see core/Action#getName()
+     * Return the action name
+     *
+     * @return string
      */
     public function getName() {
         return $this->name;
     }
     
     /**
-     * (non-PHPdoc)
-     * @see core/Action#setName()
+     * Set the action name
+     *
+     * @param string $name
      */
     public function setName( $name ) {
         $this->name = $name;
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see core/Action#setCustomAttribute()
-     */
     public function setCustomAttribute( $namespace, $name, $value ) {
         $this->customAttributes[ $namespace ][ $name ] = $value;
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see core/Action#getCustomAttribute()
-     */
     public function getCustomAttribute( $namespace, $name ) {
         if( isset( $this->customAttributes[ $namespace ][ $name ] ) ) {
             return $this->customAttributes[ $namespace ][ $name ];
@@ -108,12 +101,9 @@ abstract class AbstractAction implements Action {
         return null;
     }
     
-    /**
-     * (non-PHPdoc)
-     * @see core/Action#getCustomAttributes()
-     */
     public function getCustomAttributes( $namespace ) {
         return $this->customAttributes[ $namespace ];
     }
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -2,9 +2,8 @@
 /**
  * Application  - Application.class.php
  * 
- * In this file are difined the basic applications infrastructure with 
- * Application interface AbstactApplication that implements the basic features
- * demanded Application and the BasicApplication an AbstractApplication child. 
+ * This is the MyFuses application interface. Defines how an application must
+ * be implemented.
  * 
  * PHP version 5
  * 
@@ -24,24 +23,23 @@
  * The Original Code is MyFuses "a Candango implementation of Fusebox 
  * Corporation Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2006.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flavio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id:Application.class.php 23 2007-01-04 13:26:33Z piraz $
  */
 
-require_once MYFUSES_ROOT_PATH . "core/AbstractApplication.class.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
-
 /**
+ * Application  - Application.class.php
+ * 
  * This is the MyFuses application interface. Defines how an application must
  * be implemented.
  * 
@@ -49,53 +47,56 @@ require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision:23 $
- * @since      Revision 306
+ * @since      Revision 23
  */
-interface Application {
-
+interface Application extends ICacheable {
+    
     /**
-     * Default application name
+     * Default applicatication name
      * 
-     * @var string The application default name
+     * @var string
+     * @static 
+     * @final
      */
     const DEFAULT_APPLICATION_NAME = "default";
     
     /**
-     * The application development mode
-     * 
-     * @var string
+     * Return application locale
+     *
+     * @return string
      */
-    const DEVELOPMENT_MODE = "development";
+    public function getLocale();
     
     /**
-     * The production development mode
-     * 
-     * @var string
+     * Set application locale
+     *
+     * @param string $locale
      */
-    const PRODUCTION_MODE = "production";
+    public function setLocale( $locale );
     
     /**
-     * Returns if the application is default or not
-     * 
+     * Return if the degug is alowed
+     *
      * @return boolean
      */
-    public function isDefault();
+    public function isDebugAllowed();
     
     /**
-     * Set if the application is default or not
-     * 
-     * @param boolean $default
+     * Set application debug flag
+     *
+     * @param boolean $debug
      */
-    public function setDefault( $default );
+    public function setDebug( $debug );
     
     /**
      * Returns the application name
      *
      * @return string
+     * @access public
      */
     public function getName();
     
@@ -103,35 +104,15 @@ interface Application {
      * Sets the application name
      *
      * @param string $name
+     * @access public
      */
     public function setName( $name );
-    
-    /**
-     * Returns the application file
-     *
-     * @return string
-     */
-    public function getFile();
-    
-    /**
-     * Sets the application file
-     *
-     * @param string $path
-     */
-    public function setFile( $file );
-    
-    /**
-     * Return the complete application file path. The concatenation of 
-     * application path and application file
-     * 
-     * @return string
-     */
-    public function getCompleteFile();
     
     /**
      * Returns the application path
      *
      * @return string
+     * @access public
      */
     public function getPath();
     
@@ -139,35 +120,101 @@ interface Application {
      * Sets the application path
      *
      * @param string $path
+     * @access public
      */
     public function setPath( $path );
     
     /**
-     * Return the parsed path.
-     * 
+     * Returns the application parsed path
+     *
      * @return string
+     * @access public
      */
     public function getParsedPath();
     
     /**
-     * Return the parsed application file path
-     * 
-     * @return string
+     * Sets the application parsed path
+     *
+     * @param string $parsedPath
+     * @access public
      */
-    public function getParsedApplicationFile();
+    public function setParsedPath( $parsedPath );
     
     /**
-     * Return the applciation dependencies file with all php files that must be
-     * included before the application parsed file restore.
+     * Return application loader
+     *
+     * @return MyFusesLoader
+     * @access public
+     */
+    public function getLoader();
+    
+    /**
+     * Set the application loader
+     *
+     * @param MyFusesLoader $loader
+     * @access public
+     */
+    public function setLoader( MyFusesLoader $loader );
+    
+    /**
+     * Return application builder
+     *
+     * @return MyFusesBuilder
+     */
+    public function getBuilder();
+    
+    /**
+     * Set application builder
+     *
+     * @param MyFusesBuilder $builder
+     */
+    public function setBuilder( MyFusesBuilder $builder );
+    
+    /**
+     * Return the application file name
      * 
      * @return string
+     * @access public
      */
-    public function getDependenciesFile();
+    public function getFile();
+    
+    /**
+     * Return the complete application file path
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCompleteFile();
+    
+	/**
+     * Return the application cache file name
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCacheFile();
+    
+    /**
+     * Return the complete application file path
+     * 
+     * @return string
+     * @access public
+     */
+    public function getCompleteCacheFile();
+    
+    /**
+     * Set the application file name
+     * 
+     * @param string $file
+     * @access public
+     */
+    public function setFile( $file );
     
     /**
      * Return the application last load time
      *
      * @return integer
+     * @access public
      */
     public function getLastLoadTime();
     
@@ -175,12 +222,10 @@ interface Application {
      * Sets the application last load time
      * 
      * @param integer $lastLoadTime
+     * @access public
      */
     public function setLastLoadTime( $lastLoadTime );
-    
-    #####################
-    // COLLECTION METHODS
-    #####################
+
     /**
      * Add a circuit to application
      *
@@ -217,7 +262,7 @@ interface Application {
      * @return array
      * @access public
      */
-    public function getCircits();
+    public function getCircuits();
 
     /**
      * Set the applciation circuits
@@ -227,158 +272,81 @@ interface Application {
      */
     public function setCircuits( $circuits );
     
+    public function getControllerClass();
+    
     /**
-     * Add one reference to application
+     * Return the application controller
      * 
-     * @param $reference The circuit reference
+     * @return MyFuses
      */
-    public function addReference( CircuitReference $reference );
+    public function getController();
     
     /**
-     * Return all circuit references registered in the application
+     * Set the application Controller
      * 
-     * @return array An array of CircuitReferences
+     * @param MyFuses $myfuses
      */
-    public function getReferences();
+    public function setController( MyFuses &$myFuses );
     
     /**
-     * Return one circuit reference if registered
-     * 
-     * @param $name The name of circuit
-     * @return CircuitReference
-     */
-    public function getReference( $name );
-    
-    /**
-     * Add one class definition to application
-     * 
-     * @param $definition One class definition
-     */
-    public function addClass( ClassDefinition  $definition );
-    
-    /**
-     * Return all class defintions registered in applications
-     * 
-     * @return array An array of ClassDefinitions
-     */
-    public function getClasses();
-    
-    /**
-     * Return one class definition by a given name
-     * 
-     * @param $name
-     * @return ClassDefinition
-     */
-    public function getClass( $name );
-    
-    /**
-     * TODO add index parameter
-     * Add one plugin in a ginven fase
-     * 
-     * @param Plugin $plugin
-     */
-    public function addPlugin( Plugin $plugin );
-    
-    /**
-     * Clear all plugins registered in one phase. If the phase is null all 
-     * phases is cleared.
-     * 
-     * @param string $fase
-     */
-    public function clearPlugins( $phase = null );
-    
-    /**
-     * Return all plugins of a given fase
-     * 
-     * @param string $fase
-     * @return array
-     */
-    public function &getPlugins( $phase );
-    
-    /**
-     * Set all plugins of a given fase
-     * 
-     * @param string $fase
-     * @param array $plugins
-     */
-    public function setPlugins( $phase, $plugins );
-    
-    #########################
-    // END COLLECTION METHODS
-    #########################
-    
-    ##################
-    // PROCESS METHODS
-    ##################
-    /**
-     * Returns if the application is started or not
+     * Returns if the application is default or not
      * 
      * @return boolean
+     * @access public
      */
-    public function isStarted();
+    public function isDefault();
     
     /**
-     * Set if the application is started or not
+     * Set if the application is default or not
      * 
-     * @param boolean $started
+     * @param boolean $value
+     * @access public
      */
-    public function setStarted( $started );
+    public function setDefault( $value );
     
     /**
-     * Returns the time that application started(the first run)
-     * 
-     * @return int
-     */
-    public function getStartTime();
-    
-    /**
-     * Will fire the onApplicationStart event
-     */
-    public function fireApplicationStart();
-    
-    /**
-     * Will fire the onPreProcess event
-     */
-    public function firePreProcess();
-    
-    /**
-     * Will fire the onPostProcess event
-     */
-    public function firePostProcess();
-    ######################
-    // END PROCESS METHODS
-    ######################
-    
-    #################################
-    // METHODS DIFINED IN myfuses.xml
-    #################################
-    /**
-     * Return application locale
-     *
-     * @return string
-     */
-    public function getLocale();
-    
-    /**
-     * Set application locale
-     *
-     * @param string $locale
-     */
-    public function setLocale( $locale );
-    
-    /**
-     * Return if the degug is alowed
+     * Return if the application must be loaded of not
      *
      * @return boolean
      */
-    public function isDebugAllowed();
+    public function mustLoad();
     
     /**
-     * Set application debug flag
+     * Set if the application must be loaded or not
      *
-     * @param boolean $debug
+     * @param boolean $load
      */
-    public function setDebug( $debug );
+    public function setLoad( $load );
+    
+    /**
+     * Returns if the application must be parsed or not
+     * 
+     * @return boolean
+     * @access public
+     */
+    public function mustParse();
+    
+    /**
+     * Set if the application must be parsed or not
+     * 
+     * @param boolean $value
+     * @access public
+     */
+    public function setParse( $parse );
+    
+    /**
+     * Returns if application must be stored
+     *
+     * @return boolean
+     */
+    public function mustStore();
+    
+    /**
+     * Set if application must be stored
+     *
+     * @param boolean $store
+     */
+    public function setStore( $store );
     
     /**
      * Return the fuseaction variable
@@ -396,7 +364,7 @@ interface Application {
      */
     public function setFuseactionVariable( $fuseactionVariable );
     
-    /**
+	/**
      * Return the default fuseaction
      * 
      * @return string
@@ -412,7 +380,7 @@ interface Application {
      */
     public function setDefaultFuseaction( $defaultFuseaction );
     
-    /**
+	/**
      * Return precedence form or url
      * 
      * @return string
@@ -428,7 +396,7 @@ interface Application {
      */
     public function setPrecedenceFormOrUrl( $precedenceFormOrUrl );
     
-    /**
+	/**
      * Return the application mode
      * 
      * @return string
@@ -444,7 +412,7 @@ interface Application {
      */
     public function setMode( $mode );
     
-    /**
+	/**
      * Return the fusebox sctricMode
      * 
      * @return boolean
@@ -504,6 +472,119 @@ interface Application {
      */
     public function setConditionalParse( $conditionalParse );
     
+    public function isLexiconAllowed();
+    
+    public function setLexiconAllowed( $lexiconAllowed );
+    
+    public function isBadGrammarIgnored();
+    
+    public function setBadGrammarIgnored( $badGrammarIgnored );
+
+    public function isAssertionsUsed();
+    
+    public function setAssertionsUsed( $assertionsUsed );
+    
+    public function getScriptLanguage();
+
+    public function setScriptLanguage( $scriptLanguage );
+    
+    
+    public function getScriptFileDelimiter();
+    
+    public function setScriptFileDelimiter( $scriptFileDelimiter );
+    
+    public function getMaskedFileDelimiters();
+    
+    public function setMaskedFileDelimiters( $maskedFileDelimiters );
+    
+    public function getCharacterEncoding();
+    
+    public function setCharacterEncoding( $characterEncoding );
+    
+    public function addClass( ClassDefinition $class );
+    
+    // TODO handle non existent class exception
+    public function getClass( $name );
+    
+    // TODO handle non existent class exception
+    public function deleteClass( $name );
+    
+    public function getClasses();
+    
+    /**
+     * Return the pre process fuse action
+     * 
+     * @return CircuitAction
+     */
+    public function getPreProcessFuseAction();
+    
+    /**
+     * Set the pre process fuse action
+     * 
+     * @param CirctuitAction $action
+     */
+    public function setPreProcessFuseAction( CirctuitAction $action );
+    
+    /**
+     * Return the post process fuse action
+     * 
+     * @return CircuitAction
+     */
+    public function getPostProcessFuseAction();
+    
+    /**
+     * Set the post process fuse action
+     * 
+     * @param CirctuitAction $action
+     */
+    public function postPreProcessFuseAction( CirctuitAction $action );
+    
+    /**
+     * TODO add index parameter
+     * Add one plugin in a ginven fase
+     * 
+     * @param Plugin $plugin
+     * @param string $fase
+     */
+    public function addPlugin( Plugin $plugin );
+    
+    /**
+     * Return all plugins of a given fase
+     * 
+     * @param string $fase
+     * @return array
+     */
+    public function &getPlugins( $phase );
+    
+    /**
+     * Set all plugins of a given fase
+     * 
+     * @param string $fase
+     * @param array $plugins
+     */
+    public function setPlugins( $phase, $plugins );
+    
+    public function setRewrite( $rewrite );
+    
+    public function allowRewrite();
+    
+    /**
+     * Return one plugin of a given fase and index
+     * FIXME Handle non existent plugin error
+     * 
+     * @param string $phase
+     * @param integer $index
+     * @return Plugin
+     */
+    public function getPlugin( $phase, $index );
+    
+    /**
+     * Clear the fase plugins array
+     * 
+     * @param string $fase
+     */
+    public function clearPlugins( $phase = null );
+    
     /**
      * Return if the tools application is allowed
      *
@@ -512,20 +593,62 @@ interface Application {
     public function isToolsAllowed();
     
     /**
+     * Return the application tag
+     *
+     * @return string
+     */
+    public function getTag();
+    
+    /**
      * Set application tools flag
      *
      * @param boolean $tools
      */
     public function setTools( $tools );
-    #####################################
-    // END METHODS DIFINED IN myfuses.xml
-    #####################################
     
     /**
-     * Return one string with all application dependencies includes.
-     * 
-     * @return string
+     * Add one application load listener
+     *
+     * @param MyFusesApplicationLoaderListener $listener
      */
-    public function getDependencies();
+    public function addLoadListener( 
+        MyFusesApplicationLoaderListener $listener );
+    
+    /**
+     * Return all application load listerners
+     *
+     * @return array
+     */
+    public function getLoadListeners();
+    
+    /**
+     * Add one application builder listener
+     *
+     * @param MyFusesApplicationBuilderListener $listener
+     */
+    public function addBuilderListener( 
+        MyFusesApplicationBuilderListener $listener );
+    
+    /**
+     * Return all application builder listerners
+     *
+     * @return array
+     */
+    public function getBuilderListeners();
+    
+    /**
+     * Return application data
+     *
+     * @return array
+     */
+    public function &getData();
+    
+    /**
+     * Set application data
+     *
+     * @param array $data
+     */
+    public function setData( $data );
+    
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */

@@ -2,16 +2,7 @@
 /**
  * Plugin  - Plugin.class.php
  * 
- * Extensible, that's one of the most important myFuses main feature. One way
- * to make the myFuses extensible is work with plugins. You can plug a small
- * logic in the myFuses process using the plugin framework. There are four
- * phases in the process to be plug some logic: preProcess, postProcess, 
- * preFuseaction and postFuseactions. There are two phases to plug error
- * handling: fuseactionException and processErrror.
- * In this file is difined the basic plugin infrastructure with Plugin 
- * interface. The PluginCircuit class implements the basic features demanded by
- * Plugin and all plugins that the developer will extend the process plugin 
- * or exception plugin.
+ * This is MyFuses plugin interface. Defines how one interfece must to be.
  * 
  * PHP version 5
  * 
@@ -31,49 +22,86 @@
  * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: Plugin.class.php 702 2009-04-20 17:49:15Z flavio.garcia $
+ * @version    SVN: $Id$
  */
-
-require_once MYFUSES_ROOT_PATH . "core/ProcessPlugin.class.php";
 
 /**
  * Plugin  - Plugin.class.php
  * 
- * Extensible, that's one of the most important myFuses main feature. One way
- * to make the myFuses extensible is work with plugins. You can plug a small
- * logic in the myFuses process using the plugin framework. There are four
- * phases in the process to be plug some logic: preProcess, postProcess, 
- * preFuseaction and postFuseactions. There are two phases to plug error
- * handling: fuseactionException and processErrror.
- * In this file is difined the basic plugin infrastructure with Plugin 
- * interface. The PluginCircuit class implements the basic features demanded by
- * Plugin and all plugins that the developer will extend the process plugin 
- * or exception plugin.
+ * This is MyFuses plugin interface. Defines how one interfece must to be.
  * 
  * PHP version 5
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flávio Gonçalves Garcia <fpiraz@gmail.com>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 702 $
+ * @version    SVN: $Revision$
  * @since      Revision 88
  */
-interface Plugin { // extends IParseable, ICacheable {
+interface Plugin extends IParseable, ICacheable {
+    
+	/**
+     * Fuseaction exception fase constant<br>
+     * Value "fuseactionException"
+     * 
+     * @var string
+     */
+    const FUSEACTION_EXCEPTION_PHASE = "fuseactionException";
+	
+    /**
+     * Pre process fase constant<br>
+     * Value "preProcess"
+     * 
+     * @var string
+     */
+    const PRE_PROCESS_PHASE = "preProcess";
+    
+    /**
+     * Pre fuseaction fase constant<br>
+     * Value "preFuseaction"
+     * 
+     * @var string
+     */
+    const PRE_FUSEACTION_PHASE = "preFuseaction";
+    
+    /**
+     * Post fuseaction fase constant<br>
+     * Value "postFuseaction"
+     * 
+     * @var string
+     */
+    const POST_FUSEACTION_PHASE = "postFuseaction";
+    
+    /**
+     * Post process fase constant<br>
+     * Value "postProcess"
+     * 
+     * @var string
+     */
+    const POST_PROCESS_PHASE = "postProcess";
+    
+    /**
+     * Process error fase constant<br>
+     * Value "processError"
+     * 
+     * @var string
+     */
+    const PROCESS_ERROR_PHASE = "processError";
     
     /**
      * Return the plugin name

@@ -1,0 +1,34 @@
+<circuit access="public">
+	
+	<prefuseaction name="">
+	   <do action="showHeader"/>
+	</prefuseaction>
+	
+	<postfuseaction name="">
+       <do action="showFooter"/>
+    </postfuseaction>
+	
+	<fuseaction name="login">
+	   <include file="dspFormLogin.php"/>
+    </fuseaction>
+	
+	<fuseaction name="logout">
+    </fuseaction>
+	
+	<fuseaction name="start">
+	    <xfa name="goToApplicationSummary" value="application.summary" />
+        <include file="dspApplicationList.php" />
+	</fuseaction>
+	
+	<fuseaction name="showHeader">
+	   <xfa name="goToLogin" value="login" />
+	   <xfa name="goToLogout" value="logout" />
+	   <xfa name="goToStart" value="start" />
+	   <include file="dspHeader.php" />
+	</fuseaction>
+	
+	<fuseaction name="showFooter">
+       <include file="dspFooter.php" />
+    </fuseaction>
+	
+</circuit>

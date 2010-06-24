@@ -16,17 +16,16 @@
  * 
  * The Original Code is Candango Fusebox Implementation part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2005 - 2006.
  * All Rights Reserved.
  * 
  * Contributor(s): Flavio Goncalves Garcia.
- *                 Luiz Marcelo Serique Siroteau
  *
  * @category   file
  * @package    myfuses.util.file
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Opensource Group
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.com>
+ * @copyright  Copyright (c) 2006 - 2006 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
@@ -39,8 +38,8 @@
  *
  * @category   file
  * @package    myfuses.util.file
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Opensource Group
+ * @author     Flavio Goncalves Garcia <flavio.garcia@candango.com>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
@@ -56,18 +55,18 @@ class MyFusesFileHandler {
      * @return array Finded files list
      */
     public static function findFile( $fileList ) {
-        
+    	
         $findedFileList = array();
         
         if( is_array( $fileList ) ) {
-            foreach( $fileList as $file ) {
-                if( is_file( $file ) ) {
-                    $findedFileList[] = $file;
-                }
-            }
+        	foreach( $fileList as $file ) {
+        		if( is_file( $file ) ) {
+        			$findedFileList[] = $file;
+        		}
+        	}
         }
         else{
-            if( is_file( $fileList ) ) {
+        	if( is_file( $fileList ) ) {
                 $findedFileList[] = $fileList;
             }
         }
@@ -83,13 +82,13 @@ class MyFusesFileHandler {
      * @return boolean
      */
     public static function isAbsolutePath( $path ) {
-        // pattern that search any [DIRECTORY_SEPARATOR] or  
+    	// pattern that search any [DIRECTORY_SEPARATOR] or  
         // [any letter]:[\ or /]
         $pattern = "[^\\" . DIRECTORY_SEPARATOR . 
             "|^\w\\:[\\\\|\\/]]";
         if( preg_match( $pattern , $path  ) ) {
-            return true;
-        }
+    		return true;
+    	}
         return false;
     }
     
@@ -100,7 +99,7 @@ class MyFusesFileHandler {
      * @return string
      */
     public static function sanitizePath( $path ) {
-        if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
+    	if( substr( $path, -1 ) != DIRECTORY_SEPARATOR ) {
             $path .= DIRECTORY_SEPARATOR;
         }
         return $path;
@@ -113,16 +112,9 @@ class MyFusesFileHandler {
      * @return string
      */
     public static function unquerifyUri( $uri ){
-        return current(explode('&',$uri));
+    	return current(explode('&',$uri));
     }
     
-    /**
-     * Create a new path with recursively
-     * 
-     * @param $path
-     * @param $permission
-     * @return unknown_type
-     */
     public static function createPath( $path, $permission = 0777 ) {
         
         if( substr( $path, -1 ) == DIRECTORY_SEPARATOR ) {
@@ -153,15 +145,19 @@ class MyFusesFileHandler {
      * @param string $file The file name
      * @param string $string The string to be writed
      */
-    public static function writeFile( $file, $text ) {
-        $fp = fopen( $file,"w" );
-                
-        /*if ( !flock($fp,LOCK_EX) ) {
-            throw new MyFusesFileOperationException( $file, 
-                MyFusesFileOperationException::LOCK_EX_FILE );
-        }*/
-        
-        if ( !fwrite($fp, $text) ) {
+    public static function writeFile( $file, $string ) {
+    	$fp = fopen( $file,"w" );
+
+    	// FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
+            if ( !flock($fp,LOCK_EX) ) {
+                throw new MyFusesFileOperationException( $file, 
+                    MyFusesFileOperationException::LOCK_EX_FILE );
+            }  
+        }
+    	
+        if ( !fwrite($fp, $string) ) {
             throw new MyFusesFileOperationException( $file, 
                 MyFusesFileOperationException::WRITE_FILE );
         }
@@ -182,10 +178,14 @@ class MyFusesFileHandler {
                 MyFusesFileOperationException::OPEN_FILE );
         }
         
-        /*if ( !flock( $fp, LOCK_SH ) ) {
-            throw new MyFusesFileOperationException( $file, 
-                MyFusesFileOperationException::LOCK_FILE );
-        }*/
+        // FIXME Fixing an error occoured with CGI GATWAYS. 
+        // FIXME Sppressing redirect with CGI!!!
+        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
+            if ( !flock( $fp, LOCK_SH ) ) {
+                throw new MyFusesFileOperationException( $file, 
+                    MyFusesFileOperationException::LOCK_FILE );
+            }  
+        }
         
         $fileCode = fread( $fp, filesize( $file ) );
         
@@ -193,6 +193,28 @@ class MyFusesFileHandler {
         fclose($fp);
         
         return $fileCode;
+    }
+    
+    /**
+     * Validate one file and check if has the given extension
+     * 
+     * @param $file
+     * @param $extension
+     * @return boolean
+     */
+    public static function hasExtension( $file, $extension ) {
+        // TODO check if the file name have the php extension 
+        $fileX = explode( ".", $file );
+        
+        if( count($fileX) < 1 ) {
+            return false;
+        }
+        
+        if( $fileX[ count($fileX) - 1 ] != $extension ) {
+            return false;
+        }
+        
+        return true;
     }
     
 }

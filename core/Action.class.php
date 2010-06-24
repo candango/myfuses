@@ -1,8 +1,7 @@
 <?php
 /**
- * Action - Action.class.php
+ * Action  - Action.class.php
  * 
- * TODO Create a better action description
  * This interface defines how one action must be in MyFuses.
  * One Action is some part of MyFuses process.
  * 
@@ -24,23 +23,25 @@
  * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
  * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Id$
  */
 
+require_once "myfuses/core/IParseable.class.php";
+
 /**
- * Action - Action.class.php
+ * AbstractAction  - AbstractAction.class.php
  * 
  * This is a functional abstract MyFuses Action implementation. One concrete
  * Action must extends this class.
@@ -49,14 +50,14 @@
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision$
  * @since      Revision 25
  */
-interface Action {
+interface Action extends ICacheable, IParseable {
    
     /**
      * Return the action name
@@ -73,7 +74,6 @@ interface Action {
     public function setName( $name );
     
     /**
-     * TODO Check if this method must really exist
      * Do some action. Concrete action will implement this method.
      */
     public function doAction();
@@ -92,7 +92,7 @@ interface Action {
      *
      * @param string $namespace
      * @param string $name
-     * @return mixed
+     * @return mixed $value
      */
     public function getCustomAttribute( $namespace, $name );
     

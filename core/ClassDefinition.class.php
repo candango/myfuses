@@ -2,13 +2,8 @@
 /**
  * ClassDefinition  - ClassDefinition.class.php
  * 
- * One class definition stores classes definitions that will be used by 
- * myFuses in runtime when some one need to use or instantiate a class.
- * In this file is difined the basic class definitions infrastructure with 
- * ClassDefinition interface. The AbstactClassDefinition class implements the 
- * basic features demanded ClassDefinition and the BasicClassDefinitio is the 
- * implementable class.
- *  
+ * This class handle all class declared in myfuses.xml.
+ * 
  * PHP version 5
  * 
  * The contents of this file are subject to the Mozilla Public License
@@ -24,74 +19,98 @@
  * This product includes software developed by the Fusebox Corporation 
  * (http://www.fusebox.org/).
  * 
- * The Original Code is MyFuses "a Candango implementation of Fusebox 
- * Corporation Fusebox" part .
+ * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
+ * Fusebox" part .
  * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2010.
+ * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
+ * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
  * All Rights Reserved.
  * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * Contributor(s): Flávio Gonçalves Garcia.
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
  * @link       http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id: ClassDefinition.class.php 379 2008-04-14 03:04:45Z flavio.garcia $
+ * @version    SVN: $Id$
  */
 
-require_once MYFUSES_ROOT_PATH . "core/AbstractClassDefinition.class.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicClassDefinition.class.php";
-
 /**
- * One class definition stores classes definitions that will be used by 
- * myFuses in runtime when some one need to use or instantiate a class.
- * In this file is difined the basic class definitions infrastructure with 
- * ClassDefinition interface. The AbstactClassDefinition class implements the 
- * basic features demanded ClassDefinition and the BasicClassDefinitio is the 
- * implementable class.
+ * ClassDefinition  - ClassDefinition.class.php
+ * 
+ * This class handle all class declared in myfuses.xml.
  * 
  * PHP version 5
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2010 Candango Group <http://www.candango.org/>
+ * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
+ * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
+ * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision:23 $
+ * @version    SVN: $Revision$
  * @since      Revision 50
  */
-interface ClassDefinition {
+class ClassDefinition implements ICacheable {
+    
+    /**
+     * Class name
+     *
+     * @var string
+     */
+    private $name;
+    
+    /**
+     * Class path
+     *
+     * @var string
+     */
+    private $path;
+    
+    /**
+     * Application where the class will be used
+     *
+     * @var Application
+     */
+    private $application;
     
     /**
      * Return the class name
      *
      * @return string
      */
-    public function getName();
+    public function getName() {
+        return $this->name;
+    }
     
     /**
      * Set the class name
      *
      * @param string $name
      */
-    public function setName( $name );
+    public function setName( $name ) {
+        $this->name = $name;
+    }
     
     /**
      * Return the class path
      *
      * @return string
      */
-    public function getPath();
+    public function getPath() {
+        return $this->path;
+    }
     
     /**
      * Set the class path
      *
      * @param string $path
      */
-    public function setPath( $path );
+    public function setPath( $path ) {
+        $this->path = $path;
+    }
     
     /**
      * Return the complete class path.
@@ -99,7 +118,40 @@ interface ClassDefinition {
      *
      * @return string
      */
-    public function getCompletePath();
+    public function getCompletePath() {
+        return $this->getApplication()->getPath() . $this->getPath();
+    }
+    
+    /**
+     * Get the Class Definition Application
+     * 
+     * @return Application
+     */
+    public function getApplication() {
+        return $this->application;
+    }
+
+    /**
+     * Set the Class Definition Application
+     *
+     * @param Application $application
+     */
+    public function setApplication( Application $application ) {
+        $this->application = $application;
+    }
+    
+    public function getCachedCode() {
+        $strOut = "\$class = new ClassDefinition();\n";
+        
+        $strOut .= "\$class->setName( \"" . $this->getName() . "\" );\n";
+        
+        $strOut .= "\$class->setPath( \"" .  
+            addslashes( $this->getPath() ) . "\");\n";
+        
+        $strOut .= "\$application->addClass( \$class );\n";
+        
+        return $strOut;
+    }
     
 }
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
