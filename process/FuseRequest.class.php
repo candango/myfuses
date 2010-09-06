@@ -63,7 +63,11 @@ class FuseRequest {
                 
             $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
             
-            $path = str_replace( $root, "", $_SERVER[ 'REDIRECT_URL' ] );
+            $path = $_SERVER[ 'REDIRECT_URL' ];
+            
+            if( $root != "/" ) {
+            	$path = str_replace( $root, "", $path );	
+            }
             
             // FIXME Very very strange. Must research more about this.
             $path = str_replace( 'myfuses.xml', 'myfuses', $path );
