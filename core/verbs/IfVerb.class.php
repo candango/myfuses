@@ -171,11 +171,35 @@ class IfVerb extends AbstractVerb {
 	    
 	    $trueOccour = false;
 	    
-	    $strCondition = str_replace( array( "OR", "oR", "Or", "or"  ), "||",  
-	        $this->getCondition() );
+	    $strCondition = $this->getCondition();
 	    
-	    $strCondition = str_replace( array( "AND", "AnD", "ANd", "aND", "anD", "aNd", "and"  ), "&&",  
-            $this->getCondition() );
+	    $strCondition = str_replace( array( "NEQ", "NeQ", "nEQ", "neQ", 
+            "NEq", "Neq", "nEq", "neq"  ), "!=",  
+            $strCondition );
+	    
+	    $strCondition = str_replace( array( "EQ", "eQ", "EQ", "neQ" ), "==",  
+            $strCondition );
+	    
+	    $strCondition = str_replace( array( "LTE", "lTE", "LtE", "ltE", 
+            "LTe", "lTe", "Lte", "lte"  ), "<=",  
+            $strCondition );
+	    
+	    $strCondition = str_replace( array( "GTE", "gTE", "GtE", "gtE", 
+	        "GTe", "gTe", "Gte", "gte" ), ">=",  
+            $strCondition );
+	    
+	    $strCondition = str_replace( array( "LT", "lT", "Lt", "lt"  ), "<",  
+            $strCondition );
+	    
+        $strCondition = str_replace( array( "GT", "gT", "Gt", "gt"  ), ">",  
+            $strCondition );
+            
+	    $strCondition = str_replace( array( "OR", "oR", "Or", "or"  ), "||",  
+	        $strCondition );
+	    
+	    $strCondition = str_replace( array( "AND", "AnD", "aND", "anD", 
+	        "ANd", "And", "aNd", "and"  ), "&&",  
+            $strCondition );
 	    
 	    if( count( $this->trueVerbs ) ) {
 	        $strOut .= str_repeat( "\t", $identLevel );
@@ -201,7 +225,7 @@ class IfVerb extends AbstractVerb {
 	            $strOut .= "else {\n";
 	        }
 	        else {
-	            $strOut .= "if( !( " . $this->getCondition() . " ) ) {\n";
+	            $strOut .= "if( !( " . $strCondition . " ) ) {\n";
 	        }
 	        
 	        foreach(  $this->falseVerbs as $verb ) {
