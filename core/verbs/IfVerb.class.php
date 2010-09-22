@@ -177,9 +177,12 @@ class IfVerb extends AbstractVerb {
             "NEq", "Neq", "nEq", "neq"  ), "!=",  
             $strCondition );
 	    
-	    $strCondition = str_replace( array( "EQ", "eQ", "EQ", "neQ" ), "==",  
+	    $strCondition = str_replace( array( "EQ", "eQ", "EQ", "eQ" ), "==",  
             $strCondition );
 	    
+        $strCondition = str_replace( array( "IS", "iS", "Is", "is" ), "==",  
+            $strCondition );
+        
 	    $strCondition = str_replace( array( "LTE", "lTE", "LtE", "ltE", 
             "LTe", "lTe", "Lte", "lte"  ), "<=",  
             $strCondition );
