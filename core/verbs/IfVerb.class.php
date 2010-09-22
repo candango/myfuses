@@ -174,11 +174,11 @@ class IfVerb extends AbstractVerb {
 	    $strCondition = $this->getCondition();
 	    
 	    $strCondition = str_replace( array( " NEQ ", " NeQ ", " nEQ ", " neQ ", 
-            " NEq ", " Neq ", " nEq ", " neq "  ), "!=",  
+            " NEq ", " Neq ", " nEq ", " neq "  ), " != ",  
             $strCondition );
 	    
 	    $strCondition = str_replace( array( " EQ ", " eQ ", " EQ ", " eQ " ), 
-	       "==", $strCondition );
+	       " == ", $strCondition );
 	    
         $strCondition = str_replace( array( " IS ", " iS ", " Is ", " is " ), 
             " == ", $strCondition );
@@ -195,7 +195,7 @@ class IfVerb extends AbstractVerb {
 	        " < ", $strCondition );
 	    
         $strCondition = str_replace( array( " GT ", " gT ", " Gt ", " gt "  ), 
-            ">", $strCondition );
+            " > ", $strCondition );
             
 	    $strCondition = str_replace( array( " OR ", " oR ", " Or ", " or "  ), 
 	        " || ",  $strCondition );
