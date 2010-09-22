@@ -173,35 +173,35 @@ class IfVerb extends AbstractVerb {
 	    
 	    $strCondition = $this->getCondition();
 	    
-	    $strCondition = str_replace( array( "NEQ", "NeQ", "nEQ", "neQ", 
-            "NEq", "Neq", "nEq", "neq"  ), "!=",  
+	    $strCondition = str_replace( array( " NEQ ", " NeQ ", " nEQ ", " neQ ", 
+            " NEq ", " Neq ", " nEq ", " neq "  ), "!=",  
             $strCondition );
 	    
-	    $strCondition = str_replace( array( "EQ", "eQ", "EQ", "eQ" ), "==",  
-            $strCondition );
+	    $strCondition = str_replace( array( " EQ ", " eQ ", " EQ ", " eQ " ), 
+	       "==", $strCondition );
 	    
-        $strCondition = str_replace( array( "IS", "iS", "Is", "is" ), "==",  
-            $strCondition );
+        $strCondition = str_replace( array( " IS ", " iS ", " Is ", " is " ), 
+            " == ", $strCondition );
         
-	    $strCondition = str_replace( array( "LTE", "lTE", "LtE", "ltE", 
-            "LTe", "lTe", "Lte", "lte"  ), "<=",  
+	    $strCondition = str_replace( array( " LTE ", " lTE ", " LtE ", " ltE ", 
+            " LTe ", " lTe ", " Lte ", " lte "  ), " <= ",  
             $strCondition );
 	    
-	    $strCondition = str_replace( array( "GTE", "gTE", "GtE", "gtE", 
-	        "GTe", "gTe", "Gte", "gte" ), ">=",  
+	    $strCondition = str_replace( array( " GTE ", " gTE ", " GtE ", " gtE ", 
+	        " GTe ", " gTe ", " Gte ", " gte " ), " >= ",  
             $strCondition );
 	    
-	    $strCondition = str_replace( array( "LT", "lT", "Lt", "lt"  ), "<",  
-            $strCondition );
+	    $strCondition = str_replace( array( " LT ", " lT ", " Lt ", " lt "  ), 
+	        " < ", $strCondition );
 	    
-        $strCondition = str_replace( array( "GT", "gT", "Gt", "gt"  ), ">",  
-            $strCondition );
+        $strCondition = str_replace( array( " GT ", " gT ", " Gt ", " gt "  ), 
+            ">", $strCondition );
             
-	    $strCondition = str_replace( array( "OR", "oR", "Or", "or"  ), "||",  
-	        $strCondition );
+	    $strCondition = str_replace( array( " OR ", " oR ", " Or ", " or "  ), 
+	        " || ",  $strCondition );
 	    
-	    $strCondition = str_replace( array( "AND", "AnD", "aND", "anD", 
-	        "ANd", "And", "aNd", "and"  ), "&&",  
+	    $strCondition = str_replace( array( " AND ", " AnD ", " aND ", " anD ", 
+	        " ANd ", " And ", " aNd ", " and "  ), " && ",  
             $strCondition );
 	    
 	    if( count( $this->trueVerbs ) ) {
