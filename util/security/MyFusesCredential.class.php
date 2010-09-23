@@ -19,7 +19,7 @@ interface MyFusesCredential {
 
     public function isExpired();
     
-    public function setExpireTime( $time );
+    public function setTimeout( $timeout );
     
     /**
      * Returns if the credential is athenticated

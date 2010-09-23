@@ -435,7 +435,6 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
                 }
             }
             else {
-            	
             	$currentAction = 
             	   MyFuses::getInstance()->getRequest()->getFuseActionName();
             	

@@ -36,14 +36,14 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      *
      * @var int
      */
-    private $timeExpire = 900;
+    private $timeout = 900;
     
     /**
-     * Navigation time left
+     * ation time
      *
      * @var int
      */
-    private $navigationTimeLeft = 0;
+    private $ationTime = 0;
     
     /**
      * Credential autenticated flag
@@ -122,7 +122,7 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     }
     
     public function isExpired() {
-        if( ( $this->createTime + $this->timeExpire ) < time() ) {
+        if( $this->expirationTime < time() ) {
             return true;
         }
         return false;
@@ -133,15 +133,16 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      *
      */
     public function increaseNavigationTime() {
-        $this->navigationTimeLeft += $this->timeExpire;
+        $this->expirationTime = time() + $this->timeout;
     }
     
-    public function getExpireDate( $format = "m/d/Y h:i:s" ) {
-        return date( $format, $this->createTime + $this->timeExpire );
+    public function getExpirationDate( $format = "m/d/Y h:i:s" ) {
+        return date( $format, $this->expirationTime );
     }
     
-    public function setExpireTime( $time ) {
-        $this->timeExpire = $time;
+    public function setTimeout( $timeout ) {
+        $this->timeout = $timeout;
+        $this->increaseNavigationTime();
     }
     
     /**
@@ -159,7 +160,10 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      * @param $autenticated boolean
      */
     public function setAuthenticated( $authenticated ) {
-        $this->authenticated = $authenticated;
+    	$this->authenticated = $authenticated;
+        if( $this->authenticated ) {
+            $this->increaseNavigationTime();
+        }
     }
     
     /**
