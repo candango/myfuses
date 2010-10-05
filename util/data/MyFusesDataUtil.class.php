@@ -100,7 +100,6 @@ class MyFusesDataUtil {
                     $itemArray[ $property ] = $item->{$method->getName()}();
                     
                     if( is_object( $itemArray[ $property ] ) ) {
-                        var_dump( $itemArray[ $property ] );
                         $itemArray[ $property ] = self::objectToArray( 
                             $itemArray[ $property ], true );        
                     }

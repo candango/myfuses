@@ -159,8 +159,6 @@ class MyFusesXmlUtil {
         $strXml .= str_repeat( "\t", $level ) . 
                             "</" . $tagName . ">\n";
         
-        //var_dump( $strXml );die();
-        
         return $strXml;
         
     }
