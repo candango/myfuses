@@ -9,8 +9,8 @@
     <th>File</th>
     <th>Access</th>
   </tr>  
-<?if( count( $application->getCircits() ) ) {?>  
-    <?foreach( $application->getCircits() as $circuit ) {?>
+<?if( count( $application->getCircuits() ) ) {?>  
+    <?foreach( $application->getCircuits() as $circuit ) {?>
         <?if( $circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT' ) {?>
         <tr>
             <td><?=$circuit->getName()?></td>
