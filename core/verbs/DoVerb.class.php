@@ -76,6 +76,13 @@ class DoVerb extends ParameterizedVerb {
      */
     private $actionToBeExecutedName;
     
+    /**
+     * The include content variable
+     * 
+     * @var string
+     */
+    private $contentVariable;
+    
     public function setActionToBeExecuted( $actionName ) {
         
         
@@ -107,9 +114,33 @@ class DoVerb extends ParameterizedVerb {
         
     }
     
+    /**
+     * Return the content variable
+     *
+     * @return string
+     */
+    public function getContentVariable() {
+        return $this->contentVariable;
+    }
+    
+    /**
+     * Set the content variable
+     *
+     * @param string $contentVariable
+     */
+    public function setContentVariable( $contentVariable ) {
+        $this->contentVariable = $contentVariable;
+    }
+    
     public function getData() {
         $data = parent::getData();
         $app = $this->getAction()->getCircuit()->getApplication()->getName();
+        
+        if( !is_null( $this->getContentVariable() ) ) {
+            $data[ "attributes" ][ "contentvariable" ] = 
+                $this->getContentVariable();
+        }
+        
         $data[ "attributes" ][ "action" ] = ( $this->appName != "" ? 
             $this->appName . "." : "" ) .  $this->circuitToBeExecutedName . 
             "." . $this->actionToBeExecutedName;
@@ -119,6 +150,12 @@ class DoVerb extends ParameterizedVerb {
     public function setData( $data ) {
         parent::setData( $data );
         $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );
+        
+        if( isset( $data[ "attributes" ][ "contentvariable" ] ) ) {
+            $this->setContentVariable( 
+                $data[ "attributes" ][ "contentvariable" ] );
+        }
+        
     }
     
     public static function doAction( CircuitAction $action ) {        
@@ -182,17 +219,31 @@ class DoVerb extends ParameterizedVerb {
         }
         
         //$this->generateActionFile( $action, $commented );
-        
         $strOut = str_repeat( "\t", $identLevel );
+        
+        if( !is_null( $this->getContentVariable() ) ) {
+            $strOut .=  "ob_start();\n";
+        }
+        
+        $strOut .= str_repeat( "\t", $identLevel );
         
         $action->setCalledByDo( true );
         
         $strOut .=  $this->getAction()->getCircuit()->getApplication()->
             getControllerClass() . "::doAction( \"" . 
             $completeActionName . "\" );";
-
-        $strOut .= self::getContextRestoreString();
             
+        $strOut .= self::getContextRestoreString();
+        
+        if( !is_null( $this->getContentVariable() ) ) {
+            $strOut .= str_repeat( "\t", $identLevel );
+            
+            $strOut .= "\$" . $this->getContentVariable() . "= ob_get_contents();ob_end_clean();";
+            
+        	$strOut .= self::getVariableSetString( $this->getContentVariable(), 
+                "#$" . $this->getContentVariable() . "#" );
+        }
+        
         $action->setCalledByDo( false );
         
         return $strOut;
