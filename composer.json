@@ -1,0 +1,8 @@
+{
+    "name": "candango/myfuses",
+    "type": "library",
+    "description": "MyFuses is a framework for build web applications.",
+    "require": {
+        "php": ">=5.3"
+    }
+}
