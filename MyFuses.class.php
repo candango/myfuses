@@ -548,7 +548,6 @@ class MyFuses {
     }
     
     public function createApplicationPath( Application $application ) {
-        echo($application->getParsedPath());
         if( !file_exists( $application->getParsedPath() ) ) {
             mkdir( $application->getParsedPath(), 0777, true );
          
