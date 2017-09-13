@@ -210,20 +210,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         if( is_null( $data ) ) {
             return false;
         }
-        
-        $actionParameterAttributes = array(
-            "name" => "name",
-            "class" => "class",
-            "path" => "path",
-            "default" => "default",
-            "permissions" => "permissions"
-        );
-        
-        $parameterAttributes = array(
-            "name" => "name",
-            "value" => "value"
-        );
-        
+
         $name = "";
         
         $class = null;
@@ -236,9 +223,21 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
         $customAttribute = array();
         
         foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
-            if ( isset( $actionParameterAttributes[ $attributeName ] ) ) {
-                // getting $name
-                $$actionParameterAttributes[ $attributeName ] = "" . $attribute;
+            switch ($attributeName) {
+                case "name":
+                    $name = $attribute;
+                    break;
+                case "class":
+                    $class = $attribute;
+                    break;
+                case "path":
+                    $path = $attribute;
+                    break;
+                case "default":
+                    $default = $attribute;
+                    break;
+                case  "permissions":
+                    $permissions = $attribute;
             }
             if( strpos( $attributeName, "_ns_"  ) !== false ) {
                 list( $namespace, $attrName ) = explode( "_ns_", 

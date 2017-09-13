@@ -32,7 +32,7 @@ class FuseQueue {
     }
     
     private function buildProcessQueue() {
-        $action = &$this->request->getAction();
+        $action = $this->request->getAction();
         
 	    if( $action->getCircuit()->getAccess() == 
             Circuit::INTERNAL_ACCESS ) {
@@ -44,7 +44,7 @@ class FuseQueue {
                 USER_TRYING_ACCESS_INTERNAL_CIRCUIT );
 	    }    
         
-        $this->processQueue[] = &$this->request->getAction();
+        $this->processQueue[] = $this->request->getAction();
     }
     
     private function buildPreProcessQueue() {
