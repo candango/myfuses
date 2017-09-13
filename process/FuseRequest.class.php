@@ -45,10 +45,10 @@ class FuseRequest {
         MyFuses::setCurrentPhase( MyFusesLifecycle::BUILD_PHASE );
         
         if( is_null( $applicationName ) ) {
-            $this->application = & MyFuses::getInstance()->getApplication();    
+            $this->application = MyFuses::getInstance()->getApplication();
         }
         else{
-            $this->application = & MyFuses::getInstance()->getApplication( 
+            $this->application = MyFuses::getInstance()->getApplication(
                 $applicationName );
         }
         
@@ -62,8 +62,11 @@ class FuseRequest {
             $this->getApplication()->allowRewrite() ) {
                 
             $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
-            
-            $path = $_SERVER[ 'REDIRECT_URL' ];
+
+            if (isset($_SERVER[ 'REDIRECT_URL' ]))
+                $path = $_SERVER[ 'REDIRECT_URL' ];
+            else
+                $path = $_SERVER[ 'REQUEST_URI' ];
             
             if( $root != "/" ) {
             	$path = str_replace( $root, "", $path );	

@@ -303,7 +303,6 @@ abstract class AbstractPlugin implements Plugin{
      */
     public static function getInstance( Application $application, 
         $phase, $name, $path, $file, $parameters = array() ) {
-        
         $class = $name;
             
         if( substr( $name, -6 ) !== "Plugin" ) {
@@ -323,7 +322,7 @@ abstract class AbstractPlugin implements Plugin{
         if( $path == "" ) {
             foreach( $application->getController()->getPluginPaths() as 
                 $path ) {
-                
+
                 $tmpPath = "";
                 
                 if( MyFusesFileHandler::isAbsolutePath( $path ) ) {

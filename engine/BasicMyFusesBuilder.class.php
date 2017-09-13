@@ -93,23 +93,24 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     
     protected static function buildCircuits( 
         Application $application, &$data ) {
-            
-        $circuitAttributes = array(
-            "name" => "name",
-            "alias" => "name",
-            "path" => "path",
-            "parent" => "parent"
-        );
-        
+
         if( count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {
                 $name = "";
                 $path = "";
                 $parent = "";
-                
                 foreach( $child[ 'attributes' ] as $attributeName => $attribute ) {
-                    if ( isset( $circuitAttributes[ $attributeName ] ) ) {
-                        $$circuitAttributes[ $attributeName ] = $attribute;
+                    switch ($attributeName){
+                        case "name":
+                        case "alias":
+                            $name = $attribute;
+                            break;
+                        case "path":
+                            $path = $attribute;
+                            break;
+                        case "parent":
+                            $parent = $attribute;
+                            break;
                     }
                 }
                 
@@ -139,26 +140,24 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     
     public static function buildCircuit( Circuit $circuit ) {
         
-        $data = &$circuit->getData();
-        
-        $circuitParameterAttributes = array(
-            "access" => "access",
-            "permissions" => "permissions",
-            "file" => "file"
-        );
-        
+        $data = $circuit->getData();
+
         $access = "";
-        
         $file = "";
-        
         $permissions = "";
         
         if( isset( $data[ 'attributes' ] ) ) {
             foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
-                if ( isset( $circuitParameterAttributes[ $attributeName ] ) ) {
-                    // getting $name
-                    $$circuitParameterAttributes[ $attributeName ] = "" . 
-                        $attribute;
+                switch ($attributeName){
+                    case "access":
+                        $access = $attribute;
+                        break;
+                    case "file":
+                        $file = $attribute;
+                        break;
+                    case "permissions":
+                        $permissions = $attribute;
+                        break;
                 }
             }
         }
@@ -180,11 +179,9 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 }
             }
         }
-        
-        
+
         if( count( $data[ 'children' ] > 0 ) && !is_null( $data[ 'children' ] ) ) {
             foreach( $data[ 'children' ] as $child ) {
-                
                 switch( $child[ 'name' ] ) {
                     case "fuseaction":
                     case "action":
@@ -301,12 +298,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      * @param SimpleXMLElement $parentNode
      */
     protected function buildGlobalAction( Circuit $circuit, &$data ) {
-        
-        $globalActionMethods = array(
-            "prefuseaction" => "setPreFuseAction",
-            "postfuseaction" => "setPostFuseAction"
-        );   
-            
+
         $action = new FuseAction( $circuit );
         
         $action->setName( $data[ 'name' ] );
@@ -318,9 +310,13 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
 	            }
 	        }
         }
-        
-        if( isset( $globalActionMethods[ $action->getName() ] ) ) {
-            $circuit->$globalActionMethods[ $action->getName() ]( $action );
+        switch ($action->getName()){
+            case "prefuseaction":
+                $circuit->setPreFuseAction($action);
+                break;
+            case "postfuseaction":
+                $circuit->setPostFuseAction($action);
+                break;
         }
         
     }
@@ -361,23 +357,19 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
     }
     
     protected static function buildClass( Application $application, &$data ) {
-        
-        $parameterAttributes = array(
-            "name" => "name",
-            "alias" => "name",
-            "classpath" => "path"
-        );
-        
         $name = "";
         $path = "";
-        
+
         foreach( $data[ 'attributes' ] as $attributeName => $attribute ) {
-            if ( isset( $parameterAttributes[ $attributeName ] ) ) {
-                // getting $name or $value
-                $$parameterAttributes[ $attributeName ] = "" . $attribute;
+            switch ($attributeName){
+                case "name":
+                case "alias":
+                    $name = "" . $attribute;
+                case "classpath":
+                    $path = "" . $attribute;
             }
         }
-        
+
         if( isset($name) ) {
             if( $name != "" ) {
                 $class = new ClassDefinition();
@@ -397,46 +389,88 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
      */
     protected static function buildParameters( 
         Application $application, &$data ) {
-        
-        $parameterAttributes = array(
-            "name" => "name",
-            "value" => "value"
-        );
 
-        $applicationParameters = array(
-            "fuseactionVariable" => "setFuseactionVariable",
-            "defaultFuseaction" => "setDefaultFuseaction",
-            "precedenceFormOrUrl" => "setPrecedenceFormOrUrl",
-            "debug" => "setDebug",
-            "tools" => "setTools",
-            "mode" => "setMode",
-            "strictMode" => "setStrictMode",
-            "password" => "setPassword",
-            "parseWithComments" => "setParsedWithComments",
-            "conditionalParse" => "setConditionalParse",
-            "allowLexicon" => "setLexiconAllowed",
-            "ignoreBadGrammar" => "setBadGrammarIgnored",
-            "useAssertions" => "setAssertionsUsed",
-            "scriptLanguage" => "setScriptLanguage",
-            "scriptFileDelimiter" => "setScriptFileDelimiter",
-            "maskedFileDelimiters" => "setMaskedFileDelimiters",
-            "characterEncoding" => "setCharacterEncoding"
-        );
-        
         if( count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {    
                 $name = "";
                 $value = "";
                 foreach( $child[ 'attributes' ] as 
                     $attributeName => $attribute ) {
-                    if ( isset( $parameterAttributes[ $attributeName ] ) ) {
-                        // getting $name or $value
-                        $$parameterAttributes[ $attributeName ] = "" . 
-                            $attribute; 
+                    switch ($attributeName){
+                        case "name":
+                            $name = $attribute;
+                            break;
+                        case "value":
+                            $value = $attribute;
+                            break;
                     }
                 }
+
+                switch ($name) {
+                    case "fuseactionVariable":
+                        $application->setFuseactionVariable($value);
+                        break;
+                    case "defaultFuseaction":
+                        $application->setDefaultFuseaction($value);
+                        break;
+                    case "precedenceFormOrUrl":
+                        $application->setPrecedenceFormOrUrl($value);
+                        break;
+                    case "debug":
+                        $application->setDebug($value);
+                        break;
+                    case "tools":
+                        $application->setTools($value);
+                        break;
+                    case "mode":
+                        $application->setMode($value);
+                        break;
+                    case "strictMode":
+                        $application->strictMode($value);
+                        break;
+                    case "password":
+                        $application->setPassword($value);
+                        break;
+                    case "parseWithComments":
+                        $application->setParsedWithComments($value);
+                        break;
+                    case "conditionalParse":
+                        $application->setConditionalParse($value);
+                        break;
+                    case "allowLexicon":
+                        $application->setLexiconAllowed($value);
+                        break;
+                    case "ignoreBadGrammar":
+                        $application->setLexiconAllowed($value);
+                        break;
+                    case "useAssertions":
+                        $application->setLexiconAllowed($value);
+                        break;
+                    case "useAssertions":
+                        $application->setAssertionsUsed($value);
+                        break;
+                    case "scriptLanguage":
+                        $application->setScriptLanguage($value);
+                        break;
+                    case "scriptFileDelimiter":
+                        $application->setScriptFileDelimiter($value);
+                        break;
+                    case "maskedFileDelimiters":
+                        $application->setMaskedFileDelimiters($value);
+                        break;
+                    case "characterEncoding":
+                        $application->setCharacterEncoding($value);
+                        break;
+                }
+
+
                 // putting into $application
                 if( isset( $applicationParameters[ $name ] ) ) {
+
+                    echo "<br>";
+                    print_r($name);
+                    echo "<br>";
+                    print_r($value);
                     $application->$applicationParameters[ $name ]( $value );
                 }
             }
@@ -523,7 +557,17 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                     
                     foreach( $child[ 'attributes' ] as 
                         $attributeName => $attribute ) {
-                        $$faseParams[ $attributeName ] = $attribute;
+                        switch ($attributeName){
+                            case "name":
+                                $name = $attribute;
+                                break;
+                            case "path":
+                                $path = $attribute;
+                                break;
+                            case "file":
+                            case "template":
+                                break;
+                        }
                     }
                     
                     $paramters = array();
