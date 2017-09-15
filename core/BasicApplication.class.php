@@ -1118,7 +1118,6 @@ class BasicApplication implements Application {
      * Add one plugin in a ginven fase
      * 
      * @param Plugin $plugin
-     * @param string $fase
      */
     public function addPlugin( Plugin $plugin ) {
         $index = count( $this->plugins[ $plugin->getPhase() ] );
@@ -1130,7 +1129,7 @@ class BasicApplication implements Application {
     /**
      * Return all plugins of a given fase
      * 
-     * @param string $fase
+     * @param string $phase
      * @return array
      */
     public function &getPlugins( $phase ) {
@@ -1140,7 +1139,7 @@ class BasicApplication implements Application {
     /**
      * Set all plugins of a given fase
      * 
-     * @param string $fase
+     * @param string $phase
      * @param array $plugins
      */
     public function setPlugins( $phase, $plugins ) {
@@ -1156,7 +1155,7 @@ class BasicApplication implements Application {
     }
     
     /**
-     * Return one plugin of a given fase and index
+     * Return a plugin by a given phase and index
      * FIXME Handle non existent plugin error
      * 
      * @param string $phase
@@ -1168,9 +1167,9 @@ class BasicApplication implements Application {
     }
     
     /**
-     * Clear the fase plugins array
+     * Clear the phase plugins array
      * 
-     * @param string $fase
+     * @param string $phase
      */
     public function clearPlugins( $phase = null ) {
         if( is_null( $phase ) ) {
@@ -1184,10 +1183,10 @@ class BasicApplication implements Application {
             
         }
         else {
-            foreach( $this->plugins[ $fase ] as $plugin ) {
+            foreach( $this->plugins[ $phase ] as $plugin ) {
 	            $plugin->clearApplication();
 	        }
-	        $this->plugins[ $fase ] = array();    
+	        $this->plugins[ $phase ] = array();
         }
     }
     
@@ -1411,7 +1410,7 @@ class BasicApplication implements Application {
      * @return array
      */
     public function &getData() {
-        return $data;
+        return $this->data;
     }
     
     /**
