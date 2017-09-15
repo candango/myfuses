@@ -114,59 +114,84 @@ class MyFusesJsonUtil {
     }
     
     private static function toPhp( $data ) {
-        
-        if( $data[ "data_type" ] == "class" ) {
-            
-            if( class_exists( $data[ "data_class_name" ] ) ) {
-                $object = new $data[ "data_class_name" ]();
-                
-                $refClass = new ReflectionClass( $object );
-                
-                foreach( $data as $key => $value ) {
-                    $phpValue = self::toPhp( $value );
-                    try {
-                        if( $property = $refClass->getProperty( $key ) ) {
-                            if( $property->isPublic() ) {
-                                $object->$key = $phpValue;    
+        if(isset($data[ "data_type" ])) {
+            if( $data[ "data_type" ] == "class" ) {
+
+                if( class_exists( $data[ "data_class_name" ] ) ) {
+
+                    $object = new $data[ "data_class_name" ]();
+
+                    $refClass = new ReflectionClass( $object );
+
+                    foreach( $data as $key => $value ) {
+                        $phpValue = null;
+                        if(is_scalar($value)){
+                            $phpValue = $value;
+                        }
+                        else {
+
+                            if(!isset($value['data_type'])) {
+                                $phpValue = array();
+                                if(!is_null($value)){
+                                    foreach( $value as $v_key => $item ) {
+                                        $phpValue[$v_key] = self::toPhp( $item );
+                                    }
+                                }
+                            } else {
+                                $phpValue = self::toPhp( $value );
+                            }
+
+                        }
+
+                        try {
+                            if( $property = $refClass->getProperty( $key ) ) {
+                                if( $property->isPublic() ) {
+                                    $object->$key = $phpValue;
+                                }
+                            }
+
+                            $methodName = "set" . strtoupper( substr( $key, 0, 1 ) ) .
+                                substr( $key, 1, strlen( $key ) );
+
+                            if( $method = $refClass->getMethod( $methodName ) ) {
+                                if( $method->isPublic() ) {
+                                    $object->$methodName( $phpValue );
+                                }
                             }
                         }
-                        
-                        $methodName = "set" . strtoupper( substr( $key, 0, 1 ) ) . 
-                            substr( $key, 1, strlen( $key ) );
-                            
-                        if( $method = $refClass->getMethod( $methodName ) ) {
-                            if( $method->isPublic() ) {
-                                $object->$methodName( $phpValue );    
+                        catch( ReflectionException $re ) {
+                            switch( $re->getCode() ) {
+                                // ignoring non existent properties and methods
+                                case 0;
+                                case 1;
+                                    break;
+                                default:
+                                    throw $re;
                             }
                         }
+
                     }
-                    catch( ReflectionException $re ) {
-                        switch( $re->getCode() ) {
-                            // ignoring non existent properties and methods
-                            case 0;
-                            case 1;
-                                break;
-                            default:
-                                throw $re;
-                        }
-                    }
-                    
+                    return $object;
                 }
-                return $object;
+
             }
-            
         }
-        
+
+        /*if(is_scalar($data)){
+            var_dump($data);
+            die();
+        }
         if( $data[ 'data_type' ] == "array" ) {
             foreach( $data as $key => $value ) {
                 $data[ $key ] = self::toPhp( $value );
             }
             unset( $data[ 'data_type' ] );
             return $data;
-        }
+        }*/
         
         return $data;
-        
     }
-    
+
+
+
 }
