@@ -1,6 +1,59 @@
 <?php
+/**
+ * FuseRequest - FuseRequest.class.php
+ *
+ * This is MyFuses a Candango Opensource Group a implementation of Fusebox
+ * Corporation Fusebox framework.
+ *
+ * PHP version 5
+ *
+ * The contents of this file are subject to the Mozilla Public License
+ * Version 1.1 (the "License"); you may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at
+ * http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific language governing rights and limitations
+ * under the License.
+ *
+ * This product includes software developed by the Fusebox Corporation
+ * (http://www.fusebox.org/).
+ *
+ * The Original Code is myFuses "a Candango implementation of Fusebox
+ * Corporation Fusebox" part .
+ *
+ * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
+ * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2009.
+ * All Rights Reserved.
+ *
+ * Contributor(s): Flavio Garcia.
+ *
+ * @category   controller
+ * @package    myfuses
+ * @author     Flavio Garcia <piraz at candango.org>
+ * @copyright  Copyright (c) 2006 - 2017 Candango Open Source Group
+ * @link       http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ */
 require_once "myfuses/process/FuseQueue.class.php";
 
+/**
+ * FuseRequest - FuseRequest.class.php
+ *
+ * This is MyFuses a Candango Opensource Group a implementation of Fusebox
+ * Corporation Fusebox framework.
+ *
+ * PHP version 5
+ *
+ * @category   controller
+ * @package    myfuses
+ * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
+ * @copyright  Copyright (c) 2006 - 2009 Candango Open Source Group
+ * @link http://www.candango.org/myfuses
+ * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
+ * @version    SVN: $Revision$
+ */
 class FuseRequest {
     
     /**
@@ -55,19 +108,18 @@ class FuseRequest {
         $defaultFuseaction = $this->application->getDefaultFuseAction();
         
         $fuseactionVariable = $this->application->getFuseactionVariable();
-        
+
         // FIXME Fixing an error occoured with CGI GATWAYS. 
         // FIXME Sppressing redirect with CGI!!!
-        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
-            $this->getApplication()->allowRewrite() ) {
+        if(MyFuses::isRewriting()) {
                 
             $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
 
             if (isset($_SERVER[ 'REDIRECT_URL' ]))
                 $path = $_SERVER[ 'REDIRECT_URL' ];
             else
-                $path = $_SERVER[ 'REQUEST_URI' ];
-            
+                $pathX = explode("?", $_SERVER[ 'REQUEST_URI' ]);
+                $path = $pathX[0];
             if( $root != "/" ) {
             	$path = str_replace( $root, "", $path );	
             }
@@ -207,8 +259,8 @@ class FuseRequest {
      * @param unknown_type $path
      * @return unknown
      */
-    public function resolvePath( $path ) {
-        $resolvedPath;
+    public function resolvePath($path) {
+        $resolvedPath = "";
         
         $fuseactionVariable = $this->getApplication()->getFuseactionVariable();
         

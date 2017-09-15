@@ -853,10 +853,9 @@ class MyFuses {
     }
     
     public static function getRootUrl() {
-        
         $rootUrl = "http://" . $_SERVER[ 'HTTP_HOST' ];
         
-        if( substr( $rootUrl, -1 ) != "/" ) {
+        if(self::strEndsWith($rootUrl, "/") ) {
             $rootUrl .= "/";
         }
         
@@ -870,7 +869,6 @@ class MyFuses {
         $rootUrl = $rootUrl . implode( "/", $scriptNameX ) . "/"; 
         
         return $rootUrl;
-        
     }
     
     public static function getSelf() {
@@ -882,8 +880,7 @@ class MyFuses {
         
         // FIXME Fixing an error occoured with CGI GATWAYS. 
         // FIXME Sppressing redirect with CGI!!!
-         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
-            MyFuses::getInstance()->getApplication()->allowRewrite() ) {
+         if(MyFuses::isRewriting()) {
             $self1 = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
             if( substr( $self1, -1 ) != "/" ) {
                 $self1 .= "/";
@@ -898,15 +895,14 @@ class MyFuses {
         }
         
         $self .= $self1;
-        
+
         return $self;
     }
     
     public static function getMySelf( $showFuseactionVariable=true ) {
         // FIXME Fixing an error occoured with CGI GATWAYS. 
         // FIXME Sppressing redirect with CGI!!!
-         if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
-            MyFuses::getInstance()->getApplication()->allowRewrite() ) {
+         if(MyFuses::isRewriting()) {
             $mySelf = self::getSelf();
             if( $showFuseactionVariable ) {
                 $mySelf .= self::getInstance()->getRequest()->
@@ -928,9 +924,7 @@ class MyFuses {
         $showFuseactionVariable=true ) {
         // FIXME Fixing an error occoured with CGI GATWAYS. 
         // FIXME Sppressing redirect with CGI!!!
-        if( isset( $_SERVER[ 'REDIRECT_STATUS' ] ) && 
-            MyFuses::getInstance()->getApplication()->allowRewrite() ) {
-            
+        if(MyFuses::isRewriting()) {
             $xfaX = explode( ".", self::getXfa( $xfaName ) );
             
             $link = "";
@@ -958,11 +952,12 @@ class MyFuses {
                             $link = self::getSelf();
                         }
                         else if( $action->isDefault() ) {
-                             $link = self::getMySelf( $showFuseactionVariable ) . $xfaX[ 0 ];   
+                             $link = self::getMySelf($showFuseactionVariable)
+                                 . $xfaX[ 0 ];
                         }
                         else {
-                            $link = self::getMySelf( $showFuseactionVariable ) . 
-                                implode( "/", $xfaX );
+                            $link = self::getMySelf($showFuseactionVariable) .
+                                implode("/",$xfaX);
                         }
                     }
                     catch ( MyFusesActionException $mffae ) {
@@ -1006,7 +1001,23 @@ class MyFuses {
         require_once "myfuses/core/verbs/DoVerb.class.php";        
         DoVerb::doAction( $action );
     }
-    
+
+    public static function isRewriting() {
+        if(isset($_SERVER['REDIRECT_STATUS' ]) &&
+            MyFuses::getInstance()->getApplication()->allowRewrite() &&
+            !MyFuses::strEndsWith($_SERVER['REQUEST_URI'], ".php")) {
+            return true;
+        }
+        return false;
+    }
+
+    # From http://bit.ly/2xBUTzv
+    public static function strEndsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return $length === 0 ||
+            (substr($haystack, -$length) === $needle);
+    }
+
     /**
      * Includes core files.<br>
      * Throws IFBExeption when <code>file doesn't exists</code>.
