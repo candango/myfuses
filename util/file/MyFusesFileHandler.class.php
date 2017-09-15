@@ -148,14 +148,12 @@ class MyFusesFileHandler {
     public static function writeFile( $file, $string ) {
     	$fp = fopen( $file,"w" );
 
-    	// FIXME Fixing an error occoured with CGI GATWAYS. 
-        // FIXME Sppressing redirect with CGI!!!
-        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
-            if ( !flock($fp,LOCK_EX) ) {
-                throw new MyFusesFileOperationException( $file, 
-                    MyFusesFileOperationException::LOCK_EX_FILE );
-            }  
+
+        if ( !flock($fp,LOCK_EX) ) {
+            throw new MyFusesFileOperationException( $file,
+                MyFusesFileOperationException::LOCK_EX_FILE );
         }
+
     	
         if ( !fwrite($fp, $string) ) {
             throw new MyFusesFileOperationException( $file, 
@@ -178,15 +176,11 @@ class MyFusesFileHandler {
                 MyFusesFileOperationException::OPEN_FILE );
         }
         
-        // FIXME Fixing an error occoured with CGI GATWAYS. 
-        // FIXME Sppressing redirect with CGI!!!
-        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
-            if ( !flock( $fp, LOCK_SH ) ) {
-                throw new MyFusesFileOperationException( $file, 
-                    MyFusesFileOperationException::LOCK_FILE );
-            }  
+        if ( !flock( $fp, LOCK_SH ) ) {
+            throw new MyFusesFileOperationException( $file,
+                MyFusesFileOperationException::LOCK_FILE );
         }
-        
+
         $fileCode = fread( $fp, filesize( $file ) );
         
         flock($fp,LOCK_UN);

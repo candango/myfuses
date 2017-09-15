@@ -135,24 +135,19 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader {
              );
         
         // TODO verify if all conditions is satisfied for a file load ocours
-        if ( @!$fp = fopen( $this->getApplication()->
-            getCompleteFile() ,"r" ) ) {
+        if (@!$fp = fopen( $this->getApplication()-> getCompleteFile() ,
+            "r" ) ) {
             throw new MyFusesFileOperationException( 
                 $this->getApplication()->getCompleteFile(), 
                 MyFusesFileOperationException::OPEN_FILE );
         }
-        
-        
-        // FIXME Fixing an error occoured with CGI GATWAYS. 
-        // FIXME Sppressing redirect with CGI!!!
-        if( !isset( $_SERVER["GATEWAY_INTERFACE"] ) ) {
-            if ( !flock( $fp, LOCK_SH ) ) {
-                throw new MyFusesFileOperationException( 
-                    $this->getApplication()->getCompleteFile(), 
-                    MyFusesFileOperationException::LOCK_FILE );
-            }        
+
+        if (!flock($fp, LOCK_SH)) {
+            throw new MyFusesFileOperationException(
+                $this->getApplication()->getCompleteFile(),
+                MyFusesFileOperationException::LOCK_FILE );
         }
-        
+
         MyFuses::getInstance()->getDebugger()->registerEvent( 
             new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                 "Getting Application file \"" . 
