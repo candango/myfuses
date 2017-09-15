@@ -21,18 +21,20 @@ class MyFusesCircuitException extends MyFusesException {
      * @param integer $operation
      */
     public function __construct( $params, $operation ) {
-    	
-        $operationMessageMap = array(
-            self::NON_EXISTENT_CIRCUIT => "getNonExistentCircuitMessage",
-            self::USER_TRYING_ACCESS_INTERNAL_CIRCUIT => 
-                "getUserTryingAccessInternalCircuitMessage"
-        );
-        
-        list( $msg, $detail ) = 
-            $this->$operationMessageMap[ $operation ]( $params );
-        
-        parent::__construct( $msg, $detail, 
-            MyFusesException::NON_EXISTENT_CIRCUIT );
+    	$msg = "";
+        $detail = "";
+
+        switch ($operation){
+            case self::NON_EXISTENT_CIRCUIT:
+                list( $msg, $detail ) = $this->getNonExistentCircuitMessage($params);
+                break;
+            case self::USER_TRYING_ACCESS_INTERNAL_CIRCUIT:
+                list( $msg, $detail ) = $this->getUserTryingAccessInternalCircuitMessage($params);
+                break;
+
+        }
+
+        parent::__construct( $msg, $detail, $operation);
     }
     
     /**

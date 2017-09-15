@@ -64,7 +64,7 @@ abstract class MyFusesException extends Exception {
         
         self::setCurrentInstance( $this );
         
-        $stackTrace = & $this->getTrace();
+        $stackTrace = $this->getTrace();
         
         $function = "<b>Function</b>: " .
                     self::getTraceFunctionString( $stackTrace[ 0 ] );

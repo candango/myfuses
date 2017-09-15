@@ -21,17 +21,9 @@ class MyFusesApplicationException extends MyFusesException {
      * @param integer $operation
      */
     public function __construct( $params, $operation ) {
-    	
-        $operationMessageMap = array(
-            self::NON_EXISTENT_APPLICATION => 
-                "getNonExistentApplicationMessage"
-        );
+    	list( $msg, $detail ) = $this->getNonExistentApplicationMessage( $params );
         
-        list( $msg, $detail ) = 
-            $this->$operationMessageMap[ $operation ]( $params );
-        
-        parent::__construct( $msg, $detail, 
-            MyFusesException::NON_EXISTENT_CIRCUIT );
+        parent::__construct( $msg, $detail, MyFusesException::NON_EXISTENT_CIRCUIT);
     }
     
     /**

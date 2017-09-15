@@ -21,14 +21,12 @@ class MyFusesActionException extends MyFusesException {
      * @param integer $operation
      */
     public function __construct( $params, $operation ) {
-    	
-        $operationMessageMap = array(
-            self::NON_EXISTENT_FUSEACTION => "getNonExistentFuseActionMessage"
-        );
-        
-        list( $msg, $detail ) = 
-            $this->$operationMessageMap[ $operation ]( $params );
-        
+        $msg = null;
+        $detail = null;
+        if ($operation == self::NON_EXISTENT_FUSEACTION){
+            list( $msg, $detail ) = $this->getNonExistentFuseActionMessage($params);
+        }
+        var_dump($_GET);
         parent::__construct( $msg, $detail, 
             MyFusesException::NON_EXISTENT_FUSEACTION );
     }

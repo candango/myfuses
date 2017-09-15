@@ -141,7 +141,7 @@ class MyFusesXmlUtil {
             if( $method->isPublic() ) {
                 if( substr( $method->getName(), 0, 3 ) == "get" || 
                     substr( $method->getName(), 0, 2 ) == "is" ) {
-                    $methodName =& $method->getName();
+                    $methodName = $method->getName();
                     $subInit = substr( $methodName, 0 , 4 );
                     $subFinal = substr( $methodName, 4 );
                     $subInit = str_replace( array( "get", "is" ), "", $subInit );
