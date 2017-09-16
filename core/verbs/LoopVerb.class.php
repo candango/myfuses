@@ -225,6 +225,15 @@ class LoopVerb extends AbstractVerb {
             $from = $this->getFrom();
             $to = $this->getTo();
             $index = $this->getIndex();
+            $indexName = $this->getIndex();
+            if(MyFuses::strStartsWith($this->getIndex(), "$")) {
+                $indexName = str_replace("\$", "",
+                    $this->getIndex());
+            }
+            else {
+                $index = "\$" . $this->getIndex();
+            }
+
             $step = ( is_null( $this->step ) ) ? 1 : $this->step;
             
             $signal = "<=";
@@ -233,12 +242,14 @@ class LoopVerb extends AbstractVerb {
             
             if( $from > $to ) {
                 $signal = "<=";
-                $signal = "-";
+                $signal1 = "-";
             }
             
             $strOut .= "for( " . $index . " = " . $from . "; " . 
                 $index . " " . $signal . " " . $to . "; " . 
                 $index . " = " . $index . " " . $signal1 . " " . $step . " ) {\n";
+            $strOut .= str_repeat( "\t", $identLevel + 1 );
+            $strOut .= $this->getVariableSetString($indexName, "#" . $index . "#");
         }
         elseif( !is_null( $this->getCollection() ) ) {
             $collection = $this->getCollection();
@@ -260,7 +271,6 @@ class LoopVerb extends AbstractVerb {
         $strOut .= str_repeat( "\t", $identLevel );
         
         $strOut .= "}\n";
-        
         return $strOut;
     }
 
