@@ -1003,7 +1003,7 @@ class MyFuses {
     }
 
     public static function isRewriting() {
-        if(isset($_SERVER['REDIRECT_STATUS' ]) &&
+        if(isset($_SERVER['REDIRECT_URL' ]) &&
             MyFuses::getInstance()->getApplication()->allowRewrite() &&
             !MyFuses::strEndsWith($_SERVER['REQUEST_URI'], ".php")) {
             return true;
@@ -1011,7 +1011,12 @@ class MyFuses {
         return false;
     }
 
-    # From http://bit.ly/2xBUTzv
+    # From http://bit.ly/2wvhQ21
+    public static function strStartsWith($haystack, $needle) {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
     public static function strEndsWith($haystack, $needle) {
         $length = strlen($needle);
         return $length === 0 ||
