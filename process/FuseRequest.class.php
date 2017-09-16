@@ -94,7 +94,6 @@ class FuseRequest {
     private $extraParams = array();
     
     public function __construct( $applicationName = null ) {
-        
         MyFuses::setCurrentPhase( MyFusesLifecycle::BUILD_PHASE );
         
         if( is_null( $applicationName ) ) {
@@ -115,11 +114,12 @@ class FuseRequest {
                 
             $root = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
 
-            if (isset($_SERVER[ 'REDIRECT_URL' ]))
-                $path = $_SERVER[ 'REDIRECT_URL' ];
-            else
+            if (isset($_SERVER[ 'REDIRECT_URL' ])){
                 $pathX = explode("?", $_SERVER[ 'REQUEST_URI' ]);
                 $path = $pathX[0];
+            }
+
+
             if( $root != "/" ) {
             	$path = str_replace( $root, "", $path );	
             }
@@ -134,7 +134,7 @@ class FuseRequest {
             $path = substr( $path, 1, strlen( $path ) );
             
             $pathX = explode( "/", $path );
-            
+
             $this->validFuseactionName = $this->resolvePath( $pathX );
         }
         else {
@@ -171,8 +171,6 @@ class FuseRequest {
         
         list( $this->circuitName, $this->actionName ) = 
         	explode( '.', $this->validFuseactionName );
-        	
-        
     }
     
     /**
@@ -284,8 +282,12 @@ class FuseRequest {
                         return $circuit->getApplication()->getName() . "." . 
                             $resolvedPath . "." . $action->getName();
                     }
+                    $params = array( "actionName" => "default",
+                        "circuit" => $circuit ,
+                        "application" => $this->getApplication() );
+                    throw new MyFusesActionException( $params,
+                        MyFusesActionException::NON_EXISTENT_FUSEACTION);
                 }
-            
             }
             catch( MyFusesCircuitException $mfce ) {
                 try{
