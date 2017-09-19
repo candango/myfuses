@@ -265,7 +265,7 @@ abstract class MyFusesI18nHandler {
         }
         catch ( Exception $e ) {
             // FIXME handle error
-            echo "<b>" . $this->getApplication()->
+            echo "<b>" . MyFuses::getApplication()->
                 getCompleteFile() . "<b><br>";
             die( $e->getMessage() );    
         }
