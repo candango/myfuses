@@ -1,6 +1,6 @@
-<?if ( isset( $_SESSION[ 'file_message' ] ) ) {?>
+<?php if ( isset( $_SESSION[ 'file_message' ] ) ) {?>
 <br><br><font color="red"><?=$_SESSION[ 'file_message' ]?></font>
-<?}
+<?php }
 unset( $_SESSION[ 'file_message' ] );
 ?>
 

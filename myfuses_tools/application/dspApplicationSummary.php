@@ -9,22 +9,22 @@
     <th>File</th>
     <th>Access</th>
   </tr>  
-<?if( count( $application->getCircuits() ) ) {?>  
-    <?foreach( $application->getCircuits() as $circuit ) {?>
-        <?if( $circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT' ) {?>
+<?php if( count( $application->getCircuits() ) ) {?>
+    <?php foreach( $application->getCircuits() as $circuit ) {?>
+        <?php if( $circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT' ) {?>
         <tr>
             <td><?=$circuit->getName()?></td>
             <td><?=$circuit->getPath()?></td>
             <td><?=$circuit->getFile()?></td>
             <td><?=$circuit->getAccessName()?></td>
         </tr>
-        <?}?>
-    <?}?>
-<?}else {?>
+        <?php }?>
+    <?php }?>
+<?php }else {?>
 <tr>
     <td colspan="4">No Circuit Founded</td>
 </tr>
-<?}?>
+<?php }?>
 </table>
 
 <h3>Classes</h3>
@@ -34,18 +34,18 @@
     <th>Name</th>
     <th>Path</th>
   </tr>
-<?if( count( $application->getClasses() ) ) {?>  
-    <?foreach( $application->getClasses() as $class ) {?>
+<?php if( count( $application->getClasses() ) ) {?>
+    <?php foreach( $application->getClasses() as $class ) {?>
     <tr>
         <td><?=$class->getName()?></td>
         <td><?=$class->getPath()?></td>
     </tr>
-    <?}?>
-<?}else {?>
+    <?php }?>
+<?php }else {?>
 <tr>
     <td colspan="4">No Class Founded</td>
 </tr>
-<?}?>
+<?php }?>
 </table>
 
 <h3>Parameters</h3>

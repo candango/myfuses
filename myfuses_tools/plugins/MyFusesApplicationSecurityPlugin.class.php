@@ -6,7 +6,7 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin {
     const SESSION_INDEX = "MYFUSES_APPLICATION_SESSION_PASSWORD";
     
     public function run() {
-        @session_start();
+        session_start();
         
         $request = MyFuses::getInstance()->getRequest();
         
