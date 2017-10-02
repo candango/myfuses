@@ -652,6 +652,9 @@ class MyFuses {
             $strParse = "";
 	        
             $strParse .= "try {\n";
+
+            // Started the global output buffer control
+            $strParse .= "\tob_start();\n";
             
             $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
 		        MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  . 
@@ -670,12 +673,7 @@ class MyFuses {
                     " \$key => \$value ) {global \$\$value;}\n\n";
             }
             //end parsing pre process plugins
-            
-           $strParse .= "\$strContent = \"" . $this->getResponseType() . "; charset=\" . " . $controllerName . 
-                "::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
-    		
-	   		$strParse .= "header( \"Content-Type: \" . \$strContent );\n\n";
-            
+
             foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
                 $strParse .= $parseable->getParsedCode( 
                     $this->request->getApplication()->isParsedWithComments(), 
@@ -698,7 +696,7 @@ class MyFuses {
 	            
                 
 	            $strParse .= $parseable->getParsedCode( 
-                    $this->request->getApplication()->isParsedWithComments(), 
+                    $this->request->getApplication()->isParsedWithComments(),
                     0 );
 	        }
 	        
@@ -716,7 +714,16 @@ class MyFuses {
                 $strParse .= "\t\$plugin->run();\n}\n\n";
             }
             //end parsing post process plugins
-            
+
+            $strParse .= "\t\$strContent = " . $controllerName .
+                "::getInstance()->getResponseType() . \"; charset=\" . " . $controllerName .
+                "::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
+
+            $strParse .= "\theader( \"Content-Type: \" . \$strContent );\n";
+
+            // Flushed global output buffer content
+            $strParse .= "\tob_end_flush();\n";
+
             $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n";
 
             if( count( $application->getPlugins( 
@@ -741,7 +748,7 @@ class MyFuses {
 	            mkdir( $path );
 	            chmod( $path, 0777 );
 	        }
-	        
+
 	        MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
 	           MyFusesContext::sanitizeHashedString( $strParse ) );
 	        
