@@ -88,7 +88,7 @@ class ResponseVerb extends AbstractVerb {
     /**
      * Set the XFA Value
      *
-     * @param string $value
+     * @param string $type
      */
     public function setType( $type ) {
         $this->type = $type;
@@ -100,11 +100,8 @@ class ResponseVerb extends AbstractVerb {
      * @return array
      */
     public function getData() {
-        
         $data = parent::getData();
-        
         $data[ "attributes" ][ "type" ] = $this->getType();
-        
         return $data;
     }
     
@@ -114,13 +111,8 @@ class ResponseVerb extends AbstractVerb {
      * @param array $data
      */
     public function setData( $data ) {
-        
         parent::setData( $data );
-        
         $this->setType( $data[ "attributes" ][ "type" ] );
-        
-        MyFuses::getInstance()->setResponseType( $this->getType() );
-        
     }
 
     /**
@@ -129,9 +121,11 @@ class ResponseVerb extends AbstractVerb {
      * @return string
      */
     public function getParsedCode( $commented, $identLevel ) {
-        
-        return "";
+        $strOut = parent::getParsedCode( $commented, $identLevel );
+        $strOut .= str_repeat( "\t", $identLevel );
+        $strOut .= "MyFuses::getInstance()->setResponseType(\"" .
+            $this->getType() . "\");\n";
+        return $strOut;
     }
 
 }
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
