@@ -149,13 +149,18 @@ class DoVerb extends ParameterizedVerb {
     
     public function setData( $data ) {
         parent::setData( $data );
-        $this->setActionToBeExecuted( $data[ "attributes" ][ "action" ] );
-        
-        if( isset( $data[ "attributes" ][ "contentvariable" ] ) ) {
-            $this->setContentVariable( 
-                $data[ "attributes" ][ "contentvariable" ] );
+
+        foreach($data[ 'attributes' ] as $attributeName => $attribute) {
+            switch (strtolower($attributeName)) {
+                case "action":
+                    $this->setActionToBeExecuted($attribute);
+                    break;
+                case "contentvariable":
+                case "variable":
+                    $this->setContentVariable($attribute);
+                    break;
+            }
         }
-        
     }
     
     public static function doAction( CircuitAction $action ) {        
@@ -228,18 +233,19 @@ class DoVerb extends ParameterizedVerb {
         $strOut .= str_repeat( "\t", $identLevel );
         
         $action->setCalledByDo( true );
-        
+
         $strOut .=  $this->getAction()->getCircuit()->getApplication()->
             getControllerClass() . "::doAction( \"" . 
-            $completeActionName . "\" );";
+            $completeActionName . "\" );\n";
             
         $strOut .= self::getContextRestoreString();
         
         if( !is_null( $this->getContentVariable() ) ) {
             $strOut .= str_repeat( "\t", $identLevel );
-            
-            $strOut .= "\$" . $this->getContentVariable() . "= ob_get_contents();ob_end_clean();";
-            
+            $strOut .= "\$" . $this->getContentVariable() . "= ob_get_contents();\n";
+            $strOut .= str_repeat( "\t", $identLevel );
+            $strOut .= "ob_end_clean();\n";
+            $strOut .= str_repeat( "\t", $identLevel );
         	$strOut .= self::getVariableSetString( $this->getContentVariable(), 
                 "#$" . $this->getContentVariable() . "#" );
         }

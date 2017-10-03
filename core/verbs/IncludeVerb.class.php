@@ -164,8 +164,6 @@ class IncludeVerb extends ParameterizedVerb {
                     }
                     $this->setFile($file);
                     break;
-
-
             }
         }
     }
