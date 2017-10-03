@@ -69,7 +69,7 @@ class IncludeVerb extends ParameterizedVerb {
      * 
      * @var string
      */
-    private $circuitName;
+    private $circuitName = "";
     
     /**
      * The include content variable
@@ -146,33 +146,28 @@ class IncludeVerb extends ParameterizedVerb {
     
     public function setData( $data ) {
         parent::setData( $data );
-        $file = "";
-        if( isset( $data[ "attributes" ][ "file" ] ) ) {
-            $file = $data[ "attributes" ][ "file" ];
+
+        foreach($data[ 'attributes' ] as $attributeName => $attribute) {
+            switch (strtolower($attributeName)) {
+                case "circuit":
+                    $this->setCircuitName($attribute);
+                    break;
+                case "contentvariable":
+                case "variable":
+                    $this->setContentVariable($attribute);
+                    break;
+                case "file":
+                case "template":
+                    $file = $attribute;
+                    if(!MyFusesFileHandler::hasExtension($file, "php")) {
+                        $file .= ".php";
+                    }
+                    $this->setFile($file);
+                    break;
+
+
+            }
         }
-        
-        if( isset( $data[ "attributes" ][ "template" ] ) ) {
-            $file = $data[ "attributes" ][ "template" ];
-        }
-        
-        if( isset( $data[ "attributes" ][ "contentvariable" ] ) ) {
-            $this->setContentVariable( 
-                $data[ "attributes" ][ "contentvariable" ] );
-        }
-        
-        if( !MyFusesFileHandler::hasExtension( $file, "php" ) ) {
-            $file .= ".php";
-        }
-        
-        $this->setFile( $file );
-        
-        $circuitName = "";
-        if( isset( $data[ "attributes" ][ "circuit" ] ) ) {
-            $circuitName = $data[ "attributes" ][ "circuit" ];
-        }
-        
-        $this->setCircuitName( $circuitName );
-        
     }
     
 	/**
