@@ -123,7 +123,10 @@ class DataToXmlVerb extends AbstractVerb {
         $strOut = parent::getParsedCode( $commented, $identLevel );
         
         $strOut .= str_repeat( "\t", $identLevel );
-        
+
+        $controllerName = $this->getAction()->getCircuit()->getApplication(
+                            )->getControllerClass();
+
         if( is_null( $this->getXmlName() ) ) {
             
             if( $this->isClean() ) {
@@ -135,6 +138,15 @@ class DataToXmlVerb extends AbstractVerb {
                 $this->getValue() . "\" ) );\n";
             
             if( $this->isDie() ) {
+                // Flushed global output buffer content
+                $strOut .= str_repeat( "\t", $identLevel );
+                $strOut .= "\t\$strContent = " . $controllerName .
+                    "::getInstance()->getResponseType() . \"; charset=\" . " . $controllerName .
+                    "::getInstance()->getCurrentCircuit()->getApplication()->getCharacterEncoding();\n";
+                $strOut .= str_repeat( "\t", $identLevel );
+                $strOut .= "\theader( \"Content-Type: \" . \$strContent );\n";
+                $strOut .= str_repeat( "\t", $identLevel );
+                $strOut .= "\tob_end_flush();\n";
                 $strOut .= str_repeat( "\t", $identLevel );
                 $strOut .= "die();\n";
             }
