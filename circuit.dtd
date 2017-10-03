@@ -51,6 +51,7 @@
 <!ATTLIST do
 	action CDATA #REQUIRED
 	contentvariable CDATA #IMPLIED
+	variable CDATA #IMPLIED
 	append (true | false | yes | no) "false"
 	overwrite (true | false | yes | no) "true"
 >
@@ -70,6 +71,7 @@
 	append (true | false | yes | no) "false"
 	prepend (true | false | yes | no) "false"
 	contentvariable CDATA #IMPLIED
+	variable CDATA #IMPLIED
 >
 
 
