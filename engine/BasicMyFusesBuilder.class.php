@@ -180,7 +180,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
             }
         }
 
-        if( count( $data[ 'children' ] > 0 ) && !is_null( $data[ 'children' ] ) ) {
+        if( !is_null( $data[ 'children' ] ) && count( $data[ 'children' ] > 0 ) ) {
             foreach( $data[ 'children' ] as $child ) {
                 switch( $child[ 'name' ] ) {
                     case "fuseaction":
