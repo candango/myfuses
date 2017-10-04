@@ -179,19 +179,21 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 }
             }
         }
+        if (defined($data[ 'children' ])){
+            if( !is_null( $data[ 'children' ] ) &&
+                count( $data[ 'children' ] > 0 ) ) {
+                foreach( $data[ 'children' ] as $child ) {
+                    switch( $child[ 'name' ] ) {
+                        case "fuseaction":
+                        case "action":
+                            self::buildAction( $circuit, $child );
+                            break;
+                        case "prefuseaction":
+                        case "postfuseaction":
+                            self::buildGlobalAction( $circuit, $child );
+                            break;
 
-        if( !is_null( $data[ 'children' ] ) && count( $data[ 'children' ] > 0 ) ) {
-            foreach( $data[ 'children' ] as $child ) {
-                switch( $child[ 'name' ] ) {
-                    case "fuseaction":
-                    case "action":
-                        self::buildAction( $circuit, $child );
-                        break;
-                    case "prefuseaction":
-                    case "postfuseaction":
-                        self::buildGlobalAction( $circuit, $child );
-                        break;
-                        
+                    }
                 }
             }
         }
