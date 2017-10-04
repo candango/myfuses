@@ -77,7 +77,14 @@ class InstantiateVerb extends AbstractVerb {
      * @var string
      */
     private $webservice;
-    
+
+    /**
+     * Arguments used at object construction
+     *
+     * @var array
+     */
+    private $arguments;
+
     /**
      * Child arguments used at object construction
      * 
@@ -138,7 +145,26 @@ class InstantiateVerb extends AbstractVerb {
     public function setWebservice( $webservice ) {
         $this->webservice = $webservice;
     }
-    
+
+
+    /**
+     * Return the arguments to instantiate te object
+     *
+     * @return string
+     */
+    public function getArguments() {
+        return $this->arguments;
+    }
+
+    /**
+     * Set the arguments to instantiate the object
+     *
+     * @param string $arguments
+     */
+    public function setArguments( $arguments ) {
+        $this->arguments = $arguments;
+    }
+
     /**
      * Return all verb arguments
      *
@@ -151,18 +177,24 @@ class InstantiateVerb extends AbstractVerb {
     /**
      * Set an array of arguments in this verb
      *
-     * @param array $arguments
+     * @param array $childArguments
      */
     public function setChildArguments( $childArguments ) {
         $this->childArguments = $childArguments;
     }
      
     /**
-     * Return o new string with all arguments separated by a ','
+     * Return o new string with all arguments separated by a ',' or the legacy
+     * arguments parameters set on the instantiate.
+     *
+     * The arguments parameter will take priority over the child of arguments.
      *
      * @return string
      */
     private function getArgumentString() {
+        if (!is_null($this->getArguments())){
+            return $this->getArguments();
+        }
         $strOut = "";
         if( count( $this->getChildArguments() ) ) {
             foreach ( $this->getChildArguments() as $key => $argument ) {
@@ -175,6 +207,10 @@ class InstantiateVerb extends AbstractVerb {
     
     public function getData() {
         $data = parent::getData();
+
+        if( !is_null( $this->getArguments() ) ) {
+            $data[ "attributes" ][ "arguments" ] = $this->getArguments();
+        }
 
         if( !is_null( $this->getClass() ) ) {
             $data[ "attributes" ][ "class" ] = $this->getClass();    
@@ -200,6 +236,10 @@ class InstantiateVerb extends AbstractVerb {
     
     public function setData( $data ) {
         parent::setData( $data );
+
+        if( isset($data[ "attributes" ][ "arguments" ])) {
+            $this->setArguments($data[ "attributes" ][ "arguments" ]);
+        }
 
         if( isset( $data[ "attributes" ][ "webservice" ] ) ) {
             $this->setWebservice( $data[ "attributes" ][ "webservice" ] );
