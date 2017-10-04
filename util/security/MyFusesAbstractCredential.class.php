@@ -39,11 +39,11 @@ class MyFusesAbstractCredential implements MyFusesCredential {
     private $timeout = 900;
     
     /**
-     * ation time
+     * expiration time
      *
      * @var int
      */
-    private $ationTime = 0;
+    private $expirationTime = 0;
     
     /**
      * Credential autenticated flag
@@ -58,6 +58,7 @@ class MyFusesAbstractCredential implements MyFusesCredential {
      */
     public function __construct() {
         $this->createTime = time();
+        $this->expirationTime = time() + $this->timeout;
     }
     
     /**
@@ -225,5 +226,42 @@ class MyFusesAbstractCredential implements MyFusesCredential {
         }
         return false;
     }
-    
+
+    public function getData(){
+        $data = array();
+        $data["attributes"] = $this->attributes;
+        $data["roles"] = $this->roles;
+        $data["circuits"] = $this->circuits;
+        $data["created"] = $this->createTime;
+        $data["timeout"] = $this->timeout;
+        $data["expires"] = $this->expirationTime;
+        $data["authenticated"] = $this->authenticated;
+
+        return $data;
+    }
+
+    public function setData($data) {
+        if(isset($data["attributes"])) {
+            $this->attributes = $data["attributes"];
+        }
+        if(isset($data["roles"])) {
+            $this->roles = $data["roles"];
+        }
+        if(isset($data["circuits"])) {
+            $this->circuits = $data["circuits"];
+        }
+        if(isset($data["created"])) {
+            $this->createTime = $data["created"];
+        }
+        if(isset($data["timeout"])) {
+            $this->timeout = $data["timeout"];
+        }
+        if(isset($data["expires"])) {
+            $this->expirationTime = $data["expires"];
+        }
+        if(isset($data["authenticated"])) {
+            $this->authenticated = $data["authenticated"];
+        }
+    }
+
 }

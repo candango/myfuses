@@ -230,11 +230,11 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
         
         $this->configurePlugin();
         
-        $this->configureSecurityManager( $manager );
+        $this->configureSecurityManager($manager);
         
-        $this->authenticate( $manager );
+        $this->authenticate($manager);
         
-        $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
+        $credential = $_SESSION['MYFUSES_SECURITY_CREDENTIAL'];
         
     }
     
@@ -244,13 +244,11 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
      */
     private function runPreFuseaction() {
     	$manager = MyFusesAbstractSecurityManager::getInstance();
-    	
-    	if( $manager->isAuthenticated() ) {
+        if( $manager->isAuthenticated() ) {
     	    foreach( $manager->getAuthorizationListeners() as $listner ) {
-	    		$listner->authorize( $manager );
-	    	}
-    	}
-    	
+                $listner->authorize( $manager );
+            }
+        }
     }
     
 	/**
@@ -391,12 +389,12 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
             getFuseActionName();
         
         if( $logoutAction == $currentAction ) {
-        	if( $manager->isAuthenticated() ) {
-        		$manager->logout();
-        	}
-        	else {
-        		MyFuses::sendToUrl( MyFuses::getMySelfXfa( 
-                    'goToLoginAction' ) );
+            if($manager->isAuthenticated()) {
+                $manager->logout();
+            }
+            else {
+                MyFuses::sendToUrl(MyFuses::getMySelfXfa(
+                    'goToLoginAction'));
         	}
         }
             

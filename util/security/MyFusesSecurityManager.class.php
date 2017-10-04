@@ -22,11 +22,11 @@ interface MyFusesSecurityManager {
     public function getCredential();
 
     /**
-     * Set manager credential
+     * Persists the credential into the session
      *
      * @param IfluxCredential $credential
      */
-    public function setCredential( MyFusesCredential $credential );
+    public function persistCredential( MyFusesCredential $credential );
 
     /**
      * Returns true/false if the crendetial is athenticaded

@@ -304,7 +304,7 @@ abstract class AbstractPlugin implements Plugin{
     public static function getInstance( Application $application, 
         $phase, $name, $path, $file, $parameters = array() ) {
         $class = $name;
-            
+
         if( substr( $name, -6 ) !== "Plugin" ) {
             $class .= "Plugin";   
         }
@@ -317,7 +317,7 @@ abstract class AbstractPlugin implements Plugin{
                 $file = $name . "Plugin.class.php";    
             }
         }
-        
+
         // FIXME handle missing file include exception
         if( $path == "" ) {
             foreach( $application->getController()->getPluginPaths() as 
@@ -339,9 +339,9 @@ abstract class AbstractPlugin implements Plugin{
         }
         
         require_once $path . $file;
-        
+
         $plugin = new $class();
-        
+
         $plugin->setName( $name );
         $plugin->setPath( $path );
         $plugin->setFile( $file );

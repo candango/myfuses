@@ -1,21 +1,45 @@
 <?php
 require_once "myfuses/util/security/MyFusesAbstractSecurityManager.class.php";
+require_once "myfuses/util/data/MyFusesJsonUtil.class.php";
 
 class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
     
     public function createCredential() {
-        if( !isset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] ) ) {
-            $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = 
-                new MyFusesBasicCredential();    
+        MyFuses::getInstance()->getDebugger()->registerEvent(
+            new MyFusesDebugEvent( "MyfusesSecurityManager",
+                "Myfuses Security Plugin creating credential." ) );
+        if(!isset( $_SESSION['MYFUSES_SECURITY_CREDENTIAL'])) {
+            MyFuses::getInstance()->getDebugger()->registerEvent(
+                new MyFusesDebugEvent( "MyfusesSecurityManager",
+                    "No credential found. Creating a new one." ) );
+            $credential = new MyFusesBasicCredential();
+
+            $_SESSION['MYFUSES_SECURITY_CREDENTIAL'] =
+                $credential->getData();
         }
         else {
-            $credential = $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];
-            if( $credential->isExpired() ) {
-                $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = 
-                    new MyFusesBasicCredential();
+            MyFuses::getInstance()->getDebugger()->registerEvent(
+                new MyFusesDebugEvent( "MyfusesSecurityManager",
+                    "Credential found. Checking if isnt expired." ) );
+            $credential = new MyFusesBasicCredential();
+            $credential->setData($_SESSION['MYFUSES_SECURITY_CREDENTIAL']);
+
+            if($credential->isExpired()) {
+                MyFuses::getInstance()->getDebugger()->registerEvent(
+                    new MyFusesDebugEvent( "MyfusesSecurityManager",
+                        "Credential expired. Creating a new one." ) );
+                $credential = new MyFusesBasicCredential();
+
+                $_SESSION['MYFUSES_SECURITY_CREDENTIAL'] =
+                    $credential->getData();
             }
             else {
+                MyFuses::getInstance()->getDebugger()->registerEvent(
+                    new MyFusesDebugEvent( "MyfusesSecurityManager",
+                        "Credential not expired. Increasing navigation time." ) );
                 $credential->increaseNavigationTime();
+                $_SESSION['MYFUSES_SECURITY_CREDENTIAL'] =
+                    $credential->getData();
             }
         }
     }
@@ -26,14 +50,16 @@ class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager {
      * @return MyFusesCredential
      */
     public function getCredential() {
-    	if( isset( $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] ) ) {
-    	   return $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ];	
+        if(isset($_SESSION['MYFUSES_SECURITY_CREDENTIAL'])) {
+            $credential = new MyFusesBasicCredential();
+            $credential->setData($_SESSION['MYFUSES_SECURITY_CREDENTIAL']);
+            return $credential;
     	}
         return null;
     }
     
-    public function setCredential( MyFusesCredential $credential ) {
-        $_SESSION[ 'MYFUSES_SECURITY' ][ 'CREDENTIAL' ] = $credential;
+    public function persistCredential(MyFusesCredential $credential) {
+        $_SESSION['MYFUSES_SECURITY_CREDENTIAL'] = $credential->getData();
     }
     
 }
