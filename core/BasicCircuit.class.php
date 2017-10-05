@@ -108,7 +108,7 @@ class BasicCircuit implements Circuit {
      *
      * @var array
      */
-    private $data;
+    private $data = [];
     
     /**
      * Application parent name
@@ -211,12 +211,21 @@ class BasicCircuit implements Circuit {
     }
     
     /**
-     * REturn the complete path for cache file
+     * Return the cache file complete path
      *
      * @return string
      */
     public function getCompleteCacheFile() {
         return $this->getApplication()->getParsedPath() . $this->getName() . ".circuit.myfuses.php";
+    }
+
+    /**
+     * Return the data file complete path
+     *
+     * @return string
+     */
+    public function getCompleteCacheDataFile() {
+        return $this->getApplication()->getParsedPath() . $this->getName() . ".circuit.myfuses.data";
     }
     
     /**
@@ -621,8 +630,8 @@ class BasicCircuit implements Circuit {
                     "\", \"" . $name . "\", \"" . $value . "\" );\n";
             }
         }
-        
-        $strOut .= "\$circuit->setVerbPaths( \"" . addslashes( 
+
+        $strOut .= "\$circuit->setVerbPaths( \"" . addslashes(
             serialize( $this->getVerbPaths() ) ) . "\" );\n";
         $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
         $strOut .= "\$circuit->setPermissions( \"" . $this->getPermissions() . 
@@ -631,16 +640,17 @@ class BasicCircuit implements Circuit {
             $this->getLastLoadTime() . " );\n";
         $strOut .= "\$circuit->setParentName( \"" . 
             $this->getParentName() . "\" );\n";
-        
-        $strOut .= "\$circuit->setData( unserialize( \"" . str_replace( '$', 
-            '\$', addslashes( serialize( $this->getData() ) ) ) . "\" ) );\n";
-        
+        if( $this->getName() !== "MYFUSES_GLOBAL_CIRCUIT" ) {
+            $strOut .= "\$circuit->setData( unserialize( " .
+                "MyFusesFileHandler::readFile(\"" .
+                $this->getCompleteCacheDataFile() . "\") ) );\n";
+        }
+        else  {
+            $strOut .= "\$circuit->setData([]);\n";
+        }
         $strOut .= $this->getPreFuseActionCachedCode();
-        
         $strOut .= $this->getPostFuseActionCachedCode();
-        
         $strOut .= $this->getActionsCachedCode();
-        
         return $strOut;
     }
     

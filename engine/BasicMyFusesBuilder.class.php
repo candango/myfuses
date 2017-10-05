@@ -179,7 +179,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder {
                 }
             }
         }
-        if (defined($data[ 'children' ])){
+        if (array_key_exists('children', $data)){
             if( !is_null( $data[ 'children' ] ) &&
                 count( $data[ 'children' ] > 0 ) ) {
                 foreach( $data[ 'children' ] as $child ) {

@@ -588,16 +588,12 @@ class MyFuses {
         foreach( $application->getCircuits() as $circuit ) {
             if( $circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT" ) {
                 if( $circuit->isLoaded() ) {
-                      
-                    $strCircuitStoreData = "";
-                    
-                    $strCircuitStoreData = $circuit->getCachedCode();
-                    
                     $fileName = $circuit->getCompleteCacheFile();
-                    
-                    MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
-                        $strCircuitStoreData );
-                    
+                    $dataFileName = $circuit->getCompleteCacheDataFile();
+                    MyFusesFileHandler::writeFile($fileName, "<?php\n" .
+                        $circuit->getCachedCode());
+                    MyFusesFileHandler::writeFile( $dataFileName,
+                        serialize($circuit->getData()));
                 }
             }
         }
