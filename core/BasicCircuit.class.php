@@ -1,39 +1,10 @@
 <?php
 /**
- * BasicCircuit - BasicCircuit.class.php
- * 
- * MyFuses Circuit class
- * 
- * PHP version 5
- * 
- * The contents of this file are subject to the Mozilla Public License
- * Version 1.1 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- * 
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- * 
- * This product includes software developed by the Fusebox Corporation 
- * (http://www.fusebox.org/).
- * 
- * The Original Code is MyFuses "a Candango implementation of Fusebox 
- * Corporation Fusebox" part .
- * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flavio Gonçalves Garcia are Copyright (C) 2006 - 2006.
- * All Rights Reserved.
- * 
- * Contributor(s): Flavio Gonçalves Garcia.
+ * MyFuses Framework (http://myfuses.candango.org)
  *
- * @category   controller
- * @package    myfuses.core
- * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id:Circuit.class.php 23 2007-01-04 13:26:33Z piraz $
+ * @link      http://github.com/candango/myfuses
+ * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
 require_once "myfuses/core/Circuit.class.php";
@@ -47,10 +18,7 @@ require_once "myfuses/core/Circuit.class.php";
  * 
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2006 Candango Group <http://www.candango.org/>
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision:23 $
+ * @author     Flavio Garcia <piraz at candango.org>
  * @since      Revision 48
  */
 class BasicCircuit implements Circuit {
@@ -216,7 +184,8 @@ class BasicCircuit implements Circuit {
      * @return string
      */
     public function getCompleteCacheFile() {
-        return $this->getApplication()->getParsedPath() . $this->getName() . ".circuit.myfuses.php";
+        return $this->getApplication()->getParsedPath() . $this->getName() .
+            ".circuit.myfuses.php";
     }
 
     /**
@@ -225,7 +194,8 @@ class BasicCircuit implements Circuit {
      * @return string
      */
     public function getCompleteCacheDataFile() {
-        return $this->getApplication()->getParsedPath() . $this->getName() . ".circuit.myfuses.data";
+        return $this->getApplication()->getParsedPath() . $this->getName() .
+            ".circuit.myfuses.data";
     }
     
     /**
@@ -646,11 +616,11 @@ class BasicCircuit implements Circuit {
                 $this->getCompleteCacheDataFile() . "\") ) );\n";
         }
         else  {
-            $strOut .= "\$circuit->setData([]);\n";
+            $strOut .= "\$circuit->setData(array());\n";
+            $strOut .= $this->getPreFuseActionCachedCode();
+            $strOut .= $this->getPostFuseActionCachedCode();
+            $strOut .= $this->getActionsCachedCode();
         }
-        $strOut .= $this->getPreFuseActionCachedCode();
-        $strOut .= $this->getPostFuseActionCachedCode();
-        $strOut .= $this->getActionsCachedCode();
         return $strOut;
     }
     

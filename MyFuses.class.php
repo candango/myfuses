@@ -1,36 +1,12 @@
 <?php
 /**
- * MyFuses - MyFuses.class.php
- * 
- * Myfuses is a Framework that helps desing, develop and maintain PHP
- * applications. MyFuses is based on Fusebox and was designed to be more
- * extensible and stable.
- * 
- * PHP version 5
- * 
- * Copyright 2015-2017 Flavio Garcia
+ * MyFuses Framework (http://myfuses.candango.org)
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- * Contributor(s): Flavio Garcia.
- *
- * @category   controller
- * @package    myfuses
- * @author     Flavio Garcia <piraz at candango.org>
- * @copyright  Copyright (c) 2006 - 2017 Flavio Garcia
- * @link       http://www.candango.org/myfuses
- * @license    https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
+ * @link      http://github.com/candango/myfuses
+ * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
+
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
 require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
@@ -66,19 +42,16 @@ clearstatcache();
 
 /**
  * MyFuses - MyFuses.class.php
- * 
+ *
  * Myfuses is a Framework that helps desing, develop and maintain PHP
  * applications. MyFuses is based on Fusebox and was designed to be more
  * extensible and stable.
- * 
+ *
  * PHP version 5
  *
  * @category   controller
  * @package    myfuses
  * @author     Flavio Garcia <piraz at candango.org>
- * @copyright  Copyright (c) 2006 - 2017 Flavio Garcia
- * @link http://www.candango.org/myfuses
- * @license    https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  * @since      Revision 17
  */
 class MyFuses {
@@ -616,7 +589,7 @@ class MyFuses {
      * string in one file
      */
     public function parseRequest() {
-        
+
         $circuit = $this->request->getAction()->getCircuit();
         
         $controllerName = $circuit->getApplication()->getControllerClass();
@@ -728,9 +701,7 @@ class MyFuses {
             }
             
             $strParse .= "}";
-            
-            
-            
+
             $this->createApplicationPath( $application );
             
             if( !file_exists( $path ) ) {
@@ -745,7 +716,6 @@ class MyFuses {
                 new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
                     "Fuseaction " . 
                     $this->getRequest()->getFuseActionName() . " Compiled" ) );
-	        
         }
         
         MyFusesContext::includeFile( $fileName );

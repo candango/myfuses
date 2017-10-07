@@ -50,11 +50,7 @@ require_once 'myfuses/util/security/MyFusesAbstractSecurityManager.class.php';
  *
  * @category   plugins
  * @package    myfuses.plugins
- * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @copyright  Copyright (c) 2006 - 2008 Candango Opensource Group
- * @link http://www.candango.org/myfuses
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision: 205 $
+ * @author     Flavio Garcia <piraz at candango.org>
  * @since      Revision 25
  */
 abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin {
