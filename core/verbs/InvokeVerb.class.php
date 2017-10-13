@@ -270,34 +270,46 @@ class InvokeVerb extends AbstractVerb {
     	}
 		
     	if( !is_null( $this->getVariable() ) ) {
-    	    
     	    $strOut .= "MyFusesContext::setVariable( \"" .
                 $this->getVariable() . "\", ";
-    	    
     	}
     	
 		// Begin method call
 		if( !is_null( $this->getMethod() ) ) {
+            $hasParentheses = false;
+            #TODO: Test if the parentheses was closed.
+            if (strpos($this->getMethod(),'(') !== false) {
+                $hasParentheses = true;
+            }
 			if( is_null( $this->getClass() ) ) {
-                $strOut .= "MyFusesContext::getVariable( \"" . 
-                    $this->getObject() . "\" )->" . 
-                    $this->getMethod() . "( ";    
+                $strOut .= "MyFusesContext::getVariable( \"" .
+                    $this->getObject() . "\" )->" .
+                    $this->getMethod();
+                if(!$hasParentheses) {
+                    $strOut .= "( ";
+                }
+
 			}
 			else {
                 $strOut .= $this->getClass() . "::" . 
-                    $this->getMethod() . "( ";    
+                    $this->getMethod();
+                if(!$hasParentheses) {
+                    $strOut .= "( ";
+                }
 			}
 		    
-			// Verify arguments - Fusebox 5 (strictMode set to true)
+			//TODO: Verify arguments - Fusebox 5 (strictMode set to true)
 			if ( !is_null( $this->getArguments() ) ){
                 $strOut .= $this->getArgumentString();
 			}
-		    // Close method
-	        $strOut .= " )";
+            // Close method
+			if(!$hasParentheses) {
+                $strOut .= " )";
+            }
 		}
 		else {
-		    $strOut .= "\$" . $this->getObject() . "->" . 
-		        $this->getMethodCall() . ";\n\n";
+            $strOut .= "\$" . $this->getObject() . "->" .
+                $this->getMethodCall() . ";\n\n";
 		}
 		
         if( is_null( $this->getVariable() ) ) {
