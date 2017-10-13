@@ -309,7 +309,7 @@ class InvokeVerb extends AbstractVerb {
 		}
 		else {
             $strOut .= "\$" . $this->getObject() . "->" .
-                $this->getMethodCall() . ";\n\n";
+                $this->getMethodCall();
 		}
 		
         if( is_null( $this->getVariable() ) ) {
