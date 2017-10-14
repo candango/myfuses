@@ -1,71 +1,37 @@
 <?php
 /**
- * FuseAction  - FuseAction.class.php
- * 
- * FuseAction is the real action executed by one Circuit. When you acess some
- * Circuit.Action MyFuses will resolve some FuseAction in fact. 
- * 
- * PHP version 5
- * 
- * The contents of this file are subject to the Mozilla Public License
- * Version 1.1 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- * 
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- * 
- * This product includes software developed by the Fusebox Corporation 
- * (http://www.fusebox.org/).
- * 
- * The Original Code is myFuses "a Candango implementation of Fusebox Corporation 
- * Fusebox" part .
- * 
- * The Initial Developer of the Original Code is Flávio Gonçalves Garcia.
- * Portions created by Flávio Gonçalves Garcia are Copyright (C) 2006 - 2007.
- * All Rights Reserved.
- * 
- * Contributor(s): Flávio Gonçalves Garcia.
+ * MyFuses Framework (http://myfuses.candango.org)
  *
- * @category   controller
- * @package    myfuses.core
- * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
- * @link       http://www.candango.org/myfuses
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id$
+ * This product includes software developed by the Fusebox Corporation
+ * (http://www.fusebox.org/).
+ *
+ * @link      http://github.com/candango/myfuses
+ * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
 require_once "myfuses/core/AbstractAction.class.php";
 require_once "myfuses/core/CircuitAction.class.php";
 
 /**
- * FuseAction  - FuseAction.class.php
- * 
+ * FuseAction  - FuseAction.php
+ *
  * FuseAction is the real action executed by one Circuit. When you acess some
  * Circuit.Action MyFuses will resolve some FuseAction in fact. 
- * 
- * PHP version 5
  *
  * @category   controller
  * @package    myfuses.core
- * @author     Flavio Gonçalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
- * @link http://www.candango.org/myfuses
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision$
- * @since      Revision 25
+ * @author     Flavio Garcia <piraz at candango.org>
+ * @since      f58e20e297c17545ad8f76fed4a1f23c35f2e445
  */
-class FuseAction extends AbstractAction implements CircuitAction {
-    
+class FuseAction extends AbstractAction implements CircuitAction
+{
     /**
      * Enter description here...
      *
      * @var Circuit
      */
-    private $circtuit;
+    private $circuit;
     
     /**
      * Enter description here...
@@ -122,11 +88,11 @@ class FuseAction extends AbstractAction implements CircuitAction {
      * @return Circuit
      */
     public function &getCircuit() {
-        $circuit = $this->circtuit;
+        $circuit = $this->circuit;
         
         MyFusesLifecycle::checkCircuit( $circuit );
         
-        return $this->circtuit;
+        return $this->circuit;
     }
     
     /**
@@ -135,7 +101,7 @@ class FuseAction extends AbstractAction implements CircuitAction {
      * @param Circuit $circuit
      */
     public function setCircuit( Circuit &$circuit ) {
-        $this->circtuit = &$circuit;
+        $this->circuit = &$circuit;
     }
     
     /**
@@ -215,8 +181,8 @@ class FuseAction extends AbstractAction implements CircuitAction {
         
         $myFusesString = $controllerClass . "::getInstance()";
         
-        $actionString = "\"" . $this->circtuit->getApplication()->getName() .
-            "." . $this->circtuit->getName() . 
+        $actionString = "\"" . $this->circuit->getApplication()->getName() .
+            "." . $this->circuit->getName() .
             "." . $this->getName() . "\"";
         
         if( $this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT" ) {
@@ -438,4 +404,3 @@ class FuseAction extends AbstractAction implements CircuitAction {
         $this->permissions = $permissions;
     }
 }
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
