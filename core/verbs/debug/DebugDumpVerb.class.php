@@ -1,4 +1,28 @@
 <?php
+/**
+ * MyFuses Framework (http://myfuses.candango.org)
+ *
+ * This product includes software developed by the Fusebox Corporation
+ * (http://www.fusebox.org/).
+ *
+ * @link      http://github.com/candango/myfuses
+ * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
+ */
+
+/**
+ * DebugDumpVerb  - DebugDumpVerb.php
+ *
+ * This verb delegates execution to another verb. In fact DoVerb will resolve
+ * the verb called until find some "real" verb.
+ *
+ * PHP version 5
+ *
+ * @category   controller
+ * @package    myfuses.core.verbs.debug
+ * @author     Flavio Garcia <piraz at candango.org>
+ * @since      f7e2c2ed2897bb16a0eab9a5c4cfc6a1fbd87205
+ */
 class DebugDumpVerb extends AbstractVerb {
     
     private $variable;
