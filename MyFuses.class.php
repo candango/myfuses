@@ -391,7 +391,7 @@ class MyFuses
         $application = new $appClass($appName);
 
         if(!is_null($appReference)) {
-            if(isset( $appReference['path'])) {
+            if(isset($appReference['path'])) {
                 $application->setPath($appReference['path']);
             }
             if(isset($appReference['file'])) {
@@ -405,8 +405,8 @@ class MyFuses
         }
 
         // setting parsed path
-        $application->setParsedPath( $this->getParsedPath() . 
-            $application->getName() . DIRECTORY_SEPARATOR ) ;
+        $application->setParsedPath($this->getParsedPath() .
+            $application->getName() . DIRECTORY_SEPARATOR);
         
         $this->addApplication($application);
 
@@ -489,153 +489,160 @@ class MyFuses
         }
     }
 
-    protected function createRequest() {
+    protected function createRequest()
+    {
         $this->request = new FuseRequest();
     }
 
-    public function getCurrentPhase() {
+    public function getCurrentPhase()
+    {
         return MyFusesLifecycle::getPhase();
     }
-    
-    public function setCurrentPhase( $phase ) {
-        MyFusesLifecycle::setPhase( $phase );
+
+    public function setCurrentPhase($phase)
+    {
+        MyFusesLifecycle::setPhase($phase);
     }
-    
-    public function getCurrentCircuit() {
+
+    public function getCurrentCircuit()
+    {
         return MyFusesLifecycle::getAction()->getCircuit();
     }
-    
-    public function getCurrentAction() {
+
+    public function getCurrentAction()
+    {
         return MyFusesLifecycle::getAction();
     }
-    
-    public function setCurrentAction( $fuseaction ) {
-        list( $appName, $cName, $aName ) = explode( ".", $fuseaction );
-        MyFusesLifecycle::setAction( $this->getApplication( $appName )->
-            getCircuit( $cName )->getAction( $aName ) );
+
+    public function setCurrentAction($fuseaction)
+    {
+        list($appName, $cName, $aName) = explode(".", $fuseaction);
+        MyFusesLifecycle::setAction($this->getApplication($appName)->
+            getCircuit($cName)->getAction($aName));
     }
-    
-    public function setCurrentProperties( $phase, $fuseaction ) {
-        $this->setCurrentPhase( $phase );
-        $this->setCurrentAction( $fuseaction );
+
+    public function setCurrentProperties($phase, $fuseaction)
+    {
+        $this->setCurrentPhase($phase);
+        $this->setCurrentAction($fuseaction);
     }
-    
+
     /**
      * Return controller debugger
      *
      * @return MyFusesDebugger
      */
-    public function getDebugger() {
+    public function getDebugger()
+    {
         return $this->debugger;
     }
-    
+
     /**
      * Returns the current request
      * 
      * @return FuseRequest
      */
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
-    
-    public function createApplicationPath( Application $application ) {
-        if( !file_exists( $application->getParsedPath() ) ) {
-            mkdir( $application->getParsedPath(), 0777, true );
-         
-            $path = explode( DIRECTORY_SEPARATOR, 
-                substr( $application->getParsedPath(), 0, 
-                strlen( $application->getParsedPath() ) - 1 ) );
-         
-            while( $this->getParsedPath() != ( 
-                implode( DIRECTORY_SEPARATOR, $path ) . 
-                DIRECTORY_SEPARATOR ) ) {
-                chmod( implode( DIRECTORY_SEPARATOR, $path ), 
-                    0777 );
-                $path = array_slice( $path, 0, count( $path ) - 1 );
+
+    public function createApplicationPath(Application $application)
+    {
+        if(!file_exists($application->getParsedPath())) {
+            mkdir($application->getParsedPath(), 0777, true);
+
+            $path = explode(DIRECTORY_SEPARATOR,
+                substr($application->getParsedPath(), 0,
+                strlen($application->getParsedPath()) - 1 ));
+
+            while($this->getParsedPath() != (
+                implode(DIRECTORY_SEPARATOR, $path) .
+                DIRECTORY_SEPARATOR)) {
+                // TODO: Review the chmod permission
+                chmod(implode(DIRECTORY_SEPARATOR, $path), 0777);
+                $path = array_slice($path, 0, count($path) - 1);
             }
         }
     }
-    
-    protected function storeApplication( Application $application ) {
+
+    protected function storeApplication(Application $application)
+    {
         $strStore = "";
-        
-        if( $application->mustStore() ) {
-            if( !$this->isMemcacheEnabled() ) {
-                
-                $this->createApplicationPath( $application );
-                
+
+        if($application->mustStore()) {
+            if(!$this->isMemcacheEnabled()) {
+                $this->createApplicationPath($application);
+
                 $strStore .= $application->getCachedCode();
-                
+
                 $fileName = $application->getCompleteCacheFile();
-                
-                MyFuses::getInstance()->getDebugger()->registerEvent( 
-                    new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY, 
-                        "Application " . 
-                        $application->getName() . " Stored" ) );
-                
-                MyFusesFileHandler::writeFile( $fileName, "<?php\n" . 
-                    $strStore );
-            }
-            else {
-                $this->getMemcache()->set( $application->getTag(), 
-                    serialize( $application->getLoader()->
-                    getCachedApplicationData() ) );
+
+                MyFuses::getInstance()->getDebugger()->registerEvent(
+                    new MyFusesDebugEvent(MyFusesDebugger::MYFUSES_CATEGORY,
+                        "Application " . $application->getName() . " Stored"));
+
+                MyFusesFileHandler::writeFile($fileName, "<?php\n" . $strStore);
+            } else {
+                $this->getMemcache()->set($application->getTag(),
+                    serialize($application->getLoader()->
+                    getCachedApplicationData()));
             }
         }
-        
-        foreach( $application->getCircuits() as $circuit ) {
-            if( $circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT" ) {
-                if( $circuit->isLoaded() ) {
+
+        foreach($application->getCircuits() as $circuit) {
+            if($circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT") {
+                if($circuit->isLoaded()) {
                     $fileName = $circuit->getCompleteCacheFile();
                     $dataFileName = $circuit->getCompleteCacheDataFile();
                     MyFusesFileHandler::writeFile($fileName, "<?php\n" .
                         $circuit->getCachedCode());
-                    MyFusesFileHandler::writeFile( $dataFileName,
+                    MyFusesFileHandler::writeFile($dataFileName,
                         serialize($circuit->getData()));
                 }
             }
         }
-        
     }
-    
+
     /**
      * Sotore all myfuses applications
      */
-    protected function storeApplications() {
-        foreach( $this->applications as $index => $application ) {
-            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                $this->storeApplication( $application );
+    protected function storeApplications()
+    {
+        foreach($this->applications as $index => $application) {
+            if($index != Application::DEFAULT_APPLICATION_NAME) {
+                $this->storeApplication($application);
             }
         }
     }
-    
+
     /**
      * This method parse the request and write the genereted 
      * string in one file
      */
-    public function parseRequest() {
-
+    public function parseRequest()
+    {
         $circuit = $this->request->getAction()->getCircuit();
-        
+
         $controllerName = $circuit->getApplication()->getControllerClass();
-        
+
         $application = $circuit->getApplication();
-        
+
         $path = $this->request->getApplication()->getParsedPath() .
             $this->request->getCircuitName() . DIRECTORY_SEPARATOR;
-        
+
         $fileName = $path . $this->request->getActionName() . ".action.php" ;
-        
+
         // TODO handle file parse
-        if( !is_file( $fileName ) || $circuit->isModified() ) {
+        if(!is_file($fileName ) || $circuit->isModified()) {
             $fuseQueue = $this->request->getFuseQueue();
-            
+
             $myFusesString = $controllerName . "::getInstance()";
-        
+
             $actionString = "\"" . $this->request->getApplication()->getName() . 
                 "." . $this->request->getCircuitName() . 
                 "." . $this->request->getActionName() . "\"";
-            
+
             $strParse = "";
 
             $strParse .= "try {\n";
@@ -648,8 +655,7 @@ class MyFuses
                 $actionString . " );\n\n";
 
             // parsing pre process plugins
-            if( count( $application->getPlugins( 
-                Plugin::PRE_PROCESS_PHASE ) ) ) {
+            if(count($application->getPlugins(Plugin::PRE_PROCESS_PHASE))) {
                 $pluginsStr = $controllerName . 
                     "::getInstance()->getApplication( \"" . 
                     $application->getName() . "\" )->getPlugins(" .
@@ -661,16 +667,16 @@ class MyFuses
             }
             //end parsing pre process plugins
 
-            foreach( $fuseQueue->getPreProcessQueue() as $parseable ) {
-                $strParse .= $parseable->getParsedCode( 
-                    $this->request->getApplication()->isParsedWithComments(), 
-                    0 );
+            foreach($fuseQueue->getPreProcessQueue() as $parseable) {
+                $strParse .= $parseable->getParsedCode(
+                    $this->request->getApplication()->isParsedWithComments(),
+                    0);
             }
 
-            foreach( $fuseQueue->getProcessQueue() as $parseable ) {
-                $strParse .= $parseable->getParsedCode( 
+            foreach($fuseQueue->getProcessQueue() as $parseable) {
+                $strParse .= $parseable->getParsedCode(
                     $this->request->getApplication()->isParsedWithComments(),
-                    0 );
+                    0);
             }
 
             $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
@@ -686,8 +692,7 @@ class MyFuses
             }
 
             // parsing post process plugins
-            if( count( $application->getPlugins( 
-                Plugin::POST_PROCESS_PHASE ) ) ) {
+            if(count($application->getPlugins(Plugin::POST_PROCESS_PHASE))) {
                 $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
                         MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
                         $actionString . " );\n\n";
@@ -703,16 +708,12 @@ class MyFuses
             $strParse .= "\t\$strContent = " . $controllerName .
                 "::getInstance()->getResponseType() . \"; charset=\" . " . $controllerName .
                 "::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
-
             $strParse .= "\theader( \"Content-Type: \" . \$strContent );\n";
-
             // Flushed global output buffer content
             $strParse .= "\tob_end_flush();\n";
-
             $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n";
 
-            if( count( $application->getPlugins( 
-                Plugin::PROCESS_ERROR_PHASE ) ) ) {
+            if(count($application->getPlugins(Plugin::PROCESS_ERROR_PHASE))) {
                 $pluginsStr = $controllerName . 
                     "::getInstance()->getApplication( \"" . 
                     $application->getName() . "\" )->getPlugins(" .
@@ -722,41 +723,46 @@ class MyFuses
                 $strParse .= "\tforeach( MyFusesContext::getContext() as " . 
                     " \$key => \$value ) {global \$\$value;}\n\n";
             }
-            
             $strParse .= "}";
 
-            $this->createApplicationPath( $application );
-            
-            if( !file_exists( $path ) ) {
-                mkdir( $path );
-                chmod( $path, 0777 );
+            $this->createApplicationPath($application);
+
+            if(!file_exists($path)) {
+                mkdir($path);
+                // TODO: Review the chmod permission here
+                chmod($path, 0777);
             }
 
-            MyFusesFileHandler::writeFile( $fileName, "<?php\n" .
-               MyFusesContext::sanitizeHashedString( $strParse ));
+            MyFusesFileHandler::writeFile($fileName, "<?php\n" .
+                MyFusesContext::sanitizeHashedString($strParse ));
 
             MyFuses::getInstance()->getDebugger()->registerEvent(
                 new MyFusesDebugEvent(MyFusesDebugger::MYFUSES_CATEGORY,
                     "Fuseaction " .
                     $this->getRequest()->getFuseActionName() . " Compiled"));
         }
-        
-        MyFusesContext::includeFile( $fileName );
+
+        MyFusesContext::includeFile($fileName);
     }
-    
-    public static function includeFile( $file ) {
+
+    public static function includeFile($file)
+    {
         include $file;
     }
-    
-    private function configureApplications() {
-        foreach( $this->getApplications() as $index => $application ) {
-            if( $index != Application::DEFAULT_APPLICATION_NAME ) {
-                $this->configureApplication( $application );
+
+    private function configureApplications()
+    {
+        foreach($this->getApplications() as $index => $application) {
+            if($index != Application::DEFAULT_APPLICATION_NAME) {
+                $this->configureApplication($application);
             }
         }
     }
 
-    protected function configureApplication( Application $application ) {}
+    protected function configureApplication( Application $application )
+    {
+
+    }
 
     /**
      * Process the user request
@@ -798,194 +804,185 @@ class MyFuses
 
     /**
      * Returns one instance of MyFuses. Only one instance is creted per process.
-     * MyFuses is implemmented using the singleton pattern.
+     * MyFuses is implemented using the singleton pattern.
      * 
      * @return MyFuses
      * @static 
      */
-     public static function getInstance() {
-        
-        if( is_null( self::$instance ) ) {
+     public static function getInstance()
+     {
+        if( is_null(self::$instance) ) {
             self::$instance = new MyFuses();
         }
-        
         return self::$instance;
     }
-    
-    public static function getXfa( $name ) {
-        return self::getInstance()->getRequest()->getAction()->getXfa( $name );
+
+    public static function getXfa($name)
+    {
+        return self::getInstance()->getRequest()->getAction()->getXfa($name);
     }
-    
-    public static function getSelfPath() {
-        
-        $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
-        
+
+    public static function getSelfPath()
+    {
+        $self = "http://" . $_SERVER['HTTP_HOST'];
         $self .= "/";
-        
-        if( substr( $self, -1 ) == "/" ) {
-            $self = substr( $self, 0, strlen( $self ) - 1 );
+
+        if( substr($self, -1) == "/") {
+            $self = substr($self, 0, strlen($self) - 1);
         }
-        
-        $self .= dirname( $_SERVER[ 'PHP_SELF' ] );
-        
-        if( substr( $self, -1 ) != "/" ) {
+
+        $self .= dirname($_SERVER['PHP_SELF']);
+
+        if( substr($self, -1) != "/") {
             $self .= "/";
         }
-        
+
         return $self;
     }
-    
-    public static function getRootUrl() {
-        $rootUrl = "http://" . $_SERVER[ 'HTTP_HOST' ];
-        
-        if(self::strEndsWith($rootUrl, "/") ) {
+
+    public static function getRootUrl()
+    {
+        $rootUrl = "http://" . $_SERVER['HTTP_HOST'];
+
+        if(self::strEndsWith($rootUrl, "/")) {
             $rootUrl .= "/";
         }
-        
-        $scriptNameX = explode( "/", $_SERVER[ 'SCRIPT_NAME' ] );
-        
-        $pos = ( count( $scriptNameX ) - 1 );
-        
-        unset( $scriptNameX[ 0 ] );
-        unset( $scriptNameX[ $pos ] );
-        
-        $rootUrl = $rootUrl . implode( "/", $scriptNameX ) . "/"; 
-        
+
+        $scriptNameX = explode("/", $_SERVER['SCRIPT_NAME']);
+
+        $pos = (count($scriptNameX) - 1);
+
+        unset($scriptNameX[0] );
+        unset($scriptNameX[$pos]);
+
+        $rootUrl = $rootUrl . implode("/", $scriptNameX) . "/";
+
         return $rootUrl;
     }
-    
-    public static function getSelf() {
-        $self = "http://" . $_SERVER[ 'HTTP_HOST' ];
+
+    public static function getSelf()
+    {
+        $self = "http://" . $_SERVER['HTTP_HOST'];
         
-        if( substr( $self, -1 ) != "/" ) {
+        if( substr($self, -1 ) != "/") {
             $self .= "/";
         }
-        
-        // FIXME Fixing an error occoured with CGI GATWAYS. 
-        // FIXME Sppressing redirect with CGI!!!
+
+        // FIXME Fixing an error occurring with CGI.
+        // FIXME Suppress redirect with CGI!!!
          if(MyFuses::isRewriting()) {
-            $self1 = dirname( $_SERVER[ 'SCRIPT_NAME' ] );
-            if( substr( $self1, -1 ) != "/" ) {
+            $self1 = dirname($_SERVER['SCRIPT_NAME']);
+            if( substr($self1, -1 ) != "/") {
                 $self1 .= "/";
             }
+        } else {
+            $self1 = $_SERVER['SCRIPT_NAME'];
         }
-        else {
-            $self1 = $_SERVER[ 'SCRIPT_NAME' ];
+
+        if(substr($self1, 0, 1) == "/") {
+            $self1 = substr($self1, 1, strlen($self1));
         }
-        
-        if( substr( $self1, 0, 1 ) == "/" ) {
-            $self1 = substr( $self1, 1, strlen( $self1 ) );
-        }
-        
+
         $self .= $self1;
 
         return $self;
     }
     
-    public static function getMySelf( $showFuseactionVariable=true ) {
-        // FIXME Fixing an error occoured with CGI GATWAYS. 
-        // FIXME Sppressing redirect with CGI!!!
+    public static function getMySelf($showFuseactionVariable=true)
+    {
+        // FIXME Fixing an error occurring with CGI.
+        // FIXME Suppress redirect with CGI!!!
          if(MyFuses::isRewriting()) {
             $mySelf = self::getSelf();
-            if( $showFuseactionVariable ) {
+            if($showFuseactionVariable) {
                 $mySelf .= self::getInstance()->getRequest()->
                     getApplication()->getFuseactionVariable() . "/";    
             }
-        }
-        else {
+        } else {
             $mySelf = self::getSelf() . "?";
-        
             $mySelf .= self::getInstance()->getRequest()->
                 getApplication()->getFuseactionVariable();
-            $mySelf .= "=" ;    
+            $mySelf .= "=" ;
         }
-        
+
         return $mySelf;
     }
-    
-    public static function getMySelfXfa( $xfaName, $initQuery = false, 
-        $showFuseactionVariable=true ) {
-        // FIXME Fixing an error occoured with CGI GATWAYS. 
-        // FIXME Sppressing redirect with CGI!!!
+
+    public static function getMySelfXfa(
+        $xfaName,
+        $initQuery = false,
+        $showFuseactionVariable=true
+    ) {
+        // FIXME Fixing an error occurring with CGI.
+        // FIXME Suppress redirect with CGI!!!
         if(MyFuses::isRewriting()) {
-            $xfaX = explode( ".", self::getXfa( $xfaName ) );
-            
+            $xfaX = explode( ".", self::getXfa($xfaName));
+
             $link = "";
-            
-            if( count( $xfaX ) == 1 ) {
-                if( $xfaX[ 0 ] == "" ) {
+
+            if(count($xfaX) == 1) {
+                if($xfaX[ 0 ] == "") {
                     $link = self::getRootUrl();
+                } else {
+                    $link = self::getMySelf($showFuseactionVariable) .
+                        implode("/", explode(".", $xfaX));
                 }
-                else {
-                    $link = self::getMySelf( $showFuseactionVariable ) . 
-                        implode( "/", explode( ".", $xfaX ) );    
-                }
-            }
-            else {
+            } else {
                 try {
-                    
-                    $ciruit = MyFuses::getApplication()->getCircuit( 
-                        $xfaX[ 0 ] );
+                    $circuit = MyFuses::getApplication()->getCircuit($xfaX[0]);
                     try {
-                        $action = $ciruit->getAction( $xfaX[ 1 ] );
-                        
-                        if( $ciruit->getName() . "." . $action->getName() == 
+                        $action = $circuit->getAction($xfaX[1]);
+
+                        if($circuit->getName() . "." . $action->getName() ==
                             MyFuses::getApplication()->
                             getDefaultFuseaction() ) {
                             $link = self::getSelf();
-                        }
-                        else if( $action->isDefault() ) {
+                        } else if($action->isDefault()) {
                              $link = self::getMySelf($showFuseactionVariable)
-                                 . $xfaX[ 0 ];
-                        }
-                        else {
+                                 . $xfaX[0];
+                        } else {
                             $link = self::getMySelf($showFuseactionVariable) .
                                 implode("/",$xfaX);
                         }
+                    } catch (MyFusesActionException $mffae) {
+                        $link = self::getMySelf($showFuseactionVariable) .
+                            implode("/", $xfaX);
                     }
-                    catch ( MyFusesActionException $mffae ) {
-                        $link = self::getMySelf( $showFuseactionVariable ) . 
-                            implode( "/", $xfaX );
-                    }
-                }
-                catch( MyFusesCircuitException $mfce ) {
-                    $link = self::getMySelf( $showFuseactionVariable ) . 
-                        implode( "/", $xfaX );
+                } catch(MyFusesCircuitException $mfce) {
+                    $link = self::getMySelf($showFuseactionVariable) .
+                        implode("/", $xfaX);
                 }
             }
-            
-            if( $initQuery ) {
+            if($initQuery) {
                 $link .= "?";
             }
-        }
-        else {
-            $link = self::getMySelf() . self::getXfa( $xfaName );
-            if( $initQuery ) {
+        } else {
+            $link = self::getMySelf() . self::getXfa($xfaName);
+            if($initQuery) {
                 $link .= "&";
-            }    
+            }
         }
-        
         return $link;
     }
-    
-    public static function doAction( $actionName ) {
-        $actionNameX = explode( ".", $actionName );
-        if( count( $actionNameX ) < 3 ) {
-            array_unshift( $actionNameX, 
-                MyFuses::getInstance()->getApplication()->getName() );
+
+    public static function doAction($actionName)
+    {
+        $actionNameX = explode(".", $actionName);
+        if(count($actionNameX ) < 3) {
+            array_unshift($actionNameX,
+                MyFuses::getInstance()->getApplication()->getName());
         }
-        
-        $application = MyFuses::getInstance()->getApplication( 
-            $actionNameX[ 0 ] );
-        
-        $circuit = $application->getCircuit( $actionNameX[ 1 ] );
-            
-        $action =  $circuit->getAction( $actionNameX[ 2 ] );
+        $application = MyFuses::getInstance()->getApplication($actionNameX[0]);
+
+        $circuit = $application->getCircuit($actionNameX[1]);
+
+        $action =  $circuit->getAction($actionNameX[2]);
         require_once "myfuses/core/verbs/DoVerb.class.php";        
-        DoVerb::doAction( $action );
+        DoVerb::doAction($action);
     }
 
-    public static function isRewriting() {
+    public static function isRewriting()
+    {
         if(isset($_SERVER['REDIRECT_URL' ]) &&
             MyFuses::getInstance()->getApplication()->allowRewrite() &&
             !MyFuses::strEndsWith($_SERVER['REQUEST_URI'], ".php")) {
@@ -995,12 +992,14 @@ class MyFuses
     }
 
     # From http://bit.ly/2wvhQ21
-    public static function strStartsWith($haystack, $needle) {
+    public static function strStartsWith($haystack, $needle)
+    {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
     }
 
-    public static function strEndsWith($haystack, $needle) {
+    public static function strEndsWith($haystack, $needle)
+    {
         $length = strlen($needle);
         return $length === 0 ||
             (substr($haystack, -$length) === $needle);
@@ -1015,20 +1014,20 @@ class MyFuses
      * @param $file
      * @return void
      */
-    /*public static function includeCoreFile( $file ) {
-        if ( file_exists( $file ) ) {
+    /*public static function includeCoreFile($file)
+    {
+        if (file_exists($file)) {
             require_once $file;
-        }
-        else {
-            throw new MyFusesMissingCoreFileException( $file );
+        } else {
+            throw new MyFusesMissingCoreFileException($file);
         }
     }*/
-    
-    public static function sendToUrl( $url ) {
-        if( !headers_sent() ) {
-            header( "Location: " . $url );
-        }
-        else {
+
+    public static function sendToUrl($url)
+    {
+        if(!headers_sent()) {
+            header("Location: " . $url);
+        } else {
             echo '<script type="text/javascript">';
             echo 'window.location.href="'.$url.'";';
             echo '</script>';
@@ -1038,7 +1037,6 @@ class MyFuses
         }
         die();
     }
-    
 }
 
 /**
@@ -1049,19 +1047,19 @@ class MyFuses
  * @param boolean $showFuseactionVariable
  * @return string
  */
-function xfa( $xfaName, $initQuery = false, $showFuseactionVariable=true ) {
-    return MyFuses::getMySelfXfa( $xfaName, $initQuery, 
-        $showFuseactionVariable );
+function xfa($xfaName, $initQuery = false, $showFuseactionVariable=true)
+{
+    return MyFuses::getMySelfXfa($xfaName, $initQuery, $showFuseactionVariable);
 }
 
-class MyFusesMemcacheServer {
-    
+class MyFusesMemcacheServer
+{
     private $host;
-    
+
     private $port;
-    
+
     private $persistent;
-    
+
     /**
      * Server constructor
      *
@@ -1069,40 +1067,50 @@ class MyFusesMemcacheServer {
      * @param string $port
      * @param boolean $persistent
      */
-    public function __construct( $host = null, $port = "11211", 
-        $persistent = false ) {
-        $this->setHost( $host );
-        $this->setPort( $port );
-        $this->setPersistent( $persistent );
+    public function __construct(
+        $host = null,
+        $port = "11211",
+        $persistent = false
+    ) {
+        $this->setHost($host);
+        $this->setPort($port);
+        $this->setPersistent($persistent);
     }
-    
-    public function getHost() {
+
+    public function getHost()
+    {
         return $this->host;
     }
-    
-    public function setHost( $host ) {
+
+    public function setHost($host)
+    {
         $this->host = $host;
     }
-    
-    public function getPort() {
+
+    public function getPort()
+    {
         return $this->port;
     }
-    
-    public function setPort( $port ) {
+
+    public function setPort($port)
+    {
         $this->port = $port;
     }
-    
-    public function isPersistent() {
+
+    public function isPersistent()
+    {
         return $this->persistent;
     }
-    
-    public function setPersistent( $persistent ) {
+
+    public function setPersistent($persistent)
+    {
         $this->persistent = $persistent;
     }
-    
-    public function configureMemcache( Memcache $memcache ) {
-        $memcache->addServer( $this->getHost(), $this->getPort(), 
-            $this->isPersistent() );
+
+    public function configureMemcache(Memcache $memcache)
+    {
+        $memcache->addServer($this->getHost(), $this->getPort(),
+            $this->isPersistent());
     }
 }
 
@@ -1115,16 +1123,13 @@ class MyFusesMemcacheServer {
  * 
  * @return boolean Returns if the security credential is authenticated
  */
-function myfuses_security_is_authenticated() {
-    
-    if( class_exists( "MyFusesAbstractSecurityManager" ) ) {
+function myfuses_security_is_authenticated()
+{
+    if(class_exists("MyFusesAbstractSecurityManager")) {
         $manager = MyFusesAbstractSecurityManager::getInstance();
         
         $credential = $manager->getCredential();
-        
         return $credential->isAuthenticated();    
     }
-    
     return true;
-    
 }
