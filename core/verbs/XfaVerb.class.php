@@ -11,7 +11,7 @@
  */
 
 /**
- * XfaVerb  - XfaVerb.class.php
+ * XfaVerb  - XfaVerb.php
  *
  * This is the eXit Fuse Action.
  *
