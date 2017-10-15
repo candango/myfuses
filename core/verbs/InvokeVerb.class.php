@@ -27,91 +27,91 @@ class InvokeVerb extends AbstractVerb
 
     private static $classCall = array();
 
-	private $object;
+    private $object;
 
-	private $method;
+    private $method;
 
-	private $methodCall;
+    private $methodCall;
 
-	private $arguments;
+    private $arguments;
 
-	private $variable;
+    private $variable;
 
-	public function getClass()
+    public function getClass()
     {
-	    return $this->class;
-	}
+        return $this->class;
+    }
 
-	public function setClass($class)
+    public function setClass($class)
     {
-	    $this->class = $class;
-	}
+        $this->class = $class;
+    }
 
-	public function getObject()
+    public function getObject()
     {
-		return $this->object;
-	}
+        return $this->object;
+    }
 
-	public function setObject($object)
+    public function setObject($object)
     {
-		$this->object = $object;
-	}
+        $this->object = $object;
+    }
 
-	public function getMethod()
+    public function getMethod()
     {
-		return $this->method;
-	}
+        return $this->method;
+    }
 
-	public function setMethod($method)
+    public function setMethod($method)
     {
-		$this->method = $method;
-	}
+        $this->method = $method;
+    }
 
     public function getMethodCall()
     {
-		return $this->methodCall;
-	}
+        return $this->methodCall;
+    }
 
-	public function setMethodCall($methodCall)
+    public function setMethodCall($methodCall)
     {
-		$this->methodCall = $methodCall;
-	}
+        $this->methodCall = $methodCall;
+    }
 
-	public function getArguments()
+    public function getArguments()
     {
-		return $this->arguments;
-	}
+        return $this->arguments;
+    }
 
-	public function setArguments($arguments)
+    public function setArguments($arguments)
     {
-		$args = "";
+        $args = "";
 
-		//Verify arguments - Fusebox 5 (strictMode set to true)
-		if (!is_null($arguments)) {
-			//Gets the last child postition in arguments array
-			$lastChildPos = count($arguments) -1;
-			//Set the arguments
-			foreach ($arguments as $childPos => $atrr) {
-				$args .= $atrr["attributes"]["value"];
-				if ($childPos !==  $lastChildPos){
+        //Verify arguments - Fusebox 5 (strictMode set to true)
+        if (!is_null($arguments)) {
+            //Gets the last child postition in arguments array
+            $lastChildPos = count($arguments) -1;
+            //Set the arguments
+            foreach ($arguments as $childPos => $atrr) {
+                $args .= $atrr["attributes"]["value"];
+                if ($childPos !==  $lastChildPos){
                     $args.= ',';
                 }
-			}
-		}
-		$this->arguments = $args;
-	}
+            }
+        }
+        $this->arguments = $args;
+    }
 
-	public function getVariable()
+    public function getVariable()
     {
-		return $this->variable;
-	}
+        return $this->variable;
+    }
 
-	public function setVariable($variable)
+    public function setVariable($variable)
     {
-		$this->variable = $variable;
-	}
+        $this->variable = $variable;
+    }
 
-	/**
+    /**
      * Return o new strin with all arguments separated by a ','
      *
      * @return string
@@ -163,21 +163,21 @@ class InvokeVerb extends AbstractVerb
         return $data;
     }
 
-	public function setData($data)
+    public function setData($data)
     {
-		parent::setData($data);
+        parent::setData($data);
 
-	    if (isset($data['attributes']['class'])) {
-		    $this->setClass($data['attributes']['class']);
-		} else {
-		    $this->setObject($data['attributes']['object']);
-		}
+        if (isset($data['attributes']['class'])) {
+            $this->setClass($data['attributes']['class']);
+        } else {
+            $this->setObject($data['attributes']['object']);
+        }
 
-	    if (isset($data['attributes']['method'])) {
-		    $this->setMethod($data['attributes']['method']);
-	    }
+        if (isset($data['attributes']['method'])) {
+            $this->setMethod($data['attributes']['method']);
+        }
 
-	    if (isset($data['children'])) {
+        if (isset($data['children'])) {
             foreach ($data['children'] as $child) {
                 if ($child['name'] == "argument") {
                     if (isset($child['attributes']['value'])) {
@@ -193,30 +193,30 @@ class InvokeVerb extends AbstractVerb
             }
         }
 
-	    if (isset($data['attributes']['methodcall'])) {
-	        $this->setMethodCall($data['attributes']['methodcall']);
-	    }
-
-	    if (isset($data['attributes']['returnvariable'])) {
-		    $this->setVariable($data['attributes']['returnvariable']);
+        if (isset($data['attributes']['methodcall'])) {
+            $this->setMethodCall($data['attributes']['methodcall']);
         }
-	}
 
-	/**
-	 * Return the parsed code
-	 *
-	 * @return string
-	 */
-	public function getParsedCode($commented, $identLevel)
+        if (isset($data['attributes']['returnvariable'])) {
+            $this->setVariable($data['attributes']['returnvariable']);
+        }
+    }
+
+    /**
+     * Return the parsed code
+     *
+     * @return string
+     */
+    public function getParsedCode($commented, $identLevel)
     {
-		$appName = $this->getAction()->getCircuit()->
-		    getApplication()->getName();
+        $appName = $this->getAction()->getCircuit()->
+            getApplication()->getName();
 
-		$strOut = parent::getParsedCode($commented, $identLevel);
-		// Make identation
-		$strOut .= str_repeat( "\t", $identLevel );
-		
-    	if (!is_null($this->getClass())) {
+        $strOut = parent::getParsedCode($commented, $identLevel);
+        // Make identation
+        $strOut .= str_repeat( "\t", $identLevel );
+
+        if (!is_null($this->getClass())) {
             if (!isset(self::$classCall[$this->getClass()])) {
                 $appName = $this->getAction()->getCircuit()->
                     getApplication()->getName();
@@ -238,47 +238,35 @@ class InvokeVerb extends AbstractVerb
 
                 self::$classCall[$this->getClass()] = "called";
             }
-    	}
+        }
 
-    	if (!is_null($this->getVariable())) {
-    	    $strOut .= "MyFusesContext::setVariable( \"" .
+        if (!is_null($this->getVariable())) {
+            $strOut .= "MyFusesContext::setVariable( \"" .
                 $this->getVariable() . "\", ";
-    	}
+        }
 
-		// Begin method call
-		if (!is_null($this->getMethod())) {
-            $hasParentheses = false;
-            #TODO: Test if the parentheses was closed.
-            if (strpos($this->getMethod(),'(') !== false) {
-                $hasParentheses = true;
-            }
-			if (is_null($this->getClass())) {
+        // Begin method call
+        if (!is_null($this->getMethod())) {
+            if (is_null($this->getClass())) {
                 $strOut .= "MyFusesContext::getVariable( \"" .
                     $this->getObject() . "\" )->" .
                     $this->getMethod();
-                if (!$hasParentheses) {
-                    $strOut .= "( ";
-                }
-			} else {
+            } else {
                 $strOut .= $this->getClass() . "::" . 
                     $this->getMethod();
-                if(!$hasParentheses) {
-                    $strOut .= "( ";
-                }
-			}
-
-			//TODO: Verify arguments - Fusebox 5 (strictMode set to true)
-			if (!is_null($this->getArguments())) {
-                $strOut .= $this->getArgumentString();
-			}
-            // Close method
-			if (!$hasParentheses) {
-                $strOut .= " )";
             }
-		} else {
+            $strOut .= "( ";
+
+            //TODO: Verify arguments - Fusebox 5 (strictMode set to true)
+            if (!is_null($this->getArguments())) {
+                $strOut .= $this->getArgumentString();
+            }
+            // Close method
+            $strOut .= " )";
+        } else {
             $strOut .= "\$" . $this->getObject() . "->" .
                 $this->getMethodCall();
-		}
+        }
 
         if (is_null($this->getVariable())) {
             $strOut .= ";\n\n";
@@ -287,11 +275,11 @@ class InvokeVerb extends AbstractVerb
             $strOut .= $this->getContextRestoreString();
         }
 
-		return $strOut;
-	}
+        return $strOut;
+    }
     
-	public static function clearClassCall()
+    public static function clearClassCall()
     {
-	    self::$classCall = array();
-	}
+        self::$classCall = array();
+    }
 }
