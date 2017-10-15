@@ -1,74 +1,41 @@
 <?php
 /**
- * InstantiateVerb - InstantiateVerb.class.php
- * 
- * This verb instantiate one object by a given class or wsdl.
- * 
- * PHP version 5
- * 
- * The contents of this file are subject to the Mozilla Public License
- * Version 1.1 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://www.mozilla.org/MPL/
- * 
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- * 
- * This product includes software developed by the Fusebox Corporation 
- * (http://www.fusebox.org/).
- * 
- * The Original Code is Fuses "a Candango implementation of Fusebox Corporation 
- * Fusebox" part .
- * 
- * The Initial Developer of the Original Code is Flavio Goncalves Garcia.
- * Portions created by Flavio Goncalves Garcia are Copyright (C) 2006 - 2007.
- * All Rights Reserved.
- * 
- * Contributor(s): Flavio Goncalves Garcia.
+ * MyFuses Framework (http://myfuses.candango.org)
  *
- * @category   verb
- * @package    myfuses.core.verbs
- * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
- * @link       http://www.candango.org/myfuses
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Id$
+ * This product includes software developed by the Fusebox Corporation
+ * (http://www.fusebox.org/).
+ *
+ * @link      http://github.com/candango/myfuses
+ * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
 /**
- * InstantiateVerb - InstantiateVerb.class.php
- * 
- * This verb instantiate one object by a given class or webservice.
- * 
- * PHP version 5
+ * InstantiateVerb - InstantiateVerb.php
  *
- * @category   verb
+ * This verb instantiate one object by a given class or webservice.
+ *
+ * @category   controller
  * @package    myfuses.core.verbs
- * @author     Flavio Goncalves Garcia <flavio.garcia@candango.org>
- * @copyright  Copyright (c) 2006 - 2007 Candango Opensource Group
- * @link http://www.candango.org/myfuses
- * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
- * @version    SVN: $Revision$
- * @since      Revision 125
+ * @author     Flavio Garcia <piraz at candango.org>
+ * @since      195974621ca2e59668492bc79113b161f1910dc1
  */
-class InstantiateVerb extends AbstractVerb {
-    
+class InstantiateVerb extends AbstractVerb
+{
     /**
      * Name of the class that the verb will instantiate.
      * 
      * @var string
      */
     private $class;
-    
+
     /**
      * Nome of the instance that the verb will instantiate.
      * 
      * @var string
      */
     private $object;
-    
+
     /**
      * Wsdl path.<br>
      * When developer inform the wsld, class will be ignored, and the verb will
@@ -91,31 +58,34 @@ class InstantiateVerb extends AbstractVerb {
      * @var array
      */
     private $childArguments;
-    
+
     /**
      * Returnt the verb class
      * 
      * @return string
      */
-    public function getClass() {
+    public function getClass()
+    {
         return $this->class;
     }
-    
+
     /**
      * Set the verb class
      * 
      * @param string $class
      */
-    public function setClass( $class ) {
+    public function setClass($class)
+    {
         $this->class = $class;
     }
-    
+
     /**
      * Return verb object
      *
      * @return string
      */
-    public function getObject() {
+    public function getObject()
+    {
         return $this->object;
     }
 
@@ -124,35 +94,38 @@ class InstantiateVerb extends AbstractVerb {
      *
      * @param string $object
      */
-    public function setObject( $object ) {
+    public function setObject($object)
+    {
         $this->object = $object;
     }
-    
+
     /**
      * Return verb webservice link
      *
      * @return string
      */
-    public function getWebservice() {
+    public function getWebservice()
+    {
         return $this->webservice;
     }
-    
+
     /**
      * Set verb webservice link
      *
      * @param string $webservice
      */
-    public function setWebservice( $webservice ) {
+    public function setWebservice($webservice)
+    {
         $this->webservice = $webservice;
     }
-
 
     /**
      * Return the arguments to instantiate te object
      *
      * @return string
      */
-    public function getArguments() {
+    public function getArguments()
+    {
         return $this->arguments;
     }
 
@@ -161,7 +134,8 @@ class InstantiateVerb extends AbstractVerb {
      *
      * @param string $arguments
      */
-    public function setArguments( $arguments ) {
+    public function setArguments($arguments)
+    {
         $this->arguments = $arguments;
     }
 
@@ -170,19 +144,21 @@ class InstantiateVerb extends AbstractVerb {
      *
      * @return array
      */
-    public function getChildArguments() {
+    public function getChildArguments()
+    {
         return $this->childArguments;
     }
-    
+
     /**
      * Set an array of arguments in this verb
      *
      * @param array $childArguments
      */
-    public function setChildArguments( $childArguments ) {
+    public function setChildArguments($childArguments)
+    {
         $this->childArguments = $childArguments;
     }
-     
+
     /**
      * Return o new string with all arguments separated by a ',' or the legacy
      * arguments parameters set on the instantiate.
@@ -191,75 +167,77 @@ class InstantiateVerb extends AbstractVerb {
      *
      * @return string
      */
-    private function getArgumentString() {
-        if (!is_null($this->getArguments())){
+    private function getArgumentString()
+    {
+        if (!is_null($this->getArguments()))
+        {
             return $this->getArguments();
         }
         $strOut = "";
-        if( count( $this->getChildArguments() ) ) {
-            foreach ( $this->getChildArguments() as $key => $argument ) {
-                $strOut .= ($key == 0 ? "": " , ") . "\"" .
-                    $argument .  "\"";
+        if (count($this->getChildArguments())) {
+            foreach ($this->getChildArguments() as $key => $argument) {
+                $strOut .= ($key == 0 ? "": " , ") . "\"" . $argument .  "\"";
             }
         }
         return $strOut;
     }
-    
-    public function getData() {
+
+    public function getData()
+    {
         $data = parent::getData();
 
-        if( !is_null( $this->getArguments() ) ) {
-            $data[ "attributes" ][ "arguments" ] = $this->getArguments();
+        if (!is_null($this->getArguments())) {
+            $data['attributes']['arguments'] = $this->getArguments();
         }
 
-        if( !is_null( $this->getClass() ) ) {
-            $data[ "attributes" ][ "class" ] = $this->getClass();    
-        }
-        
-        $data[ "attributes" ][ "object" ] = $this->getObject();
-        
-        if( !is_null( $this->getWebservice() ) ) {
-            $data[ "attributes" ][ "webservice" ] = $this->getWebservice();
+        if (!is_null($this->getClass())) {
+            $data['attributes']['class'] = $this->getClass();
         }
 
-        if( !is_null( $this->getChildArguments() ) ) {
-            foreach( $this->getChildArguments() as $argument ) {
+        $data['attributes']['object'] = $this->getObject();
+
+        if (!is_null($this->getWebservice())) {
+            $data['attributes']['webservice'] = $this->getWebservice();
+        }
+
+        if (!is_null($this->getChildArguments())) {
+            foreach ($this->getChildArguments() as $argument) {
                 $child = array();
-                $child[ 'name' ] = 'argument';
-                $child[ 'namespace' ] = 'myfuses';
-                $child[ 'attributes' ][ 'value' ] = $argument;
-                $data[ 'children' ][] = $child; 
+                $child['name'] = 'argument';
+                $child['namespace'] = 'myfuses';
+                $child['attributes'][ 'value' ] = $argument;
+                $data['children'][] = $child;
             }
         }
         return $data;
     }
-    
-    public function setData( $data ) {
-        parent::setData( $data );
 
-        if( isset($data[ "attributes" ][ "arguments" ])) {
-            $this->setArguments($data[ "attributes" ][ "arguments" ]);
+    public function setData($data)
+    {
+        parent::setData($data);
+
+        if (isset($data['attributes']['arguments'])) {
+            $this->setArguments($data['attributes']['arguments']);
         }
 
-        if( isset( $data[ "attributes" ][ "webservice" ] ) ) {
-            $this->setWebservice( $data[ "attributes" ][ "webservice" ] );
+        if (isset($data['attributes']['webservice'])) {
+            $this->setWebservice($data['attributes']['webservice']);
         }
-        
-        if( isset( $data[ "attributes" ][ "class" ] ) ) {
-            $this->setClass( $data[ "attributes" ][ "class" ] );
+
+        if (isset($data['attributes']['class'])) {
+            $this->setClass($data['attributes']['class']);
         }
-        
-        if( isset( $data[ "attributes" ][ "object" ] ) ) {
-            $this->setObject( $data[ "attributes" ][ "object" ] );
+
+        if (isset($data['attributes']['object'])) {
+            $this->setObject($data['attributes']['object']);
         }
-        
-        if( isset( $data[ "children" ] ) ) {
-            foreach( $data[ "children" ] as $child ) {
-                if( $child[ 'name' ] == 'argument' ) {
-                    if( isset( $child[ 'attributes' ][ 'value' ] ) ) {
+
+        if (isset($data['children'])) {
+            foreach ($data['children'] as $child) {
+                if ($child['name'] == "argument") {
+                    if (isset($child['attributes']['value'])) {
                         $this->childArguments[] = $child['attributes']['value'];
-                    }
-                    else  {
+                    } else {
                         $params = $this->getErrorParams();
                         $params['verbName'] = "argument";
                         $params['attrName'] = "value";
@@ -269,49 +247,45 @@ class InstantiateVerb extends AbstractVerb {
                 }
             }
         }
-
     }
-    
+
 	/**
 	 * Return the parsed code
 	 *
 	 * @return string
 	 */
-	public function getParsedCode( $commented, $identLevel ) {
+	public function getParsedCode($commented, $identLevel)
+    {
 	    $appName = $this->getAction()->getCircuit()->
 	        getApplication()->getName();
-        
+
 	    $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
-	        
+
 	    $fileCall = $controllerClass . "::getInstance()->getApplication( \"" . 
             $appName . "\" )->getClass( \"" . $this->getClass() . 
 	        "\" )->getCompletePath()";
 
-	    $strOut = parent::getParsedCode( $commented, $identLevel );
-	    
-	    $strOut .= str_repeat( "\t", $identLevel );
-	    if( is_null( $this->getWebservice() ) ) {
+	    $strOut = parent::getParsedCode($commented, $identLevel);
+	    $strOut .= str_repeat("\t", $identLevel);
+	    if (is_null($this->getWebservice())) {
 	        $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
-		    $strOut .= str_repeat( "\t", $identLevel + 1 );
+		    $strOut .= str_repeat("\t", $identLevel + 1);
 		    $strOut .= "require_once( " . $fileCall . " );\n";
-		    $strOut .= str_repeat( "\t", $identLevel );
+		    $strOut .= str_repeat("\t", $identLevel);
 		    $strOut .= "}\n";
-		    $strOut .= str_repeat( "\t", $identLevel );
-		    
-		    $strOut .= "MyFusesContext::setVariable( \"" . 
-		      $this->getObject() . "\", new " . 
-            $this->getClass() . "( " . $this->getArgumentString() . " ) );\n\n";
+		    $strOut .= str_repeat("\t", $identLevel);
+		    $strOut .= "MyFusesContext::setVariable( \"" .
+                $this->getObject() . "\", new " . $this->getClass() .
+                "( " . $this->getArgumentString() . " ) );\n\n";
             $strOut .= self::getContextRestoreString();
-	    }
-	    else {
-	        $strOut .= "MyFusesContext::setVariable( \"" . 
-              $this->getObject() . "\", new SoapClient" . 
+	    } else {
+	        $strOut .= "MyFusesContext::setVariable( \"" .
+                $this->getObject() . "\", new SoapClient" .
                 "( \"" . $this->getWebservice() . "\" ) );\n\n";
             $strOut .= self::getContextRestoreString();
 	        // FIXME use MyFusesContext::setVariable in here
 	    }
 	    return $strOut;
 	}
-
 }
