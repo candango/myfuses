@@ -135,8 +135,6 @@ class XfaVerb extends AbstractVerb
             $value . "\" );\n";
         // for compatibility
         $strOut .= str_repeat("\t", $identLevel);
-        $strOut .= "\$XFA[ \"" . $this->getXfaName() . "\" ] = \"" .
-            $value . "\";\n\n";
         return $strOut;
     }
 

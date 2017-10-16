@@ -144,6 +144,14 @@ class FuseAction extends AbstractAction implements CircuitAction
 
     public function addXFA($name, $value)
     {
+        // TODO: this needs to go if enforced strict mode
+        $XFA = null;
+        if (!$XFA = MyFusesContext::getVariable("XFA")) {
+            $XFA = array();
+        }
+        $XFA[$name] = $value;
+        MyFusesContext::setVariable("XFA", $XFA);
+        global $XFA;
         $this->xfas[$name] = $value;
     }
 
