@@ -80,8 +80,8 @@ Used within the fusebox.xml or myfuses.xml files to contain the elements that co
 <!ELEMENT plugin (parameter*)>
 <!ATTLIST plugin
         name CDATA #REQUIRED
-        template CDATA #REQUIRED
-        path CDATA #REQUIRED
+        template CDATA #IMPLIED
+        path CDATA #IMPLIED
         >
 <!--
     Plugins may have parameters.
