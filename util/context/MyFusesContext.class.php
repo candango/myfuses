@@ -43,7 +43,7 @@
  * @link http://www.candango.org/myfuses
  * @license    http://www.mozilla.org/MPL/MPL-1.1.html  MPL 1.1
  * @version    SVN: $Revision: 183 $
- * @since      Revision 125
+ * @since      f06b361b3bc6909ebf21f108d42b79a17cfb3924
  */
 class MyFusesContext {
     
@@ -89,7 +89,7 @@ class MyFusesContext {
                 }
             }
         }
-        // trow some exception when file doesnt exists!!!
+        // TODO: trow some exception when file doesnt exists!!!
     }
     
     public static function setParameter( $name, $value ) {
