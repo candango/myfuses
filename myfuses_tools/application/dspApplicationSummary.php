@@ -9,9 +9,9 @@
     <th>File</th>
     <th>Access</th>
   </tr>  
-<?php if( count( $application->getCircuits() ) ) {?>
-    <?php foreach( $application->getCircuits() as $circuit ) {?>
-        <?php if( $circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT' ) {?>
+<?php if (count($application->getCircuits())) {?>
+    <?php foreach ($application->getCircuits() as $circuit) {?>
+        <?php if ($circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT') {?>
         <tr>
             <td><?=$circuit->getName()?></td>
             <td><?=$circuit->getPath()?></td>
@@ -20,7 +20,7 @@
         </tr>
         <?php }?>
     <?php }?>
-<?php }else {?>
+<?php } else {?>
 <tr>
     <td colspan="4">No Circuit Founded</td>
 </tr>
@@ -34,8 +34,8 @@
     <th>Name</th>
     <th>Path</th>
   </tr>
-<?php if( count( $application->getClasses() ) ) {?>
-    <?php foreach( $application->getClasses() as $class ) {?>
+<?php if (count($application->getClasses())) {?>
+    <?php foreach ($application->getClasses() as $class) {?>
     <tr>
         <td><?=$class->getName()?></td>
         <td><?=$class->getPath()?></td>

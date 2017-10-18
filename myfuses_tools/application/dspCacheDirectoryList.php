@@ -1,7 +1,7 @@
-<?php if ( isset( $_SESSION[ 'file_message' ] ) ) {?>
-<br><br><font color="red"><?=$_SESSION[ 'file_message' ]?></font>
+<?php if (isset($_SESSION['file_message'])) { ?>
+<br><br><font color="red"><?=$_SESSION['file_message']?></font>
 <?php }
-unset( $_SESSION[ 'file_message' ] );
+unset($_SESSION['file_message']);
 ?>
 
 <h2>MyFuses Cache Listing</h2>
@@ -13,10 +13,9 @@ $cachedPath = $application->getController()->getParsedPath() .
 <h3>Current Path: <?php echo $cachedPath?></h3>
 
 <?php
-$it = new RecursiveDirectoryIterator( $cachedPath );
+$it = new RecursiveDirectoryIterator($cachedPath);
 
-
-$depth = count( explode( DIRECTORY_SEPARATOR, $it->getPath() ) );
+$depth = count(explode(DIRECTORY_SEPARATOR, $it->getPath()));
 
 // RecursiveIteratorIterator accepts the following modes:
 //     LEAVES_ONLY = 0  (default)
@@ -26,18 +25,16 @@ $depth = count( explode( DIRECTORY_SEPARATOR, $it->getPath() ) );
 foreach (new RecursiveIteratorIterator($it, 1) as $path) {
     $iDepth = 0;
     if ($path->isDir()) {
-        $iDepth = count( explode( DIRECTORY_SEPARATOR, $path ) );        
-        echo str_repeat( "-", $iDepth - $depth ) . "Path: $path <a href=\"" . 
-            MyFuses::getMySelfXfa( "deletePath", true, false )  . 
-            "application=" . $application->getName() . "&file=" . 
-            urlencode( $path ) ."\">delete</a><br>";
+        $iDepth = count(explode(DIRECTORY_SEPARATOR, $path));
+        echo str_repeat("-", $iDepth - $depth) . "Path: $path <a href=\"" .
+            MyFuses::getMySelfXfa("deletePath", true, false) . "application=" .
+            $application->getName() . "&file=" . urlencode( $path ) .
+            "\">delete</a><br>";
+    } else {
+        $iDepth = count(explode(DIRECTORY_SEPARATOR, $path->getPath())) + 1;
+        echo str_repeat("-", $iDepth - $depth) . "File: $path <a href=\"" .
+            MyFuses::getMySelfXfa("deletePath", true, false) . "application=" .
+            $application->getName() . "&file=" . urlencode( $path ) .
+            "\">delete</a><br>";
     }
-    else {
-        $iDepth = count( explode( DIRECTORY_SEPARATOR, $path->getPath() ) ) + 1;
-        echo str_repeat( "-", $iDepth - $depth ) . "File: $path <a href=\"" . 
-            MyFuses::getMySelfXfa( "deletePath", true, false )  . 
-            "application=" . $application->getName() . "&file=" . 
-            urlencode( $path ) ."\">delete</a><br>";
-    }
-
 }

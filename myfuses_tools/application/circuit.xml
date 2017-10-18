@@ -1,15 +1,14 @@
 <circuit access="public">
-    
     <prefuseaction>
-        <if condition="isset( $_GET[ 'application' ] )" >
+        <if condition="isset($_GET['application'])" >
             <true>
-                <set name="appName" value="#$_GET[ 'application' ]#"/>
+                <set name="appName" value="#$_GET['application']#"/>
                 <do action="getApplicationFromGet"/>
                 <xfa name="goToApplicationSumary" value="summary" />
                 <xfa name="goToViewAppicationCache" value="viewCache" />
                 <xfa name="goToViewApplicationFiles" value="viewFiles" />
                 <do action="menu">
-                    <parameter name="appName" value="#$_GET[ 'application' ]#"/>
+                    <parameter name="appName" value="#$_GET['application']#"/>
                 </do>    
             </true>
             <false>
@@ -17,24 +16,24 @@
             </false>
         </if>
     </prefuseaction>
-    
-	<fuseaction name="summary">
-	    <include file="dspApplicationSummary.php"/>
+
+    <fuseaction name="summary">
+        <include file="dspApplicationSummary.php"/>
     </fuseaction>
-    
+
     <fuseaction name="getApplicationFromGet">
         <include file="actGetApplicationFromGet.php"/>
     </fuseaction>
-    
+
     <fuseaction name="menu">
         <include file="dspApplicationMenu.php" />
     </fuseaction>
-    
+
     <fuseaction name="viewCache">
         <xfa name="deletePath" value="deletePath"/>
         <include file="dspCacheDirectoryList.php"/>
     </fuseaction>
-    
+
     <fuseaction name="deletePath">
         <xfa name="backToViewCache" value="viewCache"/>
         <include file="actDeletePath.php"/>
@@ -43,12 +42,12 @@
             <parameter name="application" value="#$appName#"/>
         </relocate>
     </fuseaction>
-    
+
     <fuseaction name="viewFiles">
         <xfa name="chmodPath" value="chmodPath"/>
         <include file="dspFileList.php"/>
     </fuseaction>
-    
+
     <fuseaction name="chmodPath">
         <xfa name="backToViewFiles" value="viewFiles"/>
         <include file="actChmodPath.php"/>
@@ -57,6 +56,4 @@
             <parameter name="application" value="#$appName#"/>
         </relocate>
     </fuseaction>
-    
-    
 </circuit>

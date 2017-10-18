@@ -14,8 +14,6 @@
  * Plugin  - Plugin.php
  * 
  * This is MyFuses plugin interface. Defines how one interfece must to be.
- * 
- * PHP version 5
  *
  * @category   controller
  * @package    myfuses.core
