@@ -10,13 +10,13 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractPlugin.class.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractExceptionPlugin.class.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractVerb.class.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/Application.class.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/ClassDefinition.class.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/BasicCircuit.class.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/FuseAction.class.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractPlugin.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractExceptionPlugin.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/AbstractVerb.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/Application.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/ClassDefinition.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/BasicCircuit.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/FuseAction.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "engine/AbstractMyFusesLoader.class.php";
 
 /**

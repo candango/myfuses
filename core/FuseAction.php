@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/core/AbstractAction.class.php";
+require_once "myfuses/core/AbstractAction.php";
 require_once "myfuses/core/CircuitAction.class.php";
 
 /**

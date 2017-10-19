@@ -10,12 +10,12 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/core/ICacheable.class.php";
-require_once "myfuses/core/IParseable.class.php";
-require_once "myfuses/core/CircuitAction.class.php";
+require_once "myfuses/core/ICacheable.php";
+require_once "myfuses/core/IParseable.php";
+require_once "myfuses/core/CircuitAction.php";
 
 /**
- * Verb  - Verb.class.php
+ * Verb  - Verb.php
  *
  * This is MyFuses Verb interface. This interface refers how one verb
  * class can be implemented.
