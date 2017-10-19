@@ -11,7 +11,7 @@
  */
 
 require_once "myfuses/core/AbstractAction.php";
-require_once "myfuses/core/CircuitAction.class.php";
+require_once "myfuses/core/CircuitAction.php";
 
 /**
  * FuseAction  - FuseAction.php

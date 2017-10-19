@@ -10,8 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/util/security/MyFusesAbstractSecurityManager.class.php";
-require_once "myfuses/util/data/MyFusesJsonUtil.class.php";
+require_once "myfuses/util/security/MyFusesAbstractSecurityManager.php";
+require_once "myfuses/util/data/MyFusesJsonUtil.php";
 
 /**
  * MyFusesBasicSecurityManager - MyFusesBasicSecurityManager.php

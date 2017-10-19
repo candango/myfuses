@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/util/i18n/MyFusesI18nContext.class.php";
+require_once "myfuses/util/i18n/MyFusesI18nContext.php";
 
 /**
  * MyFuses i18n Handler class - MyFusesI18nHandler.php

@@ -17,7 +17,7 @@ require_once MyFuses::MYFUSES_ROOT_PATH . "core/Application.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/ClassDefinition.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/BasicCircuit.php";
 require_once MyFuses::MYFUSES_ROOT_PATH . "core/FuseAction.php";
-require_once MyFuses::MYFUSES_ROOT_PATH . "engine/AbstractMyFusesLoader.class.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "engine/AbstractMyFusesLoader.php";
 
 /**
  * AbstractMyFusesLoader - AbstractMyFusesLoader.php

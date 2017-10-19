@@ -11,7 +11,7 @@
  */
 
 /**
- * MyFuses Native i18n Handler class - MyFusesNativeI18nHandler.class.php
+ * MyFuses Native i18n Handler class - MyFusesNativeI18nHandler.php
  *
  * Utility to handle usual i18n operations. This class is a native 
  * implementation don't need any other lib to work.

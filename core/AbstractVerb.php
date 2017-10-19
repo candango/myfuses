@@ -10,8 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/core/Verb.class.php";
-require_once "myfuses/core/CircuitAction.class.php";
+require_once "myfuses/core/Verb.php";
+require_once "myfuses/core/CircuitAction.php";
 
 /**
  * AbstractVerb - AbstractVerb.php
@@ -166,7 +166,7 @@ abstract class AbstractVerb implements Verb
             require_once MyFuses::MYFUSES_ROOT_PATH . "core" . 
                 DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
                 self::$verbTypes[$data['namespace'] . ":" .
-                    $data['name']] . ".class.php";
+                    $data['name']] . ".php";
 
 	        $verb = new self::$verbTypes[$data['namespace'] . ":" .
                     $data['name']]();
@@ -201,14 +201,14 @@ abstract class AbstractVerb implements Verb
                     substr($data['name'], 1, strlen($data['name']) - 1) .
                     "Verb";
 
-                if(!is_file($path. $className . ".class.php")) {
+                if(!is_file($path. $className . ".php")) {
                     $params = $action->getErrorParams();
 	                $params['verbName'] = $data['name'];
 	                   throw new MyFusesVerbException($params,
 	                        MyFusesVerbException::NON_EXISTENT_VERB);
                 }
 
-                require_once($path. $className . ".class.php");
+                require_once($path. $className . ".php");
 
                 $verb = new $className();
 		        if( !is_null($action)) {
@@ -324,7 +324,7 @@ abstract class AbstractVerb implements Verb
 	    $strOut = "MyFusesContext::setVariable( \"" . 
               $variable . "\", \"" . $value . "\" );\n\n";
         $strOut .= self::getContextRestoreString();
-        return $strOut;      
+        return $strOut;
 	}
 
 	protected function getIncludeFileString($fileName, $contentVariable = null )

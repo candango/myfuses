@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MyFuses::MYFUSES_ROOT_PATH . "core/Plugin.class.php";
+require_once MyFuses::MYFUSES_ROOT_PATH . "core/Plugin.php";
 
 /**
  * AbstractPlugin  - AbstractPlugin.php
@@ -301,9 +301,9 @@ abstract class AbstractPlugin implements Plugin
 
         if($file == "") {
             if(substr($name, -6) === "Plugin") {
-                $file = $name . ".class.php";   
+                $file = $name . ".php";
             } else {
-                $file = $name . "Plugin.class.php";    
+                $file = $name . "Plugin.php";
             }
         }
 

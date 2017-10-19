@@ -11,7 +11,7 @@
  */
 
 /**
- * MyFusesVerbException - MyFusesVerbException.class.php
+ * MyFusesVerbException - MyFusesVerbException.php
  * 
  * Class that handles all verbs exptions.
  *

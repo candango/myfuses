@@ -11,7 +11,7 @@
  */
 
 /**
- * MyFusesJsonUtil  - MyFusesJsonUtil.class.php
+ * MyFusesJsonUtil  - MyFusesJsonUtil.php
  * 
  * This is utility class has some methods that handles json to php transforming
  * and encoding.

@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/core/Application.class.php";
+require_once "myfuses/core/Application.php";
 
 /**
  * Application  - Application.php

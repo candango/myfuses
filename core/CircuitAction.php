@@ -11,8 +11,8 @@
  */
 
 require_once "myfuses/core/Action.php";
-require_once "myfuses/core/Circuit.class.php";
-require_once "myfuses/core/Verb.class.php";
+require_once "myfuses/core/Circuit.php";
+require_once "myfuses/core/Verb.php";
 
 /**
  * AbstractAction  - AbstractAction.php

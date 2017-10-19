@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once 'myfuses/util/security/MyFusesAbstractSecurityManager.class.php';
+require_once 'myfuses/util/security/MyFusesAbstractSecurityManager.php';
 
 /**
  * MyFusesAbstractSecurityPlugin  - MyFusesAbstractSecurityPlugin.php
@@ -250,9 +250,9 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
 
             foreach ($authenticationListeners as $listener)
             {
-                if(file_exists($path . $listener . ".class.php"))
+                if(file_exists($path . $listener . ".php"))
                 {
-                    require_once $path . $listener . ".class.php";
+                    require_once $path . $listener . ".php";
 
                     $manager->addAuthenticationListener(new $listener());
                 }
@@ -260,9 +260,9 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
 
             foreach ($authorizationListeners as $listener)
             {
-                if (file_exists($path . $listener . ".class.php"))
+                if (file_exists($path . $listener . ".php"))
                 {
-                    require_once $path . $listener . ".class.php";
+                    require_once $path . $listener . ".php";
 
                     $manager->addAuthorizationListener(new $listener());
                 }

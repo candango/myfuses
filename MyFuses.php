@@ -12,32 +12,32 @@
 
 define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
 
-require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.class.php";
+require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.php";
 
 
-require_once MYFUSES_ROOT_PATH . "core/ICacheable.class.php";
-require_once MYFUSES_ROOT_PATH . "core/IParseable.class.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicApplication.class.php";
+require_once MYFUSES_ROOT_PATH . "core/ICacheable.php";
+require_once MYFUSES_ROOT_PATH . "core/IParseable.php";
+require_once MYFUSES_ROOT_PATH . "core/BasicApplication.php";
 
-require_once MYFUSES_ROOT_PATH . "engine/MyFusesApplicationLoaderListener.class.php";
-require_once MYFUSES_ROOT_PATH . "engine/AbstractMyFusesLoader.class.php";
-require_once MYFUSES_ROOT_PATH . "engine/loaders/XmlMyFusesLoader.class.php";
+require_once MYFUSES_ROOT_PATH . "engine/MyFusesApplicationLoaderListener.php";
+require_once MYFUSES_ROOT_PATH . "engine/AbstractMyFusesLoader.php";
+require_once MYFUSES_ROOT_PATH . "engine/loaders/XmlMyFusesLoader.php";
 
-require_once MYFUSES_ROOT_PATH . "engine/MyFusesApplicationBuilderListener.class.php";
-require_once MYFUSES_ROOT_PATH . "engine/BasicMyFusesBuilder.class.php";
+require_once MYFUSES_ROOT_PATH . "engine/MyFusesApplicationBuilderListener.php";
+require_once MYFUSES_ROOT_PATH . "engine/BasicMyFusesBuilder.php";
 
-require_once MYFUSES_ROOT_PATH . "process/FuseRequest.class.php";
-require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.class.php";
-require_once MYFUSES_ROOT_PATH . "process/MyFusesDebugger.class.php";
+require_once MYFUSES_ROOT_PATH . "process/FuseRequest.php";
+require_once MYFUSES_ROOT_PATH . "process/MyFusesLifecycle.php";
+require_once MYFUSES_ROOT_PATH . "process/MyFusesDebugger.php";
 
-require_once MYFUSES_ROOT_PATH . "util/context/MyFusesContext.class.php";
-require_once MYFUSES_ROOT_PATH . "util/file/MyFusesFileHandler.class.php";
-require_once MYFUSES_ROOT_PATH . "util/data/MyFusesDataUtil.class.php";
-require_once MYFUSES_ROOT_PATH . "util/data/MyFusesJsonUtil.class.php";
-require_once MYFUSES_ROOT_PATH . "util/data/MyFusesXmlUtil.class.php";
-require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesI18nHandler.class.php";
-require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesNativeI18nHandler.class.php";
-require_once MYFUSES_ROOT_PATH . "util/paging/MyFusesPagingHandler.class.php";
+require_once MYFUSES_ROOT_PATH . "util/context/MyFusesContext.php";
+require_once MYFUSES_ROOT_PATH . "util/file/MyFusesFileHandler.php";
+require_once MYFUSES_ROOT_PATH . "util/data/MyFusesDataUtil.php";
+require_once MYFUSES_ROOT_PATH . "util/data/MyFusesJsonUtil.php";
+require_once MYFUSES_ROOT_PATH . "util/data/MyFusesXmlUtil.php";
+require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesI18nHandler.php";
+require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesNativeI18nHandler.php";
+require_once MYFUSES_ROOT_PATH . "util/paging/MyFusesPagingHandler.php";
 
 // cleaning file functions cache
 // TODO: Figure out why this is here.
@@ -977,7 +977,7 @@ class MyFuses
         $circuit = $application->getCircuit($actionNameX[1]);
 
         $action =  $circuit->getAction($actionNameX[2]);
-        require_once "myfuses/core/verbs/DoVerb.class.php";        
+        require_once "myfuses/core/verbs/DoVerb.php";
         DoVerb::doAction($action);
     }
 

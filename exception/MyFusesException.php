@@ -11,17 +11,17 @@
  */
 
 require_once MYFUSES_ROOT_PATH .
-    "exception/MyFusesMissingCoreFileException.class.php";
+    "exception/MyFusesMissingCoreFileException.php";
 require_once MYFUSES_ROOT_PATH .
-    "exception/MyFusesFileOperationException.class.php";
+    "exception/MyFusesFileOperationException.php";
 require_once MYFUSES_ROOT_PATH .
-    "exception/MyFusesApplicationException.class.php";
+    "exception/MyFusesApplicationException.php";
 require_once MYFUSES_ROOT_PATH .
-    "exception/MyFusesCircuitException.class.php";
+    "exception/MyFusesCircuitException.php";
 require_once MYFUSES_ROOT_PATH .
-    "exception/MyFusesActionException.class.php";
+    "exception/MyFusesActionException.php";
 require_once MYFUSES_ROOT_PATH .
-    "exception/MyFusesVerbException.class.php";
+    "exception/MyFusesVerbException.php";
 
 /**
  * MyFuses Exception - MyFusesException.php

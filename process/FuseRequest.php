@@ -9,10 +9,10 @@
  * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
-require_once "myfuses/process/FuseQueue.class.php";
+require_once "myfuses/process/FuseQueue.php";
 
 /**
- * FuseRequest - FuseRequest.class.php
+ * FuseRequest - FuseRequest.php
  *
  * Current MyFuses request based on the application.circuit.action routed by
  * the Framework.
