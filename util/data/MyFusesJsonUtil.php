@@ -36,8 +36,8 @@ class MyFusesJsonUtil
     }
 
     /**
-     * Recursively converts objects into arrays and strings into UTF-8
-     * representations, as required by PHP's json_encode
+     * Recursively converts objects into arrays, as required by PHP's
+     * json_encode
      * 
      * @param mixed $data An array, an object, a string, a number, a boolean,
      *                    or null, to be converted
@@ -62,10 +62,8 @@ class MyFusesJsonUtil
             }
             return $data;
         }
-
-        if (is_string($data)) {
-            return utf8_encode($data);
-        }
+        // TODO: we need to test this with different encodes
+        // Right now we're working alright for utf-8 back to back
         // for all other cases (number, boolean, null), no change
         return $data;
     }
