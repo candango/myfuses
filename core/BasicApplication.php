@@ -1044,7 +1044,7 @@ class BasicApplication implements Application
 
     public function setCharacterEncoding($characterEncoding)
     {
-        $this->characterEncoding = strtoupper($characterEncoding);
+        $this->characterEncoding = $characterEncoding;
     }
     
     public function addClass(ClassDefinition $class)
