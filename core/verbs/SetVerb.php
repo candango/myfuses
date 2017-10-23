@@ -97,6 +97,15 @@ class SetVerb extends AbstractVerb
      */
     public function getParsedCode($commented, $identLevel)
     {
+        $isArray = false;
+        $arrayName = "";
+
+        if (strpos($this->getVariableName(), "[") !== false) {
+            $isArray = true;
+            $variableNameX = explode("[", $this->getVariableName());
+            $arrayName = $variableNameX[0];
+        }
+
         $strOut = parent::getParsedCode($commented, $identLevel);
         $strOut .= str_repeat("\t", $identLevel);
 
@@ -112,9 +121,19 @@ class SetVerb extends AbstractVerb
             $strOut .= MyFusesContext::sanitizeHashedString("\"" . $value .
                     "\"") . ";\n";
         }
-        else{
-            $strOut .= self::getVariableSetString($this->getVariableName(),
-                $value);
+        else {
+            if ($isArray) {
+                $strOut .= "$" . $this->getVariableName() . " = "  .
+                    MyFusesContext::sanitizeHashedString("\"" . $value . "\"") .
+                    ";\n";
+                $strOut .= str_repeat("\t", $identLevel);
+                $strOut .= self::getVariableSetString($arrayName, "#$" .
+                    $arrayName . "#");
+            }
+            else{
+                $strOut .= self::getVariableSetString($this->getVariableName(),
+                    $value);
+            }
         }
 
         return $strOut; 
