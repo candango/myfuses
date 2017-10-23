@@ -83,7 +83,7 @@ class SetVerb extends AbstractVerb
 
         if (isset($data['attributes']['evaluate'])) {
             if ($data['attributes']['evaluate'] == 'true') {
-                $this->setVariableName(true);
+                $this->setEvaluate(true);
             }
         }
 
@@ -111,8 +111,9 @@ class SetVerb extends AbstractVerb
 
         // resolving evaluate parameter
         $value = "";
+
         if ($this->isEvaluate()) {
-            $value = "#" . $this->getValue() . "#";
+            $value = "#eval(\"" . $this->getValue() . "\")#";
         } else {
             $value = $this->getValue();
         }

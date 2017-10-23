@@ -32,7 +32,7 @@ class MyFusesContext
 
         $$name = $value;
         if (!in_array( $name, self::$context)) {
-            self::$context[] = $name;    
+            self::$context[] = $name;
         }
     }
 
