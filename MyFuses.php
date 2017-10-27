@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-define( "MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR );
+define("MYFUSES_ROOT_PATH", dirname( __FILE__ ) . DIRECTORY_SEPARATOR);
 
 require_once MYFUSES_ROOT_PATH . "exception/MyFusesException.php";
 
@@ -61,7 +61,7 @@ class MyFuses
 {
     /**
      * The MyFuses root path constant
-     * 
+     *
      * @static
      * @final
      */
@@ -122,28 +122,28 @@ class MyFuses
 
     /**
      * Array of registered applications
-     * 
+     *
      * @var array
      */
     protected $applications = array();
 
     /**
      * The MyFuses request instance
-     * 
+     *
      * @var FuseRequest
      */
     private $request;
 
     /**
      * Instance Lifecycle
-     * 
+     *
      * @var MyFusesLifecycle
      */
     private $lifecycle;
 
     /**
      * Default debugger
-     * 
+     *
      * @var MyFusesDebugger
      */
     private $debugger;
@@ -171,24 +171,24 @@ class MyFuses
     {
         $this->builder = new BasicMyFusesBuilder();
         $this->debugger = new MyFusesDebugger();
-        
+
         $pathStr = str_replace(array(DIRECTORY_SEPARATOR, ':', '/'), '_',
             dirname($_SERVER['SCRIPT_FILENAME']));
-        
+
         $pathStr = str_replace('__' , '_', $pathStr);
-            
+
         if(substr($pathStr, 0, 1) == "_") {
             $pathStr = substr($pathStr, 1, strlen($pathStr));
         }
-        
+
         $this->setParsedPath(MyFuses::MYFUSES_ROOT_PATH . "parsed" .
             DIRECTORY_SEPARATOR . $pathStr . DIRECTORY_SEPARATOR);
-            
+
         // adding plugin paths
         $this->addPluginPath("plugins" . DIRECTORY_SEPARATOR);
         $this->addPluginPath(self::MYFUSES_ROOT_PATH . "plugins" .
             DIRECTORY_SEPARATOR);
-        
+
         // adding i18n paths
         $this->addI18nPath(self::MYFUSES_ROOT_PATH . "i18n" .
             DIRECTORY_SEPARATOR);
@@ -220,11 +220,11 @@ class MyFuses
 
     /**
      * Add one plugin path. MyFuses will be search plugins in this paths if
-     * no path was informed. 
+     * no path was informed.
      *
      * @param string $path
      */
-    protected function addPluginPath($path) {
+    public function addPluginPath($path) {
         $this->pluginPaths[] = $path;
     }
 
@@ -243,7 +243,7 @@ class MyFuses
      *
      * @param string $path
      */
-    protected function addI18nPath($path)
+    public function addI18nPath($path)
     {
         $this->i18nPaths[] = $path;
     }
@@ -260,11 +260,11 @@ class MyFuses
 
     /**
      * Add one verb path. MyFuses will be search verbs in this paths if
-     * no path was informed. 
+     * no path was informed.
      *
      * @param string $path
      */
-    protected function addVerbPath($path)
+    public function addVerbPath($path)
     {
         $this->verbPaths[] = $path;
     }
@@ -337,7 +337,7 @@ class MyFuses
         if(is_null($this->getMemcache())) {
             $this->setMemcache(new Memcache());
         }
-        
+
         foreach($this->getMemcacheServers() as $server) {
             $server->configureMemcache($this->getMemcache());
         }
@@ -383,21 +383,31 @@ class MyFuses
         $this->responseType = $response;
     }
 
+    /**
+     * Create a named application to be processed by the framework.
+     *
+     * Provide a config array to change the default path and file to be used by
+     * this application.
+     *
+     * @param string $name
+     * @param array $config
+     * @return Application
+     */
     public function createApplication(
-        $appName = Application::DEFAULT_APPLICATION_NAME, 
-        $appReference = null
+        $name = Application::DEFAULT_APPLICATION_NAME,
+        $config = null
     ) {
         $appClass = $this->getApplicationClass();
-        $application = new $appClass($appName);
+        $application = new $appClass($name);
 
-        if(!is_null($appReference)) {
-            if(isset($appReference['path'])) {
-                $application->setPath($appReference['path']);
+        if(!is_null($config)) {
+            if(isset($config['path'])) {
+                $application->setPath($config['path']);
             }
-            if(isset($appReference['file'])) {
-                $application->setFile($appReference['file']);
+            if(isset($config['file'])) {
+                $application->setFile($config['file']);
             }
-            
+
         }
         else {
             $application->setPath(dirname(str_replace( "/",
@@ -407,7 +417,7 @@ class MyFuses
         // setting parsed path
         $application->setParsedPath($this->getParsedPath() .
             $application->getName() . DIRECTORY_SEPARATOR);
-        
+
         $this->addApplication($application);
 
         return $application;
@@ -468,18 +478,18 @@ class MyFuses
         if(count($this->applications) == 0) {
             $application->setDefault(true);
         }
-        
+
         $application->setController($this);
-        
+
         $this->applications[$application->getName()] = $application;
-        
+
         $application->setController($this);
-        
+
         if(Application::DEFAULT_APPLICATION_NAME != $application->getName()) {
             if($application->isDefault()) {
                 if(isset($this->applications[
                     Application::DEFAULT_APPLICATION_NAME])) {
-                    $this->applications[ 
+                    $this->applications[
                     Application::DEFAULT_APPLICATION_NAME]->setDefault(
                         false);
                 }
@@ -539,7 +549,7 @@ class MyFuses
 
     /**
      * Returns the current request
-     * 
+     *
      * @return FuseRequest
      */
     public function getRequest()
@@ -617,7 +627,7 @@ class MyFuses
     }
 
     /**
-     * This method parse the request and write the genereted 
+     * This method parse the request and write the genereted
      * string in one file
      */
     public function parseRequest()
@@ -639,8 +649,8 @@ class MyFuses
 
             $myFusesString = $controllerName . "::getInstance()";
 
-            $actionString = "\"" . $this->request->getApplication()->getName() . 
-                "." . $this->request->getCircuitName() . 
+            $actionString = "\"" . $this->request->getApplication()->getName() .
+                "." . $this->request->getCircuitName() .
                 "." . $this->request->getActionName() . "\"";
 
             $strParse = "";
@@ -650,19 +660,19 @@ class MyFuses
             // Started the global output buffer control
             $strParse .= "\tob_start();\n";
 
-            $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
-                MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  . 
+            $strParse .= $myFusesString . "->setCurrentProperties( \"" .
+                MyFusesLifecycle::PRE_PROCESS_PHASE . "\", "  .
                 $actionString . " );\n\n";
 
             // parsing pre process plugins
             if(count($application->getPlugins(Plugin::PRE_PROCESS_PHASE))) {
-                $pluginsStr = $controllerName . 
-                    "::getInstance()->getApplication( \"" . 
+                $pluginsStr = $controllerName .
+                    "::getInstance()->getApplication( \"" .
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::PRE_PROCESS_PHASE . "\" )";
                 $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
                 $strParse .= "\t\$plugin->run();\n}\n";
-                $strParse .= "foreach( MyFusesContext::getContext() as " . 
+                $strParse .= "foreach( MyFusesContext::getContext() as " .
                     " \$key => \$value ) {global \$\$value;}\n\n";
             }
             //end parsing pre process plugins
@@ -679,8 +689,8 @@ class MyFuses
                     0);
             }
 
-            $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
-                MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
+            $strParse .= $myFusesString . "->setCurrentProperties( \"" .
+                MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  .
                 $actionString . " );\n\n";
 
             $selector = true;
@@ -693,11 +703,11 @@ class MyFuses
 
             // parsing post process plugins
             if(count($application->getPlugins(Plugin::POST_PROCESS_PHASE))) {
-                $strParse .= $myFusesString . "->setCurrentProperties( \"" . 
-                        MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  . 
+                $strParse .= $myFusesString . "->setCurrentProperties( \"" .
+                        MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  .
                         $actionString . " );\n\n";
-                $pluginsStr = $controllerName . 
-                    "::getInstance()->getApplication( \"" . 
+                $pluginsStr = $controllerName .
+                    "::getInstance()->getApplication( \"" .
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::POST_PROCESS_PHASE . "\" )";
                 $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
@@ -714,13 +724,13 @@ class MyFuses
             $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n";
 
             if(count($application->getPlugins(Plugin::PROCESS_ERROR_PHASE))) {
-                $pluginsStr = $controllerName . 
-                    "::getInstance()->getApplication( \"" . 
+                $pluginsStr = $controllerName .
+                    "::getInstance()->getApplication( \"" .
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::PROCESS_ERROR_PHASE . "\" )";
                 $strParse .= "\tforeach( " . $pluginsStr . " as \$plugin ) {\n";
                 $strParse .= "\t\t\$plugin->handle( \$mpe );\n\t}\n";
-                $strParse .= "\tforeach( MyFusesContext::getContext() as " . 
+                $strParse .= "\tforeach( MyFusesContext::getContext() as " .
                     " \$key => \$value ) {global \$\$value;}\n\n";
             }
             $strParse .= "}";
@@ -795,7 +805,7 @@ class MyFuses
             MyFusesLifecycle::storeLocale();
 
             if($this->getRequest()->getApplication()->isDebugAllowed()){
-                print $this->getDebugger();    
+                print $this->getDebugger();
             }
         } catch(MyFusesException $mfe) {
             $mfe->breakProcess();
@@ -805,9 +815,9 @@ class MyFuses
     /**
      * Returns one instance of MyFuses. Only one instance is creted per process.
      * MyFuses is implemented using the singleton pattern.
-     * 
+     *
      * @return MyFuses
-     * @static 
+     * @static
      */
      public static function getInstance()
      {
@@ -863,7 +873,7 @@ class MyFuses
     public static function getSelf()
     {
         $self = "http://" . $_SERVER['HTTP_HOST'];
-        
+
         if( substr($self, -1 ) != "/") {
             $self .= "/";
         }
@@ -887,7 +897,7 @@ class MyFuses
 
         return $self;
     }
-    
+
     public static function getMySelf($showFuseactionVariable=true)
     {
         // FIXME Fixing an error occurring with CGI.
@@ -896,7 +906,7 @@ class MyFuses
             $mySelf = self::getSelf();
             if($showFuseactionVariable) {
                 $mySelf .= self::getInstance()->getRequest()->
-                    getApplication()->getFuseactionVariable() . "/";    
+                    getApplication()->getFuseactionVariable() . "/";
             }
         } else {
             $mySelf = self::getSelf() . "?";
@@ -1010,7 +1020,7 @@ class MyFuses
      * Throws IFBExeption when <code>file doesn't exists</code>.
      * In truth this method use require_once insted include_once.
      * Process must break if some core file doesn't exists.
-     * 
+     *
      * @param $file
      * @return void
      */
@@ -1120,16 +1130,16 @@ class MyFusesMemcacheServer
 
 /**
  * This function returns if the security credential is authenticated
- * 
+ *
  * @return boolean Returns if the security credential is authenticated
  */
 function myfuses_security_is_authenticated()
 {
     if(class_exists("MyFusesAbstractSecurityManager")) {
         $manager = MyFusesAbstractSecurityManager::getInstance();
-        
+
         $credential = $manager->getCredential();
-        return $credential->isAuthenticated();    
+        return $credential->isAuthenticated();
     }
     return true;
 }

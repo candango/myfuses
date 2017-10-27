@@ -155,7 +155,7 @@ class XmlMyFusesLoader extends AbstractMyFusesLoader
         );
 
         // TODO verify if all conditions is satisfied for a file load occurs
-        if (@!$fp = fopen($this->getApplication()-> getCompleteFile() , "r")) {
+        if (@!$fp = fopen($this->getApplication()->getCompleteFile() , "r")) {
             throw new MyFusesFileOperationException(
                 $this->getApplication()->getCompleteFile(), 
                 MyFusesFileOperationException::OPEN_FILE);
