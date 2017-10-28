@@ -90,6 +90,21 @@ class FuseRequest
             // FIXME Very very strange. Must research more about this.
             $path = str_replace("myfuses.xml", "myfuses", $path);
 
+            if ($this->hasPathFuseactionVariable($path)) {
+                if (MyFuses::getApplication()->ignoreFuseactionVariable()) {
+                    $urlRedirect = MyFuses::getMySelf();
+                    if (substr($urlRedirect, -1) != "/"){
+                        $urlRedirect .= "/";
+                    }
+                    $urlRedirect .= str_replace(
+                        "/" . $fuseactionVariable . "/", "", $path);
+                    if (!empty($_GET)) {
+                        $urlRedirect .= "?" . http_build_query($_GET);
+                    }
+                    MyFuses::sendToUrl($urlRedirect);
+                }
+            }
+
             if (substr($path, -1) == "/") {
                 $path = substr($path, 0, strlen($path) - 1);
             }
@@ -365,6 +380,21 @@ class FuseRequest
                 }
             }
         }
+    }
+
+    /**
+     * Returns true if path has the fuseaction variable
+     *
+     * @param $path
+     * @return boolean
+     */
+    public function hasPathFuseactionVariable($path)
+    {
+        $fuseactionVariable = $this->getApplication()->getFuseactionVariable();
+        if (strpos($path, $fuseactionVariable) !== false) {
+            return true;
+        }
+        return false;
     }
 
     /**
