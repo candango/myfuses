@@ -991,13 +991,28 @@ class MyFuses
         DoVerb::doAction($action);
     }
 
+    /**
+     * Returns true if the main controller will interpret a directory request
+     * redirected by the web server to the main controller.
+     *
+     * To set myfuses to rewrite it is necessary to set the parameter rewrite
+     * as true:
+     *
+     *     <parameter name="redirect" value="true" />
+     *
+     * @return bool
+     */
     public static function isRewriting()
     {
-        if(isset($_SERVER['REDIRECT_URL' ]) &&
+        if (MyFuses::getInstance()->getApplication()->allowRewrite()) {
+            return true;
+        }
+
+        /*if(isset($_SERVER['REDIRECT_URL' ]) &&
             MyFuses::getInstance()->getApplication()->allowRewrite() &&
             !MyFuses::strEndsWith($_SERVER['REQUEST_URI'], ".php")) {
             return true;
-        }
+        }*/
         return false;
     }
 
