@@ -78,20 +78,15 @@ class FuseRequest
 
         $fuseactionVariable = $this->application->getFuseactionVariable();
 
-        // FIXME Fixing an error occurred with CGI GATEWAYS.
-        // FIXME Suppressing redirect with CGI!!!
         if (MyFuses::isRewriting()) {
             $root = dirname($_SERVER[ 'SCRIPT_NAME']);
-
-            if (isset($_SERVER['REDIRECT_URL'])) {
-                $pathX = explode("?", $_SERVER['REQUEST_URI']);
-                $path = $pathX[0];
-            }
+            $pathX = explode("?", $_SERVER['REQUEST_URI']);
+            $path = $pathX[0];
 
             if ($root != "/") {
                 $path = str_replace($root, "", $path);
             }
-            
+
             // FIXME Very very strange. Must research more about this.
             $path = str_replace("myfuses.xml", "myfuses", $path);
 
