@@ -64,7 +64,7 @@ class BasicApplication implements Application
      *
      * @var boolean
      */
-    private $rewrite = true;
+    private $rewrite = false;
 
     /**
      * Application debug flag
@@ -198,7 +198,7 @@ class BasicApplication implements Application
      * @var boolean
      * @deprecated
      */
-    private $lexiconAllowed;
+    private $lexiconAllowed = true;
 
     /**
      * Flag that indicates that bad grammar will be ignored
@@ -248,6 +248,13 @@ class BasicApplication implements Application
      * @var string
      */
     private $characterEncoding = "UTF-8";
+
+    /**
+     * Flag that defines if the fuseaction variable should be ignored
+     *
+     * @var bool
+     */
+    private $ignoreFuseactionVariable = false;
 
     /**
      * All applications class definitions founded in application file
@@ -820,6 +827,7 @@ class BasicApplication implements Application
      * Set precedence form or url
      * 
      * @param string $precedenceFormOrUrl
+     * @deprecated
      */
     public function setPrecedenceFormOrUrl($precedenceFormOrUrl)
     {
@@ -1046,7 +1054,38 @@ class BasicApplication implements Application
     {
         $this->characterEncoding = $characterEncoding;
     }
-    
+
+    /**
+     * Returns it the fuseaction variable should be ignored when myfuses
+     * is rewriting.
+     *
+     * @return boolean
+     */
+    public function ignoreFuseactionVariable()
+    {
+        return $this->ignoreFuseactionVariable;
+    }
+
+    /**
+     * Set the application parameter to ignore the fuseaction variable when
+     * myfuses is rewriting.
+     *
+     * @param boolean $ignoreFuseactionVariable
+     */
+    public function setIgnoreFuseactionVariable($ignoreFuseactionVariable)
+    {
+        if (is_bool($ignoreFuseactionVariable)) {
+            $this->ignoreFuseactionVariable =
+                (boolean) $ignoreFuseactionVariable;
+        } else {
+            if ($ignoreFuseactionVariable == "true") {
+                $this->ignoreFuseactionVariable = true;
+            } else {
+                $this->ignoreFuseactionVariable = false;
+            }
+        }
+    }
+
     public function addClass(ClassDefinition $class)
     {
         $class->setApplication($this);
@@ -1149,7 +1188,15 @@ class BasicApplication implements Application
 
     public function setRewrite($rewrite)
     {
-        $this->rewrite = $rewrite;
+        if (is_bool($rewrite)) {
+            $this->rewrite = (boolean) $rewrite;
+        } else {
+            if ($rewrite == "true") {
+                $this->rewrite = true;
+            } else {
+                $this->rewrite = false;
+            }
+        }
     }
 
     public function allowRewrite()
@@ -1240,69 +1287,72 @@ class BasicApplication implements Application
      */
     public function getCachedCode()
     {
-        $strOut = "\$application = new " . get_class($this) . "( \"" .
-            $this->getName() . "\" );\n";
-        $strOut .= "\$application->setPath( \"" . addslashes($this->getPath()) .
-            "\" );\n";
-        $strOut .= "\$application->setRewrite( " .
-            ($this->allowRewrite() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setParsedPath( \"" .
+        $strOut = "\$application = new " . get_class($this) . "(\"" .
+            $this->getName() . "\");\n";
+        $strOut .= "\$application->setPath(\"" . addslashes($this->getPath()) .
+            "\");\n";
+        $strOut .= "\$application->setRewrite(" .
+            ($this->allowRewrite() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setParsedPath(\"" .
             addslashes($this->getParsedPath()) . "\");\n";
-        $strOut .= "\$application->setFile( \"" .
-            addslashes($this->getFile()) . "\" );\n";
-        $strOut .= "\$application->setLastLoadTime( " .
-            $this->getLastLoadTime() . " );\n";
-        $strOut .= "\$application->setLocale( \"" .
-            $this->getLocale() . "\" );\n";
-        $strOut .= "\$application->setLoader( new " .
-            get_class($this->getLoader()) . "() );\n";
+        $strOut .= "\$application->setFile(\"" .
+            addslashes($this->getFile()) . "\");\n";
+        $strOut .= "\$application->setLastLoadTime(" .
+            $this->getLastLoadTime() . ");\n";
+        $strOut .= "\$application->setLocale(\"" .
+            $this->getLocale() . "\");\n";
+        $strOut .= "\$application->setLoader(new " .
+            get_class($this->getLoader()) . "());\n";
 
         /*if ($this->isDefault() ) {
             $strOut .= "\$application->setDefault( true );\n";
         }*/
 
         // parameters
-        $strOut .= "\n\$application->setFuseactionVariable( \"" . 
-            $this->getFuseactionVariable() . "\" );\n";
-        $strOut .= "\$application->setDefaultFuseaction( \"" . 
-            $this->getDefaultFuseaction() . "\" );\n";
-        $strOut .= "\$application->setPrecedenceFormOrUrl( \"" . 
-            $this->getPrecedenceFormOrUrl() . "\" );\n";
-        $strOut .= "\$application->setMode( \"" . 
-            $this->getMode() . "\" );\n";
-        $strOut .= "\$application->setPassword( \"" . 
-            $this->getPassword() . "\" );\n";
-        $strOut .= "\$application->setParsedWithComments( " .
-            ($this->isParsedWithComments() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setConditionalParse( " .
-            ($this->isConditionalParse() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setLexiconAllowed( " .
-            ($this->isLexiconAllowed() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setBadGrammarIgnored( " .
-            ($this->isBadGrammarIgnored() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setAssertionsUsed( " .
-            ($this->isAssertionsUsed() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setScriptLanguage( \"" . 
-            $this->getScriptLanguage() . "\" );\n";
-        $strOut .= "\$application->setScriptFileDelimiter( \"" . 
-            $this->getScriptFileDelimiter() . "\" );\n";
-        $strOut .= "\$application->setDebug( " .
-            ($this->isDebugAllowed() ? "true" : "false") . " );\n";
-        $strOut .= "\$application->setTools( " .
-            ($this->isToolsAllowed() ? "true" : "false") . " );\n";
+        $strOut .= "\n\$application->setFuseactionVariable(\"" .
+            $this->getFuseactionVariable() . "\");\n";
+        $strOut .= "\$application->setDefaultFuseaction(\"" .
+            $this->getDefaultFuseaction() . "\");\n";
+        $strOut .= "\$application->setPrecedenceFormOrUrl(\"" .
+            $this->getPrecedenceFormOrUrl() . "\");\n";
+        $strOut .= "\$application->setMode(\"" .
+            $this->getMode() . "\");\n";
+        $strOut .= "\$application->setPassword(\"" .
+            $this->getPassword() . "\");\n";
+        $strOut .= "\$application->setParsedWithComments(" .
+            ($this->isParsedWithComments() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setConditionalParse(" .
+            ($this->isConditionalParse() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setLexiconAllowed(" .
+            ($this->isLexiconAllowed() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setBadGrammarIgnored(" .
+            ($this->isBadGrammarIgnored() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setAssertionsUsed(" .
+            ($this->isAssertionsUsed() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setScriptLanguage(\"" .
+            $this->getScriptLanguage() . "\");\n";
+        $strOut .= "\$application->setScriptFileDelimiter(\"" .
+            $this->getScriptFileDelimiter() . "\");\n";
+        $strOut .= "\$application->setDebug(" .
+            ($this->isDebugAllowed() ? "true" : "false") . ");\n";
+        $strOut .= "\$application->setTools(" .
+            ($this->isToolsAllowed() ? "true" : "false") . ");\n";
 
         if (!is_null($this->getMaskedFileDelimiters())) {
-            $strOut .= "\$application->setMaskedFileDelimiters( \"" . 
-                implode(",", $this->getMaskedFileDelimiters()) . "\" );\n";
+            $strOut .= "\$application->setMaskedFileDelimiters(\"" .
+                implode(",", $this->getMaskedFileDelimiters()) . "\");\n";
         }
-        $strOut .= "\$application->setCharacterEncoding( \"" . 
-            $this->getCharacterEncoding() . "\" );\n";
+        $strOut .= "\$application->setCharacterEncoding(\"" .
+            $this->getCharacterEncoding() . "\");\n";
+
+        $strOut .= "\$application->setIgnoreFuseactionVariable(" .
+            ($this->ignoreFuseactionVariable() ? "true" : "false") . ");\n";
         // end paramenters
 
         $controllerClass = $this->getControllerClass();
 
         $strOut .= $controllerClass . 
-            "::getInstance()->addApplication( \$application );\n\n";
+            "::getInstance()->addApplication(\$application);\n\n";
         $strOut .= $this->getCircuitsCachedCode();
         $strOut .= $this->getGlobalFuseactionCode();
         $strOut .= $this->getClassesCacheCode();

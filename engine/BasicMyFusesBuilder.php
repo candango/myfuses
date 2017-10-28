@@ -397,6 +397,17 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
      */
     protected static function buildParameters(Application $application, &$data)
     {
+        // Setting default parameters
+        $application->setFuseactionVariable("fuseactionVariable");
+        $application->setRewrite(false);
+        $application->setIgnoreFuseactionVariable(false);
+        $application->setDebug(false);
+        $application->setCharacterEncoding("UTF-8");
+        $application->setLocale("en");
+        $application->setLocale("en");
+        $application->setLexiconAllowed(true);
+        $application->setStrictMode(false);
+
         if (count($data['children'] > 0)) {
             foreach ($data['children'] as $child) {
                 $name = "";
@@ -463,6 +474,12 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                         break;
                     case "characterEncoding":
                         $application->setCharacterEncoding($value);
+                        break;
+                    case "rewrite":
+                        $application->setRewrite($value);
+                        break;
+                    case "ignoreFuseactionVariable":
+                        $application->setIgnoreFuseactionVariable($value);
                         break;
                 }
 

@@ -327,6 +327,7 @@ interface Application extends ICacheable
      * Return precedence form or url
      * 
      * @return string
+     * @deprecated
      */
     public function getPrecedenceFormOrUrl();
 
@@ -334,6 +335,7 @@ interface Application extends ICacheable
      * Set precedence form or url
      * 
      * @param string $precedenceFormOrUrl
+     * @deprecated
      */
     public function setPrecedenceFormOrUrl($precedenceFormOrUrl);
 
@@ -434,6 +436,22 @@ interface Application extends ICacheable
     public function getCharacterEncoding();
 
     public function setCharacterEncoding($characterEncoding);
+
+    /**
+     * Returns it the fuseaction variable should be ignored when myfuses
+     * is rewriting.
+     *
+     * @return boolean
+     */
+    public function ignoreFuseactionVariable();
+
+    /**
+     * Set the application parameter to ignore the fuseaction variable when
+     * myfuses is rewriting.
+     *
+     * @param boolean $ignoreFuseactionVariable
+     */
+    public function setIgnoreFuseactionVariable($ignoreFuseactionVariable);
 
     public function addClass(ClassDefinition $class);
 
