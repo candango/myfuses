@@ -163,9 +163,6 @@ class MyFuses
 
     /**
      * MyFuses constructor
-     *
-     * @param MyFusesLoader $loader
-     * @param string $applicationName
      */
     protected function __construct()
     {
@@ -177,7 +174,7 @@ class MyFuses
 
         $pathStr = str_replace('__' , '_', $pathStr);
 
-        if(substr($pathStr, 0, 1) == "_") {
+        if (substr($pathStr, 0, 1) == "_") {
             $pathStr = substr($pathStr, 1, strlen($pathStr));
         }
 
@@ -334,11 +331,11 @@ class MyFuses
      */
     private function configureMemcache()
     {
-        if(is_null($this->getMemcache())) {
+        if (is_null($this->getMemcache())) {
             $this->setMemcache(new Memcache());
         }
 
-        foreach($this->getMemcacheServers() as $server) {
+        foreach ($this->getMemcacheServers() as $server) {
             $server->configureMemcache($this->getMemcache());
         }
     }
@@ -400,11 +397,11 @@ class MyFuses
         $appClass = $this->getApplicationClass();
         $application = new $appClass($name);
 
-        if(!is_null($config)) {
-            if(isset($config['path'])) {
+        if (!is_null($config)) {
+            if (isset($config['path'])) {
                 $application->setPath($config['path']);
             }
-            if(isset($config['file'])) {
+            if (isset($config['file'])) {
                 $application->setFile($config['file']);
             }
 
@@ -433,7 +430,7 @@ class MyFuses
     public static function getApplication(
         $name = Application::DEFAULT_APPLICATION_NAME
     ) {
-        if(isset(self::getInstance()->applications[$name])) {
+        if (isset(self::getInstance()->applications[$name])) {
             return self::getInstance()->applications[$name];
         }
 
@@ -453,7 +450,7 @@ class MyFuses
         try {
             self::getApplication($name);
             return true;
-        } catch(MyFusesApplicationException $mfae) {
+        } catch (MyFusesApplicationException $mfae) {
             return false;
         }
     }
@@ -475,7 +472,7 @@ class MyFuses
      */
     public function addApplication(Application $application)
     {
-        if(count($this->applications) == 0) {
+        if (count($this->applications) == 0) {
             $application->setDefault(true);
         }
 
@@ -485,9 +482,9 @@ class MyFuses
 
         $application->setController($this);
 
-        if(Application::DEFAULT_APPLICATION_NAME != $application->getName()) {
-            if($application->isDefault()) {
-                if(isset($this->applications[
+        if (Application::DEFAULT_APPLICATION_NAME != $application->getName()) {
+            if ($application->isDefault()) {
+                if (isset($this->applications[
                     Application::DEFAULT_APPLICATION_NAME])) {
                     $this->applications[
                     Application::DEFAULT_APPLICATION_NAME]->setDefault(
@@ -559,14 +556,14 @@ class MyFuses
 
     public function createApplicationPath(Application $application)
     {
-        if(!file_exists($application->getParsedPath())) {
+        if (!file_exists($application->getParsedPath())) {
             mkdir($application->getParsedPath(), 0777, true);
 
             $path = explode(DIRECTORY_SEPARATOR,
                 substr($application->getParsedPath(), 0,
                 strlen($application->getParsedPath()) - 1 ));
 
-            while($this->getParsedPath() != (
+            while ($this->getParsedPath() != (
                 implode(DIRECTORY_SEPARATOR, $path) .
                 DIRECTORY_SEPARATOR)) {
                 // TODO: Review the chmod permission
@@ -580,7 +577,7 @@ class MyFuses
     {
         $strStore = "";
 
-        if($application->mustStore()) {
+        if ($application->mustStore()) {
             if(!$this->isMemcacheEnabled()) {
                 $this->createApplicationPath($application);
 
@@ -600,9 +597,9 @@ class MyFuses
             }
         }
 
-        foreach($application->getCircuits() as $circuit) {
-            if($circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT") {
-                if($circuit->isLoaded()) {
+        foreach ($application->getCircuits() as $circuit) {
+            if ($circuit->getName() !== "MYFUSES_GLOBAL_CIRCUIT") {
+                if ($circuit->isLoaded()) {
                     $fileName = $circuit->getCompleteCacheFile();
                     $dataFileName = $circuit->getCompleteCacheDataFile();
                     MyFusesFileHandler::writeFile($fileName, "<?php\n" .
@@ -644,7 +641,7 @@ class MyFuses
         $fileName = $path . $this->request->getActionName() . ".action.php" ;
 
         // TODO handle file parse
-        if(!is_file($fileName ) || $circuit->isModified()) {
+        if (!is_file($fileName ) || $circuit->isModified()) {
             $fuseQueue = $this->request->getFuseQueue();
 
             $myFusesString = $controllerName . "::getInstance()";
@@ -665,7 +662,7 @@ class MyFuses
                 $actionString . " );\n\n";
 
             // parsing pre process plugins
-            if(count($application->getPlugins(Plugin::PRE_PROCESS_PHASE))) {
+            if (count($application->getPlugins(Plugin::PRE_PROCESS_PHASE))) {
                 $pluginsStr = $controllerName .
                     "::getInstance()->getApplication( \"" .
                     $application->getName() . "\" )->getPlugins(" .
@@ -677,13 +674,13 @@ class MyFuses
             }
             //end parsing pre process plugins
 
-            foreach($fuseQueue->getPreProcessQueue() as $parseable) {
+            foreach ($fuseQueue->getPreProcessQueue() as $parseable) {
                 $strParse .= $parseable->getParsedCode(
                     $this->request->getApplication()->isParsedWithComments(),
                     0);
             }
 
-            foreach($fuseQueue->getProcessQueue() as $parseable) {
+            foreach ($fuseQueue->getProcessQueue() as $parseable) {
                 $strParse .= $parseable->getParsedCode(
                     $this->request->getApplication()->isParsedWithComments(),
                     0);
@@ -702,7 +699,7 @@ class MyFuses
             }
 
             // parsing post process plugins
-            if(count($application->getPlugins(Plugin::POST_PROCESS_PHASE))) {
+            if (count($application->getPlugins(Plugin::POST_PROCESS_PHASE))) {
                 $strParse .= $myFusesString . "->setCurrentProperties( \"" .
                         MyFusesLifecycle::POST_PROCESS_PHASE . "\", "  .
                         $actionString . " );\n\n";
@@ -716,14 +713,15 @@ class MyFuses
             //end parsing post process plugins
 
             $strParse .= "\t\$strContent = " . $controllerName .
-                "::getInstance()->getResponseType() . \"; charset=\" . " . $controllerName .
-                "::getInstance()->getRequest()->getApplication()->getCharacterEncoding();\n";
+                "::getInstance()->getResponseType() . \"; charset=\" . " .
+                $controllerName . "::getInstance()->getRequest()->" .
+                "getApplication()->getCharacterEncoding();\n";
             $strParse .= "\theader( \"Content-Type: \" . \$strContent );\n";
             // Flushed global output buffer content
             $strParse .= "\tob_end_flush();\n";
             $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n";
 
-            if(count($application->getPlugins(Plugin::PROCESS_ERROR_PHASE))) {
+            if (count($application->getPlugins(Plugin::PROCESS_ERROR_PHASE))) {
                 $pluginsStr = $controllerName .
                     "::getInstance()->getApplication( \"" .
                     $application->getName() . "\" )->getPlugins(" .
@@ -737,7 +735,7 @@ class MyFuses
 
             $this->createApplicationPath($application);
 
-            if(!file_exists($path)) {
+            if (!file_exists($path)) {
                 mkdir($path);
                 // TODO: Review the chmod permission here
                 chmod($path, 0777);
@@ -763,13 +761,13 @@ class MyFuses
     private function configureApplications()
     {
         foreach($this->getApplications() as $index => $application) {
-            if($index != Application::DEFAULT_APPLICATION_NAME) {
+            if ($index != Application::DEFAULT_APPLICATION_NAME) {
                 $this->configureApplication($application);
             }
         }
     }
 
-    protected function configureApplication( Application $application )
+    protected function configureApplication(Application $application)
     {
 
     }
@@ -782,7 +780,7 @@ class MyFuses
         try {
             MyFusesLifecycle::configureLocale();
 
-            if($this->isMemcacheEnabled()) {
+            if ($this->isMemcacheEnabled()) {
                 $this->configureMemcache();
             }
 
@@ -804,10 +802,10 @@ class MyFuses
 
             MyFusesLifecycle::storeLocale();
 
-            if($this->getRequest()->getApplication()->isDebugAllowed()){
+            if ($this->getApplication()->isDebugAllowed()) {
                 print $this->getDebugger();
             }
-        } catch(MyFusesException $mfe) {
+        } catch (MyFusesException $mfe) {
             $mfe->breakProcess();
         }
     }
@@ -902,7 +900,13 @@ class MyFuses
     {
         // FIXME Fixing an error occurring with CGI.
         // FIXME Suppress redirect with CGI!!!
-         if(MyFuses::isRewriting()) {
+        if (MyFuses::isRewriting()) {
+            // If ignoreFuseactionVariable is true, we always don't return it
+            // with the url
+            if (self::getInstance()->getApplication()->
+                ignoreFuseactionVariable()) {
+                $showFuseactionVariable = false;
+            }
             $mySelf = self::getSelf();
             if($showFuseactionVariable) {
                 $mySelf .= self::getInstance()->getRequest()->
@@ -925,13 +929,13 @@ class MyFuses
     ) {
         // FIXME Fixing an error occurring with CGI.
         // FIXME Suppress redirect with CGI!!!
-        if(MyFuses::isRewriting()) {
+        if (MyFuses::isRewriting()) {
             $xfaX = explode( ".", self::getXfa($xfaName));
 
             $link = "";
 
-            if(count($xfaX) == 1) {
-                if($xfaX[ 0 ] == "") {
+            if (count($xfaX) == 1) {
+                if($xfaX[0] == "") {
                     $link = self::getRootUrl();
                 } else {
                     $link = self::getMySelf($showFuseactionVariable) .
