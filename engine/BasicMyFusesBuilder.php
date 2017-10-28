@@ -398,7 +398,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
     protected static function buildParameters(Application $application, &$data)
     {
         // Setting default parameters
-        $application->setFuseactionVariable("fuseactionVariable");
+        $application->setFuseactionVariable("fuseaction");
         $application->setRewrite(false);
         $application->setIgnoreFuseactionVariable(false);
         $application->setDebug(false);
