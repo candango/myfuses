@@ -851,7 +851,13 @@ class BasicApplication implements Application
      */
     public function setMode($mode)
     {
-        $this->mode = $mode;
+        if (in_array($mode, array(MyFuses::MODE_DEVELOPMENT,
+            MyFuses::MODE_PRODUCTION))) {
+            $this->mode = $mode;
+        } else {
+            // TODO: This must be a warning in the log when implmented.
+            $this->mode = MyFuses::MODE_DEVELOPMENT;
+        }
     }
 
 	/**
