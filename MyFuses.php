@@ -154,6 +154,8 @@ class MyFuses
 
     private $responseType = "text/html";
 
+    const VERSION = "0.9.9";
+
     /**
      * I18n type flag. Default native.
      *
