@@ -403,8 +403,6 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $application->setIgnoreFuseactionVariable(false);
         $application->setDebug(false);
         $application->setCharacterEncoding("UTF-8");
-        $application->setLocale("en");
-        $application->setLocale("en");
         $application->setLexiconAllowed(true);
         $application->setStrictMode(false);
 
