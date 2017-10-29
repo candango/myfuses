@@ -69,11 +69,11 @@ abstract class AbstractPlugin implements Plugin
     private $application;
 
     /**
-     * Plugins paramters
+     * Plugins parameters
      *
      * @var array
      */
-    private $paramters = array();
+    private $parameters = array();
 
     /**
      * Return the plugin name
@@ -232,17 +232,17 @@ abstract class AbstractPlugin implements Plugin
     public function addParameter($name, $value)
     {
         $parameter = array("name" => $name, "value" => $value);
-        $this->paramters[] = $parameter;
+        $this->parameters[] = $parameter;
     }
 
     /**
      * Get plugins parameters
      * 
-     * @return array An array of paramters
+     * @return array An array of parameters
      */
     public function getParameters()
     {
-        return $this->paramters;
+        return $this->parameters;
     }
 
     /**
@@ -252,7 +252,7 @@ abstract class AbstractPlugin implements Plugin
      */
     public function setParameters( $parameters )
     {
-        $this->paramters = $parameters;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -264,7 +264,7 @@ abstract class AbstractPlugin implements Plugin
     {
         $params = array();
 
-        foreach($this->paramters as $param) {
+        foreach($this->parameters as $param) {
             if($param['name'] == $name) {
                 $params[] = $param['value'];
             }

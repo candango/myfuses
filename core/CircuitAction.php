@@ -79,6 +79,20 @@ interface CircuitAction extends Action
     public function setPermissions($permissions);
 
     /**
+     * Return security mode
+     *
+     * @return string
+     */
+    public function getSecurity();
+
+    /**
+     * Set security mode
+     *
+     * @param $security
+     */
+    public function setSecurity($security);
+
+    /**
      * Enter description here...
      *
      * @param Verb $verb

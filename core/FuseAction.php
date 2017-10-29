@@ -54,11 +54,18 @@ class FuseAction extends AbstractAction implements CircuitAction
     private $default = false;
 
     /**
-     * FuseAction permissions paramter
+     * FuseAction permissions parameter
      * 
      * @var string
      */
     private $permissions = "";
+
+    /**
+     * Security mode parameter
+     *
+     * @var string
+     */
+    private $security = "optimistic";
 
     /**
      * Call prefuseaction flag
@@ -341,16 +348,16 @@ class FuseAction extends AbstractAction implements CircuitAction
         if (!is_null($this->getPath())) {
             $strOut .= "\$action->setPath( \"" . $this->getPath() . "\" );\n";    
         }
-        $strOut .= "\$action->setName( \"" . $this->getName() . "\" );\n";
+        $strOut .= "\$action->setName(\"" . $this->getName() . "\");\n";
         foreach ($this->customAttributes as $namespace => $attributes) {
             foreach ($attributes as $name => $value) {
-                $strOut .= "\$action->setCustomAttribute( \"" . $namespace . 
-                    "\", \"" . $name . "\", \"" . $value . "\" );\n";
+                $strOut .= "\$action->setCustomAttribute(\"" . $namespace .
+                    "\", \"" . $name . "\", \"" . $value . "\");\n";
             }
         }
 
-        $strOut .= "\$action->setDefault( " . (
-            $this->isDefault() ? "true" : "false") . " );\n";
+        $strOut .= "\$action->setDefault(" . (
+            $this->isDefault() ? "true" : "false") . ");\n";
         $strOut .= $this->getVerbsCachedCode();
         return $strOut;
     }
@@ -419,5 +426,31 @@ class FuseAction extends AbstractAction implements CircuitAction
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
+    }
+
+    /**
+     * Return security mode
+     *
+     * @return string
+     */
+    public function getSecurity()
+    {
+        return $this->security;
+    }
+
+    /**
+     * Set security mode
+     *
+     * @param $security
+     */
+    public function setSecurity($security)
+    {
+        $allowedModes = array("optimistic", "pessimistic", "disabled");
+        if (in_array($security, $allowedModes)) {
+            $this->security = $security;
+        } else {
+            // Get from the from the circuit
+            $this->security = $this->getCircuit()->getSecurity();
+        }
     }
 }

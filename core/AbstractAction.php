@@ -28,7 +28,7 @@ abstract class AbstractAction implements Action
     /**
      * Action name
      *
-     * @var strign
+     * @var string
      */
     private $name;
 

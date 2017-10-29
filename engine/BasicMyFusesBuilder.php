@@ -161,6 +161,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $access = "";
         $file = "";
         $permissions = "";
+        $security = "";
 
         if (isset($data['attributes'])) {
             foreach ($data['attributes'] as $attributeName => $attribute) {
@@ -174,13 +175,16 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                     case "permissions":
                         $permissions = $attribute;
                         break;
+                    case "security":
+                        $security = $attribute;
+                        break;
                 }
             }
         }
-
         $circuit->setFile($file);
         $circuit->setAccessByString($access);
         $circuit->setPermissions($permissions);
+        $circuit->setSecurity($security);
 
         if (isset($data['docNamespaces'])) {
             $circuit->setVerbPaths(serialize($data['docNamespaces']));
@@ -232,8 +236,8 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $class = null;
         $path = null;
         $default = null;
-
         $permissions = "";
+        $security = "";
 
         $customAttribute = array();
 
@@ -250,6 +254,9 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                     break;
                 case "default":
                     $default = $attribute;
+                    break;
+                case "security":
+                    $security = $attribute;
                     break;
                 case  "permissions":
                     $permissions = $attribute;
@@ -286,8 +293,9 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
 
         $action->setName($name);
         $action->setDefault($default);
-        $action->setPermissions( $permissions );
+        $action->setPermissions($permissions);
         $circuit->addAction($action);
+        $action->setSecurity($security);
 
         if (isset($data['children'])) {
             if (count($data['children']) > 0) {
@@ -405,6 +413,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $application->setCharacterEncoding("UTF-8");
         $application->setLexiconAllowed(true);
         $application->setStrictMode(false);
+        $application->setSecurity("optimistic");
 
         if (count($data['children'] > 0)) {
             foreach ($data['children'] as $child) {
@@ -472,6 +481,9 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                         break;
                     case "characterEncoding":
                         $application->setCharacterEncoding($value);
+                        break;
+                    case "security":
+                        $application->setSecurity($value);
                         break;
                     case "rewrite":
                         $application->setRewrite($value);

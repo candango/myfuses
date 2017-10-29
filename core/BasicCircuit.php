@@ -64,6 +64,13 @@ class BasicCircuit implements Circuit
     private $permissions = "";
 
     /**
+     * Security mode parameter
+     *
+     * @var string
+     */
+    private $security = "optimistic";
+
+    /**
      * Cicuit actions
      *
      * @var array
@@ -336,6 +343,30 @@ class BasicCircuit implements Circuit
     public function setPermissions($permissions)
     {
         $this->permissions = $permissions;
+    }
+
+    /**
+     * Return security mode
+     *
+     * @return string
+     */
+    public function getSecurity(){
+        return $this->security;
+    }
+
+    /**
+     * Set security mode
+     *
+     * @param $security
+     */
+    public function setSecurity($security) {
+        $allowedModes = array("optimistic", "pessimistic", "disabled");
+        if (in_array($security, $allowedModes)) {
+            $this->security = $security;
+        } else {
+            // Get from the from the application
+            $this->security = $this->getApplication()->getSecurity();
+        }
     }
 
     /**
@@ -636,28 +667,30 @@ class BasicCircuit implements Circuit
     {
         $strOut = "\$circuit = " . get_class(
             $this->getApplication()->getController()) .
-            "::getApplication( \"" . $this->getApplication()->getName() . 
-            "\" )->getCircuit(  \"" . $this->getName() . "\"  );\n";
+            "::getApplication(\"" . $this->getApplication()->getName() .
+            "\")->getCircuit(\"" . $this->getName() . "\");\n";
 
         foreach ($this->customAttributes as $namespace => $attributes) {
             foreach ($attributes as $name => $value) {
-                $strOut .= "\$circuit->setCustomAttribute( \"" . $namespace . 
-                    "\", \"" . $name . "\", \"" . $value . "\" );\n";
+                $strOut .= "\$circuit->setCustomAttribute(\"" . $namespace .
+                    "\", \"" . $name . "\", \"" . $value . "\");\n";
             }
         }
-        $strOut .= "\$circuit->setVerbPaths( \"" . addslashes(
-            serialize($this->getVerbPaths())) . "\" );\n";
-        $strOut .= "\$circuit->setAccess( " . $this->getAccess() . " );\n";
-        $strOut .= "\$circuit->setPermissions( \"" . $this->getPermissions() . 
-            "\" );\n";
-        $strOut .= "\$circuit->setLastLoadTime( " .
-            $this->getLastLoadTime() . " );\n";
-        $strOut .= "\$circuit->setParentName( \"" . 
-            $this->getParentName() . "\" );\n";
+        $strOut .= "\$circuit->setVerbPaths(\"" . addslashes(
+            serialize($this->getVerbPaths())) . "\");\n";
+        $strOut .= "\$circuit->setAccess(" . $this->getAccess() . ");\n";
+        $strOut .= "\$circuit->setPermissions(\"" . $this->getPermissions() .
+            "\");\n";
+        $strOut .= "\$circuit->setSecurity(\"" . $this->getSecurity() .
+            "\");\n";
+        $strOut .= "\$circuit->setLastLoadTime(" .
+            $this->getLastLoadTime() . ");\n";
+        $strOut .= "\$circuit->setParentName(\"" .
+            $this->getParentName() . "\");\n";
         if ($this->getName() !== "MYFUSES_GLOBAL_CIRCUIT") {
-            $strOut .= "\$circuit->setData( unserialize( " .
+            $strOut .= "\$circuit->setData(unserialize(" .
                 "MyFusesFileHandler::readFile(\"" .
-                $this->getCompleteCacheDataFile() . "\") ) );\n";
+                $this->getCompleteCacheDataFile() . "\")));\n";
         } else {
             $strOut .= "\$circuit->setData(array());\n";
             $strOut .= $this->getPreFuseActionCachedCode();
@@ -677,7 +710,7 @@ class BasicCircuit implements Circuit
         $strOut = "\n";
         foreach ($this->actions as $action) {
             $strOut .= $action->getCachedCode();
-            $strOut .= "\$circuit->addAction( \$action );\n";
+            $strOut .= "\$circuit->addAction(\$action);\n";
         }
         return $strOut;
     }
@@ -692,7 +725,7 @@ class BasicCircuit implements Circuit
         $strOut = "";
         if (!(is_null($this->preFuseAction))) {
             $strOut = "\n" . $this->preFuseAction->getCachedCode();
-            $strOut .= "\$circuit->setPreFuseAction( \$action );\n";    
+            $strOut .= "\$circuit->setPreFuseAction(\$action);\n";
         }
         return $strOut;
     }
@@ -707,7 +740,7 @@ class BasicCircuit implements Circuit
         $strOut = "";
         if (!( is_null($this->postFuseAction))) {
             $strOut = "\n" . $this->postFuseAction->getCachedCode();
-            $strOut .= "\$circuit->setPostFuseAction( \$action );\n";
+            $strOut .= "\$circuit->setPostFuseAction(\$action);\n";
         }
         return $strOut;
     }

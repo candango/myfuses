@@ -438,6 +438,20 @@ interface Application extends ICacheable
     public function setCharacterEncoding($characterEncoding);
 
     /**
+     * Return security mode
+     *
+     * @return string
+     */
+    public function getSecurity();
+
+    /**
+     * Set security mode
+     *
+     * @param $security
+     */
+    public function setSecurity($security);
+
+    /**
      * Returns it the fuseaction variable should be ignored when myfuses
      * is rewriting.
      *

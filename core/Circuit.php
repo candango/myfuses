@@ -178,6 +178,20 @@ interface Circuit extends ICacheable
     public function setPermissions($permissions);
 
     /**
+     * Return security mode
+     *
+     * @return string
+     */
+    public function getSecurity();
+
+    /**
+     * Set security mode
+     *
+     * @param $security
+     */
+    public function setSecurity($security);
+
+    /**
      * Add one action to circuit
      * 
      * @param Action $action

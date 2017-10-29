@@ -18,6 +18,7 @@
 <!ATTLIST circuit
     access (internal | public | private) "public"
     permissions CDATA #IMPLIED
+    security (optimistic|pessimistic|disabled) "optimistic"
 >
 
 
@@ -35,10 +36,11 @@
 <!ELEMENT fuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
 <!ATTLIST fuseaction
     name CDATA #REQUIRED
-    permissions CDATA #IMPLIED
-    default (true | false | yes | no) "false"
-    class CDATA #IMPLIED
     access (internal | public | private) #IMPLIED
+    class CDATA #IMPLIED
+    default (true | false | yes | no) "false"
+    permissions CDATA #IMPLIED
+    security (optimistic|pessimistic|disabled) "optimistic"
 >
 
 <!ELEMENT set EMPTY>

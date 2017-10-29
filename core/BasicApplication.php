@@ -250,6 +250,13 @@ class BasicApplication implements Application
     private $characterEncoding = "UTF-8";
 
     /**
+     * Security mode parameter
+     *
+     * @var string
+     */
+    private $security = "optimistic";
+
+    /**
      * Flag that defines if the fuseaction variable should be ignored
      *
      * @var bool
@@ -1062,6 +1069,32 @@ class BasicApplication implements Application
     }
 
     /**
+     * Return security mode
+     *
+     * @return string
+     */
+    public function getSecurity()
+    {
+        return $this->security;
+    }
+
+    /**
+     * Set security mode
+     *
+     * @param $security
+     */
+    public function setSecurity($security)
+    {
+        $allowedModes = array("optimistic", "pessimistic", "disabled");
+        if (in_array($security, $allowedModes)) {
+            $this->security = $security;
+        } else {
+            // If invalid set to optimistic
+            $this->security = $allowedModes[0];
+        }
+    }
+
+    /**
      * Returns it the fuseaction variable should be ignored when myfuses
      * is rewriting.
      *
@@ -1350,6 +1383,8 @@ class BasicApplication implements Application
         }
         $strOut .= "\$application->setCharacterEncoding(\"" .
             $this->getCharacterEncoding() . "\");\n";
+        $strOut .= "\$application->setSecurity(\"" .
+            $this->getSecurity() . "\");\n";
 
         $strOut .= "\$application->setIgnoreFuseactionVariable(" .
             ($this->ignoreFuseactionVariable() ? "true" : "false") . ");\n";
@@ -1377,13 +1412,13 @@ class BasicApplication implements Application
         foreach ($this->circuits as $circuit) {
             if ($circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT') {
                 $strOut .= "\$circuit = new BasicCircuit();\n";
-                $strOut .= "\$circuit->setName( \"" . $circuit->getName() .
+                $strOut .= "\$circuit->setName(\"" . $circuit->getName() .
                     "\" );\n";
-                $strOut .= "\$circuit->setPath( \"" .
-                    addslashes($circuit->getPath()) . "\" );\n";
-                $strOut .= "\$circuit->setParentName( \"" . 
-                    $circuit->getParentName() . "\" );\n";
-                $strOut .= "\$application->addCircuit( \$circuit );\n\n";
+                $strOut .= "\$circuit->setPath(\"" .
+                    addslashes($circuit->getPath()) . "\");\n";
+                $strOut .= "\$circuit->setParentName(\"" .
+                    $circuit->getParentName() . "\");\n";
+                $strOut .= "\$application->addCircuit(\$circuit);\n\n";
             }
         }
         return $strOut;
@@ -1391,13 +1426,13 @@ class BasicApplication implements Application
 
     private function getGlobalFuseactionCode()
     {
-        $strOut = str_replace( '$circuit = ' . $this->getControllerClass() . 
-            '::getApplication( "' . 
-            $this->getName() . '" )->getCircuit(  "MYFUSES_GLOBAL_CIRCUIT"  );', 
-            "\$circuit = new BasicCircuit();\n\$circuit->setName( " . 
-            "\"MYFUSES_GLOBAL_CIRCUIT\" );", $this->getCircuit(
-            'MYFUSES_GLOBAL_CIRCUIT' )->getCachedCode());
-        $strOut .= "\$application->addCircuit( \$circuit );\n\n";
+        $strOut = str_replace('$circuit = ' . $this->getControllerClass() .
+            '::getApplication("' . $this->getName() .
+            '")->getCircuit("MYFUSES_GLOBAL_CIRCUIT");',
+            "\$circuit = new BasicCircuit();\n\$circuit->setName(" .
+            "\"MYFUSES_GLOBAL_CIRCUIT\");", $this->getCircuit(
+            'MYFUSES_GLOBAL_CIRCUIT')->getCachedCode());
+        $strOut .= "\$application->addCircuit(\$circuit);\n\n";
         return $strOut;
     }
 
