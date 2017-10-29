@@ -28,8 +28,8 @@ class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager
     public function createCredential()
     {
         MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent("MyfusesSecurityManager",
-                "Myfuses Security Plugin creating credential."));
+            new MyFusesDebugEvent("MyFusesSecurityManager",
+                "MyFuses Security Manager creating credential."));
         if (!isset($_SESSION['MYFUSES_SECURITY_CREDENTIAL'])) {
             MyFuses::getInstance()->getDebugger()->registerEvent(
                 new MyFusesDebugEvent("MyfusesSecurityManager",

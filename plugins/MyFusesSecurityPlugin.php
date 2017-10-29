@@ -32,9 +32,17 @@ class MyFusesSecurityPlugin extends MyFusesAbstractSecurityPlugin
             switch($this->getPhase())
             {
                 case Plugin::PRE_PROCESS_PHASE:
+                    MyFuses::getInstance()->getDebugger()->registerEvent(
+                        new MyFusesDebugEvent("MyFusesSecurityPlugin",
+                            "Reached Pre Process Phase. Running pre process" .
+                            "plugin action."));
                     $this->runPreProcess();
                     break;
                 case Plugin::PRE_FUSEACTION_PHASE:
+                    MyFuses::getInstance()->getDebugger()->registerEvent(
+                        new MyFusesDebugEvent("MyFusesSecurityPlugin",
+                            "Reached Pre Fuseaction Phase. Running pre process" .
+                            "plugin action."));
                     $this->runPreFuseaction();
                     break;
             }

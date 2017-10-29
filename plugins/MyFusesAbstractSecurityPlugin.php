@@ -51,7 +51,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
      *
      * @var array
      */
-    private static $listenersPath = array('plugins/');
+    private static $listenersPaths = array("plugins/", "security/");
 
     /**
      * Application authentication fuseaction
@@ -153,9 +153,9 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
      *
      * @return array
      */
-    public static function getListenersPath()
+    public static function getListenersPaths()
     {
-        return self::$listenersPath;
+        return self::$listenersPaths;
     }
 
     /**
@@ -163,21 +163,19 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
      *
      * @param string $path
      */
-    public static function addListenerPath($path)
+    public static function addListenersPaths($path)
     {
-        if (!in_array($path, self::$listenersPath))
-        {
-            self::$listenersPath[] = $path;    
+        if (!in_array($path, self::$listenersPaths)) {
+            self::$listenersPaths[] = $path;
         }
     }
 
 	/**
-	 * Verify if the session was started. If not start the session
+	 * Verify if the session was started. If not start the session.
 	 */
 	protected function checkSession()
     {
-        if(!isset($_SESSION))
-        {
+        if(!isset($_SESSION)) {
             session_start();
         }
 	}
@@ -188,10 +186,16 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
 	 */
     protected function runPreProcess()
     {
+        MyFuses::getInstance()->getDebugger()->registerEvent(
+            new MyFusesDebugEvent("MyFusesSecurityPlugin",
+                "Getting security manager instance"));
         $manager = MyFusesAbstractSecurityManager::getInstance();
+        MyFuses::getInstance()->getDebugger()->registerEvent(
+            new MyFusesDebugEvent("MyFusesSecurityPlugin",
+                "Calling security manager to create a credention based on the" .
+                " session state."));
         $manager->createCredential();
-
-        $this->configurePlugin();
+        $this->configureListenersPaths();
         $this->configureSecurityManager($manager);
         $this->authenticate($manager);
 
@@ -206,24 +210,24 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
     protected function runPreFuseaction()
     {
     	$manager = MyFusesAbstractSecurityManager::getInstance();
-        if($manager->isAuthenticated())
-        {
-    	    foreach ($manager->getAuthorizationListeners() as $listener)
-    	    {
+        if($manager->isAuthenticated()) {
+            foreach ($manager->getAuthorizationListeners() as $listener) {
                 $listener->authorize($manager);
             }
         }
     }
 
 	/**
-	 * Configure plugin reading the his parameters
+	 *
 	 *
 	 */
-    private function configurePlugin()
+    private function configureListenersPaths()
     {
-        foreach($this->getParameter("ListenersPath") as $path)
-        {
-            self::addListenerPath($path);
+        foreach($this->getParameter("ListenersPath") as $path) {
+            if (substr($path, -1) != DIRECTORY_SEPARATOR) {
+                $path .= DIRECTORY_SEPARATOR;
+            }
+            self::addListenersPaths($path);
         }
     }
 
@@ -232,7 +236,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
      * 
      * @param $manager
      */
-    public function configureSecurityManager(MyFusesSecurityManager$manager)
+    public function configureSecurityManager(MyFusesSecurityManager $manager)
     {
         $this->configureParameters($manager);
 
@@ -241,27 +245,22 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
 
         $authorizationListeners = $this->getParameter("AuthorizationListener");
 
-        foreach ($this->getListenersPath() as $path)
-        {
-            if (!MyFusesFileHandler::isAbsolutePath($path))
-            {
+        // TODO: This is too brute force. We need more taught here.
+        foreach ($this->getListenersPaths() as $path) {
+            if (!MyFusesFileHandler::isAbsolutePath($path)) {
                 $path = $this->getApplication()->getPath() . $path;
             }
 
-            foreach ($authenticationListeners as $listener)
-            {
-                if(file_exists($path . $listener . ".php"))
-                {
+            foreach ($authenticationListeners as $listener) {
+                if(file_exists($path . $listener . ".php")) {
                     require_once $path . $listener . ".php";
 
                     $manager->addAuthenticationListener(new $listener());
                 }
             }
 
-            foreach ($authorizationListeners as $listener)
-            {
-                if (file_exists($path . $listener . ".php"))
-                {
+            foreach ($authorizationListeners as $listener) {
+                if (file_exists($path . $listener . ".php")) {
                     require_once $path . $listener . ".php";
 
                     $manager->addAuthorizationListener(new $listener());
@@ -280,8 +279,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
     	// getting next action
         $nextAction = $this->getParameter("NextAction");
 
-        if (count($nextAction))
-        {
+        if (count($nextAction)) {
             $nextAction = $nextAction[0];
         } else {
             $nextAction = $this->getApplication()->getDefaultFuseaction();
@@ -292,8 +290,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
         // getting login action
         $loginAction = $this->getParameter("LoginAction");
 
-        if (count($loginAction))
-        {
+        if (count($loginAction)) {
             $loginAction = $loginAction[0];
         } else {
             $loginAction = $this->getApplication()->getDefaultFuseaction();
@@ -304,8 +301,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
         // getting logout action
         $logoutAction = $this->getParameter("LogoutAction");
 
-        if (count($logoutAction))
-        {
+        if (count($logoutAction)) {
             $logoutAction = $logoutAction[0];
         } else {
             $logoutAction = "";
@@ -316,8 +312,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
         // getting login action    
         $authenticationAction = $this->getParameter("AuthenticationAction");
 
-        if (count($logoutAction))
-        {
+        if (count($authenticationAction)) {
             $authenticationAction = $authenticationAction[0];
         } else {
             $authenticationAction = "";
@@ -353,46 +348,38 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
         $currentAction = MyFuses::getInstance()->getRequest()->
             getFuseActionName();
 
-        if ($logoutAction == $currentAction)
-        {
-            if ($manager->isAuthenticated())
-            {
+        if ($logoutAction == $currentAction) {
+            if ($manager->isAuthenticated()) {
                 $manager->logout();
             } else {
                 MyFuses::sendToUrl(MyFuses::getMySelfXfa("goToLoginAction"));
         	}
         }
 
-        if ((strtolower( MyFuses::getInstance()->getRequest()->getAction()->
-            getCustomAttribute("security", "enabled")) != "false"))
-        {
+        // TODO: This should be moved to the default attribute.
+        if ($this->mustAuthenticate()) {
+
             if ($loginAction != $currentAction && $authenticationAction !=
-                $currentAction)
-            {
-                if (!$manager->isAuthenticated())
-                {
+                $currentAction) {
+                if (!$manager->isAuthenticated()) {
                     MyFuses::sendToUrl(MyFuses::getMySelfXfa(
                         "goToLoginAction"));
                 }
             }
 
-            if(!$manager->isAuthenticated())
-            {
+            if(!$manager->isAuthenticated()) {
                 if (MyFuses::getInstance()->getRequest()->getFuseActionName()
-                    == $this->getAuthenticationAction())
-                {
+                    == $this->getAuthenticationAction()) {
                     $manager->clearMessages();
 
                     $error = false;
 
                     foreach ($manager->getAuthenticationListeners() as
-                        $listener)
-                    {
+                        $listener) {
                         $listener->authenticate($manager);
                     }
 
-                    if(!$manager->isAuthenticated())
-                    {
+                    if(!$manager->isAuthenticated()) {
                         MyFuses::sendToUrl( MyFuses::getMySelfXfa(
                             "goToLoginAction"));
                     } else {
@@ -405,12 +392,39 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
             	   MyFuses::getInstance()->getRequest()->getFuseActionName();
 
             	if ($currentAction == $this->getAuthenticationAction() ||
-            	    $currentAction == $this->getLoginAction())
-            	{
+                    $currentAction == $this->getLoginAction()) {
                     MyFuses::sendToUrl(MyFuses::getMySelfXfa(
                         "goToNextAction"));
                 }
             }
         }
     }
+
+    /**
+     * Check if the pluging must trigger the authentication
+     *
+     * @return bool
+     */
+    public function mustAuthenticate()
+    {
+        $security = MyFuses::getInstance()->getCurrentAction()->getSecurity();
+        $circuitPermissions = MyFuses::getInstance()->getCurrentCircuit()->
+                        getPermissions();
+        $actionPermissions = MyFuses::getInstance()->getCurrentAction()->
+                        getPermissions();
+
+        if ($security == "pessimistic") {
+            return true;
+        } else if ($security == "optimistic") {
+            if($circuitPermissions != "") {
+                return true;
+            }
+            if($actionPermissions != "") {
+                return true;
+            }
+        }
+        // If not it is disabled
+        return false;
+    }
+
 }
