@@ -13,8 +13,7 @@
 require_once "myfuses/plugins/MyFusesAbstractSecurityPlugin.php";
 
 /**
- * MyFusesBasicSecurityPlugin  - MyFusesBasicSecurityPlugin.php
- *
+ * MyFusesSecurityPlugin  - MyFusesSecurityPlugin.php
  * Basic security plugin implementation to be used on the myfuses.xml.
  * Mapping this plugin will allow the app benefit from all features and
  * workflows defined by MyFusesAbstractSecurityPlugin.
@@ -24,7 +23,7 @@ require_once "myfuses/plugins/MyFusesAbstractSecurityPlugin.php";
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      a10e2e12abf0f387df778bf633b4dfa4efd37515
  */
-class MyFusesBasicSecurityPlugin extends MyFusesAbstractSecurityPlugin
+class MyFusesSecurityPlugin extends MyFusesAbstractSecurityPlugin
 {
         public function run()
         {
