@@ -9,7 +9,7 @@
  * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
-require_once "myfuses/process/FuseQueue.php";
+require_once MYFUSES_ROOT_PATH . "process/FuseQueue.php";
 
 /**
  * FuseRequest - FuseRequest.php

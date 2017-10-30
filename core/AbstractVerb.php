@@ -10,8 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/core/Verb.php";
-require_once "myfuses/core/CircuitAction.php";
+require_once MYFUSES_ROOT_PATH . "core/Verb.php";
+require_once MYFUSES_ROOT_PATH . "core/CircuitAction.php";
 
 /**
  * AbstractVerb - AbstractVerb.php
@@ -163,7 +163,7 @@ abstract class AbstractVerb implements Verb
         //$data = unserialize( $data );
         if (isset(self::$verbTypes[@$data['namespace'] . ":" .
             $data['name']])) {
-            require_once MyFuses::MYFUSES_ROOT_PATH . "core" . 
+            require_once MYFUSES_ROOT_PATH . "core" .
                 DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
                 self::$verbTypes[$data['namespace'] . ":" .
                     $data['name']] . ".php";

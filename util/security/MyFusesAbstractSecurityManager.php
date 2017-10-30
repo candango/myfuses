@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once "myfuses/util/security/MyFusesSecurityManager.php";
+require_once MYFUSES_ROOT_PATH . "util/security/MyFusesSecurityManager.php";
 
 /**
  * MyFusesAbstractSecurityManager - MyFusesAbstractSecurityManager.php
@@ -144,7 +144,7 @@ abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
     public static function getInstance()
     {
         if (is_null(self::$instance)) {
-            require_once "myfuses/util/security/" .
+            require_once MYFUSES_ROOT_PATH . "util/security/" .
                 "MyFusesBasicSecurityManager.php";
             self::$instance = new MyFusesBasicSecurityManager();
         }
