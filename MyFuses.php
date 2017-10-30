@@ -396,8 +396,7 @@ class MyFuses
     public function createApplication(
         $name = Application::DEFAULT_APPLICATION_NAME,
         $config = null
-    )
-    {
+    ) {
         $appClass = $this->getApplicationClass();
         $application = new $appClass($name);
 
@@ -432,8 +431,7 @@ class MyFuses
      */
     public static function getApplication(
         $name = Application::DEFAULT_APPLICATION_NAME
-    )
-    {
+    ) {
         if (isset(self::getInstance()->applications[$name])) {
             return self::getInstance()->applications[$name];
         }
@@ -486,13 +484,14 @@ class MyFuses
 
         $application->setController($this);
 
-        if (Application::DEFAULT_APPLICATION_NAME != $application->getName()) {
+        $appDefaultName = Application::DEFAULT_APPLICATION_NAME;
+
+        if ($appDefaultName != $application->getName()) {
             if ($application->isDefault()) {
-                if (isset($this->applications[Application::DEFAULT_APPLICATION_NAME])) {
-                    $this->applications[Application::DEFAULT_APPLICATION_NAME]->setDefault(
-                        false);
+                if (isset($this->applications[$appDefaultName])) {
+                    $this->applications[$appDefaultName]->setDefault(false);
                 }
-                $this->applications[Application::DEFAULT_APPLICATION_NAME] =
+                $this->applications[$appDefaultName] =
                     &$this->applications[$application->getName()];
             }
         }
@@ -728,10 +727,10 @@ class MyFuses
                     "::getInstance()->getApplication( \"" .
                     $application->getName() . "\" )->getPlugins(" .
                     " \"" . Plugin::PROCESS_ERROR_PHASE . "\" )";
-                $strParse .= "\tforeach( " . $pluginsStr . " as \$plugin ) {\n";
+                $strParse .= "\tforeach(" . $pluginsStr . " as \$plugin) {\n";
                 $strParse .= "\t\t\$plugin->handle( \$mpe );\n\t}\n";
-                $strParse .= "\tforeach( MyFusesContext::getContext() as " .
-                    " \$key => \$value ) {global \$\$value;}\n\n";
+                $strParse .= "\tforeach(MyFusesContext::getContext() as " .
+                    " \$key => \$value) {global \$\$value;}\n\n";
             }
             $strParse .= "}";
 
@@ -834,7 +833,7 @@ class MyFuses
 
     public static function getSelfPath()
     {
-        $self = "http://" . $_SERVER['HTTP_HOST'];
+        $self = self::getProcotol() . "://" . $_SERVER['HTTP_HOST'];
         $self .= "/";
 
         if (substr($self, -1) == "/") {
@@ -852,7 +851,10 @@ class MyFuses
 
     public static function getRootUrl()
     {
-        $rootUrl = "http://" . $_SERVER['HTTP_HOST'];
+        // TODO: It seems like request scheme isn't present all the time
+        // TODO: We need to verify that
+        // https://stackoverflow.com/questions/18008135/is-serverrequest-scheme-reliable
+        $rootUrl = self::getProcotol() . "://" . $_SERVER['HTTP_HOST'];
 
         if (substr($rootUrl, -1) != "/") {
             $rootUrl .= "/";
@@ -865,14 +867,16 @@ class MyFuses
         unset($scriptNameX[0]);
         unset($scriptNameX[$pos]);
 
-        $rootUrl = $rootUrl . implode("/", $scriptNameX) . "/";
+        $rootDir = implode("/", $scriptNameX);
+
+        $rootUrl = $rootUrl . ($rootDir==""? "": $rootDir . "/");
 
         return $rootUrl;
     }
 
     public static function getSelf()
     {
-        $self = "http://" . $_SERVER['HTTP_HOST'];
+        $self = self::getProcotol() . "://" . $_SERVER['HTTP_HOST'];
 
         if (substr($self, -1) != "/") {
             $self .= "/";
@@ -898,6 +902,15 @@ class MyFuses
         return $self;
     }
 
+    public static function getProcotol()
+    {
+        // TODO: get from the parameter
+        if(array_key_exists("REQUEST_SCHEME", $_SERVER)){
+            return $_SERVER['REQUEST_SCHEME'];
+        }
+        return "http";
+    }
+
     public static function getMySelf($showFuseactionVariable = true)
     {
         // FIXME Fixing an error occurring with CGI.
@@ -906,7 +919,7 @@ class MyFuses
             // If ignoreFuseactionVariable is true, we always don't return it
             // with the url
             if (self::getInstance()->getApplication()->
-            ignoreFuseactionVariable()) {
+                ignoreFuseactionVariable()) {
                 $showFuseactionVariable = false;
             }
             $mySelf = self::getSelf();
@@ -928,8 +941,7 @@ class MyFuses
         $xfaName,
         $initQuery = false,
         $showFuseactionVariable = true
-    )
-    {
+    ) {
         // FIXME Fixing an error occurring with CGI.
         // FIXME Suppress redirect with CGI!!!
         if (MyFuses::isRewriting()) {
@@ -994,7 +1006,7 @@ class MyFuses
         $circuit = $application->getCircuit($actionNameX[1]);
 
         $action = $circuit->getAction($actionNameX[2]);
-        require_once "myfuses/core/verbs/DoVerb.php";
+        require_once MYFUSES_ROOT_PATH . "core/verbs/DoVerb.php";
         DoVerb::doAction($action);
     }
 
@@ -1103,8 +1115,7 @@ class MyFusesMemcacheServer
         $host = null,
         $port = "11211",
         $persistent = false
-    )
-    {
+    ) {
         $this->setHost($host);
         $this->setPort($port);
         $this->setPersistent($persistent);
