@@ -1,6 +1,6 @@
 <?php
 if (file_exists($_GET['file'])) {
-    if (chmod($_GET['file'] , 0770)) {
+    if (chmod($_GET['file'] , 0755)) {
     $_SESSION['file_message'] = "File " . $_GET['file'] .
         " chmoded sucessfully.";
     } else {

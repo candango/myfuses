@@ -145,7 +145,7 @@ class DoVerb extends ParameterizedVerb
 
             if (!file_exists($path)) {
                 MyFusesFileHandler::createPath($path);
-                chmod($path, 0777);
+                chmod($path, 0755);
             }   
 
             MyFusesFileHandler::writeFile($actionFile, "<?php\n" .

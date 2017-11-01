@@ -91,7 +91,7 @@ class MyFusesFileHandler
     	return current(explode('&',$uri));
     }
 
-    public static function createPath($path, $permission = 0777)
+    public static function createPath($path, $permission = 0755)
     {
         if (substr($path, -1) == DIRECTORY_SEPARATOR) {
             $path = substr($path, 0, strlen($path) - 1);
@@ -135,7 +135,7 @@ class MyFusesFileHandler
 
         flock($fp,LOCK_UN);
         fclose($fp);
-        chmod( $file, 0777);
+        chmod( $file, 0755);
     }
 
     /**

@@ -558,7 +558,7 @@ class MyFuses
     public function createApplicationPath(Application $application)
     {
         if (!file_exists($application->getParsedPath())) {
-            mkdir($application->getParsedPath(), 0777, true);
+            mkdir($application->getParsedPath(), 0755, true);
 
             $path = explode(DIRECTORY_SEPARATOR,
                 substr($application->getParsedPath(), 0,
@@ -568,7 +568,7 @@ class MyFuses
                     implode(DIRECTORY_SEPARATOR, $path) .
                     DIRECTORY_SEPARATOR)) {
                 // TODO: Review the chmod permission
-                chmod(implode(DIRECTORY_SEPARATOR, $path), 0777);
+                chmod(implode(DIRECTORY_SEPARATOR, $path), 0755);
                 $path = array_slice($path, 0, count($path) - 1);
             }
         }
@@ -739,7 +739,7 @@ class MyFuses
             if (!file_exists($path)) {
                 mkdir($path);
                 // TODO: Review the chmod permission here
-                chmod($path, 0777);
+                chmod($path, 0755);
             }
 
             MyFusesFileHandler::writeFile($fileName, "<?php\n" .
