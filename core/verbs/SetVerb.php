@@ -107,7 +107,6 @@ class SetVerb extends AbstractVerb
         }
 
         $strOut = parent::getParsedCode($commented, $identLevel);
-        $strOut .= str_repeat("\t", $identLevel);
 
         // resolving evaluate parameter
         $value = "";
@@ -117,23 +116,24 @@ class SetVerb extends AbstractVerb
         } else {
             $value = $this->getValue();
         }
-        
+
         if (is_null($this->getVariableName())) {
+            $strOut .= str_repeat("\t", $identLevel);
             $strOut .= MyFusesContext::sanitizeHashedString("\"" . $value .
                     "\"") . ";\n";
         }
         else {
             if ($isArray) {
+                $strOut .= str_repeat("\t", $identLevel);
                 $strOut .= "$" . $this->getVariableName() . " = "  .
                     MyFusesContext::sanitizeHashedString("\"" . $value . "\"") .
                     ";\n";
-                $strOut .= str_repeat("\t", $identLevel);
                 $strOut .= self::getVariableSetString($arrayName, "#$" .
-                    $arrayName . "#");
+                    $arrayName . "#", $identLevel);
             }
             else{
                 $strOut .= self::getVariableSetString($this->getVariableName(),
-                    $value);
+                    $value, $identLevel);
             }
         }
 

@@ -319,42 +319,56 @@ abstract class AbstractVerb implements Verb
 	    return $params;
 	}
 
-	protected function getVariableSetString($variable, $value)
+	protected function getVariableSetString($variable, $value, $identLevel=0)
     {
-	    $strOut = "MyFusesContext::setVariable( \"" . 
-              $variable . "\", \"" . $value . "\" );\n\n";
-        $strOut .= self::getContextRestoreString();
+        $strOut = str_repeat("\t", $identLevel);
+	    $strOut .= "MyFusesContext::setVariable( \"" .
+              $variable . "\", \"" . $value . "\" );\n";
+        $strOut .= str_repeat("\t", $identLevel);
+        $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;
 	}
 
-	protected function getIncludeFileString($fileName, $contentVariable = null )
-    {
-	    $strOut = "if( file_exists( " . 
-	       $fileName . " ) ) { \n";
+	protected function getIncludeFileString(
+	    $fileName,
+        $contentVariable = null,
+        $identLevel=0
+    ) {
+        $strOut = str_repeat("\t", $identLevel);
+	    $strOut .= "if(file_exists(" .
+	       $fileName . ")) { \n";
 	    if( $contentVariable != null ) {
 	        $strOut .= "    ob_start();\n";
 	    }
-		$strOut .= "    MyFusesContext::includeFile( " . 
-	       $fileName . " );\n\n";
-        $strOut .= "    " . self::getContextRestoreString();
+        $strOut .= str_repeat("\t", $identLevel+1);
+	    $strOut .= "MyFusesContext::includeFile( " .
+	       $fileName . ");\n";
+        $strOut .= str_repeat("\t", $identLevel+1);
+	    $strOut .= self::getContextRestoreString();
 	    if( $contentVariable != null ) {
-            $strOut .= "    \$" . $contentVariable . " .= ob_get_contents();" . 
+            $strOut .= str_repeat("\t", $identLevel+1);
+	        $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
                 "ob_end_clean();\n";
+            $strOut .= str_repeat("\t", $identLevel+1);
             $strOut .= "    MyFusesContext::setParameter( \"" . 
                 $contentVariable . "\", \$" . $contentVariable . " );\n";
         }
-        $strOut .= "}\nelse {\n";
-        $strOut .= "    throw new MyFusesFileOperationException( " .  
+        $strOut .= str_repeat("\t", $identLevel);
+        $strOut .= "} else {\n";
+        $strOut .= str_repeat("\t", $identLevel+1);
+        $strOut .= "throw new MyFusesFileOperationException( " .
         	$fileName . ", MyFusesFileOperationException::INCLUDE_FILE );\n";
+        $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "}\n\n";
         return $strOut;
 	}
 
-	protected function getContextRestoreString()
+	protected function getContextRestoreString($identLevel=0)
     {
-	    $strOut = "foreach( MyFusesContext::getContext() as \$key => \$value ) {";
+        $strOut = str_repeat("\t", $identLevel);
+	    $strOut .= "foreach(MyFusesContext::getContext() as \$value) {";
         $strOut .= "global \$\$value;";
-        $strOut .= "}\n\n";
+        $strOut .= "}\n";
         return $strOut;
 	}
 }
