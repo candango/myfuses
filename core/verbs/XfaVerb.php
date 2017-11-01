@@ -131,10 +131,9 @@ class XfaVerb extends AbstractVerb
         $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
         $strOut .= $controllerClass . "::getInstance()->getRequest()->" .
-            "getAction()->addXFA( \"" . $this->getXfaName() . "\", \"" .
-            $value . "\" );\n";
+            "getAction()->addXFA(\"" . $this->getXfaName() . "\", \"" .
+            $value . "\");\n\n";
         // for compatibility
-        $strOut .= str_repeat("\t", $identLevel);
         return $strOut;
     }
 

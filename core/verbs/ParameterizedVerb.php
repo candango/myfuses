@@ -123,6 +123,7 @@ abstract class ParameterizedVerb extends AbstractVerb
                 "\");\n";
         }
         $strOut .=  "\n";
+
         return $strOut;
     }
 }

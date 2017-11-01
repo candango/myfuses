@@ -188,11 +188,13 @@ class DoVerb extends ParameterizedVerb
         }
 
         //$this->generateActionFile($action, $commented);
-        $strOut = str_repeat("\t", $identLevel);
+        $strOut = "";
 
         if (!is_null($this->getContentVariable())) {
+            $strOut .= str_repeat("\t", $identLevel);
             $strOut .=  "ob_start();\n";
         }
+
         $strOut .= str_repeat("\t", $identLevel);
 
         $action->setCalledByDo(true);
@@ -201,7 +203,7 @@ class DoVerb extends ParameterizedVerb
             getControllerClass() . "::doAction( \"" . 
             $completeActionName . "\" );\n";
 
-        $strOut .= self::getContextRestoreString();
+        $strOut .= self::getContextRestoreString($identLevel);
 
         if (!is_null($this->getContentVariable())) {
             $strOut .= str_repeat("\t", $identLevel);

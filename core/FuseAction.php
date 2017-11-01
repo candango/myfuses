@@ -212,23 +212,29 @@ class FuseAction extends AbstractAction implements CircuitAction
             "." . $this->circuit->getName() .
             "." . $this->getName() . "\"";
 
+        $inTheTry = false;
         if ($this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT") {
             if ($this->getName() != "prefuseaction" &&
                 $this->getName() != "postfuseaction") {
-
+                $strOut = str_repeat("\t", $identLevel);
                 $strOut .= "try {\n\n";
-                $strOut .= $myFusesString . "->setCurrentProperties( \"" . 
+
+                $inTheTry = true;
+
+                $strOut .= str_repeat("\t", $identLevel+1);
+                $strOut .= $myFusesString . "->setCurrentProperties(\"" .
                         MyFusesLifecycle::PRE_FUSEACTION_PHASE . "\", "  . 
-                        $actionString . " );\n\n";    
+                        $actionString . ");\n\n";
 
                 // parsing pre fuseaction plugins
                 if (count($this->getCircuit()->getApplication()->getPlugins(
                     Plugin::PRE_FUSEACTION_PHASE))) {
                     $pluginsStr = $controllerClass . 
-                        "::getInstance()->getApplication( \"" . 
-                        $application->getName() . "\" )->getPlugins(" .
-                        " \"" . Plugin::PRE_FUSEACTION_PHASE . "\" )";
-                    $strOut .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
+                        "::getInstance()->getApplication(\"" .
+                        $application->getName() . "\")->getPlugins(" .
+                        "\"" . Plugin::PRE_FUSEACTION_PHASE . "\")";
+                    $strOut .= str_repeat("\t", $identLevel+1);
+                    $strOut .= "foreach (" . $pluginsStr . " as \$plugin) {\n";
                     $strOut .= "\t\$plugin->run();\n}\n\n";
                 }
                 //end parsing pre fuseaction plugins
@@ -236,51 +242,57 @@ class FuseAction extends AbstractAction implements CircuitAction
         }
         $action = null;
         if (!is_null($action)) {
-            $strOut .= $action->getParsedCode($comented, $identLevel);
+            $strOut .= $action->getParsedCode($comented,
+                $identLevel + ($inTheTry ? 1 : 0));
         }
 
         $request = MyFuses::getInstance()->getRequest();
 
         if (($this->getCircuit()->getName() == $request->getCircuitName()) &&
             ($this->getName() == $request->getActionName())) {
-           $strOut .= $myFusesString . "->setCurrentProperties( \"" . 
+            $strOut .= str_repeat("\t", $identLevel + ($inTheTry ? 1 : 0));
+            $strOut .= $myFusesString . "->setCurrentProperties(\"" .
                 MyFusesLifecycle::PROCESS_PHASE . "\", "  . 
-                $actionString . " );\n\n";
+                $actionString . ");\n\n";
         }
 
         if (get_class($this) != "FuseAction" ) {
+            $strOut .= str_repeat("\t", $identLevel + ($inTheTry ? 1 : 0));
             $strOut .= $actionString . "->doAction();\n";    
         }
 
         foreach ($this->verbs as $verb) {
-            $strOut .= $verb->getParsedCode($comented, $identLevel);
+            $strOut .= $verb->getParsedCode($comented,
+                $identLevel + ($inTheTry ? 1 : 0));
         }
 
         if ($this->getCircuit()->getName() != "MYFUSES_GLOBAL_CIRCUIT") {
             if ($this->getName() != "prefuseaction" &&
                 $this->getName() != "postfuseaction") {
-                $strOut .= $myFusesString . "->setCurrentPhase( \"" . 
-                    MyFusesLifecycle::POST_FUSEACTION_PHASE . "\" );\n\n";
+                $strOut .= str_repeat("\t", $identLevel+1);
+                $strOut .= $myFusesString . "->setCurrentPhase(\"" .
+                    MyFusesLifecycle::POST_FUSEACTION_PHASE . "\");\n\n";
 
                 if (!is_null($action)) {
+                    $strOut .= str_repeat("\t", $identLevel+1);
                     $strOut .= $action->getParsedCode($comented, $identLevel);
                 }
-
-                $strOut .= $myFusesString . "->setCurrentAction( "  . 
-                    $actionString . " );\n\n";
+                $strOut .= str_repeat("\t", $identLevel+1);
+                $strOut .= $myFusesString . "->setCurrentAction("  .
+                    $actionString . ");\n\n";
 
                 // parsing post fuseaction plugins
                 if (count($this->getCircuit()->getApplication()->getPlugins(
                     Plugin::POST_FUSEACTION_PHASE))) {
                     $pluginsStr = $controllerClass . 
-                        "::getInstance->getApplication( \"" . 
-                        $application->getName() . "\" )->getPlugins(" .
+                        "::getInstance->getApplication(\"" .
+                        $application->getName() . "\")->getPlugins(" .
                         " \"" . Plugin::POST_FUSEACTION_PHASE . "\" )";
-                    $strOut .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
+                    $strOut .= "foreach (" . $pluginsStr . " as \$plugin) {\n";
                     $strOut .= "\t\$plugin->run();\n}\n\n";
                 }
-
-                $strOut .= "} catch ( MyFusesFuseActionException \$mfae ) {\n";
+                $strOut .= str_repeat("\t", $identLevel);
+                $strOut .= "} catch (MyFusesFuseActionException \$mfae) {\n";
 
 	            if (count($application->getPlugins(
 	                Plugin::FUSEACTION_EXCEPTION_PHASE))) {
@@ -288,15 +300,17 @@ class FuseAction extends AbstractAction implements CircuitAction
 	                    "::getInstance()->getApplication( \"" . 
 	                    $application->getName() . "\" )->getPlugins(" .
 	                    " \"" . Plugin::FUSEACTION_EXCEPTION_PHASE . "\" )";
-	                $strOut .= "\tforeach( " . $pluginsStr . " as \$plugin ) {\n";
-	                $strOut .= "\t\t\$plugin->handle( \$mfae );\n\t}\n";
-	                $strOut .= "\tforeach( MyFusesContext::getContext() as " . 
-	                    " \$key => \$value ) {global \$\$value;}\n\n";
+	                $strOut .= "\tforeach (" . $pluginsStr . " as \$plugin) {\n";
+	                $strOut .= "\t\t\$plugin->handle(\$mfae);\n\t}\n";
+	                $strOut .= "\tforeach (MyFusesContext::getContext() as " .
+	                    " \$key => \$value) {global \$\$value;}\n\n";
 	            }
-	            $strOut .= "}";
+                $strOut .= str_repeat("\t", $identLevel);
+	            $strOut .= "}\n\n";
                 //end parsing post fuseaction plugins
             }
         }
+
         return $strOut;
     }
 

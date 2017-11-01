@@ -651,65 +651,63 @@ class MyFuses
                 "." . $this->request->getCircuitName() .
                 "." . $this->request->getActionName() . "\"";
 
-            $strParse = "";
-
-            $strParse .= "try {\n";
+            $strParse = "try {\n";
 
             // Started the global output buffer control
             $strParse .= "\tob_start();\n";
 
-            $strParse .= $myFusesString . "->setCurrentProperties( \"" .
+            $strParse .= "\t" . $myFusesString . "->setCurrentProperties(\"" .
                 MyFusesLifecycle::PRE_PROCESS_PHASE . "\", " .
-                $actionString . " );\n\n";
+                $actionString . ");\n\n";
 
             // parsing pre process plugins
             if (count($application->getPlugins(Plugin::PRE_PROCESS_PHASE))) {
                 $pluginsStr = $controllerName .
-                    "::getInstance()->getApplication( \"" .
-                    $application->getName() . "\" )->getPlugins(" .
-                    " \"" . Plugin::PRE_PROCESS_PHASE . "\" )";
-                $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
-                $strParse .= "\t\$plugin->run();\n}\n";
-                $strParse .= "foreach( MyFusesContext::getContext() as " .
-                    " \$key => \$value ) {global \$\$value;}\n\n";
+                    "::getInstance()->getApplication(\"" .
+                    $application->getName() . "\")->getPlugins(" .
+                    "\"" . Plugin::PRE_PROCESS_PHASE . "\")";
+                $strParse .= "\tforeach (" . $pluginsStr . " as \$plugin) {\n";
+                $strParse .= "\t\t\$plugin->run();\n\t}\n";
+                $strParse .= "\tforeach (MyFusesContext::getContext() as " .
+                    " \$key => \$value) {global \$\$value;}\n\n";
             }
             //end parsing pre process plugins
 
             foreach ($fuseQueue->getPreProcessQueue() as $parseable) {
                 $strParse .= $parseable->getParsedCode(
                     $this->request->getApplication()->isParsedWithComments(),
-                    0);
+                    1);
             }
 
             foreach ($fuseQueue->getProcessQueue() as $parseable) {
                 $strParse .= $parseable->getParsedCode(
                     $this->request->getApplication()->isParsedWithComments(),
-                    0);
+                    1);
             }
-
-            $strParse .= $myFusesString . "->setCurrentProperties( \"" .
+            $strParse .= "\t" . $myFusesString . "->setCurrentProperties(\"" .
                 MyFusesLifecycle::POST_PROCESS_PHASE . "\", " .
-                $actionString . " );\n\n";
+                $actionString . ");\n\n";
 
             $selector = true;
 
             foreach ($fuseQueue->getPostProcessQueue() as $parseable) {
                 $strParse .= $parseable->getParsedCode(
                     $this->request->getApplication()->isParsedWithComments(),
-                    0);
+                    1);
             }
 
             // parsing post process plugins
             if (count($application->getPlugins(Plugin::POST_PROCESS_PHASE))) {
-                $strParse .= $myFusesString . "->setCurrentProperties( \"" .
+                $strParse .= "\t" . $myFusesString .
+                    "->setCurrentProperties(\"" .
                     MyFusesLifecycle::POST_PROCESS_PHASE . "\", " .
                     $actionString . " );\n\n";
                 $pluginsStr = $controllerName .
-                    "::getInstance()->getApplication( \"" .
-                    $application->getName() . "\" )->getPlugins(" .
+                    "::getInstance()->getApplication(\"" .
+                    $application->getName() . "\")->getPlugins(" .
                     " \"" . Plugin::POST_PROCESS_PHASE . "\" )";
-                $strParse .= "foreach( " . $pluginsStr . " as \$plugin ) {\n";
-                $strParse .= "\t\$plugin->run();\n}\n\n";
+                $strParse .= "\tforeach(" . $pluginsStr . " as \$plugin) {\n";
+                $strParse .= "\t\t\$plugin->run();\n\t}\n\n";
             }
             //end parsing post process plugins
 
@@ -717,10 +715,10 @@ class MyFuses
                 "::getInstance()->getResponseType() . \"; charset=\" . " .
                 $controllerName . "::getInstance()->getRequest()->" .
                 "getApplication()->getCharacterEncoding();\n";
-            $strParse .= "\theader( \"Content-Type: \" . \$strContent );\n";
+            $strParse .= "\theader(\"Content-Type: \" . \$strContent);\n";
             // Flushed global output buffer content
             $strParse .= "\tob_end_flush();\n";
-            $strParse .= "} catch ( MyFusesProcessException \$mpe ) {\n";
+            $strParse .= "} catch (MyFusesProcessException \$mpe) {\n";
 
             if (count($application->getPlugins(Plugin::PROCESS_ERROR_PHASE))) {
                 $pluginsStr = $controllerName .
