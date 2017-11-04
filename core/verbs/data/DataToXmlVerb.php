@@ -153,7 +153,6 @@ class DataToXmlVerb extends AbstractVerb
     public function getParsedCode($commented, $identLevel)
     {
         $strOut = parent::getParsedCode($commented, $identLevel);
-        $strOut .= str_repeat("\t", $identLevel);
 
         $controllerName = $this->getAction()->getCircuit()->getApplication(
                             )->getControllerClass();
@@ -163,24 +162,26 @@ class DataToXmlVerb extends AbstractVerb
                 $strOut .= str_repeat("\t", $identLevel);
                 $strOut .= "ob_clean();\n";
             }
-            $strOut .= "print(MyFusesXmlUtil::toXml(\"" .
+            $strOut .= str_repeat("\t", $identLevel);
+            $strOut .= "echo(MyFusesXmlUtil::toXml(\"" .
                 $this->getValue() . "\"));\n";
 
             if ($this->isDie()) {
                 // Flushed global output buffer content
                 $strOut .= str_repeat("\t", $identLevel);
-                $strOut .= "\t\$strContent = " . $controllerName .
+                $strOut .= "\$strContent = " . $controllerName .
                     "::getInstance()->getResponseType() . \"; charset=\" . " .
                     $controllerName . "::getInstance()->getCurrentCircuit()->" .
                     "getApplication()->getCharacterEncoding();\n";
                 $strOut .= str_repeat("\t", $identLevel);
-                $strOut .= "\theader(\"Content-Type: \" . \$strContent);\n";
+                $strOut .= "header(\"Content-Type: \" . \$strContent);\n";
                 $strOut .= str_repeat("\t", $identLevel);
-                $strOut .= "\tob_end_flush();\n";
+                $strOut .= "ob_end_flush();\n";
                 $strOut .= str_repeat("\t", $identLevel);
                 $strOut .= "die();\n";
             }
         }
+        $strOut .= "\n";
         return $strOut;
     }
 }

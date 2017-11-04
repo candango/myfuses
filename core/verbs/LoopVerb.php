@@ -220,9 +220,9 @@ class LoopVerb extends AbstractVerb
             $strOut .= "for( " . $index . " = " . $from . "; " . $index . " " .
                 $signal . " " . $to . "; " . $index . " = " . $index . " " .
                 $signal1 . " " . $step . " ) {\n";
-            $strOut .= str_repeat("\t", $identLevel + 1);
+            // TODO: We don't concatenate here, just set as false
             $strOut .= $this->getVariableSetString(
-                $indexName, "#" . $index . "#");
+                $indexName, "#" . $index . "#", $identLevel + 1);
         } elseif (!is_null( $this->getCollection())) {
             $collection = $this->getCollection();
             $item = $this->getItem();

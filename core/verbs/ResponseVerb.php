@@ -84,7 +84,7 @@ class ResponseVerb extends AbstractVerb
         $strOut = parent::getParsedCode($commented, $identLevel);
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "MyFuses::getInstance()->setResponseType(\"" .
-            $this->getType() . "\");\n";
+            $this->getType() . "\");\n\n";
         return $strOut;
     }
 }
