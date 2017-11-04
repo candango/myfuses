@@ -212,6 +212,7 @@ class DoVerb extends ParameterizedVerb
             $strOut .= str_repeat("\t", $identLevel);
             $strOut .= "ob_end_clean();\n";
             $strOut .= str_repeat("\t", $identLevel);
+            // TODO: prepare concatenation here
         	$strOut .= self::getVariableSetString($this->getContentVariable(),
                 "#$" . $this->getContentVariable() . "#");
         }

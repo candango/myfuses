@@ -128,10 +128,12 @@ class SetVerb extends AbstractVerb
                 $strOut .= "$" . $this->getVariableName() . " = "  .
                     MyFusesContext::sanitizeHashedString("\"" . $value . "\"") .
                     ";\n";
+                // TODO: prepare concatenation here
                 $strOut .= self::getVariableSetString($arrayName, "#$" .
                     $arrayName . "#", $identLevel);
             }
             else{
+                // TODO: prepare concatenation here
                 $strOut .= self::getVariableSetString($this->getVariableName(),
                     $value, $identLevel);
             }
