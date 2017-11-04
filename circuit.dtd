@@ -22,18 +22,18 @@
 >
 
 
-<!ELEMENT prefuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT prefuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 <!ATTLIST prefuseaction
     callsuper (true | false | yes | no) "false"
 >
 
-<!ELEMENT postfuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT postfuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 <!ATTLIST postfuseaction
     callsuper (true | false | yes | no) "false"
 >
 
 
-<!ELEMENT fuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT fuseaction (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 <!ATTLIST fuseaction
     name CDATA #REQUIRED
     access (internal | public | private) #IMPLIED
@@ -123,7 +123,7 @@
     addtoken (true | false | yes | no) "false"
 >
 
-<!ELEMENT loop (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT loop (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 <!ATTLIST loop
     condition CDATA #IMPLIED
     from CDATA #IMPLIED
@@ -139,19 +139,25 @@
     condition CDATA #REQUIRED
 >
 
-<!ELEMENT true (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT true (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 
-<!ELEMENT false (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT false (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 
 <!ELEMENT switch (case*, default?)>
 <!ATTLIST switch
     condition CDATA #REQUIRED
 >
 
-<!ELEMENT case (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT case (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
 <!ATTLIST case
     value CDATA #REQUIRED
     break (true | false) "true"
 >
 
-<!ELEMENT default (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch)*>
+<!ELEMENT default (set | xfa | do | include | relocate | loop | if | instantiate | invoke | switch | var_dump)*>
+
+<!ELEMENT var_dump EMPTY>
+<!ATTLIST var_dump
+    variable CDATA #REQUIRED
+    die (true | false) "false"
+>
