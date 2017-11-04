@@ -38,7 +38,8 @@ abstract class AbstractVerb implements Verb
             "myfuses:response" => "ResponseVerb",
             "myfuses:set" => "SetVerb",
             "myfuses:switch" => "SwitchVerb",
-            "myfuses:xfa" => "XfaVerb"
+            "myfuses:xfa" => "XfaVerb",
+            "myfuses:var_dump" => "VarDumpVerb"
     );
 
     /**
@@ -321,6 +322,7 @@ abstract class AbstractVerb implements Verb
 
 	protected function getVariableSetString($variable, $value, $identLevel=0)
     {
+        // TODO: prepare to concatenation here
         $strOut = str_repeat("\t", $identLevel);
 	    $strOut .= "MyFusesContext::setVariable( \"" .
               $variable . "\", \"" . $value . "\" );\n";

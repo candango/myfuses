@@ -11,16 +11,16 @@
  */
 
 /**
- * DebugDumpVerb  - DebugDumpVerb.php
+ * VarDumpVerb  - VarDumpVerb.php
  *
  * Provides a var_dump verb. Can be helpful for debugging.
  *
  * @category   controller
- * @package    myfuses.core.verbs.debug
+ * @package    myfuses.core.verbs
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      f7e2c2ed2897bb16a0eab9a5c4cfc6a1fbd87205
  */
-class DebugDumpVerb extends AbstractVerb
+class VarDumpVerb extends AbstractVerb
 {
     private $variable;
 
@@ -52,7 +52,7 @@ class DebugDumpVerb extends AbstractVerb
 
     /**
      * Set verb data
-     * 
+     *
      * @param array $data
      * @throws MyFusesVerbException
      */
