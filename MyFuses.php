@@ -40,7 +40,12 @@ require_once MYFUSES_ROOT_PATH . "util/i18n/MyFusesNativeI18nHandler.php";
 require_once MYFUSES_ROOT_PATH . "util/paging/MyFusesPagingHandler.php";
 
 // cleaning file functions cache
-// TODO: Figure out why this is here.
+// As per documentation http://php.net/manual/en/function.clearstatcache.php
+// We do that: "if the same file is being checked multiple times within a
+// single script, and that file is in danger of being removed or changed during
+// that script's operation, you may elect to clear the status cache."
+// TODO: Use this function for the files being handled by the framework
+// TODO: Meaning: myfuses/fusebox.xml and circuit.xml
 clearstatcache();
 
 /**
