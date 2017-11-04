@@ -6,7 +6,7 @@ function delpath($path)
         foreach (new RecursiveIteratorIterator($it, 1) as $child) {
             $pName = "" . $child;
             if ($child->isDir() && !$child->isLink()) {
-                delpath($pName);
+                rmdir($pName);
             } else {
                 unlink($pName);
             }

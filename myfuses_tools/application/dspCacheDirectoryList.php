@@ -23,18 +23,22 @@ $depth = count(explode(DIRECTORY_SEPARATOR, $it->getPath()));
 //     CHILD_FIRST = 2
 
 foreach (new RecursiveIteratorIterator($it, 1) as $path) {
-    $iDepth = 0;
-    if ($path->isDir()) {
-        $iDepth = count(explode(DIRECTORY_SEPARATOR, $path));
-        echo str_repeat("-", $iDepth - $depth) . "Path: $path <a href=\"" .
-            MyFuses::getMySelfXfa("deletePath", true, false) . "application=" .
-            $application->getName() . "&file=" . urlencode( $path ) .
-            "\">delete</a><br>";
-    } else {
-        $iDepth = count(explode(DIRECTORY_SEPARATOR, $path->getPath())) + 1;
-        echo str_repeat("-", $iDepth - $depth) . "File: $path <a href=\"" .
-            MyFuses::getMySelfXfa("deletePath", true, false) . "application=" .
-            $application->getName() . "&file=" . urlencode( $path ) .
-            "\">delete</a><br>";
+
+    //var_dump($path->getFileName());
+    if ($path->getFileName() != "." && $path->getFileName() != "..") {
+        $iDepth = 0;
+        if ($path->isDir()) {
+            $iDepth = count(explode(DIRECTORY_SEPARATOR, $path));
+            echo str_repeat("-", $iDepth - $depth) . "Path: $path <a href=\"" .
+                MyFuses::getMySelfXfa("deletePath", true, false) . "application=" .
+                $application->getName() . "&file=" . urlencode( $path ) .
+                "\">delete</a><br>";
+        } else {
+            $iDepth = count(explode(DIRECTORY_SEPARATOR, $path->getPath())) + 1;
+            echo str_repeat("-", $iDepth - $depth) . "File: $path <a href=\"" .
+                MyFuses::getMySelfXfa("deletePath", true, false) . "application=" .
+                $application->getName() . "&file=" . urlencode( $path ) .
+                "\">delete</a><br>";
+        }
     }
 }
