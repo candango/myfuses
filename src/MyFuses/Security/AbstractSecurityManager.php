@@ -10,7 +10,9 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "util/security/MyFusesSecurityManager.php";
+namespace Candango\MyFuses\Security;
+
+use Candango\MyFuses\Controller;
 
 /**
  * MyFusesAbstractSecurityManager - MyFusesAbstractSecurityManager.php
@@ -22,7 +24,7 @@ require_once MYFUSES_ROOT_PATH . "util/security/MyFusesSecurityManager.php";
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
+abstract class AbstractSecurityManager implements SecurityManager
 {
     /**
      * Security Manager listeners
@@ -77,10 +79,10 @@ abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
     /**
      * Add one Authentication Listener to manager
      *
-     * @param MyFusesAuthenticationListener $listener
+     * @param AuthenticationListener $listener
      */
     public function addAuthenticationListener(
-        MyFusesAuthenticationListener $listener
+        AuthenticationListener $listener
     ) {
         $this->authenticationListeners[] = $listener;
     }
@@ -98,10 +100,10 @@ abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
     /**
      * Add one Authorization Listener to manager
      *
-     * @param MyFusesAuthorizationListener $listener
+     * @param AuthorizationListener $listener
      */
     public function addAuthorizationListener(
-        MyFusesAuthorizationListener $listener
+        AuthorizationListener $listener
     ) {
         $this->authorizationListeners[] = $listener;
     }
@@ -119,9 +121,9 @@ abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
     /**
      * Add one Authentication Listener
      *
-     * @param MyFusesSecuriyListener $listener
+     * @param SecuriyListener $listener
      */
-    public function addSecutiyListener(MyFusesSecuriyListener $listener)
+    public function addSecutiyListener(SecuriyListener $listener)
     {
         $this->securityListeners[] = $listener;
     }
@@ -139,14 +141,12 @@ abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
     /**
      * Return new Basic Security Manager instance
      *
-     * @return MyFusesSecurityManager
+     * @return SecurityManager
      */
     public static function getInstance()
     {
         if (is_null(self::$instance)) {
-            require_once MYFUSES_ROOT_PATH . "util/security/" .
-                "MyFusesBasicSecurityManager.php";
-            self::$instance = new MyFusesBasicSecurityManager();
+            self::$instance = new BasicSecurityManager();
         }
         return self::$instance;
     }
@@ -223,6 +223,6 @@ abstract class MyFusesAbstractSecurityManager implements MyFusesSecurityManager
     public function logout()
     {
         session_destroy();
-        MyFuses::sendToUrl(MyFuses::getMySelfXfa("goToIndexAction"));
+        Controller::sendToUrl(MyFuses::getMySelfXfa("goToIndexAction"));
     }
 }

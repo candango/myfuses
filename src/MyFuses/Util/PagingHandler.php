@@ -10,18 +10,22 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Util;
+
+use Candango\MyFuses\Controller;
+
 /**
- * MyFusesPagingHandler - MyFusesPagingHandler.php
+ * PagingHandler - PagingHandler.php
  *
  * Handles Pagination
  *
  * @category   paging
- * @package    myfuses.util.paging
+ * @package    Candango.MyFuses.Util
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @author     Marcelo Siroteau Serique <marcelo.serique at gmail.com>
  * @since      b27672410eaa5a6ce62a3a3b5ff99902a0944f17
  */
-class MyFusesPagingHandler
+class PagingHandler
 {
     private static $queryCount;
     private static $regsPerPage;
@@ -78,7 +82,7 @@ class MyFusesPagingHandler
         // definining href
 
         // Removing page indicator and fuseaction variable
-        $fuseactionVar = MyFuses::getApplication()->getFuseactionVariable();
+        $fuseactionVar = Controller::getApplication()->getFuseactionVariable();
 
         $qStrPos = 0;
         $qFuseactionVarPos = 0;
@@ -89,7 +93,7 @@ class MyFusesPagingHandler
                 $qStrPos = $i;
             }
             if (!(strpos($vurlQueryString[$i],
-                    MyFuses::getApplication()->getFuseactionVariable()) ===
+                    Controller::getApplication()->getFuseactionVariable()) ===
                 false)) {
                 $qFuseactionVarPos = $i;
             }
@@ -127,7 +131,7 @@ class MyFusesPagingHandler
             self::$urlQueryString .=  '&' . self::$urlVariable . '=' ;
         }
 
-        self::$href = MyFuses::getMySelfXfa($xfa) . "&" .
+        self::$href = Controller::getMySelfXfa($xfa) . "&" .
             self::$urlQueryString;
 
         // setting page count

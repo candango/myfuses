@@ -10,17 +10,21 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Util;
+
+use Candango\MyFuses\Exceptions\FileOperationException;
+
 /**
  * MyFuses File Handler class - MyFusesFileHandler.php
  *
  * Utility to handle usual file operations.
  *
  * @category   file
- * @package    myfuses.util.file
+ * @package    Candango.MyFuses.Util
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      63b5db316ba7c748afa1a8e60b2c6bb319492abb
  */
-class MyFusesFileHandler
+class FileHandler
 {
     /**
      * Returns a array of finded files in a given file list or single file 

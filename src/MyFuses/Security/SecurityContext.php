@@ -10,6 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Security;
+
+use Candango\MyFuses\Core\Application;
+
 /**
  * MyFusesSecurityContext - MyFusesSecurityContext.php
  *
@@ -20,7 +24,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-class MyFusesSecurityContext
+class SecurityContext
 {
 	public static function registerApplication(Application $application)
     {

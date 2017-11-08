@@ -10,7 +10,13 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "core/Application.php";
+namespace Candango\MyFuses\Core;
+
+use Candango\MyFuses\Engine\AbstractLoader;
+use Candango\MyFuses\Engine\Loader;
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Process\Lifecycle;
+use Candango\MyFuses\Util\FileHandler;
 
 /**
  * Application  - Application.php
@@ -27,7 +33,7 @@ class BasicApplication implements Application
     /**
      * Application loader
      * 
-     * @var MyFusesLoader
+     * @var Loader
      */
     private $loader;
 
@@ -119,7 +125,7 @@ class BasicApplication implements Application
     /**
      * Application controller
      * 
-     * @var MyFuses
+     * @var Controller
      */
     private $controller;
 
@@ -330,7 +336,7 @@ class BasicApplication implements Application
      * Application constructor
      * 
      * @param string $name
-     * @param MyFusesLoader $loader
+     * @param Loader $loader
      */
     public function __construct(
         $name = Application::DEFAULT_APPLICATION_NAME,
@@ -340,18 +346,17 @@ class BasicApplication implements Application
         $this->setName($name);
 
         if (is_null($loader)) {
-            $loader = AbstractMyFusesLoader::getLoader(
-                MyFusesLoader::XML_LOADER);
+            $loader = AbstractLoader::getLoader(Loader::XML_LOADER);
         }
 
         $this->setLoader($loader);
 
-        $this->plugins[MyFusesLifecycle::PRE_PROCESS_PHASE] = array();
-        $this->plugins[MyFusesLifecycle::PRE_FUSEACTION_PHASE] = array();
-        $this->plugins[MyFusesLifecycle::POST_FUSEACTION_PHASE] = array();
-        $this->plugins[MyFusesLifecycle::POST_PROCESS_PHASE] = array();
-        $this->plugins[MyFusesLifecycle::PROCESS_ERROR_PHASE] = array();
-        $this->plugins[MyFusesLifecycle::FUSEACTION_EXCEPTION_PHASE] = array();
+        $this->plugins[Lifecycle::PRE_PROCESS_PHASE] = array();
+        $this->plugins[Lifecycle::PRE_FUSEACTION_PHASE] = array();
+        $this->plugins[Lifecycle::POST_FUSEACTION_PHASE] = array();
+        $this->plugins[Lifecycle::POST_PROCESS_PHASE] = array();
+        $this->plugins[Lifecycle::PROCESS_ERROR_PHASE] = array();
+        $this->plugins[Lifecycle::FUSEACTION_EXCEPTION_PHASE] = array();
     }
 
     /**
@@ -422,10 +427,10 @@ class BasicApplication implements Application
         if (substr($path, -1) != DIRECTORY_SEPARATOR) {
             $path .= DIRECTORY_SEPARATOR;
         }
-        if (MyFusesFileHandler::isAbsolutePath($path)) {
+        if (FileHandler::isAbsolutePath($path)) {
             $this->path = $path;    
         } else {
-            $this->path = MyFusesFileHandler::sanitizePath(getcwd()) . $path;
+            $this->path = FileHandler::sanitizePath(getcwd()) . $path;
         }
     }
 
@@ -452,7 +457,7 @@ class BasicApplication implements Application
     /**
      * Return application loader
      *
-     * @return MyFusesLoader
+     * @return Loader
      */
     public function getLoader()
     {
@@ -462,9 +467,9 @@ class BasicApplication implements Application
     /**
      * Set the application loader
      *
-     * @param MyFusesLoader $loader
+     * @param Loader $loader
      */
-    public function setLoader(MyFusesLoader $loader)
+    public function setLoader(Loader $loader)
     {
         $this->loader = $loader;
         $loader->setApplication($this);
@@ -692,11 +697,11 @@ class BasicApplication implements Application
     /**
      * Set the application Controller
      * 
-     * @param MyFuses $myFuses
+     * @param Controller $controller
      */
-    public function setController(MyFuses &$myFuses)
+    public function setController(Controller &$controller)
     {
-        $this->controller = &$myFuses;
+        $this->controller = &$controller;
     }
 
     /**

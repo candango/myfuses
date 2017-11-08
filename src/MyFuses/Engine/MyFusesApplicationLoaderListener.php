@@ -16,7 +16,7 @@
  * Interface defining an application loader listener.
  *
  * @category   controller
- * @package    myfuses.engine
+ * @package    myfuses.Engine
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      5fd8d0153c67b1d5ceb21ff9117c98ebb9deda6b
  */
@@ -24,5 +24,5 @@ interface MyFusesApplicationLoaderListener
 {
     public function loadInitialized(BasicApplication $application);
 
-    public function loadPerformed(MyfusesLoader $loader, &$data);
+    public function loadPerformed(Loader $loader, &$data);
 }

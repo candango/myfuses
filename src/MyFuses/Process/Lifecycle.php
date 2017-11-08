@@ -10,8 +10,19 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Process;
+
+use Candango\MyFuses\Core\Application;
+use Candango\MyFuses\Core\Circuit;
+use Candango\MyFuses\Core\CircuitAction;
+use Candango\MyFuses\Engine\BasicBuilder;
+use Candango\MyFuses\I18n\I18NHandler;
+use Candango\MyFuses\Controller;
+
+use const Candango\MyFuses\ROOT_PATH;
+
 /**
- * MyFusesLifecycle - MyFusesLifecycle.php
+ * Lifecycle - Lifecycle.php
  * 
  * The MyFuses Lifecycle controls all phases of application and request process.
  *
@@ -20,7 +31,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      f5a327301f2e1df449f25f07953fcac1689411ab
  */
-abstract class MyFusesLifecycle
+abstract class Lifecycle
 {
     const LOAD_PHASE = "load";
 
@@ -107,7 +118,7 @@ abstract class MyFusesLifecycle
 
     public static function configureLocale()
     {
-        $handler = MyFusesI18nHandler::getInstance();
+        $handler = I18NHandler::getInstance();
 
         $handler->configure();
         /*
@@ -127,7 +138,7 @@ abstract class MyFusesLifecycle
 
     public static function storeLocale()
     {
-        $handler = MyFusesI18nHandler::getInstance();
+        $handler = I18nHandler::getInstance();
         $handler->storeFiles();
     }
 
@@ -188,8 +199,8 @@ abstract class MyFusesLifecycle
      */
     public static function loadApplications()
     {
-        foreach (MyFuses::getInstance()->getApplications() as
-            $key => $application) {
+        foreach (Controller::getInstance()->getApplications() as
+                 $key => $application) {
              if ($key != Application::DEFAULT_APPLICATION_NAME) {
                  self::loadApplication($application);
              }
@@ -221,19 +232,18 @@ abstract class MyFusesLifecycle
 
     public static function enableTools()
     {
-        if (MyFuses::getApplication()->isToolsAllowed()) {
-            $appReference['path'] = MyFuses::MYFUSES_ROOT_PATH .
-            "myfuses_tools/";
+        if (Controller::getApplication()->isToolsAllowed()) {
+            $appReference['path'] = ROOT_PATH . "myfuses_tools/";
 
-            MyFuses::getInstance()->createApplication("myfuses", $appReference);
+            Controller::getInstance()->createApplication("myfuses",
+                $appReference);
 
-            self::loadApplication( MyFuses::getApplication("myfuses"));
+            self::loadApplication(Controller::getApplication("myfuses"));
 
             BasicBuilder::buildApplication(
-                MyFuses::getApplication("myfuses")
+                Controller::getApplication("myfuses")
             );
         }
-        
     }
 
     public static function checkCircuit(Circuit $circuit)

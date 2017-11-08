@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Exceptions;
+
 /**
  * MyFuses Application Exception - MyFusesApplicationException.php
  *
@@ -20,7 +22,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      077e9521c58e1649e586615446be221f10934b95
  */
-class MyFusesApplicationException extends MyFusesException
+class ApplicationException extends Exception
 {
     /**
      * Non-existent application contant <br>
@@ -41,7 +43,7 @@ class MyFusesApplicationException extends MyFusesException
         list($msg, $detail) = $this->getNonExistentApplicationMessage($params);
 
         parent::__construct($msg, $detail,
-            MyFusesException::NON_EXISTENT_CIRCUIT);
+            self::NON_EXISTENT_CIRCUIT);
     }
 
     /**

@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "util/security/MyFusesBasicCredential.php";
+namespace Candango\MyFuses\Security;
 
 /**
  * MyFusesSecurityManager - MyFusesSecurityManager.php
@@ -22,7 +22,7 @@ require_once MYFUSES_ROOT_PATH . "util/security/MyFusesBasicCredential.php";
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-interface MyFusesSecurityManager
+interface SecurityManager
 {
 	const MESSAGE_INFO = "INFO";
 
@@ -66,9 +66,9 @@ interface MyFusesSecurityManager
     /**
      * Add one Authentication Listener to manager
      *
-     * @param MyFusesAuthenticationListener $listener
+     * @param AuthenticationListener $listener
      */
-    public function addAuthenticationListener(MyFusesAuthenticationListener
+    public function addAuthenticationListener(AuthenticationListener
         $listener);
 
     /**
@@ -81,9 +81,9 @@ interface MyFusesSecurityManager
     /**
      * Add one Authorization Listener to manager
      *
-     * @param MyFusesAuthorizationListener $listener
+     * @param AuthorizationListener $listener
      */
-    public function addAuthorizationListener(MyFusesAuthorizationListener
+    public function addAuthorizationListener(AuthorizationListener
         $listener);
 
     /**
@@ -96,9 +96,9 @@ interface MyFusesSecurityManager
     /**
      * Add one Authentication Listener
      *
-     * @param MyFusesSecuriyListener $listener
+     * @param SecuriyListener $listener
      */
-    public function addSecutiyListener(MyFusesSecuriyListener $listener);
+    public function addSecutiyListener(SecuriyListener $listener);
 
     /**
      * Return all authentication listeners
@@ -135,7 +135,7 @@ interface MyFusesSecurityManager
 }
 
 /**
- * MyFusesAuthenticationListener - MyFusesSecurityManager.php
+ * AuthenticationListener - SecurityManager.php
  *
  * MyFuses Authentication Listener
  *
@@ -144,7 +144,7 @@ interface MyFusesSecurityManager
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-interface MyFusesAuthenticationListener
+interface AuthenticationListener
 {
     public function authenticate(MyFusesSecurityManager $manager);
 
@@ -152,7 +152,7 @@ interface MyFusesAuthenticationListener
 }
 
 /**
- * MyFusesAuthorizationListener - MyFusesSecurityManager.php
+ * AuthorizationListener - SecurityManager.php
  *
  * MyFuses Authorization Listener
  *
@@ -161,15 +161,15 @@ interface MyFusesAuthenticationListener
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-interface MyFusesAuthorizationListener
+interface AuthorizationListener
 {
-	public function authorize(MyFusesSecurityManager $manager);
+	public function authorize(SecurityManager $manager);
 
-    public function authorizationPerformed(MyFusesSecurityManager $manager);
+    public function authorizationPerformed(SecurityManager $manager);
 }
 
 /**
- * MyFusesSecuriyListener - MyFusesSecurityManager.php
+ * SecuriyListener - SecurityManager.php
  *
  * MyFuses Security Listener
  *
@@ -178,7 +178,8 @@ interface MyFusesAuthorizationListener
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-interface MyFusesSecuriyListener extends MyFusesAuthenticationListener
+interface MyFusesSecuriyListener extends
+    AuthenticationListener,
+    AuthorizationListener
 {
-    public function authorizationPerformed();
 }

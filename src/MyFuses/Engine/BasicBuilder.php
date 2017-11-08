@@ -10,18 +10,19 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "engine/MyFusesBuilder.php";
+namespace Candango\MyFuses\Engine;
 
 /**
  * BasicBuilder - BasicBuilder
- * Basic implementation of a MyFusesBuilder.
+ *
+ * Basic implementation of a Builder.
  *
  * @category   controller
- * @package    myfuses.engine
+ * @package    myfuses.Engine
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      4ea81cee237c94b5349825934ecad7e2675c7355
  */
-class BasicBuilder implements MyFusesBuilder
+class BasicBuilder implements Builder
 {
     private $application;
 

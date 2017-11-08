@@ -10,6 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Engine;
+
+use Candango\MyFuses\Core\Application;
+use Candango\MyFuses\Core\Circuit;
 /**
  * MyFusesLoader - MyFusesLoader.php
  *
@@ -20,7 +24,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      4ea81cee237c94b5349825934ecad7e2675c7355
  */
-interface MyFusesLoader
+interface Loader
 {
 
     const XML_LOADER = 0;

@@ -10,6 +10,11 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Security;
+
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Process\DebugEvent;
+
 require_once MYFUSES_ROOT_PATH . "util/security/" .
     "MyFusesAbstractSecurityManager.php";
 require_once MYFUSES_ROOT_PATH . "util/data/MyFusesJsonUtil.php";
@@ -24,40 +29,40 @@ require_once MYFUSES_ROOT_PATH . "util/data/MyFusesJsonUtil.php";
  * @author     Flavio Goncalves Garcia <piraz at candango.org>
  * @since      7117f031f18f8fa583d344b573d3fbf574e42652
  */
-class MyFusesBasicSecurityManager extends MyFusesAbstractSecurityManager
+class BasicSecurityManager extends AbstractSecurityManager
 {
     public function createCredential()
     {
-        MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent("MyFusesSecurityManager",
+        Controller::getInstance()->getDebugger()->registerEvent(
+            new DebugEvent("MyFusesSecurityManager",
                 "MyFuses Security Manager creating credential."));
         if (!isset($_SESSION['MYFUSES_SECURITY_CREDENTIAL'])) {
-            MyFuses::getInstance()->getDebugger()->registerEvent(
-                new MyFusesDebugEvent("MyfusesSecurityManager",
+            Controller::getInstance()->getDebugger()->registerEvent(
+                new DebugEvent("MyfusesSecurityManager",
                     "No credential found. Creating a new one."));
 
             $credential = new BasicCredential();
 
             $_SESSION['MYFUSES_SECURITY_CREDENTIAL'] = $credential->getData();
         } else {
-            MyFuses::getInstance()->getDebugger()->registerEvent(
-                new MyFusesDebugEvent("MyfusesSecurityManager",
+            Controller::getInstance()->getDebugger()->registerEvent(
+                new DebugEvent("MyfusesSecurityManager",
                     "Credential found. Checking if isnt expired."));
 
             $credential = new BasicCredential();
             $credential->setData($_SESSION['MYFUSES_SECURITY_CREDENTIAL']);
 
             if ($credential->isExpired()) {
-                MyFuses::getInstance()->getDebugger()->registerEvent(
-                    new MyFusesDebugEvent("MyfusesSecurityManager",
+                Controller::getInstance()->getDebugger()->registerEvent(
+                    new DebugEvent("MyfusesSecurityManager",
                         "Credential expired. Creating a new one."));
                 $credential = new BasicCredential();
 
                 $_SESSION['MYFUSES_SECURITY_CREDENTIAL'] =
                     $credential->getData();
             } else {
-                MyFuses::getInstance()->getDebugger()->registerEvent(
-                    new MyFusesDebugEvent("MyfusesSecurityManager",
+                Controller::getInstance()->getDebugger()->registerEvent(
+                    new DebugEvent("MyfusesSecurityManager",
                         "Credential not expired. Increasing navigation " .
                         "time."));
                 $credential->increaseNavigationTime();

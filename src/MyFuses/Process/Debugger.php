@@ -10,8 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Process;
+
 /**
- * FuseDebugger  - FuseDebugger.php
+ * Debugger  - Debugger.php
  * 
  * This is the MyFuses Debugger class. All myfuses events will be registered in
  * Debugger and printed at the request end.
@@ -21,7 +23,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      5addb5347d0470a105f5865fc57d7df3dc981f7a
  */
-class MyFusesDebugger
+class Debugger
 {
     const MYFUSES_CATEGORY = "MyFuses";
 
@@ -46,7 +48,7 @@ class MyFusesDebugger
      *
      * @param MyFusesDebugEvent $event
      */
-    public function registerEvent(MyFusesDebugEvent $event)
+    public function registerEvent(DebugEvent $event)
     {
         $event->setTime($this->getMicrotime() - $this->initTime);
         $event->setCount(count( $this->events) + 1);
@@ -102,7 +104,7 @@ class MyFusesDebugger
 }
 
 /**
- * FuseDebugEvent
+ * DebugEvent
  * 
  * This class represents one event that will be registered into FuseDebuger.
  *
@@ -111,7 +113,7 @@ class MyFusesDebugger
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      5addb5347d0470a105f5865fc57d7df3dc981f7a
  */
-class MyFusesDebugEvent
+class DebugEvent
 {
     /**
      * Time when this debug Debug Event occours

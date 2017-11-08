@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Exceptions;
+
 /**
  * MyFusesVerbException - MyFusesVerbException.php
  * 
@@ -20,7 +22,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      b6271fd21f8e3597665afcc63e9d3fc91a025bf3
  */
-class MyFusesVerbException extends MyFusesException
+class VerbException extends Exception
 {
     /**
      * Missing require attribute error constant <br>

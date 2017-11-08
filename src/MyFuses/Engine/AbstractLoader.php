@@ -10,8 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "Engine/MyFusesLoader.php";
+namespace Candango\MyFuses\Engine;
 
+use Candango\MyFuses\Core\Application;
+use Candango\MyFuses\Core\Circuit;
 /**
  * AbstractMyFusesLoader - AbstractMyFusesLoader.php
  *
@@ -22,7 +24,7 @@ require_once MYFUSES_ROOT_PATH . "Engine/MyFusesLoader.php";
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      4ea81cee237c94b5349825934ecad7e2675c7355
  */
-abstract class AbstractMyFusesLoader implements MyFusesLoader
+abstract class AbstractLoader implements Loader
 {
     private $applicationData = array();
 
@@ -222,12 +224,12 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader
      * Currently only the xml loader is available.
      *
      * @param int $whichLoader
-     * @return AbstractMyFusesLoader
+     * @return AbstractLoader
      */
     public static function getLoader($whichLoader)
     {
         $loaderArray = array(
-            MyFusesLoader::XML_LOADER => "XmlMyFusesLoader"
+            Loader::XML_LOADER => __NAMESPACE__ . "\\Loaders\\XmlLoader"
         );
         return new $loaderArray[$whichLoader]();
     }

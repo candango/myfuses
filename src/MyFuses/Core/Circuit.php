@@ -10,8 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "core/Application.php";
-require_once MYFUSES_ROOT_PATH . "core/CircuitAction.php";
+namespace Candango\MyFuses\Core;
 
 /**
  * Circuit - Circuit.php

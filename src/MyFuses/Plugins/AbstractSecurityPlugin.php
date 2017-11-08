@@ -24,7 +24,7 @@ require_once MYFUSES_ROOT_PATH . "util/security/" .
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      a10e2e12abf0f387df778bf633b4dfa4efd37515
  */
-abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
+abstract class AbstractSecurityPlugin extends AbstractPlugin
 {
     /**
      * Application login fuseaction
@@ -248,7 +248,7 @@ abstract class MyFusesAbstractSecurityPlugin extends AbstractPlugin
 
         // TODO: This is too brute force. We need more taught here.
         foreach ($this->getListenersPaths() as $path) {
-            if (!MyFusesFileHandler::isAbsolutePath($path)) {
+            if (!FileHandler::isAbsolutePath($path)) {
                 $path = $this->getApplication()->getPath() . $path;
             }
 

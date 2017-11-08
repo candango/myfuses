@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Core;
+
 /**
  * Plugin  - Plugin.php
  * 

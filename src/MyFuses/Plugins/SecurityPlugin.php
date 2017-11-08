@@ -23,7 +23,7 @@ require_once MYFUSES_ROOT_PATH . "plugins/MyFusesAbstractSecurityPlugin.php";
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      a10e2e12abf0f387df778bf633b4dfa4efd37515
  */
-class MyFusesSecurityPlugin extends MyFusesAbstractSecurityPlugin
+class SecurityPlugin extends AbstractSecurityPlugin
 {
         public function run()
         {

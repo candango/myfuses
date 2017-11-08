@@ -10,6 +10,11 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Core;
+
+use Candango\MyFuses\Engine\Loader;
+use Candango\MyFuses\Controller;
+
 /**
  * Application  - Application.php
  *
@@ -105,16 +110,16 @@ interface Application extends ICacheable
     /**
      * Return application loader
      *
-     * @return MyFusesLoader
+     * @return Loader
      */
     public function getLoader();
 
     /**
      * Set the application loader
      *
-     * @param MyFusesLoader $loader
+     * @param Loader $loader
      */
-    public function setLoader(MyFusesLoader $loader);
+    public function setLoader(Loader $loader);
 
     /**
      * Return application builder
@@ -235,9 +240,9 @@ interface Application extends ICacheable
     /**
      * Set the application Controller
      * 
-     * @param MyFuses $myFuses
+     * @param Controller $controller
      */
-    public function setController(MyFuses &$myFuses);
+    public function setController(Controller &$controller);
 
     /**
      * Returns if the application is default or not

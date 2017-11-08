@@ -16,7 +16,7 @@
  * Interface defining an application builder listener
  *
  * @category   controller
- * @package    myfuses.engine
+ * @package    myfuses.Engine
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      80f65515c7288e149b488c889009acb65002d371
  */

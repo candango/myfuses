@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Util\Data;
+
 /**
  * MyFusesJsonUtil  - MyFusesJsonUtil.php
  * 
@@ -17,7 +19,7 @@
  * and encoding.
  *
  * @category   util
- * @package    util.data
+ * @package    Candango.MyFuses.Util.Data
  * @author     Flavio Garcia <piraz at candango.org>
  * @author     Daniel Luz <mernen at users.sf.net>
  * @since      c27bd97ef31dce175ab66eed0fc0a7d86f95bb8e

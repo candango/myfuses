@@ -10,6 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\I18n;
+
+use Candango\MyFuses\Controller;
+
 /**
  * MyFuses I18n Context class - MyFusesI18nContext.php
  *
@@ -20,7 +24,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c36c8ff941c440d0c01ea0341e03345dd9727b10
  */
-class MyFusesI18nContext
+class I18NContext
 {
     private static $context = array();
 
@@ -30,10 +34,10 @@ class MyFusesI18nContext
 
     public static function getExpression($name, $params=null)
     {
-    	if (is_null(MyFuses::getInstance()->getRequest())) {
+    	if (is_null(Controller::getInstance()->getRequest())) {
     		$encoding = "UTF-8";
     	} else {
-    		$encoding = MyFuses::getInstance()->getRequest()->
+    		$encoding = Controller::getInstance()->getRequest()->
     		  getApplication()->getCharacterEncoding();	
     	}
 
@@ -42,12 +46,12 @@ class MyFusesI18nContext
     	$replace = null;
 
     	if (is_null($params)) {
-    	    $locale = MyFuses::getApplication()->getLocale();
+    	    $locale = Controller::getApplication()->getLocale();
     	} else {
     	    if (isset($params['locale'])) {
     	        $locale = $params['locale'];
     	    } else {
-    	        $locale = MyFuses::getApplication()->getLocale();
+    	        $locale = Controller::getApplication()->getLocale();
     	    }
 
     	    if (isset($params['replace'])) {
@@ -105,12 +109,12 @@ class MyFusesI18nContext
     }
 }
 
-function get_myfuses_expresion($name, $params=null)
+function myfuses_expresion($name, $params=null)
 {
-	return MyFusesI18nContext::getExpression($name, $params);
+	return I18NContext::getExpression($name, $params);
 }
 
 function myexp($name, $params=null)
 {
-	return MyFusesI18nContext::getExpression($name, $params);
+	return I18NContext::getExpression($name, $params);
 }

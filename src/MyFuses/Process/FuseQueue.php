@@ -10,7 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "process/FuseRequest.php";
+require_once MYFUSES_ROOT_PATH . "Process/FuseRequest.php";
 
 /**
  * FuseQueue - FuseQueue.php
@@ -62,8 +62,8 @@ class FuseQueue
                 'circuitName' => $action->getCircuit()->getName(),
                 'application' => $action->getCircuit()->getApplication()
             );
-            throw new MyFusesCircuitException($params,
-                MyFusesCircuitException::USER_TRYING_ACCESS_INTERNAL_CIRCUIT);
+            throw new CircuitException($params,
+                CircuitException::USER_TRYING_ACCESS_INTERNAL_CIRCUIT);
 	    }
 
         $this->processQueue[] = $this->request->getAction();

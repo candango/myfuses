@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Security;
+
 require_once MYFUSES_ROOT_PATH . "util/security/MyFusesCredential.php";
 
 /**
@@ -22,7 +24,7 @@ require_once MYFUSES_ROOT_PATH . "util/security/MyFusesCredential.php";
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-class MyFusesAbstractCredential implements MyFusesCredential
+class AbstractCredential implements Credential
 {
     /**
      * Credential attributes

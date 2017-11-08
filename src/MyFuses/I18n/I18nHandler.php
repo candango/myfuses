@@ -11,15 +11,18 @@
  */
 
 namespace Candango\MyFuses\I18n;
-use Candango\MyFuses\Platform;
+
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\Application;
+use Candango\MyFuses\Util\FileHandler;
 
 /**
- * MyFuses i18n Handler class - I18nHandler.php
+ * MyFuses I18n Handler class - I18nHandler.php
  *
- * Utility to handle usual i18n operations.
+ * Utility to handle usual I18n operations.
  *
- * @category   i18n
- * @package    candango.myfuses.i18n
+ * @category   I18n
+ * @package    candango.myfuses.I18n
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c36c8ff941c440d0c01ea0341e03345dd9727b10
  */
@@ -54,7 +57,7 @@ abstract class I18NHandler
     private static $instance;
 
     /**
-     * Method that execute all steps to configure i18n
+     * Method that execute all steps to configure I18n
      */
     public function configure()
     {
@@ -72,61 +75,65 @@ abstract class I18NHandler
     abstract public function setLocale();
 
     /**
-     * Load i18n files
+     * Load I18n files
      */
     public function loadFiles()
     {
-        $application = Platform::getApplication();
+        $application = Controller::getApplication();
 
-        Platform::getInstance()->createApplicationPath($application);
+        Controller::getInstance()->createApplicationPath($application);
 
-        $i18nPath = MyFusesFileHandler::sanitizePath(
-            MyFuses::getApplication()->getParsedPath() . "i18n");
+        $i18nPath = FileHandler::sanitizePath(
+            Controller::getApplication()->getParsedPath() . "i18n");
+
         $i18nFile = $i18nPath . "locale.data.php";
 
         if (file_exists($i18nFile)) {
             $i18nData = require $i18nFile;
 
-            MyFusesI18nContext::setTime($i18nData['last_load_time']);
+            I18nContext::setTime($i18nData['last_load_time']);
 
             unset($i18nData['last_load_time']);
 
-            MyFusesI18nContext::setContext($i18nData);
+            I18nContext::setContext($i18nData);
         } else {
-            MyFusesI18nContext::setStore(true);
+            I18nContext::setStore(true);
         }
 
-        MyFuses::getApplication()->getParsedPath();
+        Controller::getApplication()->getParsedPath();
 
         if ($this->mustLoad()) {
-            foreach (MyFuses::getInstance()->getI18nPaths() as $path) {
-                if (MyFusesFileHandler::isAbsolutePath($path)) {
+
+            var_dump($i18nFile);
+            foreach (Controller::getInstance()->getI18nPaths() as $path) {
+                if (FileHandler::isAbsolutePath($path)) {
                     $this->digPath($path);
                 } else {
-                    foreach(MyFuses::getInstance()->getApplications()
-                        as $key => $application) {
+                    foreach(Controller::getInstance()->getApplications()
+                            as $key => $application) {
                         if ($key != Application::DEFAULT_APPLICATION_NAME) {
                             $this->digPath($application->getPath() . $path);
                         }
                     }
                 }
             }
-            MyFusesI18nContext::setTime(time());
-            MyFusesI18nContext::setStore(true);
+            I18nContext::setTime(time());
+            I18nContext::setStore(true);
         }
         //var_dump(MyFusesI18nContext::getContext());die();
     }
 
     private function mustLoad()
     {
-        foreach (Platform::getInstance()->getI18nPaths() as $path) {
-            if (MyFusesFileHandler::isAbsolutePath($path)) {
+        foreach (Controller::getInstance()->getI18nPaths() as $path) {
+            if (FileHandler::isAbsolutePath($path)) {
+                var_dump(FileHandler::isAbsolutePath($path));
                 if ($this->checkPath($path)) {
                     return true;
                 }
             } else {
-                foreach (Platform::getInstance()->getApplications()
-                    as $key => $application) {
+                foreach (Controller::getInstance()->getApplications()
+                         as $key => $application) {
                     if( $key != Application::DEFAULT_APPLICATION_NAME ) {
                         if ($this->checkPath($application->getPath() .
                             $path)) {
@@ -142,14 +149,15 @@ abstract class I18NHandler
     private function checkPath($path)
     {
         if (file_exists($path)) {
+
             $dir = dir( $path );
 
             while (false !== ($subdir = $dir->read())) {
-                $localePath = MyFusesFileHandler::sanitizePath(
+                $localePath = FileHandler::sanitizePath(
                     $path . $subdir);
                 if(file_exists($localePath . "expressions.xml" )) {
                     if(filemtime($localePath . "expressions.xml") >
-                        MyFusesI18nContext::getTime()) {
+                        I18nContext::getTime()) {
                         return true;
                     }
                 }
@@ -159,7 +167,7 @@ abstract class I18NHandler
     }
 
     /**
-     * Dig the given path to find i18n files
+     * Dig the given path to find I18n files
      *
      * @param string $path
      */
@@ -170,7 +178,7 @@ abstract class I18NHandler
             $dir = dir($path);
 
             while (false !== ($subdir = $dir->read())) {
-                $localePath = MyFusesFileHandler::sanitizePath(
+                $localePath = FileHandler::sanitizePath(
                     $path . $subdir
                 );
 
@@ -178,7 +186,7 @@ abstract class I18NHandler
 
                 if (file_exists($localePath . "expressions.xml")) {
                     if (filemtime($localePath . "expressions.xml") >
-                        MyFusesI18nContext::getTime()) {
+                        I18nContext::getTime()) {
                         $doc = $this->loadFile($localePath .
                                 "expressions.xml");
 
@@ -196,7 +204,7 @@ abstract class I18NHandler
                                     $expression, ENT_NOQUOTES, 'UTF-8'
                                 );
 
-                                MyFusesI18nContext::setExpression(
+                                I18nContext::setExpression(
                                     $locale, $name, "" . $expression
                                 );
                             }
@@ -247,7 +255,7 @@ abstract class I18NHandler
 
     /*private static function storeFiles($exps) {
         $path = MyFusesFileHandler::sanitizePath(
-            MyFuses::getApplication()->getParsedPath() . 'i18n');
+            MyFuses::getApplication()->getParsedPath() . 'I18n');
         foreach ($exps as $locale => $expressions) {
             $strOut = self::getFileComments($locale);
             $strOut .= self::getFileHeaders($locale);
@@ -284,9 +292,9 @@ abstract class I18NHandler
     public static function getInstance()
     {
         if (is_null(self::$instance)) {
-            switch (MyFuses::getI18nType()) {
+            switch (Controller::getI18nType()) {
                 case self::NATIVE_TYPE:
-                    self::$instance = new MyFusesNativeI18nHandler();
+                    self::$instance = new NativeI18nHandler();
                     break;
             }    
         }

@@ -9,7 +9,7 @@
  * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
-require_once MYFUSES_ROOT_PATH . "process/FuseQueue.php";
+require_once MYFUSES_ROOT_PATH . "Process/FuseQueue.php";
 
 /**
  * FuseRequest - FuseRequest.php
@@ -64,7 +64,7 @@ class FuseRequest
 
     public function __construct($applicationName = null)
     {
-        MyFuses::setCurrentPhase(MyFusesLifecycle::BUILD_PHASE);
+        MyFuses::setCurrentPhase(Lifecycle::BUILD_PHASE);
 
         if (is_null($applicationName)) {
             $this->application = MyFuses::getInstance()->getApplication();
@@ -135,8 +135,8 @@ class FuseRequest
 
             if (is_null($this->application)) {
                 $params = array("applicationName" => $appName);
-                throw new MyFusesApplicationException($params,
-                    MyFusesApplicationException::NON_EXISTENT_APPLICATION);
+                throw new ApplicationException($params,
+                    ApplicationException::NON_EXISTENT_APPLICATION);
             }
 
             $this->validFuseactionName = $circuitName . "." . $actionName;
@@ -283,12 +283,12 @@ class FuseRequest
                     throw new MyFusesActionException($params,
                         MyFusesActionException::NON_EXISTENT_FUSEACTION);
                 }
-            } catch (MyFusesCircuitException $mfce) {
+            } catch (CircuitException $mfce) {
                 try {
                     $application = MyFuses::getApplication($path[0]);
                     return $application->getName() . "." .
                         $application->getDefaultFuseaction();    
-                } catch (MyFusesApplicationException $mfae) {
+                } catch (ApplicationException $mfae) {
                     $this->setExtraParams($path);
                     return $this->getApplication()->getName() . "." . 
                         $this->getApplication()->getDefaultFuseaction();  
@@ -321,7 +321,7 @@ class FuseRequest
                 }
                 
             }
-            catch( MyFusesCircuitException $mfce ) {
+            catch( CircuitException $mfce ) {
                 try {
                     $application = MyFuses::getApplication($path[0]);
 
@@ -366,14 +366,14 @@ class FuseRequest
                                 }
                             }
                         }
-                    } catch(MyFusesCircuitException $mfce) {
+                    } catch(CircuitException $mfce) {
                         $this->setExtraParams(
                             array_slice($path, 1, count($path))
                         );
                         return $application->getName() . "." .
                             $application->getDefaultFuseaction();
                     }
-                } catch(MyFusesApplicationException $mfae) {
+                } catch(ApplicationException $mfae) {
                     $this->setExtraParams($path);
                     return $this->getApplication()->getName() . "." .
                         $this->getApplication()->getDefaultFuseaction();

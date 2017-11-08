@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Exceptions;
+
 /**
  * MyFuses Circuit Exception - MyFusesCircuitException.php
  *
@@ -20,7 +22,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c095d5e7f208976dcf8f724ce20a592bb36179b0
  */
-class MyFusesCircuitException extends MyFusesException
+class CircuitException extends Exception
 {
     /**
      * Non-existent circuit contant <br>

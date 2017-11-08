@@ -10,17 +10,19 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Engine;
+
 /**
- * MyFusesBuilder - MyFusesBuilder.php
+ * Builder - Builder.php
  *
  * Interface defining a MyFuses Builder.
  *
  * @category   controller
- * @package    myfuses.engine
+ * @package    myfuses.Engine
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      7af9bea446be73248961f6db1b72500de3903243
  */
-interface MyFusesBuilder
+interface Builder
 {
     /**
      * Builds the application structure

@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Security;
+
 /**
  * MyFusesCredential - MyFusesCredential.php
  *
@@ -20,7 +22,7 @@
  * @author     Flavio Goncalves Garcia <piraz at candango.org>
  * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-interface MyFusesCredential
+interface Credential
 {
 	const ALL_ACTIONS = "CAN_ACCESS_ALL_ACTIONS";
 

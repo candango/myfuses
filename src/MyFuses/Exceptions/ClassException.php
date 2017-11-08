@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Exceptions;
+
 /**
  * MyFuses Class Exception - MyFusesClassException.php
  *
@@ -20,7 +22,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      cb9a309e40c6718286ac436d775513dc07f6fce4
  */
-class MyFusesClassException extends MyFusesException
+class ClassException extends Exception
 {
     /**
      * Non-existent class contant <br>

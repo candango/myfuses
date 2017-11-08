@@ -10,17 +10,16 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "core/AbstractPlugin.php";
-require_once MYFUSES_ROOT_PATH . "core/AbstractExceptionPlugin.php";
-require_once MYFUSES_ROOT_PATH . "core/AbstractVerb.php";
-require_once MYFUSES_ROOT_PATH . "core/Application.php";
-require_once MYFUSES_ROOT_PATH . "core/ClassDefinition.php";
-require_once MYFUSES_ROOT_PATH . "core/BasicCircuit.php";
-require_once MYFUSES_ROOT_PATH . "core/FuseAction.php";
-require_once MYFUSES_ROOT_PATH . "Engine/AbstractMyFusesLoader.php";
+namespace Candango\MyFuses\Engine\Loaders;
+use Candango\MyFuses\Core\Circuit;
+use Candango\MyFuses\Engine\AbstractLoader;
+use Candango\MyFuses\Exceptions\FileOperationException;
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Process\DebugEvent;
+use Candango\MyFuses\Process\Debugger;
 
 /**
- * AbstractMyFusesLoader - AbstractMyFusesLoader.php
+ * XmlLoader - XmlLoader.php
  *
  * XML MyFuses loader. Loads myfuses.xml, fusebox.xml and circuit.xml files
  * in order to provide the data used to config, build and execute the
@@ -156,19 +155,19 @@ class XmlLoader extends AbstractLoader
 
         // TODO verify if all conditions is satisfied for a file load occurs
         if (@!$fp = fopen($this->getApplication()->getCompleteFile() , "r")) {
-            throw new MyFusesFileOperationException(
-                $this->getApplication()->getCompleteFile(), 
-                MyFusesFileOperationException::OPEN_FILE);
+            throw new FileOperationException(
+                $this->getApplication()->getCompleteFile(),
+                FileOperationException::OPEN_FILE);
         }
 
         if (!flock($fp, LOCK_SH)) {
-            throw new MyFusesFileOperationException(
+            throw new FileOperationException(
                 $this->getApplication()->getCompleteFile(),
-                MyFusesFileOperationException::LOCK_FILE);
+                FileOperationException::LOCK_FILE);
         }
 
-        MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent(MyFusesDebugger::MYFUSES_CATEGORY,
+        Controller::getInstance()->getDebugger()->registerEvent(
+            new DebugEvent(Debugger::MYFUSES_CATEGORY,
                 "Getting Application file \"" .
                 $this->getApplication()->getCompleteFile() . "\""));
 
@@ -178,7 +177,7 @@ class XmlLoader extends AbstractLoader
         try {
             // FIXME put no warning modifier in SimpleXMLElement call
             $rootNode = @new SimpleXMLElement($fileCode);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // FIXME handle error
             echo "<b>" . $this->getApplication()->getCompleteFile() .
                 "<b><br>";
@@ -208,7 +207,7 @@ class XmlLoader extends AbstractLoader
      * 
      * @param Circuit $circuit
      * @return SimpleXMLElement
-     * @throws MyFusesFileOperationException
+     * @throws FileOperationException
      */
     private function loadCircuitFile(Circuit $circuit)
     {
@@ -216,15 +215,15 @@ class XmlLoader extends AbstractLoader
 
         // TODO verify if all conditions is satisfied for a file load occurs
         if (@!$fp = fopen($circuitFile ,"r")) {
-            throw new MyFusesFileOperationException($circuitFile,
-                MyFusesFileOperationException::OPEN_FILE);
+            throw new FileOperationException($circuitFile,
+                FileOperationException::OPEN_FILE);
         }
         // FIXME Fixing an error occurred with CGI GATEWAYS.
         // FIXME Suppressing redirect with CGI!!!
         if (!isset($_SERVER["GATEWAY_INTERFACE"])) {
             if (!flock($fp, LOCK_SH)) {
-                throw new MyFusesFileOperationException(
-                    $circuitFile, MyFusesFileOperationException::LOCK_FILE);
+                throw new FileOperationException(
+                    $circuitFile, FileOperationException::LOCK_FILE);
             }
         }
 

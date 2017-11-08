@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Process;
+
 /**
  * MyFuses Context class - MyFusesContext.php
  *
@@ -22,7 +24,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      7b802fcc293a23bc8ccfb6eedad643d3fbccf933
  */
-class MyFusesContext
+class Context
 {
     public static $context = array();
 

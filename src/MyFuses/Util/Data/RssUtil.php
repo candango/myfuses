@@ -1,4 +1,7 @@
 <?php
+
+namespace Candango\MyFuses\Util\Data;
+
 class RssUtil
 {
     const VERSION_1_0 = "1.0";

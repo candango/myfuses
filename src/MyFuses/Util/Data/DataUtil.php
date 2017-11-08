@@ -10,14 +10,16 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Util\Data;
+
 /**
- * MyFusesDataUtil  - MyFusesDataUtil.php
+ * DataUtil  - DataUtil.php
  * 
  * This is utility class has some methdos that handles basic php transforming 
  * and encoding.
  *
  * @category   data
- * @package    util.data
+ * @package    Candango.MyFuses.Util.Data
  * @author     Flavio Garcia <piraz at candango.org>
  * @author     Daniel Luz <mernen at users.sf.net>
  * @since      18a7520a16fec0da6c6e570d12aea982299779c0

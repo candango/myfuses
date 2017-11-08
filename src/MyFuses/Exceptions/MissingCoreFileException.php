@@ -10,6 +10,8 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Exceptions;
+
 /**
  * MyFuses Missing Core File Exception - MyFusesMissingCoreFileException.php
  *
@@ -20,7 +22,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      f06b361b3bc6909ebf21f108d42b79a17cfb3924
  */
-class MyFusesMissingCoreFileException extends MyFusesException
+class MissingCoreFileException extends Exception
 {
     public function __construct( $file )
     {
@@ -32,6 +34,6 @@ class MyFusesMissingCoreFileException extends MyFusesException
                 "cannot move this file to another place or rename unless " .
                 "you kown what you are doing.<br>";
 
-        parent::__construct($msg, $detail, MyFusesException::MISSING_CORE_FILE);
+        parent::__construct($msg, $detail, self::MISSING_CORE_FILE);
     }
 }

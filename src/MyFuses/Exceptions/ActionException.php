@@ -22,7 +22,7 @@ namespace Candango\MyFuses\Exceptions;
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c5fec49e04ae09fefb514b4e47ed24d324b6231e
  */
-class MyFusesActionException extends MyFusesException
+class ActionException extends Exception
 {
     /**
      * Non-existent circuit contant <br>
