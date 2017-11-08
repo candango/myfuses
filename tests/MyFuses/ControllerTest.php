@@ -10,10 +10,14 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+require dirname(__FILE__) . DIRECTORY_SEPARATOR .
+    "../../src/MyFuses/Controller.php";
+
 use PHPUnit\Framework\TestCase;
+use Candango\MyFuses\Controller;
 
 /**
- * MyFusesTest - MyFusesTest.php
+ * MyFusesTest - ControllerTest.php
  *
  * Tests case that covers the MyFuses class.
  *
@@ -25,12 +29,12 @@ use PHPUnit\Framework\TestCase;
  * @since      3b84558078c197418cfe757efde0d19b0806d45a
  * @covers     MyFuses
  */
-final class MyFusesTest extends TestCase
+final class ControllerTest extends TestCase
 {
 
     public function testGetInstanceReturns()
     {
-        $this->assertInstanceOf(MyFuses::class, MyFuses::getInstance());
+        $this->assertInstanceOf(Controller::class, Controller::getInstance());
     }
 
     public function testRootUrlOnRootAndHttp()
@@ -42,7 +46,7 @@ final class MyFusesTest extends TestCase
         $_SERVER['SCRIPT_NAME'] = "/index.php";
 
         $expectedUrl = "http://localhost/";
-        $this->assertEquals($expectedUrl, MyFuses::getRootUrl());
+        $this->assertEquals($expectedUrl, Controller::getRootUrl());
 
         unset($_SERVER['REQUEST_SCHEME']);
         unset($_SERVER['HTTP_HOST']);
@@ -58,7 +62,7 @@ final class MyFusesTest extends TestCase
         $_SERVER['SCRIPT_NAME'] = "/index.php";
 
         $expectedUrl = "https://localhost/";
-        $this->assertEquals($expectedUrl, MyFuses::getRootUrl());
+        $this->assertEquals($expectedUrl, Controller::getRootUrl());
 
         unset($_SERVER['REQUEST_SCHEME']);
         unset($_SERVER['HTTP_HOST']);
@@ -74,7 +78,7 @@ final class MyFusesTest extends TestCase
         $_SERVER['SCRIPT_NAME'] = "/directory/index.php";
 
         $expectedUrl = "http://localhost/directory/";
-        $this->assertEquals($expectedUrl, MyFuses::getRootUrl());
+        $this->assertEquals($expectedUrl, Controller::getRootUrl());
 
         unset($_SERVER['REQUEST_SCHEME']);
         unset($_SERVER['HTTP_HOST']);
@@ -90,7 +94,7 @@ final class MyFusesTest extends TestCase
         $_SERVER['SCRIPT_NAME'] = "/directory/index.php";
 
         $expectedUrl = "https://localhost/directory/";
-        $this->assertEquals($expectedUrl, MyFuses::getRootUrl());
+        $this->assertEquals($expectedUrl, Controller::getRootUrl());
 
         unset($_SERVER['REQUEST_SCHEME']);
         unset($_SERVER['HTTP_HOST']);
@@ -106,7 +110,7 @@ final class MyFusesTest extends TestCase
         $_SERVER['SCRIPT_NAME'] = "/directory/directory1/directory2/index.php";
 
         $expectedUrl = "http://localhost/directory/directory1/directory2/";
-        $this->assertEquals($expectedUrl, MyFuses::getRootUrl());
+        $this->assertEquals($expectedUrl, Controller::getRootUrl());
 
         unset($_SERVER['REQUEST_SCHEME']);
         unset($_SERVER['HTTP_HOST']);
@@ -122,7 +126,7 @@ final class MyFusesTest extends TestCase
         $_SERVER['SCRIPT_NAME'] = "/directory/directory1/directory2/index.php";
 
         $expectedUrl = "https://localhost/directory/directory1/directory2/";
-        $this->assertEquals($expectedUrl, MyFuses::getRootUrl());
+        $this->assertEquals($expectedUrl, Controller::getRootUrl());
 
         unset($_SERVER['REQUEST_SCHEME']);
         unset($_SERVER['HTTP_HOST']);
@@ -133,7 +137,7 @@ final class MyFusesTest extends TestCase
     {
         $expectedProtocol = "http";
         $_SERVER['REQUEST_SCHEME'] = "http";
-        $this->assertEquals($expectedProtocol, MyFuses::getProcotol());
+        $this->assertEquals($expectedProtocol, Controller::getProcotol());
         unset($_SERVER['REQUEST_SCHEME']);
     }
 
@@ -141,13 +145,13 @@ final class MyFusesTest extends TestCase
     {
         $expectedProtocol = "https";
         $_SERVER['REQUEST_SCHEME'] = "https";
-        $this->assertEquals($expectedProtocol, MyFuses::getProcotol());
+        $this->assertEquals($expectedProtocol, Controller::getProcotol());
         unset($_SERVER['REQUEST_SCHEME']);
     }
 
     public function testProtocolNoRequestScheme()
     {
         $expectedProtocol = "http";
-        $this->assertEquals($expectedProtocol, MyFuses::getProcotol());
+        $this->assertEquals($expectedProtocol, Controller::getProcotol());
     }
 }
