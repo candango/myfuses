@@ -104,7 +104,6 @@ abstract class I18NHandler
             foreach (Controller::getInstance()->getI18nPaths() as $path) {
                 $path = FileHandler::sanitizePath($path);
                 if (FileHandler::isAbsolutePath($path)) {
-                    var_dump($path);
                     $this->digPath($path);
                 } else {
                     foreach(Controller::getInstance()->getApplications()

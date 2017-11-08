@@ -12,6 +12,9 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Process\Context;
+
 /**
  * InstantiateVerb - InstantiateVerb.php
  *
@@ -277,16 +280,16 @@ class InstantiateVerb extends AbstractVerb
 		    $strOut .= str_repeat("\t", $identLevel);
 		    $strOut .= "}\n";
 		    $strOut .= str_repeat("\t", $identLevel);
-		    $strOut .= "MyFusesContext::setVariable( \"" .
+		    $strOut .= Context::class . "::setVariable( \"" .
                 $this->getObject() . "\", new " . $this->getClass() .
                 "( " . $this->getArgumentString() . " ) );\n\n";
             $strOut .= self::getContextRestoreString();
 	    } else {
-	        $strOut .= "MyFusesContext::setVariable( \"" .
+	        $strOut .= Context::class . "::setVariable( \"" .
                 $this->getObject() . "\", new SoapClient" .
                 "( \"" . $this->getWebservice() . "\" ) );\n\n";
             $strOut .= self::getContextRestoreString();
-	        // FIXME use MyFusesContext::setVariable in here
+	        // FIXME use Context::setVariable in here
 	    }
 	    return $strOut;
 	}

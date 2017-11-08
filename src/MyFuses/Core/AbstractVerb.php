@@ -11,6 +11,9 @@
  */
 
 namespace Candango\MyFuses\Core;
+use Candango\MyFuses\Exceptions\VerbException;
+use Candango\MyFuses\Process\Context;
+use Candango\MyFuses\Util\FileHandler;
 
 /**
  * AbstractVerb - AbstractVerb.php
@@ -27,18 +30,18 @@ namespace Candango\MyFuses\Core;
 abstract class AbstractVerb implements Verb
 {
     private static $verbTypes = array(
-            "myfuses:do" => "DoVerb",
-            "myfuses:if" => "IfVerb",
-            "myfuses:include" => "IncludeVerb",
-            "myfuses:instantiate" => "InstantiateVerb",
-            "myfuses:invoke" => "InvokeVerb",
-            "myfuses:loop" => "LoopVerb",
-            "myfuses:relocate" => "RelocateVerb",
-            "myfuses:response" => "ResponseVerb",
-            "myfuses:set" => "SetVerb",
-            "myfuses:switch" => "SwitchVerb",
-            "myfuses:xfa" => "XfaVerb",
-            "myfuses:var_dump" => "VarDumpVerb"
+            "myfuses:do" => __NAMESPACE__ . "\\Verbs\\DoVerb",
+            "myfuses:if" => __NAMESPACE__ . "Verbs\\IfVerb",
+            "myfuses:include" => __NAMESPACE__ . "\\Verbs\\IncludeVerb",
+            "myfuses:instantiate" => __NAMESPACE__ . "\\Verbs\\InstantiateVerb",
+            "myfuses:invoke" => __NAMESPACE__ . "\\Verbs\\InvokeVerb",
+            "myfuses:loop" => __NAMESPACE__ . "\\Verbs\\LoopVerb",
+            "myfuses:relocate" => __NAMESPACE__ . "\\Verbs\\RelocateVerb",
+            "myfuses:response" => __NAMESPACE__ . "\\Verbs\\ResponseVerb",
+            "myfuses:set" => __NAMESPACE__ . "\\Verbs\\SetVerb",
+            "myfuses:switch" => __NAMESPACE__ . "\\Verbs\\SwitchVerb",
+            "myfuses:xfa" => __NAMESPACE__ . "\\Verbs\\XfaVerb",
+            "myfuses:var_dump" => __NAMESPACE__ . "\\Verbs\\VarDumpVerb"
     );
 
     /**
@@ -163,12 +166,7 @@ abstract class AbstractVerb implements Verb
         //$data = unserialize( $data );
         if (isset(self::$verbTypes[@$data['namespace'] . ":" .
             $data['name']])) {
-            require_once MYFUSES_ROOT_PATH . "core" .
-                DIRECTORY_SEPARATOR . "verbs" . DIRECTORY_SEPARATOR .
-                self::$verbTypes[$data['namespace'] . ":" .
-                    $data['name']] . ".php";
-
-	        $verb = new self::$verbTypes[$data['namespace'] . ":" .
+            $verb = new self::$verbTypes[$data['namespace'] . ":" .
                     $data['name']]();
 
 	        if(!is_null($action)) {
@@ -179,7 +177,7 @@ abstract class AbstractVerb implements Verb
         } else {
             if($action->getCircuit()->verbPathExists(@$data['namespace'])) {
                 $path = $action->getCircuit()->getVerbPath($data['namespace']);
-                if(!MyFusesFileHandler::isAbsolutePath($path)) {
+                if(!FileHandler::isAbsolutePath($path)) {
                     if(file_exists($action->getCircuit()->getApplication()
                             ->getPath() . $path)) {
                         $path = $action->getCircuit()->getApplication()
@@ -204,8 +202,8 @@ abstract class AbstractVerb implements Verb
                 if(!is_file($path. $className . ".php")) {
                     $params = $action->getErrorParams();
 	                $params['verbName'] = $data['name'];
-	                   throw new MyFusesVerbException($params,
-	                        MyFusesVerbException::NON_EXISTENT_VERB);
+	                   throw new VerbException($params,
+	                        VerbException::NON_EXISTENT_VERB);
                 }
 
                 require_once($path. $className . ".php");
@@ -219,8 +217,8 @@ abstract class AbstractVerb implements Verb
             } else {
                     $params = $action->getErrorParams();
                     $params['verbName'] = $data['name'];
-                    throw new MyFusesVerbException($params,
-                        MyFusesVerbException::MISSING_NAMESPACE);
+                    throw new VerbException($params,
+                        VerbException::MISSING_NAMESPACE);
             }
         }
         return null;
@@ -323,8 +321,8 @@ abstract class AbstractVerb implements Verb
     {
         // TODO: prepare to concatenation here
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "MyFusesContext::setVariable( \"" .
-              $variable . "\", \"" . $value . "\" );\n";
+	    $strOut .= Context::class . "::setVariable( \"" . $variable . "\", \"" .
+            $value . "\" );\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;
@@ -342,8 +340,7 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "    ob_start();\n";
 	    }
         $strOut .= str_repeat("\t", $identLevel+1);
-	    $strOut .= "MyFusesContext::includeFile( " .
-	       $fileName . ");\n";
+	    $strOut .= Context::class . "::includeFile( " . $fileName . ");\n";
         $strOut .= str_repeat("\t", $identLevel+1);
 	    $strOut .= self::getContextRestoreString();
 	    if( $contentVariable != null ) {
@@ -351,7 +348,7 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
                 "ob_end_clean();\n";
             $strOut .= str_repeat("\t", $identLevel+1);
-            $strOut .= "    MyFusesContext::setParameter( \"" . 
+            $strOut .= "    " . Context::class . "::setParameter( \"" .
                 $contentVariable . "\", \$" . $contentVariable . " );\n";
         }
         $strOut .= str_repeat("\t", $identLevel);
@@ -367,7 +364,7 @@ abstract class AbstractVerb implements Verb
 	protected function getContextRestoreString($identLevel=0)
     {
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "foreach(MyFusesContext::getContext() as \$value) {";
+	    $strOut .= "foreach(" . Context::class . "::getContext() as \$value) {";
         $strOut .= "global \$\$value;";
         $strOut .= "}\n";
         return $strOut;

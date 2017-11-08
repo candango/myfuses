@@ -12,6 +12,9 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Process\Context;
+
 /**
  * SetVerb  - SetVerb.php
  * 
@@ -121,14 +124,14 @@ class SetVerb extends AbstractVerb
 
         if (is_null($this->getVariableName())) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .= MyFusesContext::sanitizeHashedString("\"" . $value .
+            $strOut .= Context::sanitizeHashedString("\"" . $value .
                     "\"") . ";\n";
         }
         else {
             if ($isArray) {
                 $strOut .= str_repeat("\t", $identLevel);
                 $strOut .= "$" . $this->getVariableName() . " = "  .
-                    MyFusesContext::sanitizeHashedString("\"" . $value . "\"") .
+                    Context::sanitizeHashedString("\"" . $value . "\"") .
                     ";\n";
                 // TODO: prepare concatenation here
                 $strOut .= self::getVariableSetString($arrayName, "#$" .

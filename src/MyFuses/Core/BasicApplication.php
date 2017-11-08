@@ -13,6 +13,8 @@
 namespace Candango\MyFuses\Core;
 
 use Candango\MyFuses\Engine\AbstractLoader;
+use Candango\MyFuses\Engine\ApplicationBuilderListener;
+use Candango\MyFuses\Engine\ApplicationLoaderListener;
 use Candango\MyFuses\Engine\Loader;
 use Candango\MyFuses\Controller;
 use Candango\MyFuses\Process\Lifecycle;
@@ -611,7 +613,7 @@ class BasicApplication implements Application
 	                    $circuit->setParent($this->getCircuit(
 	                        $circuit->getParentName()));
 	                }
-                } catch (MyFusesCircuitException $mfe) {
+                } catch (CircuitException $ce) {
 		            // TODO think about that
 	                //$mfe->breakProcess();
 		            return;
@@ -639,7 +641,7 @@ class BasicApplication implements Application
      *
      * @param string $name
      * @return Circuit
-     * @throws MyFusesCircuitException
+     * @throws CircuitException
      */
     public function getCircuit($name)
     {
@@ -651,11 +653,11 @@ class BasicApplication implements Application
 
     	if (is_null($circuit)) {
     	    $params = array("circuitName" => $name, "application" => &$this);
-                throw new MyFusesCircuitException($params,
-                    MyFusesCircuitException::NON_EXISTENT_CIRCUIT);
+                throw new CircuitException($params,
+                    CircuitException::NON_EXISTENT_CIRCUIT);
     	}
 
-    	MyFusesLifecycle::checkCircuit($circuit);
+    	Lifecycle::checkCircuit($circuit);
         return $circuit;
     }
 
@@ -687,7 +689,7 @@ class BasicApplication implements Application
     /**
      * Return the application controller
      * 
-     * @return MyFuses
+     * @return Controller
      */
     public function getController()
     {
@@ -863,12 +865,12 @@ class BasicApplication implements Application
      */
     public function setMode($mode)
     {
-        if (in_array($mode, array(MyFuses::MODE_DEVELOPMENT,
-            MyFuses::MODE_PRODUCTION))) {
+        if (in_array($mode, array(Controller::MODE_DEVELOPMENT,
+            Controller::MODE_PRODUCTION))) {
             $this->mode = $mode;
         } else {
             // TODO: This must be a warning in the log when implmented.
-            $this->mode = MyFuses::MODE_DEVELOPMENT;
+            $this->mode = Controller::MODE_DEVELOPMENT;
         }
     }
 
@@ -1466,11 +1468,9 @@ class BasicApplication implements Application
     /**
      * Add one application load listener
      *
-     * @param MyFusesApplicationLoaderListener $listener
+     * @param ApplicationLoaderListener $listener
      */
-    public function addLoadListener(
-        MyFusesApplicationLoaderListener $listener
-    )
+    public function addLoadListener(ApplicationLoaderListener $listener)
     {
         $this->loaderListeners[] = $listener;
     }
@@ -1488,11 +1488,9 @@ class BasicApplication implements Application
     /**
      * Add one application builder listener
      *
-     * @param MyFusesApplicationBuilderListener $listener
+     * @param ApplicationBuilderListener $listener
      */
-    public function addBuilderListener(
-        MyFusesApplicationBuilderListener $listener
-    )
+    public function addBuilderListener(ApplicationBuilderListener $listener)
     {
         $this->builderListeners[] = $listener;
     }

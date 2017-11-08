@@ -12,6 +12,8 @@
 
 namespace Candango\MyFuses\Core;
 
+use Candango\MyFuses\Engine\ApplicationBuilderListener;
+use Candango\MyFuses\Engine\ApplicationLoaderListener;
 use Candango\MyFuses\Engine\Loader;
 use Candango\MyFuses\Controller;
 
@@ -233,7 +235,7 @@ interface Application extends ICacheable
     /**
      * Return the application controller
      * 
-     * @return MyFuses
+     * @return Controller
      */
     public function getController();
 
@@ -579,9 +581,9 @@ interface Application extends ICacheable
     /**
      * Add one application load listener
      *
-     * @param MyFusesApplicationLoaderListener $listener
+     * @param ApplicationLoaderListener $listener
      */
-    public function addLoadListener(MyFusesApplicationLoaderListener $listener);
+    public function addLoadListener(ApplicationLoaderListener $listener);
 
     /**
      * Return all application load listerners
@@ -593,10 +595,9 @@ interface Application extends ICacheable
     /**
      * Add one application builder listener
      *
-     * @param MyFusesApplicationBuilderListener $listener
+     * @param ApplicationBuilderListener $listener
      */
-    public function addBuilderListener(
-        MyFusesApplicationBuilderListener $listener);
+    public function addBuilderListener(ApplicationBuilderListener $listener);
 
     /**
      * Return all application builder listerners

@@ -12,6 +12,9 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Process\Context;
+
 /**
  * Parameterized Verb  - ParameterizedVerb.php
  * 
@@ -82,8 +85,8 @@ abstract class ParameterizedVerb extends AbstractVerb
                         $params = $this->getErrorParams();
                         $params['verbName'] = "parameter";
                         $params['attrName'] = "name";
-                        throw new MyFusesVerbException($params,
-                            MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE);
+                        throw new VerbException($params,
+                            VerbException::MISSING_REQUIRED_ATTRIBUTE);
                     }
                     if (isset($child['attributes']['value'])) {
                         $value = $child['attributes']['value'];
@@ -114,15 +117,15 @@ abstract class ParameterizedVerb extends AbstractVerb
 
         foreach ($this->getParameters() as $name => $value) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .=  "MyFusesContext::setParameter(\"" . $name . "\", \"" .
-                $value . "\");\n";
+            $strOut .=  Context::class . "Context::setParameter(\"" . $name .
+                "\", \"" . $value . "\");\n";
         }
         $strOut .= $this->getRealParsedCode($commented, $identLevel);
 
         foreach ($this->getParameters() as  $name => $value) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .=  "MyFusesContext::restoreParameter(\"" . $name .
-                "\");\n";
+            $strOut .=  Context::class . "Context::restoreParameter(\"" .
+                $name . "\");\n";
         }
         $strOut .=  "\n";
 

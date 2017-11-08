@@ -12,6 +12,9 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Process\Context;
+
 /**
  * InstantiateVerb - InstantiateVerb.php
  *
@@ -188,8 +191,8 @@ class InvokeVerb extends AbstractVerb
                         $params = $this->getErrorParams();
                         $params['verbName'] = "argument";
                         $params['attrName'] = "value";
-                        throw new MyFusesVerbException($params,
-                            MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE);
+                        throw new VerbException($params,
+                            VerbException::MISSING_REQUIRED_ATTRIBUTE);
                     }
                 }
             }
@@ -243,14 +246,14 @@ class InvokeVerb extends AbstractVerb
         }
 
         if (!is_null($this->getVariable())) {
-            $strOut .= "MyFusesContext::setVariable( \"" .
+            $strOut .= Context::class . "Context::setVariable( \"" .
                 $this->getVariable() . "\", ";
         }
 
         // Begin method call
         if (!is_null($this->getMethod())) {
             if (is_null($this->getClass())) {
-                $strOut .= "MyFusesContext::getVariable( \"" .
+                $strOut .= Context::class . "Context::getVariable( \"" .
                     $this->getObject() . "\" )->" .
                     $this->getMethod();
             } else {

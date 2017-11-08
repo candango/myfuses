@@ -12,6 +12,10 @@
 
 namespace Candango\MyFuses\Core;
 
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Process\Context;
+use Candango\MyFuses\Process\Lifecycle;
+
 /**
  * FuseAction  - FuseAction.php
  *
@@ -97,7 +101,7 @@ class FuseAction extends AbstractAction implements CircuitAction
     public function &getCircuit()
     {
         $circuit = $this->circuit;
-        MyFusesLifecycle::checkCircuit($circuit);
+        Lifecycle::checkCircuit($circuit);
         return $this->circuit;
     }
 
@@ -152,11 +156,11 @@ class FuseAction extends AbstractAction implements CircuitAction
     {
         // TODO: this needs to go if enforced strict mode
         $XFA = null;
-        if (!$XFA = MyFusesContext::getVariable("XFA")) {
+        if (!$XFA = Context::getVariable("XFA")) {
             $XFA = array();
         }
         $XFA[$name] = $value;
-        MyFusesContext::setVariable("XFA", $XFA);
+        Context::setVariable("XFA", $XFA);
         global $XFA;
         $this->xfas[$name] = $value;
     }
@@ -222,7 +226,7 @@ class FuseAction extends AbstractAction implements CircuitAction
 
                 $strOut .= str_repeat("\t", $identLevel+1);
                 $strOut .= $myFusesString . "->setCurrentProperties(\"" .
-                        MyFusesLifecycle::PRE_FUSEACTION_PHASE . "\", "  . 
+                        Lifecycle::PRE_FUSEACTION_PHASE . "\", "  .
                         $actionString . ");\n\n";
 
                 // parsing pre fuseaction plugins
@@ -245,17 +249,17 @@ class FuseAction extends AbstractAction implements CircuitAction
                 $identLevel + ($inTheTry ? 1 : 0));
         }
 
-        $request = MyFuses::getInstance()->getRequest();
+        $request = Controller::getInstance()->getRequest();
 
         if (($this->getCircuit()->getName() == $request->getCircuitName()) &&
             ($this->getName() == $request->getActionName())) {
             $strOut .= str_repeat("\t", $identLevel + ($inTheTry ? 1 : 0));
             $strOut .= $myFusesString . "->setCurrentProperties(\"" .
-                MyFusesLifecycle::PROCESS_PHASE . "\", "  . 
+                Lifecycle::PROCESS_PHASE . "\", "  .
                 $actionString . ");\n\n";
         }
 
-        if (get_class($this) != "FuseAction" ) {
+        if (get_class($this) != "Candango\\MyFuses\\Core\\FuseAction" ) {
             $strOut .= str_repeat("\t", $identLevel + ($inTheTry ? 1 : 0));
             $strOut .= $actionString . "->doAction();\n";    
         }
@@ -270,7 +274,7 @@ class FuseAction extends AbstractAction implements CircuitAction
                 $this->getName() != "postfuseaction") {
                 $strOut .= str_repeat("\t", $identLevel+1);
                 $strOut .= $myFusesString . "->setCurrentPhase(\"" .
-                    MyFusesLifecycle::POST_FUSEACTION_PHASE . "\");\n\n";
+                    Lifecycle::POST_FUSEACTION_PHASE . "\");\n\n";
 
                 if (!is_null($action)) {
                     $strOut .= str_repeat("\t", $identLevel+1);
@@ -291,7 +295,7 @@ class FuseAction extends AbstractAction implements CircuitAction
                     $strOut .= "\t\$plugin->run();\n}\n\n";
                 }
                 $strOut .= str_repeat("\t", $identLevel);
-                $strOut .= "} catch (MyFusesFuseActionException \$mfae) {\n";
+                $strOut .= "} catch (FuseActionException \$mfae) {\n";
 
 	            if (count($application->getPlugins(
 	                Plugin::FUSEACTION_EXCEPTION_PHASE))) {
@@ -301,7 +305,8 @@ class FuseAction extends AbstractAction implements CircuitAction
 	                    " \"" . Plugin::FUSEACTION_EXCEPTION_PHASE . "\" )";
 	                $strOut .= "\tforeach (" . $pluginsStr . " as \$plugin) {\n";
 	                $strOut .= "\t\t\$plugin->handle(\$mfae);\n\t}\n";
-	                $strOut .= "\tforeach (MyFusesContext::getContext() as " .
+	                $contextClass = Context::class;
+	                $strOut .= "\tforeach (" . $contextClass . "::getContext() as " .
 	                    " \$key => \$value) {global \$\$value;}\n\n";
 	            }
                 $strOut .= str_repeat("\t", $identLevel);

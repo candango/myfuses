@@ -12,6 +12,8 @@
 
 namespace Candango\MyFuses\Core;
 
+use Candango\MyFuses\Util\FileHandler;
+
 /**
  * AbstractPlugin  - AbstractPlugin.php
  *
@@ -312,7 +314,7 @@ abstract class AbstractPlugin implements Plugin
             foreach($application->getController()->getPluginPaths() as $path) {
                 $tmpPath = "";
 
-                if(MyFusesFileHandler::isAbsolutePath($path)) {
+                if(FileHandler::isAbsolutePath($path)) {
                     $tmpPath = $path;
                 } else {
                     $tmpPath = $application->getPath() . $path;

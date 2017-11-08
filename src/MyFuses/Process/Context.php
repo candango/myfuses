@@ -13,7 +13,7 @@
 namespace Candango\MyFuses\Process;
 
 /**
- * MyFuses Context class - MyFusesContext.php
+ * MyFuses Context class - Context.php
  *
  * Utility to handle usual code operations.
  *

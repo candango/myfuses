@@ -12,6 +12,8 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Util\FileHandler;
+
 /**
  * IncludeVerb  - IncludeVerb.php
  * 
@@ -133,7 +135,7 @@ class IncludeVerb extends ParameterizedVerb
                 case "file":
                 case "template":
                     $file = $attribute;
-                    if (!MyFusesFileHandler::hasExtension($file, "php")) {
+                    if (!FileHandler::hasExtension($file, "php")) {
                         $file .= ".php";
                     }
                     $this->setFile($file);

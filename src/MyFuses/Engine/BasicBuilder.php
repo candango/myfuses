@@ -20,6 +20,7 @@ use Candango\MyFuses\Core\Circuit;
 use Candango\MyFuses\Core\CircuitAction;
 use Candango\MyFuses\Core\ClassDefinition;
 use Candango\MyFuses\Core\FuseAction;
+use Candango\MyFuses\Util\FileHandler;
 
 /**
  * BasicBuilder - BasicBuilder
@@ -279,7 +280,7 @@ class BasicBuilder implements Builder
         }
 
         if (!is_null($path)) {
-            if (!MyFusesFileHandler::isAbsolutePath($path)) {
+            if (!FileHandler::isAbsolutePath($path)) {
                 $path = $circuit->getApplication()->getPath() . $path;
             }
             require_once $path;    

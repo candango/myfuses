@@ -12,6 +12,7 @@
 
 namespace Candango\MyFuses\Process;
 
+use Candango\MyFuses\Core\Circuit;
 use Candango\MyFuses\Exceptions\CircuitException;
 
 /**

@@ -12,6 +12,15 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\CircuitAction;
+use Candango\MyFuses\Exceptions\ActionException;
+use Candango\MyFuses\Exceptions\CircuitException;
+use Candango\MyFuses\Process\Context;
+use Candango\MyFuses\Process\DebugEvent;
+use Candango\MyFuses\Process\Debugger;
+use Candango\MyFuses\Util\FileHandler;
+
 /**
  * DoVerb  - DoVerb.php
  *
@@ -65,8 +74,8 @@ class DoVerb extends ParameterizedVerb
             try {
                 $this->circuitToBeExecutedName = 
                     $this->getAction()->getCircuit()->getName();    
-            } catch (MyFusesCircuitException $mfe) {
-	            $mfe->breakProcess();
+            } catch (CircuitException $ce) {
+	            $ce->breakProcess();
 	        }
             $this->actionToBeExecutedName = $actionName;
         } else {
@@ -143,22 +152,22 @@ class DoVerb extends ParameterizedVerb
                 $action->getCircuit()->getName() . DIRECTORY_SEPARATOR;
 
             if (!file_exists($path)) {
-                MyFusesFileHandler::createPath($path);
+                FileHandler::createPath($path);
                 chmod($path, 0755);
             }   
 
-            MyFusesFileHandler::writeFile($actionFile, "<?php\n" .
-                MyFusesContext::sanitizeHashedString($strOut));
+            FileHandler::writeFile($actionFile, "<?php\n" .
+                Context::sanitizeHashedString($strOut));
 
-            MyFuses::getInstance()->getDebugger()->registerEvent(
-                new MyFusesDebugEvent(MyFusesDebugger::MYFUSES_CATEGORY,
+            Controller::getInstance()->getDebugger()->registerEvent(
+                new DebugEvent(Debugger::MYFUSES_CATEGORY,
                     "Fuseaction " . $action->getCircuit()->
                     getApplication()->getName() . "." . 
                     $action->getCircuit()->getName() . "." .
                     $action->getName() . " Compiled"));
         }
 
-        MyFusesContext::includeFile($actionFile);
+        Context::includeFile($actionFile);
     }
 
 	/**
@@ -177,13 +186,13 @@ class DoVerb extends ParameterizedVerb
             $this->actionToBeExecutedName; 
 
         try {
-            $action = MyFuses::getInstance()->getApplication(
+            $action = Controller::getInstance()->getApplication(
                 $appName)->getCircuit($this->circuitToBeExecutedName)->
 	            getAction($this->actionToBeExecutedName);
-        } catch (MyFusesCircuitException $mfce) {
-            $mfce->breakProcess();
-        } catch (MyFusesActionException $mffae) {
-            $mffae->breakProcess();
+        } catch (CircuitException $ce) {
+            $ce->breakProcess();
+        } catch (ActionException $ae) {
+            $ae->breakProcess();
         }
 
         //$this->generateActionFile($action, $commented);
@@ -220,5 +229,4 @@ class DoVerb extends ParameterizedVerb
 
         return $strOut;
     }
-
 }
