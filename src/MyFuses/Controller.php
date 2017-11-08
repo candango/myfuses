@@ -35,7 +35,7 @@ define("Candango\\MyFuses\\ROOT_PATH", dirname(__FILE__));
 clearstatcache();
 
 /**
- * MyFuses Platform - Platform.php
+ * MyFuses Platform - Controller.php
  *
  * Myfuses is a Framework that helps desing, develop and maintain PHP
  * applications. MyFuses is based on Fusebox and was designed to be more
@@ -48,7 +48,7 @@ clearstatcache();
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      f06b361b3bc6909ebf21f108d42b79a17cfb3924
  */
-class Platform
+class Controller
 {
 
     const MODE_DEVELOPMENT = "development";
@@ -813,7 +813,7 @@ class Platform
     public static function getInstance()
     {
         if (is_null(self::$instance)) {
-            self::$instance = new Platform();
+            self::$instance = new Controller();
         }
         return self::$instance;
     }
@@ -1101,7 +1101,7 @@ class Platform
  */
 function xfa($xfaName, $initQuery = false, $showFuseactionVariable = true)
 {
-    return Platform::getMySelfXfa($xfaName, $initQuery, $showFuseactionVariable);
+    return Controller::getMySelfXfa($xfaName, $initQuery, $showFuseactionVariable);
 }
 
 class MyFusesMemcacheServer
@@ -1186,4 +1186,4 @@ function security_is_authenticated()
     return true;
 }
 
-spl_autoload_register("Candango\MyFuses\Platform::autoload");
+spl_autoload_register("Candango\\MyFuses\\Controller::autoload");
