@@ -215,7 +215,7 @@ abstract class AbstractLoader implements Loader
         $circuit->setLastLoadTime(time());
         $circuit->setModified(true);
 
-        MyFuses::getInstance()->getDebugger()->registerEvent(
+        Controller::getInstance()->getDebugger()->registerEvent(
             new DebugEvent(Debugger::MYFUSES_CATEGORY,
                 "Loading circuit \"" . $circuit->getName() . "\""));
         return $data;

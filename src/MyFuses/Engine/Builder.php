@@ -12,6 +12,8 @@
 
 namespace Candango\MyFuses\Engine;
 
+use Candango\MyFuses\Core\Application;
+
 /**
  * Builder - Builder.php
  *
@@ -34,10 +36,10 @@ interface Builder
     /**
      * Add one application build listener
      *
-     * @param MyFusesApplicationBuilderListener $listener
+     * @param ApplicationBuilderListener $listener
      */
     public function addApplicationBuilderListener(
-        MyFusesApplicationBuilderListener $listener);
+        ApplicationBuilderListener $listener);
 
     /**
      * Return builder application

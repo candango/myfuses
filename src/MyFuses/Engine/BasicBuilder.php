@@ -12,6 +12,15 @@
 
 namespace Candango\MyFuses\Engine;
 
+use Candango\MyFuses\Core\AbstractPlugin;
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Core\Application;
+use Candango\MyFuses\Core\BasicCircuit;
+use Candango\MyFuses\Core\Circuit;
+use Candango\MyFuses\Core\CircuitAction;
+use Candango\MyFuses\Core\ClassDefinition;
+use Candango\MyFuses\Core\FuseAction;
+
 /**
  * BasicBuilder - BasicBuilder
  *
@@ -136,7 +145,7 @@ class BasicBuilder implements Builder
                 if ($application->hasCircuit($name)) {
                     $circuit = $application->getCircuit($name);
                 } else {
-                    $circuit = new BasicCircuit();    
+                    $circuit = new BasicCircuit();
                 }
 
                 //TODO handle this parameters changes
@@ -222,9 +231,10 @@ class BasicBuilder implements Builder
 
     /**
      * Builds action
-     * 
+     *
      * @param Circuit $circuit
      * @param array $data
+     * @return bool
      */
     public static function buildAction(Circuit $circuit, $data)
     {
@@ -625,10 +635,10 @@ class BasicBuilder implements Builder
     /**
      * Add one application builder listener
      *
-     * @param MyFusesApplicationBuilderListener $listener
+     * @param ApplicationBuilderListener $listener
      */
     public function addApplicationBuilderListener(
-        MyFusesApplicationBuilderListener $listener
+        ApplicationBuilderListener $listener
     ) {
         $this->applicationBuilderListeners[] = $listener;
     }
