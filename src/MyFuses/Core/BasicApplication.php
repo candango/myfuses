@@ -1418,7 +1418,7 @@ class BasicApplication implements Application
         $strOut = "";        
         foreach ($this->circuits as $circuit) {
             if ($circuit->getName() != 'MYFUSES_GLOBAL_CIRCUIT') {
-                $strOut .= "\$circuit = new BasicCircuit();\n";
+                $strOut .= "\$circuit = new " . BasicCircuit::class . "();\n";
                 $strOut .= "\$circuit->setName(\"" . $circuit->getName() .
                     "\" );\n";
                 $strOut .= "\$circuit->setPath(\"" .
@@ -1436,9 +1436,9 @@ class BasicApplication implements Application
         $strOut = str_replace('$circuit = ' . $this->getControllerClass() .
             '::getApplication("' . $this->getName() .
             '")->getCircuit("MYFUSES_GLOBAL_CIRCUIT");',
-            "\$circuit = new BasicCircuit();\n\$circuit->setName(" .
-            "\"MYFUSES_GLOBAL_CIRCUIT\");", $this->getCircuit(
-            'MYFUSES_GLOBAL_CIRCUIT')->getCachedCode());
+            "\$circuit = new " . BasicCircuit::class .
+            "();\n\$circuit->setName(\"MYFUSES_GLOBAL_CIRCUIT\");",
+            $this->getCircuit('MYFUSES_GLOBAL_CIRCUIT')->getCachedCode());
         $strOut .= "\$application->addCircuit(\$circuit);\n\n";
         return $strOut;
     }

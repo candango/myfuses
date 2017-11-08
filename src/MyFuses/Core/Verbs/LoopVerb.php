@@ -12,6 +12,10 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Core\Verb;
+
 /**
  * LoopVerb  - LoopVerb.php
  * 
@@ -182,7 +186,7 @@ class LoopVerb extends AbstractVerb
      *
      * @param Verb $verb
      */
-    public function addLoopVerb( Verb $verb )
+    public function addLoopVerb(Verb $verb)
     {
        $this->loopVerbs[] = $verb;
        $verb->setParent($this);
@@ -204,7 +208,7 @@ class LoopVerb extends AbstractVerb
             $to = $this->getTo();
             $index = $this->getIndex();
             $indexName = $this->getIndex();
-            if (MyFuses::strStartsWith($this->getIndex(), "$")) {
+            if (Controller::strStartsWith($this->getIndex(), "$")) {
                 $indexName = str_replace("\$", "", $this->getIndex());
             } else {
                 $index = "\$" . $this->getIndex();

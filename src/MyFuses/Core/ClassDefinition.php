@@ -117,7 +117,7 @@ class ClassDefinition implements ICacheable
     }
 
     public function getCachedCode() {
-        $strOut = "\$class = new ClassDefinition();\n";
+        $strOut = "\$class = new " . ClassDefinition::class . "();\n";
         $strOut .= "\$class->setName(\"" . $this->getName() . "\");\n";
         $strOut .= "\$class->setPath(\"" . addslashes($this->getPath()) .
             "\");\n";

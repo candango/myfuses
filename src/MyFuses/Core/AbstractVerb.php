@@ -11,6 +11,7 @@
  */
 
 namespace Candango\MyFuses\Core;
+use Candango\MyFuses\Exceptions\FileOperationException;
 use Candango\MyFuses\Exceptions\VerbException;
 use Candango\MyFuses\Process\Context;
 use Candango\MyFuses\Util\FileHandler;
@@ -31,7 +32,7 @@ abstract class AbstractVerb implements Verb
 {
     private static $verbTypes = array(
             "myfuses:do" => __NAMESPACE__ . "\\Verbs\\DoVerb",
-            "myfuses:if" => __NAMESPACE__ . "Verbs\\IfVerb",
+            "myfuses:if" => __NAMESPACE__ . "\\Verbs\\IfVerb",
             "myfuses:include" => __NAMESPACE__ . "\\Verbs\\IncludeVerb",
             "myfuses:instantiate" => __NAMESPACE__ . "\\Verbs\\InstantiateVerb",
             "myfuses:invoke" => __NAMESPACE__ . "\\Verbs\\InvokeVerb",
@@ -354,8 +355,11 @@ abstract class AbstractVerb implements Verb
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "} else {\n";
         $strOut .= str_repeat("\t", $identLevel+1);
-        $strOut .= "throw new MyFusesFileOperationException( " .
-        	$fileName . ", MyFusesFileOperationException::INCLUDE_FILE );\n";
+
+
+        $strOut .= "throw new " . FileOperationException::class . "(" .
+        	$fileName . ", " . FileOperationException::class .
+            "::INCLUDE_FILE);\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "}\n\n";
         return $strOut;

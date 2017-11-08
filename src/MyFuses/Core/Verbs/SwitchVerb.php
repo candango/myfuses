@@ -12,6 +12,9 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Exceptions\VerbException;
+
 /**
  * SwitchVerb  - SwitchVerb.php
  * 
@@ -106,8 +109,8 @@ class SwitchVerb extends AbstractVerb
         } else {
             $params = $this->getErrorParams();
             $params['attrName'] = "condition";
-            throw new MyFusesVerbException($params,
-                MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE);
+            throw new VerbException($params,
+                VerbException::MISSING_REQUIRED_ATTRIBUTE);
         }
 
         if (isset( $data['children'])) {
@@ -130,7 +133,7 @@ class SwitchVerb extends AbstractVerb
      * Set the switch case verbs
      *
      * @param array $caseChild
-     * @throws MyFusesVerbException
+     * @throws VerbException
      */
     private function setCaseVerbs($caseChild)
     {
@@ -154,8 +157,8 @@ class SwitchVerb extends AbstractVerb
             $params = $this->getErrorParams();
             $params['verbName'] = 'case';
             $params['attrName'] = "condition";
-            throw new MyFusesVerbException($params,
-                MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE);
+            throw new VerbException($params,
+                VerbException::MISSING_REQUIRED_ATTRIBUTE);
         }
     }
 

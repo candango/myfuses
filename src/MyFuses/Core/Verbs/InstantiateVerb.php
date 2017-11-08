@@ -246,8 +246,8 @@ class InstantiateVerb extends AbstractVerb
                         $params = $this->getErrorParams();
                         $params['verbName'] = "argument";
                         $params['attrName'] = "value";
-                        throw new MyFusesVerbException($params,
-                            MyFusesVerbException::MISSING_REQUIRED_ATTRIBUTE);
+                        throw new VerbException($params,
+                            VerbException::MISSING_REQUIRED_ATTRIBUTE);
                     }
                 }
             }

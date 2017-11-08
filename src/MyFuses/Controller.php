@@ -1045,7 +1045,8 @@ namespace Candango\MyFuses
             return false;
         }
 
-        # From http://bit.ly/2wvhQ21
+        // From http://bit.ly/2wvhQ21
+        // FIXME: This need to be on util
         public static function strStartsWith($haystack, $needle)
         {
             $length = strlen($needle);

@@ -356,7 +356,8 @@ abstract class AbstractPlugin implements Plugin
 
     public function getCachedCode()
     {
-        $strOut = "\$plugin = AbstractPlugin::getInstance( \$application, \"" . 
+        $strOut = "\$plugin = " . AbstractPlugin::class .
+            "::getInstance( \$application, \"" .
             $this->phase . "\", \"" . $this->name . "\", \"" . 
             addslashes( $this->path ) . 
             "\", \"" . $this->file . "\" );\n";

@@ -246,14 +246,14 @@ class InvokeVerb extends AbstractVerb
         }
 
         if (!is_null($this->getVariable())) {
-            $strOut .= Context::class . "Context::setVariable( \"" .
+            $strOut .= Context::class . "::setVariable( \"" .
                 $this->getVariable() . "\", ";
         }
 
         // Begin method call
         if (!is_null($this->getMethod())) {
             if (is_null($this->getClass())) {
-                $strOut .= Context::class . "Context::getVariable( \"" .
+                $strOut .= Context::class . "::getVariable( \"" .
                     $this->getObject() . "\" )->" .
                     $this->getMethod();
             } else {
