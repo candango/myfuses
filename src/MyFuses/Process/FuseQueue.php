@@ -10,7 +10,9 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "Process/FuseRequest.php";
+namespace Candango\MyFuses\Process;
+
+use Candango\MyFuses\Exceptions\CircuitException;
 
 /**
  * FuseQueue - FuseQueue.php

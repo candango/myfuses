@@ -14,12 +14,15 @@ namespace Candango\MyFuses;
 
 use Candango\MyFuses\Core\Application;
 use Candango\MyFuses\Core\Plugin;
+use Candango\MyFuses\Core\Verbs\DoVerb;
 use Candango\MyFuses\Exceptions\ActionException;
+use Candango\MyFuses\Exceptions\ApplicationException;
 use Candango\MyFuses\Exceptions\CircuitException;
 use Candango\MyFuses\Exceptions\Exception;
 use Candango\MyFuses\Process\Context;
 use Candango\MyFuses\Process\DebugEvent;
 use Candango\MyFuses\Process\Debugger;
+use Candango\MyFuses\Process\FuseRequest;
 use Candango\MyFuses\Process\Lifecycle;
 use Candango\MyFuses\Util\FileHandler;
 
@@ -417,7 +420,7 @@ class Controller
      *
      * @param string $name
      * @return Application
-     * @throws MyFusesApplicationException
+     * @throws ApplicationException
      */
     public static function getApplication(
         $name = Application::DEFAULT_APPLICATION_NAME
@@ -427,8 +430,8 @@ class Controller
         }
 
         $params = array("applicationName" => $name);
-        throw new MyFusesApplicationException($params,
-            MyFusesApplicationException::NON_EXISTENT_APPLICATION);
+        throw new ApplicationException($params,
+            ApplicationException::NON_EXISTENT_APPLICATION);
     }
 
     /**
@@ -442,7 +445,7 @@ class Controller
         try {
             self::getApplication($name);
             return true;
-        } catch (MyFusesApplicationException $mfae) {
+        } catch (ApplicationException $ae) {
             return false;
         }
     }
@@ -494,28 +497,28 @@ class Controller
 
     public function getCurrentPhase()
     {
-        return MyFusesLifecycle::getPhase();
+        return Lifecycle::getPhase();
     }
 
     public function setCurrentPhase($phase)
     {
-        MyFusesLifecycle::setPhase($phase);
+        Lifecycle::setPhase($phase);
     }
 
     public function getCurrentCircuit()
     {
-        return MyFusesLifecycle::getAction()->getCircuit();
+        return Lifecycle::getAction()->getCircuit();
     }
 
     public function getCurrentAction()
     {
-        return MyFusesLifecycle::getAction();
+        return Lifecycle::getAction();
     }
 
     public function setCurrentAction($fuseaction)
     {
         list($appName, $cName, $aName) = explode(".", $fuseaction);
-        MyFusesLifecycle::setAction($this->getApplication($appName)->
+        Lifecycle::setAction($this->getApplication($appName)->
         getCircuit($cName)->getAction($aName));
     }
 
@@ -547,23 +550,19 @@ class Controller
 
     public function createApplicationPath(Application $application)
     {
-        var_dump($application->getParsedPath());
         if (!file_exists($application->getParsedPath())) {
             mkdir($application->getParsedPath(), 0755, true);
 
-            $pathX = explode(DIRECTORY_SEPARATOR,
+            $path = explode(DIRECTORY_SEPARATOR,
                 substr($application->getParsedPath(), 0,
                     strlen($application->getParsedPath()) - 1));
 
-            var_dump($pathX);
-
-            while ($this->getParsedPath() != (
-                    implode(DIRECTORY_SEPARATOR, $pathX) .
+            while (FileHandler::sanitizePath($this->getParsedPath()) != (
+                    implode(DIRECTORY_SEPARATOR, $path) .
                     DIRECTORY_SEPARATOR)) {
                 // TODO: Review the chmod permission
-                var_dump($pathX);
-                chmod(implode(DIRECTORY_SEPARATOR, $pathX), 0755);
-                $pathX = array_slice($pathX, 0, count($pathX) - 1);
+                chmod(implode(DIRECTORY_SEPARATOR, $path), 0755);
+                $path = array_slice($path, 0, count($path) - 1);
             }
         }
     }
@@ -679,7 +678,7 @@ class Controller
                     1);
             }
             $strParse .= "\t" . $myFusesString . "->setCurrentProperties(\"" .
-                MyFusesLifecycle::POST_PROCESS_PHASE . "\", " .
+                Lifecycle::POST_PROCESS_PHASE . "\", " .
                 $actionString . ");\n\n";
 
             $selector = true;
@@ -694,7 +693,7 @@ class Controller
             if (count($application->getPlugins(Plugin::POST_PROCESS_PHASE))) {
                 $strParse .= "\t" . $myFusesString .
                     "->setCurrentProperties(\"" .
-                    MyFusesLifecycle::POST_PROCESS_PHASE . "\", " .
+                    Lifecycle::POST_PROCESS_PHASE . "\", " .
                     $actionString . " );\n\n";
                 $pluginsStr = $controllerName .
                     "::getInstance()->getApplication(\"" .
@@ -998,7 +997,7 @@ class Controller
         $circuit = $application->getCircuit($actionNameX[1]);
 
         $action = $circuit->getAction($actionNameX[2]);
-        require_once MYFUSES_ROOT_PATH . "core/verbs/DoVerb.php";
+
         DoVerb::doAction($action);
     }
 

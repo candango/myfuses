@@ -10,9 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Engine;
+
 /**
- * MyFusesApplicationLoaderListener - MyFusesApplicationLoaderListener.php
- *
+ * ApplicationLoaderListener - ApplicationLoaderListener
  * Interface defining an application loader listener.
  *
  * @category   controller
@@ -20,7 +21,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      5fd8d0153c67b1d5ceb21ff9117c98ebb9deda6b
  */
-interface MyFusesApplicationLoaderListener
+interface ApplicationLoaderListener
 {
     public function loadInitialized(BasicApplication $application);
 

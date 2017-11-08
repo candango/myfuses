@@ -9,7 +9,15 @@
  * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
-require_once MYFUSES_ROOT_PATH . "Process/FuseQueue.php";
+
+namespace Candango\MyFuses\Process;
+
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\Application;
+use Candango\MyFuses\Core\FuseAction;
+use Candango\MyFuses\Exceptions\ActionException;
+use Candango\MyFuses\Exceptions\ApplicationException;
+use Candango\MyFuses\Exceptions\CircuitException;
 
 /**
  * FuseRequest - FuseRequest.php
@@ -64,13 +72,13 @@ class FuseRequest
 
     public function __construct($applicationName = null)
     {
-        MyFuses::setCurrentPhase(Lifecycle::BUILD_PHASE);
+        Controller::setCurrentPhase(Lifecycle::BUILD_PHASE);
 
         if (is_null($applicationName)) {
-            $this->application = MyFuses::getInstance()->getApplication();
+            $this->application = Controller::getInstance()->getApplication();
         }
         else {
-            $this->application = MyFuses::getInstance()->getApplication(
+            $this->application = Controller::getInstance()->getApplication(
                 $applicationName);
         }
 
@@ -78,7 +86,7 @@ class FuseRequest
 
         $fuseactionVariable = $this->application->getFuseactionVariable();
 
-        if (MyFuses::isRewriting()) {
+        if (Controller::isRewriting()) {
             $root = dirname($_SERVER[ 'SCRIPT_NAME']);
             $pathX = explode("?", $_SERVER['REQUEST_URI']);
             $path = $pathX[0];
@@ -91,8 +99,8 @@ class FuseRequest
             $path = str_replace("myfuses.xml", "myfuses", $path);
 
             if ($this->hasPathFuseactionVariable($path)) {
-                if (MyFuses::getApplication()->ignoreFuseactionVariable()) {
-                    $urlRedirect = MyFuses::getMySelf();
+                if (Controller::getApplication()->ignoreFuseactionVariable()) {
+                    $urlRedirect = Controller::getMySelf();
                     if (substr($urlRedirect, -1) != "/"){
                         $urlRedirect .= "/";
                     }
@@ -101,7 +109,7 @@ class FuseRequest
                     if (!empty($_GET)) {
                         $urlRedirect .= "?" . http_build_query($_GET);
                     }
-                    MyFuses::sendToUrl($urlRedirect);
+                    Controller::sendToUrl($urlRedirect);
                 }
             }
 
@@ -130,7 +138,7 @@ class FuseRequest
             list($appName, $circuitName, $actionName) =
                 explode('.', $this->validFuseactionName);
 
-            $this->application = MyFuses::getInstance()->getApplication(
+            $this->application = Controller::getInstance()->getApplication(
                 $appName);
 
             if (is_null($this->application)) {
@@ -246,7 +254,7 @@ class FuseRequest
      *
      * @param string $path
      * @return string
-     * @throws MyFusesActionException
+     * @throws ActionException
      */
     public function resolvePath($path)
     {
@@ -280,15 +288,15 @@ class FuseRequest
                         'circuit' => $circuit ,
                         'application' => $this->getApplication()
                     );
-                    throw new MyFusesActionException($params,
-                        MyFusesActionException::NON_EXISTENT_FUSEACTION);
+                    throw new ActionException($params,
+                        ActionException::NON_EXISTENT_FUSEACTION);
                 }
-            } catch (CircuitException $mfce) {
+            } catch (CircuitException $ce) {
                 try {
                     $application = MyFuses::getApplication($path[0]);
                     return $application->getName() . "." .
                         $application->getDefaultFuseaction();    
-                } catch (ApplicationException $mfae) {
+                } catch (ApplicationException $ae) {
                     $this->setExtraParams($path);
                     return $this->getApplication()->getName() . "." . 
                         $this->getApplication()->getDefaultFuseaction();  
@@ -309,7 +317,7 @@ class FuseRequest
                     return $circuit->getApplication()->getName() . "." . 
                             $resolvedPath . "." . $action->getName();
                 }
-                catch ( MyFusesActionException $mffae ) {
+                catch (ActionException $ae) {
                     foreach( $circuit->getActions() as $action ) {
                         if( $action->isDefault() ) {
                             $this->setExtraParams( array_slice( 
@@ -320,8 +328,7 @@ class FuseRequest
                     }
                 }
                 
-            }
-            catch( CircuitException $mfce ) {
+            } catch (CircuitException $ce) {
                 try {
                     $application = MyFuses::getApplication($path[0]);
 
@@ -345,7 +352,7 @@ class FuseRequest
 
                                 return $resolvedPath . "." .
                                     $action->getName();
-                            } catch (MyFusesActionException $mffae) {
+                            } catch (ActionException $mffae) {
                                 foreach ($circuit->getActions() as $action){
                                     if($action->isDefault()){
                                         $this->setExtraParams(
@@ -366,14 +373,14 @@ class FuseRequest
                                 }
                             }
                         }
-                    } catch(CircuitException $mfce) {
+                    } catch(CircuitException $ce) {
                         $this->setExtraParams(
                             array_slice($path, 1, count($path))
                         );
                         return $application->getName() . "." .
                             $application->getDefaultFuseaction();
                     }
-                } catch(ApplicationException $mfae) {
+                } catch(ApplicationException $ae) {
                     $this->setExtraParams($path);
                     return $this->getApplication()->getName() . "." .
                         $this->getApplication()->getDefaultFuseaction();

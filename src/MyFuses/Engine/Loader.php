@@ -51,10 +51,10 @@ interface Loader
     /**
      * Add one application load listener
      *
-     * @param MyFusesApplicationLoaderListener $listener
+     * @param ApplicationLoaderListener $listener
      */
     public function addApplicationLoadListener(
-        MyFusesApplicationLoaderListener $listener);
+        ApplicationLoaderListener $listener);
 
     /**
      * Return the application

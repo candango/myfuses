@@ -10,9 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+namespace Candango\MyFuses\Engine;
+
 /**
- * MyFusesApplicationBuilderListener - MyFusesApplicationBuilderListener.php
- *
+ * ApplicationBuilderListener - ApplicationBuilderListener
  * Interface defining an application builder listener
  *
  * @category   controller
@@ -20,7 +21,7 @@
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      80f65515c7288e149b488c889009acb65002d371
  */
-interface MyFusesApplicationBuilderListener
+interface ApplicationBuilderListener
 {
     public function applicationBuildPerformed(Application $application,
         &$data);

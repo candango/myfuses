@@ -176,7 +176,7 @@ class XmlLoader extends AbstractLoader
 
         try {
             // FIXME put no warning modifier in SimpleXMLElement call
-            $rootNode = @new SimpleXMLElement($fileCode);
+            $rootNode = @new \SimpleXMLElement($fileCode);
         } catch (\Exception $e) {
             // FIXME handle error
             echo "<b>" . $this->getApplication()->getCompleteFile() .
@@ -206,7 +206,7 @@ class XmlLoader extends AbstractLoader
      * Load a circuit file
      * 
      * @param Circuit $circuit
-     * @return SimpleXMLElement
+     * @return \SimpleXMLElement
      * @throws FileOperationException
      */
     private function loadCircuitFile(Circuit $circuit)
@@ -231,8 +231,8 @@ class XmlLoader extends AbstractLoader
 
         try {
             // FIXME put no warning modifier in SimpleXMLElement call
-            @$rootNode = new SimpleXMLElement($fileCode);
-        } catch (Exception $e) {
+            @$rootNode = new \SimpleXMLElement($fileCode);
+        } catch (\Exception $e) {
             // FIXME handle error
             echo "<b>" . $circuitFile . "<b><br>";
             die($e->getMessage());
@@ -241,7 +241,7 @@ class XmlLoader extends AbstractLoader
         return $rootNode;
     }
 
-    public static function getDataFromXML($name, SimpleXMLElement $node)
+    public static function getDataFromXML($name, \SimpleXMLElement $node)
     {
         $nameX = explode("_ns_", $name);
 
@@ -277,7 +277,7 @@ class XmlLoader extends AbstractLoader
                     $child->asXML());
                 $xml = preg_replace(
                     "@(\w+|\d+):(\w+|\d+)([=])@", "$1_ns_$2$3", $xml);
-                $child = new SimpleXMLElement(preg_replace(
+                $child = new \SimpleXMLElement(preg_replace(
                     "@([<|</])(\w+|\d+):(\w+|\d+)( |)@", "$1$2_ns_$3$4", 
                     $xml));
                 $data['children'][] = self::getDataFromXML($key, $child);

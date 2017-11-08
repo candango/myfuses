@@ -222,7 +222,7 @@ abstract class Lifecycle
      */
     public static function buildApplications()
     {
-        foreach (MyFuses::getInstance()->getApplications() as
+        foreach (Controller::getInstance()->getApplications() as
             $key => $application) {
             if ($key != Application::DEFAULT_APPLICATION_NAME) {
                 BasicBuilder::buildApplication($application);

@@ -12,8 +12,12 @@
 
 namespace Candango\MyFuses\Engine;
 
+use Candango\MyFuses\Controller;
 use Candango\MyFuses\Core\Application;
 use Candango\MyFuses\Core\Circuit;
+use Candango\MyFuses\Process\DebugEvent;
+use Candango\MyFuses\Process\Debugger;
+
 /**
  * AbstractMyFusesLoader - AbstractMyFusesLoader.php
  *
@@ -114,9 +118,9 @@ abstract class AbstractLoader implements Loader
             }
             $this->getApplication()->setDefault($default);
 
-            if (MyFuses::getApplication()->isDebugAllowed()) {
-                MyFuses::getInstance()->getDebugger()->registerEvent(
-                    new MyFusesDebugEvent(MyFusesDebugger::MYFUSES_CATEGORY,
+            if (Controller::getApplication()->isDebugAllowed()) {
+                Controller::getInstance()->getDebugger()->registerEvent(
+                    new DebugEvent(Debugger::MYFUSES_CATEGORY,
                         "Application " . $this->getApplication()->getName() .
                         " Restored"));
             }
@@ -174,10 +178,9 @@ abstract class AbstractLoader implements Loader
         $this->getApplication()->setParse(true);
         $this->getApplication()->setStore(true);
 
-        MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent( MyFusesDebugger::MYFUSES_CATEGORY,
-                "Application " . $this->getApplication()->getName() .
-                " Loaded"));
+        Controller::getInstance()->getDebugger()->registerEvent(
+            new DebugEvent(Debugger::MYFUSES_CATEGORY, "Application " .
+                $this->getApplication()->getName() . " Loaded"));
     }
 
     public function loadCircuit(Circuit $circuit)
@@ -213,7 +216,7 @@ abstract class AbstractLoader implements Loader
         $circuit->setModified(true);
 
         MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent(MyFusesDebugger::MYFUSES_CATEGORY,
+            new DebugEvent(Debugger::MYFUSES_CATEGORY,
                 "Loading circuit \"" . $circuit->getName() . "\""));
         return $data;
     }
@@ -237,10 +240,10 @@ abstract class AbstractLoader implements Loader
     /**
      * Add one application load listener
      *
-     * @param MyFusesApplicationLoaderListener $listener
+     * @param ApplicationLoaderListener $listener
      */
     public function addApplicationLoadListener(
-        MyFusesApplicationLoaderListener $listener)
+        ApplicationLoaderListener $listener)
     {
         $this->applicationLoaderListeners[] = $listener;
     }

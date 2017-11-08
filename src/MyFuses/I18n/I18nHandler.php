@@ -100,13 +100,11 @@ abstract class I18NHandler
             I18nContext::setStore(true);
         }
 
-        Controller::getApplication()->getParsedPath();
-
         if ($this->mustLoad()) {
-
-            var_dump($i18nFile);
             foreach (Controller::getInstance()->getI18nPaths() as $path) {
+                $path = FileHandler::sanitizePath($path);
                 if (FileHandler::isAbsolutePath($path)) {
+                    var_dump($path);
                     $this->digPath($path);
                 } else {
                     foreach(Controller::getInstance()->getApplications()
@@ -117,6 +115,7 @@ abstract class I18NHandler
                     }
                 }
             }
+
             I18nContext::setTime(time());
             I18nContext::setStore(true);
         }
@@ -126,8 +125,8 @@ abstract class I18NHandler
     private function mustLoad()
     {
         foreach (Controller::getInstance()->getI18nPaths() as $path) {
+            $path = FileHandler::sanitizePath($path);
             if (FileHandler::isAbsolutePath($path)) {
-                var_dump(FileHandler::isAbsolutePath($path));
                 if ($this->checkPath($path)) {
                     return true;
                 }
@@ -149,16 +148,18 @@ abstract class I18NHandler
     private function checkPath($path)
     {
         if (file_exists($path)) {
-
-            $dir = dir( $path );
-
-            while (false !== ($subdir = $dir->read())) {
-                $localePath = FileHandler::sanitizePath(
-                    $path . $subdir);
-                if(file_exists($localePath . "expressions.xml" )) {
-                    if(filemtime($localePath . "expressions.xml") >
-                        I18nContext::getTime()) {
-                        return true;
+            $it = new \RecursiveDirectoryIterator($path);
+            foreach (new \RecursiveIteratorIterator($it, 1) as $subdir) {
+                if ($subdir->getFileName() != "." &&
+                    $subdir->getFileName() != "..") {
+                    if ($subdir->isDir()) {
+                        $expFile = FileHandler::sanitizePath($subdir) .
+                            "expressions.xml";
+                        if (file_exists($expFile)) {
+                            if (filemtime($expFile) > I18nContext::getTime()) {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
@@ -173,6 +174,8 @@ abstract class I18NHandler
      */
     private function digPath($path)
     {
+        $path = FileHandler::sanitizePath($path);
+
         if (file_exists($path)) {
 
             $dir = dir($path);
@@ -187,9 +190,7 @@ abstract class I18NHandler
                 if (file_exists($localePath . "expressions.xml")) {
                     if (filemtime($localePath . "expressions.xml") >
                         I18nContext::getTime()) {
-                        $doc = $this->loadFile($localePath .
-                                "expressions.xml");
-
+                        $doc = $this->loadFile($localePath . "expressions.xml");
                         foreach ($doc->expression as $expression) {
                             $name = "";
                             foreach ($expression->attributes() as $key =>
@@ -242,11 +243,11 @@ abstract class I18NHandler
     {
         try {
             // FIXME put no warning modifier in SimpleXMLElement call
-            return @new SimpleXMLElement(file_get_contents($file));
-        } catch (Exception $e) {
+            return @new \SimpleXMLElement(file_get_contents($file));
+        } catch (\Exception $e) {
             // FIXME handle error
-            echo "<b>" . MyFuses::getApplication()->
-                getCompleteFile() . "<b><br>";
+            echo "<b>" . Controller::getApplication()->getCompleteFile() .
+                "<b><br>";
             die($e->getMessage());
         }
     }
