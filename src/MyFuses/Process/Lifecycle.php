@@ -15,7 +15,6 @@ namespace Candango\MyFuses\Process;
 use Candango\MyFuses\Core\Application;
 use Candango\MyFuses\Core\Circuit;
 use Candango\MyFuses\Core\CircuitAction;
-use Candango\MyFuses\Engine\BasicBuilder;
 use Candango\MyFuses\I18n\I18NHandler;
 use Candango\MyFuses\Controller;
 
@@ -226,7 +225,8 @@ abstract class Lifecycle
         foreach (Controller::getInstance()->getApplications() as
             $key => $application) {
             if ($key != Application::DEFAULT_APPLICATION_NAME) {
-                BasicBuilder::buildApplication($application);
+                Controller::getInstance()->getBuilder()->buildApplication(
+                    $application);
              }
          }
     }
@@ -246,7 +246,7 @@ abstract class Lifecycle
 
             self::loadApplication(Controller::getApplication("myfuses"));
 
-            BasicBuilder::buildApplication(
+            Controller::getInstance()->getBuilder()->buildApplication(
                 Controller::getApplication("myfuses")
             );
         }
@@ -261,7 +261,8 @@ abstract class Lifecycle
                     $circuit->setLoaded(true);
                     $circuit->setData($circuit->getApplication()->getLoader()->
                         loadCircuit($circuit));
-                    BasicBuilder::buildCircuit($circuit);
+                    Controller::getInstance()->getBuilder()->buildCircuit(
+                        $circuit);
                 }
             }
         }

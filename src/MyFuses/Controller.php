@@ -16,6 +16,7 @@ namespace Candango\MyFuses
     use Candango\MyFuses\Core\Application;
     use Candango\MyFuses\Core\Plugin;
     use Candango\MyFuses\Core\Verbs\DoVerb;
+    use Candango\MyFuses\Engine\Builder;
     use Candango\MyFuses\Exceptions\ActionException;
     use Candango\MyFuses\Exceptions\ApplicationException;
     use Candango\MyFuses\Exceptions\CircuitException;
@@ -559,7 +560,17 @@ namespace Candango\MyFuses
         }
 
         /**
-         * Return controller debugger
+         * Return the controller builder
+         *
+         * @return Builder
+         */
+        public function getBuilder()
+        {
+            return $this->builder;
+        }
+
+        /**
+         * Return the controller debugger
          *
          * @return Debugger
          */
@@ -852,7 +863,7 @@ namespace Candango\MyFuses
          * process.
          * MyFuses is implemented using the singleton pattern.
          *
-         * @return MyFuses
+         * @return Controller
          * @static
          */
         public static function getInstance()

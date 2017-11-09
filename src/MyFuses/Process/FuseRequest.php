@@ -72,7 +72,7 @@ class FuseRequest
 
     public function __construct($applicationName = null)
     {
-        Controller::setCurrentPhase(Lifecycle::BUILD_PHASE);
+        Controller::getInstance()->setCurrentPhase(Lifecycle::BUILD_PHASE);
 
         if (is_null($applicationName)) {
             $this->application = Controller::getInstance()->getApplication();

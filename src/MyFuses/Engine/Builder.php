@@ -31,7 +31,7 @@ interface Builder
      *
      * @param Application $application
      */
-    public static function buildApplication(Application $application);
+    public function buildApplication(Application $application);
 
     /**
      * Add one application build listener
