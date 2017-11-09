@@ -66,6 +66,8 @@ namespace Candango\MyFuses
         const MODE_DEVELOPMENT = "development";
         const MODE_PRODUCTION = "production";
 
+        const ROOT_PATH = ROOT_PATH;
+
         /**
          * Memcache enabled flag
          *

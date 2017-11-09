@@ -17,8 +17,6 @@ use Candango\MyFuses\Core\Circuit;
 use Candango\MyFuses\Core\CircuitAction;
 use Candango\MyFuses\I18n\I18NHandler;
 use Candango\MyFuses\Controller;
-
-use const Candango\MyFuses\ROOT_PATH;
 use Candango\MyFuses\Util\FileHandler;
 
 /**
@@ -235,7 +233,7 @@ abstract class Lifecycle
     {
         if (Controller::getApplication()->isToolsAllowed()) {
             $projectPath = FileHandler::sanitizePath(
-                realpath(ROOT_PATH . DIRECTORY_SEPARATOR . ".." .
+                realpath(Controller::ROOT_PATH . DIRECTORY_SEPARATOR . ".." .
                     DIRECTORY_SEPARATOR . "..")
             );
 
