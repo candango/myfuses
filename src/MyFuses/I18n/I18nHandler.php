@@ -22,7 +22,7 @@ use Candango\MyFuses\Util\FileHandler;
  * Utility to handle usual I18n operations.
  *
  * @category   I18n
- * @package    candango.myfuses.I18n
+ * @package    Candango.MyFuses.I18n
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c36c8ff941c440d0c01ea0341e03345dd9727b10
  */

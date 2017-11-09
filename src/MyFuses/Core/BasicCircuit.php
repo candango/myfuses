@@ -12,6 +12,8 @@
 
 namespace Candango\MyFuses\Core;
 
+use Candango\MyFuses\Util\FileHandler;
+
 /**
  * BasicCircuit - BasicCircuit.php
  *
@@ -689,7 +691,7 @@ class BasicCircuit implements Circuit
             $this->getParentName() . "\");\n";
         if ($this->getName() !== "MYFUSES_GLOBAL_CIRCUIT") {
             $strOut .= "\$circuit->setData(unserialize(" .
-                "MyFusesFileHandler::readFile(\"" .
+                FileHandler::class . "::readFile(\"" .
                 $this->getCompleteCacheDataFile() . "\")));\n";
         } else {
             $strOut .= "\$circuit->setData(array());\n";

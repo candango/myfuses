@@ -56,17 +56,22 @@ class VerbException extends Exception
      */
     public function __construct($params, $operation)
     {
-        $operationMessageMap = array(
-            self::MISSING_REQUIRED_ATTRIBUTE => 
-                "getMissingRequiredAttributeMessage",
-            self::MISSING_NAMESPACE => "getMissingNamespaceMessage",
-            self::NON_EXISTENT_VERB =>
-                "getNonExistentVerbMessage"
-        );
+        $msg = "";
+        $detail = "";
 
-        list($msg, $detail) = $this->$operationMessageMap[$operation]($params);
+        switch ($operation) {
+            case self::MISSING_REQUIRED_ATTRIBUTE:
+                list($msg, $detail) = $this->getMissingRequiredAttributeMessage($params);
+                break;
+            case self::MISSING_NAMESPACE:
+                list($msg, $detail) = $this->getMissingNamespaceMessage($params);
+                break;
+            case self::NON_EXISTENT_VERB:
+                list($msg, $detail) = $this->getNonExistentVerbMessage($params);
+                break;
+        }
 
-        parent::__construct($msg, $detail, self::MISSING_REQUIRED_ATTRIBUTE);
+        parent::__construct($msg, $detail, $operation);
     }
 
     /**

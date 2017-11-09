@@ -20,6 +20,7 @@ use Candango\MyFuses\I18n\I18NHandler;
 use Candango\MyFuses\Controller;
 
 use const Candango\MyFuses\ROOT_PATH;
+use Candango\MyFuses\Util\FileHandler;
 
 /**
  * Lifecycle - Lifecycle.php
@@ -233,7 +234,12 @@ abstract class Lifecycle
     public static function enableTools()
     {
         if (Controller::getApplication()->isToolsAllowed()) {
-            $appReference['path'] = ROOT_PATH . "myfuses_tools/";
+            $projectPath = FileHandler::sanitizePath(
+                realpath(ROOT_PATH . DIRECTORY_SEPARATOR . ".." .
+                    DIRECTORY_SEPARATOR . "..")
+            );
+
+            $appReference['path'] = $projectPath . "myfuses_tools/";
 
             Controller::getInstance()->createApplication("myfuses",
                 $appReference);

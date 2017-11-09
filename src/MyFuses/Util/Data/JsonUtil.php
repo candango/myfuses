@@ -87,7 +87,7 @@ class JsonUtil
                 if (class_exists($data['data_class_name'])) {
                     $object = new $data['data_class_name']();
 
-                    $refClass = new ReflectionClass($object);
+                    $refClass = new \ReflectionClass($object);
 
                     foreach ($data as $key => $value) {
                         $phpValue = null;
@@ -123,7 +123,7 @@ class JsonUtil
                                     $object->$methodName($phpValue);
                                 }
                             }
-                        } catch (ReflectionException $re) {
+                        } catch (\ReflectionException $re) {
                             switch ($re->getCode()) {
                                 // ignoring non existent properties and methods
                                 case 0;

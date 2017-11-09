@@ -176,7 +176,7 @@ abstract class Exception extends \Exception
                             substr($value, 0, 40) . "...");
                     }
                     $traceX[$key] = "<b>" . gettype($value) .
-                        "</b> => '" . $value . "'"  ;
+                        "</b> => '" . print_r($value, true) . "'"  ;
                 }
             }
         }

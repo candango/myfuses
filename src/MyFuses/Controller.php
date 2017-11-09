@@ -20,6 +20,7 @@ namespace Candango\MyFuses
     use Candango\MyFuses\Exceptions\ApplicationException;
     use Candango\MyFuses\Exceptions\CircuitException;
     use Candango\MyFuses\Exceptions\Exception;
+    use Candango\MyFuses\Exceptions\ProcessException;
     use Candango\MyFuses\Process\Context;
     use Candango\MyFuses\Process\DebugEvent;
     use Candango\MyFuses\Process\Debugger;
@@ -30,25 +31,32 @@ namespace Candango\MyFuses
     define("Candango\\MyFuses\\ROOT_PATH", dirname(__FILE__));
 
     // cleaning file functions cache
-    // As per documentation http://php.net/manual/en/function.clearstatcache.php
+    // As per documentation
+    // http://php.net/manual/en/function.clearstatcache.php
     // We do that: "if the same file is being checked multiple times within a
-    // single script, and that file is in danger of being removed or changed during
-    // that script's operation, you may elect to clear the status cache."
+    // single script, and that file is in danger of being removed or changed
+    // during that script's operation, you may elect to clear the
+    // status cache."
     // TODO: Use this function for the files being handled by the framework
     // TODO: Meaning: myfuses/fusebox.xml and circuit.xml
     clearstatcache();
 
     /**
-     * MyFuses Platform - Controller.php
+     * MyFuses Controller - Controller.php
      *
-     * Myfuses is a Framework that helps desing, develop and maintain PHP
-     * applications. MyFuses is based on Fusebox and was designed to be more
+     * Myfuses is a Framework that helps design, develop and maintain PHP
+     * applications. It is based on Fusebox and was designed to be more
      * extensible and stable.
      *
-     * PHP version 5
+     * The Controller register applications and handle requests based on
+     * a application.circuit.action value defined on the fuseaction variable
+     * received by get.
+     *
+     * MyFuses will convert paths sent to the main controller script and
+     * transform them to the application.circuit.action pattern.
      *
      * @category   controller
-     * @package    candango.myfuses
+     * @package    Candango.Myfuses
      * @author     Flavio Garcia <piraz at candango.org>
      * @since      f06b361b3bc6909ebf21f108d42b79a17cfb3924
      */
@@ -101,10 +109,11 @@ namespace Candango\MyFuses
         private $verbPaths = array();
 
         /**
-         * Unique instance to be created in process. MyFuses is implemmented using
-         * the singleton pattern.
+         * Unique controller instance to be created/referenced during the
+         * request. It is returned by the getInstance method following a
+         * singleton pattern.
          *
-         * @var MyFuses
+         * @var Controller
          */
         protected static $instance;
 
@@ -136,10 +145,30 @@ namespace Candango\MyFuses
          */
         private $debugger;
 
+        /**
+         * Controller(Framework) parsed path.
+         *
+         * This path will be used to compose applications parsed path.
+         *
+         * @var string
+         */
         private $parsedPath;
 
+        /**
+         * Default class to be used when registering an application in the
+         * controller instance.
+         *
+         * @var string
+         */
         private $applicationClass = __NAMESPACE__ . "\\Core\\BasicApplication";
 
+        /**
+         * Default response type to be set in the header.
+         *
+         * It is possible to change this programmatically or using a verb.
+         *
+         * @var string
+         */
         private $responseType = "text/html";
 
         const VERSION = "0.9.9";
@@ -152,7 +181,7 @@ namespace Candango\MyFuses
         private static $i18nType = I18n\I18nHandler::NATIVE_TYPE;
 
         /**
-         * MyFuses constructor
+         * MyFuses Controller constructor
          */
         protected function __construct()
         {
@@ -722,7 +751,8 @@ namespace Candango\MyFuses
                 $strParse .= "\theader(\"Content-Type: \" . \$strContent);\n";
                 // Flushed global output buffer content
                 $strParse .= "\tob_end_flush();\n";
-                $strParse .= "} catch (MyFusesProcessException \$mpe) {\n";
+                $strParse .= "} catch (" . ProcessException::class .
+                    " \$pe) {\n";
 
                 if (count($application->getPlugins(
                     Plugin::PROCESS_ERROR_PHASE))) {
@@ -732,7 +762,7 @@ namespace Candango\MyFuses
                         " \"" . Plugin::PROCESS_ERROR_PHASE . "\" )";
                     $strParse .= "\tforeach(" . $pluginsStr .
                         " as \$plugin) {\n";
-                    $strParse .= "\t\t\$plugin->handle( \$mpe );\n\t}\n";
+                    $strParse .= "\t\t\$plugin->handle( \$pe );\n\t}\n";
                     $strParse .= "\tforeach(" . $contextClass .
                         "::getContext() as " .
                         " \$key => \$value) {global \$\$value;}\n\n";

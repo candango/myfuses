@@ -1,2 +1,4 @@
 <?php
-$application = MyFuses::getInstance()->getApplication($_GET['application']);
+use Candango\MyFuses\Controller;
+
+$application = Controller::getInstance()->getApplication($_GET['application']);

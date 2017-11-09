@@ -20,7 +20,7 @@ namespace Candango\MyFuses\I18n {
      * Utility that controls I18n state.
      *
      * @category   I18n
-     * @package    myfuses.util.I18n
+     * @package    Candango.MyFuses.I18n
      * @author     Flavio Garcia <piraz at candango.org>
      * @since      c36c8ff941c440d0c01ea0341e03345dd9727b10
      */

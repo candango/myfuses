@@ -22,7 +22,7 @@ use Candango\MyFuses\Util\FileHandler;
  * implementation don't need any other lib to work.
  *
  * @category   I18n
- * @package    myfuses.util.I18n
+ * @package    Candango.MyFuses.I18n
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      38b53c53441bab6b440803e69d06f0aef51fa3a2
  */

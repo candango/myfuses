@@ -10,6 +10,9 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Util\Data\JsonUtil;
+
 /**
  * DataToJsonVerb  - DataToJsonVerb.php
  *
@@ -154,8 +157,8 @@ class DataToJsonVerb extends AbstractVerb
             }
 
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .= "echo(MyFusesJsonUtil::toJson(\"" . $this->getValue() .
-                "\"));\n";
+            $strOut .= "echo(" . JsonUtil::class . "::toJson(\"" .
+                $this->getValue() . "\"));\n";
 
             if ($this->isDie()) {
                 // Flushed global output buffer content

@@ -311,22 +311,25 @@ abstract class AbstractPlugin implements Plugin
 
         // FIXME: handle missing included file exception
         if($path == "") {
-            foreach($application->getController()->getPluginPaths() as $path) {
+            foreach ($application->getController()->getPluginPaths() as $path) {
+                $path = FileHandler::sanitizePath($path);
+
                 $tmpPath = "";
 
-                if(FileHandler::isAbsolutePath($path)) {
+                if (FileHandler::isAbsolutePath($path)) {
                     $tmpPath = $path;
                 } else {
                     $tmpPath = $application->getPath() . $path;
                 }
                 
-                if(file_exists($tmpPath . $file)) {
-                    $path = $tmpPath; break;
+                if (file_exists($tmpPath . $file)) {
+                    $path = $tmpPath;
+                    break;
                 }
             }
         }
 
-        require_once $path . $file;
+        require_once FileHandler::sanitizePath($path) . $file;
 
         $plugin = new $class();
         $plugin->setName($name);

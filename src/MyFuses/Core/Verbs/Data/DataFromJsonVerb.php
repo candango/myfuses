@@ -10,6 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Util\Data\JsonUtil;
+
 /**
  * DataFromJsonVerb  - DataFromJsonVerb.php
  *
@@ -134,14 +138,15 @@ class DataFromJsonVerb extends AbstractVerb
 
         if (is_null( $this->getValue())) {
             if (is_null($this->getUrl())) {
-                $strValue = "#MyFusesJsonUtil::fromJsonUrl(" .
-                    "MyFuses::getMySelfXfa(\"" . $this->getXfa() . "\"))#";
+                $strValue = "#" . JsonUtil::class . "::fromJsonUrl(" .
+                    "" . Controller::class . "::getMySelfXfa(\"" .
+                    $this->getXfa() . "\"))#";
             } else {
-                $strValue = "#MyFusesJsonUtil::fromJsonUrl(\"" .
+                $strValue = "#" . JsonUtil::class . "::fromJsonUrl(\"" .
                     $this->getUrl() . "\")#";
             }
         } else {
-            $strOut .= "\$value = MyFusesJsonUtil::fromJson(\"" .
+            $strOut .= "\$value = " . JsonUtil::class . "::fromJson(\"" .
                 $this->getValue() . "\");\n";
 
             $strValue = "#\$value#" ;

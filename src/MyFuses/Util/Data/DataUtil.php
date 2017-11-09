@@ -37,7 +37,7 @@ class DataUtil
     {
         $itemArray = array();
 
-        $refClass = new ReflectionClass($item);
+        $refClass = new \ReflectionClass($item);
 
         foreach ($refClass->getProperties() as $property) {
             if ($property->isPublic()) {

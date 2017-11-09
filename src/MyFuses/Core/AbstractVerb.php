@@ -11,6 +11,7 @@
  */
 
 namespace Candango\MyFuses\Core;
+
 use Candango\MyFuses\Exceptions\FileOperationException;
 use Candango\MyFuses\Exceptions\VerbException;
 use Candango\MyFuses\Process\Context;
@@ -159,7 +160,7 @@ abstract class AbstractVerb implements Verb
      * @param array $data
      * @param CircuitAction $action
      * @return Verb
-     * @throws MyFusesVerbException
+     * @throws VerbException
      */
     public static function getInstance(&$data, CircuitAction $action = null)
     {
@@ -186,6 +187,7 @@ abstract class AbstractVerb implements Verb
                     } else {
                         foreach($action->getCircuit()->getApplication()->
                             getController()->getVerbPaths() as $vPath) {
+                            $vPath = FileHandler::sanitizePath($vPath);
                             if(file_exists($vPath . $path)) {
                                 $path = $vPath . $path;
                             } 

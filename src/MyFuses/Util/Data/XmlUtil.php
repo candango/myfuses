@@ -37,7 +37,7 @@ class XmlUtil
     public static function toXml($data, $root = "myfuses_xml")
     {
         $strXml = "<" . $root . ">\n";
-        $strXml .= self::doXmlTransformation($data);
+        $strXml .= self::transformToXml($data);
         $strXml .= "</" . $root . ">";
         return $strXml;
     }
@@ -50,7 +50,7 @@ class XmlUtil
      * @param string $tagName
      * @return string
      */
-    private static function doXmlTransformation($data, $level=1, $tagName = "")
+    private static function transformToXml($data, $level=1, $tagName = "")
     {
         $strXml = "";
 
@@ -62,7 +62,7 @@ class XmlUtil
             }
             $strXml .= str_repeat( "\t", $level ) . "<" . $tagName . ">\n";
             foreach ($data as $items) {
-                $strXml .= self::doXmlTransformation($items, $level+1);
+                $strXml .= self::transformToXml($items, $level+1);
             }
             $strXml .= str_repeat( "\t", $level ) . "</" . $tagName . ">\n";
         } else {
@@ -96,7 +96,7 @@ class XmlUtil
     {
         $tagName = get_class($object);
 
-        $refClass = new ReflectionClass($object);
+        $refClass = new \ReflectionClass($object);
 
         $strXml = str_repeat("\t", $level) . "<" . $tagName . ">\n";
 
@@ -113,7 +113,7 @@ class XmlUtil
 
                     $value = $object->$methodName();
                     
-                    $strXml .= self::doXmlTransformation(
+                    $strXml .= self::transformToXml(
                         $value, $level + 1, $property
                     );
                 }
@@ -171,7 +171,7 @@ class XmlUtil
      */
     public static function fromXml($xml)
     {
-        $document = new SimpleXMLElement($xml);
+        $document = new \SimpleXMLElement($xml);
 
         return self::fromXmlElement($document->children());
     }
@@ -181,7 +181,7 @@ class XmlUtil
         return self::fromXml(file_get_contents($url), true);
     }
 
-    private static function fromXmlElement(SimpleXMLElement $element)
+    private static function fromXmlElement(\SimpleXMLElement $element)
     {
         $struct = null;
 
@@ -191,7 +191,7 @@ class XmlUtil
             if (class_exists($structName, true)) {
                 $struct = new $structName();
 
-                $refClass = new ReflectionClass($struct);
+                $refClass = new \ReflectionClass($struct);
 
                 foreach ($element->children() as $key => $item) {
                     $phpValue = self::fromXmlElement($item);
@@ -211,7 +211,7 @@ class XmlUtil
                                 $struct->$methodName($phpValue);
                             }
                         }
-                    } catch (ReflectionException $re) {
+                    } catch (\ReflectionException $re) {
                         switch ($re->getCode()) {
                             // ignoring non existent properties and methods
                             case 0;

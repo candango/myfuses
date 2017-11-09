@@ -10,6 +10,9 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Util\Data\XmlUtil;
+
 /**
  * DataToXmlVerb  - DataToXmlVerb.php
  *
@@ -163,7 +166,8 @@ class DataToXmlVerb extends AbstractVerb
                 $strOut .= "ob_clean();\n";
             }
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .= "echo(MyFusesXmlUtil::toXml(\"" .
+
+            $strOut .= "echo(" . XmlUtil::class . "::toXml(\"" .
                 $this->getValue() . "\"));\n";
 
             if ($this->isDie()) {

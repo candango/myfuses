@@ -22,13 +22,13 @@ foreach (new RecursiveIteratorIterator($it, 1) as $path) {
         if ($path->isDir()) {
             $iDepth = count(explode(DIRECTORY_SEPARATOR, $path));
             echo str_repeat("-", $iDepth - $depth) . "Path: $path <a href=\"" .
-                MyFuses::getMySelfXfa("chmodPath", true, false) . "application=" .
+                xfa("chmodPath", true, false) . "application=" .
                 $application->getName() . "&file=" . urlencode($path) .
                 "\">chmod</a><br>";
         } else {
             $iDepth = count(explode(DIRECTORY_SEPARATOR, $path->getPath())) + 1;
             echo str_repeat("-", $iDepth - $depth) . "File: $path <a href=\"" .
-                MyFuses::getMySelfXfa("chmodPath", true, false) . "application=" .
+                xfa("chmodPath", true, false) . "application=" .
                 $application->getName() . "&file=" . urlencode($path) .
                 "\">chmod</a><br>";
         }

@@ -117,14 +117,14 @@ abstract class ParameterizedVerb extends AbstractVerb
 
         foreach ($this->getParameters() as $name => $value) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .=  Context::class . "Context::setParameter(\"" . $name .
+            $strOut .=  Context::class . "::setParameter(\"" . $name .
                 "\", \"" . $value . "\");\n";
         }
         $strOut .= $this->getRealParsedCode($commented, $identLevel);
 
         foreach ($this->getParameters() as  $name => $value) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .=  Context::class . "Context::restoreParameter(\"" .
+            $strOut .=  Context::class . "::restoreParameter(\"" .
                 $name . "\");\n";
         }
         $strOut .=  "\n";

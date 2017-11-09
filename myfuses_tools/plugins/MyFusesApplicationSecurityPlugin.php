@@ -10,6 +10,9 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\AbstractPlugin;
+
 /**
  * MyFusesApplicationSecurityPlugin  - MyFusesApplicationSecurityPlugin.php
  *
@@ -32,7 +35,7 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin
     {
         session_start();
 
-        $request = MyFuses::getInstance()->getRequest();
+        $request = Controller::getInstance()->getRequest();
         
         if ($request->getFuseActionName() == "tools.logout") {
             $this->logout();
@@ -92,7 +95,7 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin
 
     private function getApplicationPassword()
     {
-        $password = MyFuses::getInstance()->getApplication()->getPassword();
+        $password = Controller::getInstance()->getApplication()->getPassword();
         return md5($password);
     }
 
@@ -118,7 +121,7 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin
 
     private function goToLogin()
     {
-        $request = MyFuses::getInstance()->getRequest();
+        $request = Controller::getInstance()->getRequest();
 
         if($this->getApplication()->isDefault()) {
             $request->getAction()->addXFA("goToLogin", "tools.login");
@@ -127,13 +130,12 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin
                 $this->getApplication()->getName() . ".tools.login");
         }
 
-        MyFuses::sendToUrl( MyFuses::getInstance()->getMySelfXfa(
-            "goToLogin", true, false));
+        Controller::sendToUrl(xfa("goToLogin", true, false));
     }
     
     private function goToStart()
     {
-        $request = MyFuses::getInstance()->getRequest();
+        $request = Controller::getInstance()->getRequest();
 
         if ($this->getApplication()->isDefault()) {
             $request->getAction()->addXFA( "goToStart", 
@@ -143,8 +145,7 @@ class MyFusesApplicationSecurityPlugin extends AbstractPlugin
                 $this->getApplication()->getName() . "." . 
                 $this->getApplication()->getDefaultFuseaction());
         }
-        MyFuses::sendToUrl(MyFuses::getInstance()->getMySelfXfa(
-            "goToStart", true, false));
+        Controller::sendToUrl(xfa("goToStart", true, false));
     }
 
     public static function getMessage()
