@@ -33,14 +33,14 @@ abstract class AbstractVerb implements Verb
             "myfuses:do" => "Candango\\MyFuses\\Core\\Verbs\\DoVerb",
             "myfuses:if" => "Candango\\MyFuses\\Core\\Verbs\\IfVerb",
             "myfuses:include" => "Candango\\MyFuses\\Core\\Verbs\\IncludeVerb",
-            "myfuses:instantiate" => "Candango\\MyFuses\\Core\\Verbs\\" .
-                "InstantiateVerb",
+            "myfuses:instantiate" =>
+                "Candango\\MyFuses\\Core\\Verbs\\InstantiateVerb",
             "myfuses:invoke" => "Candango\\MyFuses\\Core\\Verbs\\InvokeVerb",
             "myfuses:loop" => "Candango\\MyFuses\\Core\\Verbs\\LoopVerb",
-            "myfuses:relocate" => "Candango\\MyFuses\\Core\\Verbs\\" .
-                "RelocateVerb",
-            "myfuses:response" => "Candango\\MyFuses\\Core\\Verbs\\" .
-                "ResponseVerb",
+            "myfuses:relocate" =>
+                "Candango\\MyFuses\\Core\\Verbs\\RelocateVerb",
+            "myfuses:response" =>
+                "Candango\\MyFuses\\Core\\Verbs\\ResponseVerb",
             "myfuses:set" => "Candango\\MyFuses\\Core\\Verbs\\SetVerb",
             "myfuses:switch" => "Candango\\MyFuses\\Core\\Verbs\\SwitchVerb",
             "myfuses:xfa" => "Candango\\MyFuses\\Core\\Verbs\\XfaVerb",
