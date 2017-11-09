@@ -30,18 +30,21 @@ use Candango\MyFuses\Util\FileHandler;
 abstract class AbstractVerb implements Verb
 {
     private static $verbTypes = array(
-            "myfuses:do" => __NAMESPACE__ . "\\Verbs\\DoVerb",
-            "myfuses:if" => __NAMESPACE__ . "\\Verbs\\IfVerb",
-            "myfuses:include" => __NAMESPACE__ . "\\Verbs\\IncludeVerb",
-            "myfuses:instantiate" => __NAMESPACE__ . "\\Verbs\\InstantiateVerb",
-            "myfuses:invoke" => __NAMESPACE__ . "\\Verbs\\InvokeVerb",
-            "myfuses:loop" => __NAMESPACE__ . "\\Verbs\\LoopVerb",
-            "myfuses:relocate" => __NAMESPACE__ . "\\Verbs\\RelocateVerb",
-            "myfuses:response" => __NAMESPACE__ . "\\Verbs\\ResponseVerb",
-            "myfuses:set" => __NAMESPACE__ . "\\Verbs\\SetVerb",
-            "myfuses:switch" => __NAMESPACE__ . "\\Verbs\\SwitchVerb",
-            "myfuses:xfa" => __NAMESPACE__ . "\\Verbs\\XfaVerb",
-            "myfuses:var_dump" => __NAMESPACE__ . "\\Verbs\\VarDumpVerb"
+            "myfuses:do" => "Candango\\MyFuses\\Core\\Verbs\\DoVerb",
+            "myfuses:if" => "Candango\\MyFuses\\Core\\Verbs\\IfVerb",
+            "myfuses:include" => "Candango\\MyFuses\\Core\\Verbs\\IncludeVerb",
+            "myfuses:instantiate" => "Candango\\MyFuses\\Core\\Verbs\\" .
+                "InstantiateVerb",
+            "myfuses:invoke" => "Candango\\MyFuses\\Core\\Verbs\\InvokeVerb",
+            "myfuses:loop" => "Candango\\MyFuses\\Core\\Verbs\\LoopVerb",
+            "myfuses:relocate" => "Candango\\MyFuses\\Core\\Verbs\\" .
+                "RelocateVerb",
+            "myfuses:response" => "Candango\\MyFuses\\Core\\Verbs\\" .
+                "ResponseVerb",
+            "myfuses:set" => "Candango\\MyFuses\\Core\\Verbs\\SetVerb",
+            "myfuses:switch" => "Candango\\MyFuses\\Core\\Verbs\\SwitchVerb",
+            "myfuses:xfa" => "Candango\\MyFuses\\Core\\Verbs\\XfaVerb",
+            "myfuses:var_dump" => "Candango\\MyFuses\\Core\\Verbs\\VarDumpVerb"
     );
 
     /**
