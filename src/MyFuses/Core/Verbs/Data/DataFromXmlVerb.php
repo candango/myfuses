@@ -10,9 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-use Candango\MyFuses\Controller;
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Util\Data\XmlUtil;
 
 /**
  * DataFromXmlVerb  - DataFromXmlVerb.php
@@ -135,18 +133,19 @@ class DataFromXmlVerb extends AbstractVerb
         $strOut .= str_repeat( "\t", $identLevel );
 
         $strValue = "";
-
+        $xmlUtilClass= "Candango\\MyFuses\\Util\\Data\\XmlUtil";
         if (is_null($this->getValue())) {
             if (is_null($this->getUrl())) {
-                $strValue = "#" . XmlUtil::class . "::fromXmlUrl(" .
-                    "" . Controller::class . "::getMySelfXfa(\"" .
+                $controllerClass = "Candango\\MyFuses\\Controller";
+                $strValue = "#" . $xmlUtilClass . "::fromXmlUrl(" .
+                    "" . $controllerClass . "::getMySelfXfa(\"" .
                     $this->getXfa() . "\"))#";
             } else {
-                $strValue = "#" . XmlUtil::class . "::fromXmlUrl(\"" .
+                $strValue = "#" . $xmlUtilClass . "::fromXmlUrl(\"" .
                     $this->getUrl() . "\")#";
             }
         } else {
-            $strValue = "" . XmlUtil::class . "::fromXml(\"" .
+            $strValue = "" . $xmlUtilClass . "::fromXml(\"" .
                 $this->getValue() . "\")";
         }
 

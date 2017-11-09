@@ -359,7 +359,8 @@ abstract class AbstractPlugin implements Plugin
 
     public function getCachedCode()
     {
-        $strOut = "\$plugin = " . AbstractPlugin::class .
+        $abstractPluginClass = "Candango\\MyFuses\\Core\\AbstractPlugin";
+        $strOut = "\$plugin = " . $abstractPluginClass .
             "::getInstance( \$application, \"" .
             $this->phase . "\", \"" . $this->name . "\", \"" . 
             addslashes( $this->path ) . 

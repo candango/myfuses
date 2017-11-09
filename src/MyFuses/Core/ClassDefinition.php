@@ -117,7 +117,8 @@ class ClassDefinition implements ICacheable
     }
 
     public function getCachedCode() {
-        $strOut = "\$class = new " . ClassDefinition::class . "();\n";
+        $classDefinitionClass = "Candango\\MyFuses\\Core\\ClassDefinition";
+        $strOut = "\$class = new " . $classDefinitionClass . "();\n";
         $strOut .= "\$class->setName(\"" . $this->getName() . "\");\n";
         $strOut .= "\$class->setPath(\"" . addslashes($this->getPath()) .
             "\");\n";

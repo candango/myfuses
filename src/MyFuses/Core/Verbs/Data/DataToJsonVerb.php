@@ -11,7 +11,6 @@
  */
 
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Util\Data\JsonUtil;
 
 /**
  * DataToJsonVerb  - DataToJsonVerb.php
@@ -157,7 +156,8 @@ class DataToJsonVerb extends AbstractVerb
             }
 
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .= "echo(" . JsonUtil::class . "::toJson(\"" .
+            $jsonUtilClass= "Candango\\MyFuses\\Util\\Data\\JsonUtil";
+            $strOut .= "echo(" . $jsonUtilClass . "::toJson(\"" .
                 $this->getValue() . "\"));\n";
 
             if ($this->isDie()) {

@@ -13,7 +13,6 @@
 namespace Candango\MyFuses\Core\Verbs;
 
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Process\Context;
 
 /**
  * Parameterized Verb  - ParameterizedVerb.php
@@ -114,17 +113,18 @@ abstract class ParameterizedVerb extends AbstractVerb
         $strOut = parent::getParsedCode($commented, $identLevel);
         // TODO: This is not being used. Check if that should go.
         $id = uniqid();
+        $contextClass = "Candango\\MyFuses\\Process\\Context";
 
         foreach ($this->getParameters() as $name => $value) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .=  Context::class . "::setParameter(\"" . $name .
+            $strOut .=  $contextClass . "::setParameter(\"" . $name .
                 "\", \"" . $value . "\");\n";
         }
         $strOut .= $this->getRealParsedCode($commented, $identLevel);
 
         foreach ($this->getParameters() as  $name => $value) {
             $strOut .= str_repeat("\t", $identLevel);
-            $strOut .=  Context::class . "::restoreParameter(\"" .
+            $strOut .=  $contextClass . "::restoreParameter(\"" .
                 $name . "\");\n";
         }
         $strOut .=  "\n";

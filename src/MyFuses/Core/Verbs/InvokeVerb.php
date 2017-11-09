@@ -13,7 +13,6 @@
 namespace Candango\MyFuses\Core\Verbs;
 
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Process\Context;
 
 /**
  * InstantiateVerb - InstantiateVerb.php
@@ -216,7 +215,7 @@ class InvokeVerb extends AbstractVerb
     {
         $appName = $this->getAction()->getCircuit()->
             getApplication()->getName();
-
+        $contextClass = "Candango\\MyFuses\\Process\\Context";
         $strOut = parent::getParsedCode($commented, $identLevel);
         // Make identation
         $strOut .= str_repeat( "\t", $identLevel );
@@ -246,14 +245,14 @@ class InvokeVerb extends AbstractVerb
         }
 
         if (!is_null($this->getVariable())) {
-            $strOut .= Context::class . "::setVariable( \"" .
+            $strOut .= $contextClass . "::setVariable( \"" .
                 $this->getVariable() . "\", ";
         }
 
         // Begin method call
         if (!is_null($this->getMethod())) {
             if (is_null($this->getClass())) {
-                $strOut .= Context::class . "::getVariable( \"" .
+                $strOut .= $contextClass . "::getVariable( \"" .
                     $this->getObject() . "\" )->" .
                     $this->getMethod();
             } else {

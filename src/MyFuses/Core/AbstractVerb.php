@@ -12,9 +12,7 @@
 
 namespace Candango\MyFuses\Core;
 
-use Candango\MyFuses\Exceptions\FileOperationException;
 use Candango\MyFuses\Exceptions\VerbException;
-use Candango\MyFuses\Process\Context;
 use Candango\MyFuses\Util\FileHandler;
 
 /**
@@ -73,6 +71,8 @@ abstract class AbstractVerb implements Verb
      * @var Verb
      */
     private $parent;
+
+    private $contextClass = "Candango\\MyFuses\\Process\\Context";
 
     /**
      * Return the verb Action
@@ -324,8 +324,8 @@ abstract class AbstractVerb implements Verb
     {
         // TODO: prepare to concatenation here
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= Context::class . "::setVariable( \"" . $variable . "\", \"" .
-            $value . "\" );\n";
+	    $strOut .= $this->contextClass . "::setVariable( \"" . $variable .
+            "\", \"" . $value . "\" );\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;
@@ -343,7 +343,7 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "    ob_start();\n";
 	    }
         $strOut .= str_repeat("\t", $identLevel+1);
-	    $strOut .= Context::class . "::includeFile( " . $fileName . ");\n";
+	    $strOut .= $this->contextClass . "::includeFile( " . $fileName . ");\n";
         $strOut .= str_repeat("\t", $identLevel+1);
 	    $strOut .= self::getContextRestoreString();
 	    if( $contentVariable != null ) {
@@ -351,17 +351,17 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
                 "ob_end_clean();\n";
             $strOut .= str_repeat("\t", $identLevel+1);
-            $strOut .= "    " . Context::class . "::setParameter( \"" .
+            $strOut .= "    " . $this->contextClass . "::setParameter( \"" .
                 $contentVariable . "\", \$" . $contentVariable . " );\n";
         }
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "} else {\n";
         $strOut .= str_repeat("\t", $identLevel+1);
 
-
-        $strOut .= "throw new " . FileOperationException::class . "(" .
-        	$fileName . ", " . FileOperationException::class .
-            "::INCLUDE_FILE);\n";
+        $fileOperationClass = "Candango\\MyFuses\\Exceptions\\" .
+            "FileOperationException";
+        $strOut .= "throw new " . $fileOperationClass . "(" . $fileName . ", " .
+            $fileOperationClass . "::INCLUDE_FILE);\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "}\n\n";
         return $strOut;
@@ -370,7 +370,8 @@ abstract class AbstractVerb implements Verb
 	protected function getContextRestoreString($identLevel=0)
     {
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "foreach(" . Context::class . "::getContext() as \$value) {";
+	    $strOut .= "foreach(" . $this->contextClass .
+            "::getContext() as \$value) {";
         $strOut .= "global \$\$value;";
         $strOut .= "}\n";
         return $strOut;

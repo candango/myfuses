@@ -11,7 +11,6 @@
  */
 
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Util\Data\XmlUtil;
 
 /**
  * DataToXmlVerb  - DataToXmlVerb.php
@@ -166,8 +165,8 @@ class DataToXmlVerb extends AbstractVerb
                 $strOut .= "ob_clean();\n";
             }
             $strOut .= str_repeat("\t", $identLevel);
-
-            $strOut .= "echo(" . XmlUtil::class . "::toXml(\"" .
+            $xmlUtilClass= "Candango\\MyFuses\\Util\\Data\\XmlUtil";
+            $strOut .= "echo(" . $xmlUtilClass . "::toXml(\"" .
                 $this->getValue() . "\"));\n";
 
             if ($this->isDie()) {

@@ -10,9 +10,7 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-use Candango\MyFuses\Controller;
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Util\Data\JsonUtil;
 
 /**
  * DataFromJsonVerb  - DataFromJsonVerb.php
@@ -135,18 +133,19 @@ class DataFromJsonVerb extends AbstractVerb
         $strOut .= str_repeat("\t", $identLevel);
 
         $strValue = "";
-
+        $jsonUtilClass= "Candango\\MyFuses\\Util\\Data\\JsonUtil";
         if (is_null( $this->getValue())) {
             if (is_null($this->getUrl())) {
-                $strValue = "#" . JsonUtil::class . "::fromJsonUrl(" .
-                    "" . Controller::class . "::getMySelfXfa(\"" .
+                $controllerClass = "Candango\\MyFuses\\Controller";
+                $strValue = "#" . $jsonUtilClass . "::fromJsonUrl(" .
+                    "" . $controllerClass . "::getMySelfXfa(\"" .
                     $this->getXfa() . "\"))#";
             } else {
-                $strValue = "#" . JsonUtil::class . "::fromJsonUrl(\"" .
+                $strValue = "#" . $jsonUtilClass . "::fromJsonUrl(\"" .
                     $this->getUrl() . "\")#";
             }
         } else {
-            $strOut .= "\$value = " . JsonUtil::class . "::fromJson(\"" .
+            $strOut .= "\$value = " . $jsonUtilClass . "::fromJson(\"" .
                 $this->getValue() . "\");\n";
 
             $strValue = "#\$value#" ;

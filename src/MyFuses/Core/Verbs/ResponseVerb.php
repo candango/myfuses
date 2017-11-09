@@ -12,7 +12,6 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
-use Candango\MyFuses\Controller;
 use Candango\MyFuses\Core\AbstractVerb;
 
 /**
@@ -88,7 +87,8 @@ class ResponseVerb extends AbstractVerb
     {
         $strOut = parent::getParsedCode($commented, $identLevel);
         $strOut .= str_repeat("\t", $identLevel);
-        $strOut .= Controller::class . "::getInstance()->setResponseType(\"" .
+        $controllerClass = "Candango\\MyFuses\\Controller";
+        $strOut .= $controllerClass . "::getInstance()->setResponseType(\"" .
             $this->getType() . "\");\n\n";
         return $strOut;
     }

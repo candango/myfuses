@@ -13,7 +13,6 @@
 namespace Candango\MyFuses\Core\Verbs;
 
 use Candango\MyFuses\Core\AbstractVerb;
-use Candango\MyFuses\Process\Context;
 
 /**
  * InstantiateVerb - InstantiateVerb.php
@@ -273,6 +272,7 @@ class InstantiateVerb extends AbstractVerb
 
 	    $strOut = parent::getParsedCode($commented, $identLevel);
 	    $strOut .= str_repeat("\t", $identLevel);
+        $contextClass = "Candango\\MyFuses\\Process\\Context";
 	    if (is_null($this->getWebservice())) {
 	        $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
 		    $strOut .= str_repeat("\t", $identLevel + 1);
@@ -280,12 +280,12 @@ class InstantiateVerb extends AbstractVerb
 		    $strOut .= str_repeat("\t", $identLevel);
 		    $strOut .= "}\n";
 		    $strOut .= str_repeat("\t", $identLevel);
-		    $strOut .= Context::class . "::setVariable( \"" .
+		    $strOut .= $contextClass . "::setVariable( \"" .
                 $this->getObject() . "\", new " . $this->getClass() .
                 "( " . $this->getArgumentString() . " ) );\n\n";
             $strOut .= self::getContextRestoreString();
 	    } else {
-	        $strOut .= Context::class . "::setVariable( \"" .
+	        $strOut .= $contextClass . "::setVariable( \"" .
                 $this->getObject() . "\", new SoapClient" .
                 "( \"" . $this->getWebservice() . "\" ) );\n\n";
             $strOut .= self::getContextRestoreString();

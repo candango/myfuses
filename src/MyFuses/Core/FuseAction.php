@@ -13,7 +13,6 @@
 namespace Candango\MyFuses\Core;
 
 use Candango\MyFuses\Controller;
-use Candango\MyFuses\Exceptions\FuseactionException;
 use Candango\MyFuses\Process\Context;
 use Candango\MyFuses\Process\Lifecycle;
 
@@ -296,8 +295,8 @@ class FuseAction extends AbstractAction implements CircuitAction
                     $strOut .= "\t\$plugin->run();\n}\n\n";
                 }
                 $strOut .= str_repeat("\t", $identLevel);
-                $strOut .= "} catch (" . FuseactionException::class .
-                    " \$fae) {\n";
+                $faeClass = "Candango\\MyFuses\\Exceptions\\FuseactionException";
+                $strOut .= "} catch (" . $faeClass . " \$fae) {\n";
 
 	            if (count($application->getPlugins(
 	                Plugin::FUSEACTION_EXCEPTION_PHASE))) {
@@ -307,7 +306,7 @@ class FuseAction extends AbstractAction implements CircuitAction
 	                    " \"" . Plugin::FUSEACTION_EXCEPTION_PHASE . "\" )";
 	                $strOut .= "\tforeach (" . $pluginsStr . " as \$plugin) {\n";
 	                $strOut .= "\t\t\$plugin->handle(\$fae);\n\t}\n";
-	                $contextClass = Context::class;
+	                $contextClass = "Candango\\MyFuses\\Process\\Context";
 	                $strOut .= "\tforeach (" . $contextClass . "::getContext() as " .
 	                    " \$key => \$value) {global \$\$value;}\n\n";
 	            }

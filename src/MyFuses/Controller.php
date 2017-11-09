@@ -21,7 +21,6 @@ namespace Candango\MyFuses
     use Candango\MyFuses\Exceptions\ApplicationException;
     use Candango\MyFuses\Exceptions\CircuitException;
     use Candango\MyFuses\Exceptions\Exception;
-    use Candango\MyFuses\Exceptions\ProcessException;
     use Candango\MyFuses\Process\Context;
     use Candango\MyFuses\Process\DebugEvent;
     use Candango\MyFuses\Process\Debugger;
@@ -161,7 +160,7 @@ namespace Candango\MyFuses
          *
          * @var string
          */
-        private $applicationClass = __NAMESPACE__ . "\\Core\\BasicApplication";
+        private $applicationClass = "Candango\\MyFuses\\Core\\BasicApplication";
 
         /**
          * Default response type to be set in the header.
@@ -677,7 +676,9 @@ namespace Candango\MyFuses
 
             $fileName = $path . $this->request->getActionName() . ".action.php";
 
-            $contextClass = Context::class;
+            $contextClass = "Candango\\MyFuses\\Process\\Context";
+            $processExceptionClass = "Candango\\MyFuses\\Exceptions\\" .
+                "ProcessException";
 
             // TODO handle file parse
             if (!is_file($fileName) || $circuit->isModified()) {
@@ -762,7 +763,7 @@ namespace Candango\MyFuses
                 $strParse .= "\theader(\"Content-Type: \" . \$strContent);\n";
                 // Flushed global output buffer content
                 $strParse .= "\tob_end_flush();\n";
-                $strParse .= "} catch (" . ProcessException::class .
+                $strParse .= "} catch (" . $processExceptionClass .
                     " \$pe) {\n";
 
                 if (count($application->getPlugins(
