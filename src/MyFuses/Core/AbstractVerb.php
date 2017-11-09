@@ -72,8 +72,6 @@ abstract class AbstractVerb implements Verb
      */
     private $parent;
 
-    private $contextClass = "Candango\\MyFuses\\Process\\Context";
-
     /**
      * Return the verb Action
      *
@@ -324,8 +322,9 @@ abstract class AbstractVerb implements Verb
     {
         // TODO: prepare to concatenation here
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= $this->contextClass . "::setVariable( \"" . $variable .
-            "\", \"" . $value . "\" );\n";
+        $contextClass = "Candango\\MyFuses\\Process\\Context";
+	    $strOut .= $contextClass . "::setVariable( \"" . $variable . "\", \"" .
+            $value . "\" );\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;
@@ -336,6 +335,7 @@ abstract class AbstractVerb implements Verb
         $contentVariable = null,
         $identLevel=0
     ) {
+        $contextClass = "Candango\\MyFuses\\Process\\Context";
         $strOut = str_repeat("\t", $identLevel);
 	    $strOut .= "if(file_exists(" .
 	       $fileName . ")) { \n";
@@ -343,7 +343,7 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "    ob_start();\n";
 	    }
         $strOut .= str_repeat("\t", $identLevel+1);
-	    $strOut .= $this->contextClass . "::includeFile( " . $fileName . ");\n";
+	    $strOut .= $contextClass . "::includeFile( " . $fileName . ");\n";
         $strOut .= str_repeat("\t", $identLevel+1);
 	    $strOut .= self::getContextRestoreString();
 	    if( $contentVariable != null ) {
@@ -351,7 +351,7 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
                 "ob_end_clean();\n";
             $strOut .= str_repeat("\t", $identLevel+1);
-            $strOut .= "    " . $this->contextClass . "::setParameter( \"" .
+            $strOut .= "    " . $contextClass . "::setParameter( \"" .
                 $contentVariable . "\", \$" . $contentVariable . " );\n";
         }
         $strOut .= str_repeat("\t", $identLevel);
@@ -370,7 +370,8 @@ abstract class AbstractVerb implements Verb
 	protected function getContextRestoreString($identLevel=0)
     {
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "foreach(" . $this->contextClass .
+        $contextClass = "Candango\\MyFuses\\Process\\Context";
+	    $strOut .= "foreach(" . $contextClass .
             "::getContext() as \$value) {";
         $strOut .= "global \$\$value;";
         $strOut .= "}\n";
