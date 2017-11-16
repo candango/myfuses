@@ -19,8 +19,8 @@ use Candango\MyFuses\Util\FileHandler;
  * AbstractVerb - AbstractVerb.php
  *
  * AbstractVerb implements various methods defined in Verb interface.
- * All Custom verbs must extend AbstractVerb to be in compliance with the 
- * framework. 
+ * All Custom verbs must extend AbstractVerb to be in compliance with the
+ * framework.
  *
  * @category   controller
  * @package    myfuses.core
@@ -70,7 +70,7 @@ abstract class AbstractVerb implements Verb
 
     /**
      * Verb parent
-     * 
+     *
      * @var Verb
      */
     private $parent;
@@ -137,7 +137,7 @@ abstract class AbstractVerb implements Verb
 
     /**
      * Return the verb parent
-     *	
+     *
      * @return Verb
      */
     public function getParent()
@@ -172,11 +172,11 @@ abstract class AbstractVerb implements Verb
             $verb = new self::$verbTypes[$data['namespace'] . ":" .
                     $data['name']]();
 
-	        if(!is_null($action)) {
-	            $verb->setAction($action);
-	        }
-	        $verb->setData($data);
-	        return $verb;
+            if(!is_null($action)) {
+                $verb->setAction($action);
+            }
+            $verb->setData($data);
+            return $verb;
         } else {
             if($action->getCircuit()->verbPathExists(@$data['namespace'])) {
                 $path = $action->getCircuit()->getVerbPath($data['namespace']);
@@ -191,9 +191,9 @@ abstract class AbstractVerb implements Verb
                             $vPath = FileHandler::sanitizePath($vPath);
                             if(file_exists($vPath . $path)) {
                                 $path = $vPath . $path;
-                            } 
+                            }
                         }
-                    }   
+                    }
                 }
 
                 $className = strtoupper(substr($data['namespace'], 0, 1)) .
@@ -203,21 +203,23 @@ abstract class AbstractVerb implements Verb
                     substr($data['name'], 1, strlen($data['name']) - 1) .
                     "Verb";
 
-                if(!is_file($path. $className . ".php")) {
-                    $params = $action->getErrorParams();
-	                $params['verbName'] = $data['name'];
-	                   throw new VerbException($params,
-	                        VerbException::NON_EXISTENT_VERB);
+                if (!class_exists($className)) {
+                    if(!is_file($path. $className . ".php")) {
+                        $params = $action->getErrorParams();
+                        $params['verbName'] = $data['name'];
+                        throw new VerbException($params,
+                            VerbException::NON_EXISTENT_VERB);
+                    }
+
+                    require_once($path. $className . ".php");
                 }
 
-                require_once($path. $className . ".php");
-
                 $verb = new $className();
-		        if( !is_null($action)) {
-		            $verb->setAction($action);
-		        }
-		        $verb->setData($data);
-		        return $verb;
+                if( !is_null($action)) {
+                    $verb->setAction($action);
+                }
+                $verb->setData($data);
+                return $verb;
             } else {
                     $params = $action->getErrorParams();
                     $params['verbName'] = $data['name'];
@@ -233,7 +235,7 @@ abstract class AbstractVerb implements Verb
         $strOut = "array(";
         $comma = false;
         foreach($data as $key => $value) {
-            $strOut .= $comma ? ", " : "";    
+            $strOut .= $comma ? ", " : "";
             if(is_array($value)) {
                 $strOut .= "'" . $key . "' => " . $this->dataToString($value);
             }
@@ -254,104 +256,104 @@ abstract class AbstractVerb implements Verb
         return $strOut;
     }
 
-	public function getData()
+    public function getData()
     {
-	    if($this->getNamespace() != "myfuses") {
-	        $data['name'] = $this->getName();
-	    } else {
-	        $data['name'] = $this->getName();
-	    }
-	    $data['namespace'] = $this->getNamespace();
-	    return $data;
-	}
+        if($this->getNamespace() != "myfuses") {
+            $data['name'] = $this->getName();
+        } else {
+            $data['name'] = $this->getName();
+        }
+        $data['namespace'] = $this->getNamespace();
+        return $data;
+    }
 
-	public function setData($data)
+    public function setData($data)
     {
-	    $this->setName($data['name']);
-	    $this->setNamespace($data['namespace']);
-	}
+        $this->setName($data['name']);
+        $this->setNamespace($data['namespace']);
+    }
 
-	/**
-	 * Return the parsed code
-	 *
-	 * @return string
-	 */
-	public function getParsedCode($commented, $identLevel)
+    /**
+     * Return the parsed code
+     *
+     * @return string
+     */
+    public function getParsedCode($commented, $identLevel)
     {
-	    $strOut = "";
-	    if($commented) {
-	        $strOut = $this->getComments($identLevel);
-	    }
-	    return $strOut;
-	}
+        $strOut = "";
+        if($commented) {
+            $strOut = $this->getComments($identLevel);
+        }
+        return $strOut;
+    }
 
-	public function getTrace($toHtml = false)
+    public function getTrace($toHtml = false)
     {
-	    $data = $this->getData();
-	    $strTrace = "<" . $data['namespace'] . ":" . $data['name'];
-	    if(isset($data['attributes'])) {
-	        foreach($data['attributes'] as $key => $value) {
-	            $strTrace .= " " . $key . "=\"" . $value . "\"";
-	        }
-	    }
-	    $strTrace .= ">";
-	    if($toHtml) {
-	        return htmlentities($strTrace);
-	    }
-	    return $strTrace;
-	}
-	
-	/**
-	 * Return the parsed comments
-	 *
-	 * @return string
-	 */
-	public function getComments($identLevel)
-    {
-	    $fuseactionName = $this->getAction()->getCompleteName();
-	    $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "/* " . $fuseactionName . ": " . $this->getTrace() . " */\n";
-	    return $strOut;
-	}
+        $data = $this->getData();
+        $strTrace = "<" . $data['namespace'] . ":" . $data['name'];
+        if(isset($data['attributes'])) {
+            foreach($data['attributes'] as $key => $value) {
+                $strTrace .= " " . $key . "=\"" . $value . "\"";
+            }
+        }
+        $strTrace .= ">";
+        if($toHtml) {
+            return htmlentities($strTrace);
+        }
+        return $strTrace;
+    }
 
-	public function getErrorParams()
+    /**
+     * Return the parsed comments
+     *
+     * @return string
+     */
+    public function getComments($identLevel)
     {
-	    $params = $this->getAction()->getErrorParams();
-	    $params['verbName'] = $this->getName();
-	    return $params;
-	}
+        $fuseactionName = $this->getAction()->getCompleteName();
+        $strOut = str_repeat("\t", $identLevel);
+        $strOut .= "/* " . $fuseactionName . ": " . $this->getTrace() . " */\n";
+        return $strOut;
+    }
 
-	protected function getVariableSetString($variable, $value, $identLevel=0)
+    public function getErrorParams()
+    {
+        $params = $this->getAction()->getErrorParams();
+        $params['verbName'] = $this->getName();
+        return $params;
+    }
+
+    protected function getVariableSetString($variable, $value, $identLevel=0)
     {
         // TODO: prepare to concatenation here
         $strOut = str_repeat("\t", $identLevel);
         $contextClass = "Candango\\MyFuses\\Process\\Context";
-	    $strOut .= $contextClass . "::setVariable( \"" . $variable . "\", \"" .
+        $strOut .= $contextClass . "::setVariable( \"" . $variable . "\", \"" .
             $value . "\" );\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;
-	}
+    }
 
-	protected function getIncludeFileString(
-	    $fileName,
+    protected function getIncludeFileString(
+        $fileName,
         $contentVariable = null,
         $identLevel=0
     ) {
         $contextClass = "Candango\\MyFuses\\Process\\Context";
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "if(file_exists(" .
-	       $fileName . ")) { \n";
-	    if( $contentVariable != null ) {
-	        $strOut .= "    ob_start();\n";
-	    }
+        $strOut .= "if(file_exists(" .
+           $fileName . ")) { \n";
+        if( $contentVariable != null ) {
+            $strOut .= "    ob_start();\n";
+        }
         $strOut .= str_repeat("\t", $identLevel+1);
-	    $strOut .= $contextClass . "::includeFile( " . $fileName . ");\n";
+        $strOut .= $contextClass . "::includeFile( " . $fileName . ");\n";
         $strOut .= str_repeat("\t", $identLevel+1);
-	    $strOut .= self::getContextRestoreString();
-	    if( $contentVariable != null ) {
+        $strOut .= self::getContextRestoreString();
+        if( $contentVariable != null ) {
             $strOut .= str_repeat("\t", $identLevel+1);
-	        $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
+            $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
                 "ob_end_clean();\n";
             $strOut .= str_repeat("\t", $identLevel+1);
             $strOut .= "    " . $contextClass . "::setParameter( \"" .
@@ -368,16 +370,16 @@ abstract class AbstractVerb implements Verb
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "}\n\n";
         return $strOut;
-	}
+    }
 
-	protected function getContextRestoreString($identLevel=0)
+    protected function getContextRestoreString($identLevel=0)
     {
         $strOut = str_repeat("\t", $identLevel);
         $contextClass = "Candango\\MyFuses\\Process\\Context";
-	    $strOut .= "foreach(" . $contextClass .
+        $strOut .= "foreach(" . $contextClass .
             "::getContext() as \$value) {";
         $strOut .= "global \$\$value;";
         $strOut .= "}\n";
         return $strOut;
-	}
+    }
 }

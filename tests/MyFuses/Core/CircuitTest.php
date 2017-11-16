@@ -24,8 +24,6 @@ use PHPUnit\Framework\TestCase;
  *
  * Tests case that covers the MyFuses class.
  *
- * PHP version 5
- *
  * @category   tests
  * @package    myfuses.tests
  * @author     Flavio Garcia <piraz at candango.org>

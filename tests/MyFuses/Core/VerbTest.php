@@ -13,18 +13,26 @@
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR .
     "../../../src/MyFuses/Controller.php";
 
+use Candango\MyFuses\Controller;
 use Candango\MyFuses\Core\AbstractVerb;
+use Candango\MyFuses\Core\BasicApplication;
 use Candango\MyFuses\Core\BasicCircuit;
+use Candango\MyFuses\Core\FuseAction;
+
+use Candango\MyFuses\Core\Verbs\DoVerb;
+use Candango\MyFuses\Core\Verbs\IncludeVerb;
 
 use PHPUnit\Framework\TestCase;
 
+
+class TestCustomMockVerb extends AbstractVerb{
+
+}
 
 /**
  * VerbTest - VerbTest.php
  *
  * Tests case that covers the MyFuses class.
- *
- * PHP version 5
  *
  * @category   tests
  * @package    myfuses.tests
@@ -40,36 +48,87 @@ final class VerbTest extends TestCase
     public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-        $this->mockVerb = new CustomMockVerb();
-    }
 
-    public function testGetInstanceReturns()
-    {
+        $controller = Controller::getInstance();
+
+        $this->application = new BasicApplication();
+        $this->application->setController($controller);
+
         $circuit = new BasicCircuit();
-        $this->assertEquals(false, false);
+        $circuit->setName("test");
+        $this->application->addCircuit($circuit);
+
+        $action = new FuseAction($circuit);
+        $action->setName("test");
+        $circuit->addAction($action);
+
+        $verbPaths = array(
+            "test" => __DIR__
+        );
+        $circuit->setVerbPaths(serialize($verbPaths));
+
+    }
+
+    public function testGetDoVerbGetInstanceClass(){
+        $mockDoVerbData = array(
+            'name' => "do",
+            'namespace' => "myfuses",
+            'attributes' => array(
+                'action' => "test"
+            )
+        );
+        $verb = AbstractVerb::getInstance($mockDoVerbData,
+            $this->getTestAction());
+
+        $this->assertInstanceOf(DoVerb::class, $verb);
+    }
+
+    public function testGetIncludeVerbGetInstanceClass(){
+        $mockDoVerbData = array(
+            'name' => "include",
+            'namespace' => "myfuses",
+            'attributes' => array(
+                'file' => "test"
+            )
+        );
+        $verb = AbstractVerb::getInstance($mockDoVerbData,
+            $this->getTestAction());
+
+        $this->assertInstanceOf(IncludeVerb::class, $verb);
+    }
+
+    public function testGetCustomVerbGetInstanceClass()
+    {
+        $mockCustomVerbData = array(
+            'name' => "customMock",
+            'namespace' => "test",
+            'attributes' => array(
+                'value' => "Mock Test"
+            )
+        );
+
+        $verb = AbstractVerb::getInstance($mockCustomVerbData,
+            $this->getTestAction());
+
+        $this->assertInstanceOf(TestCustomMockVerb::class, $verb);
+    }
+
+    /**
+     * Returns the test circuit
+     *
+     * @return BasicCircuit
+     */
+    private function getTestCircuit(){
+        return $this->application->getCircuit("test");
+    }
+
+    /**
+     * Returns the test action
+     *
+     * @return FuseAction
+     */
+    private function getTestAction(){
+        return $this->getTestCircuit()->getAction("test");
+
     }
 }
-
-
-
-class CustomMockVerb extends AbstractVerb{
-
-}
-
-$mockVerbData = array(
-    'name' => "customMock",
-    'namespace' => "test",
-    'attributes' => array(
-        'value' => "Mock Test"
-    )
-);
-
-/**
-/home/fgarcia/source/candango/myfuses/src/MyFuses/Core/Verbs/DoVerb.php:125:
-array (size=3)
-'name' => string 'do' (length=2)
-'namespace' => string 'myfuses' (length=7)
-'attributes' =>
-array (size=1)
-'action' => string 'header' (length=6)
- */
