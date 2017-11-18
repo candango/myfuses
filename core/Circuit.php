@@ -99,6 +99,13 @@ interface Circuit extends ICacheable
     public function getCompleteCacheFile();
 
     /**
+     * Return the complete path for cache data file
+     *
+     * @return string
+     */
+    public function getCompleteCacheDataFile();
+
+    /**
      * Set the circuit path
      *
      * @param string $path

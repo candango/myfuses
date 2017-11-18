@@ -187,7 +187,9 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader
         }
 
         if ($circuit->getApplication()->getMode() === "production") {
-            if (!file_exists($circuit->getCompleteCacheFile())) {
+            $circuit->setModified(false);
+            if (!file_exists($circuit->getCompleteCacheFile()) ||
+                !file_exists($circuit->getCompleteCacheDataFile())) {
                 $data = $this->doLoadCircuit($circuit);
             } else {
                 include $circuit->getCompleteCacheFile();
@@ -195,9 +197,7 @@ abstract class AbstractMyFusesLoader implements MyFusesLoader
                 if($this->circuitWasModified($circuit->getName() ) ||
                     $this->applicationWasModified()) {
                     $data = $this->doLoadCircuit($circuit);
-                } else {
-                    $circuit->setModified(false);
-                }       
+                }
             }
         }
         return $data;

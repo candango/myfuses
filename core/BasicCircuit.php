@@ -204,7 +204,7 @@ class BasicCircuit implements Circuit
     }
 
     /**
-     * Return the data file complete path
+     * Return the complete path for cache data file
      *
      * @return string
      */
