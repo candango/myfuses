@@ -541,7 +541,17 @@ class MyFuses
     }
 
     /**
-     * Return controller debugger
+     * Returns the controller builder
+     *
+     * @return MyFusesBuilder
+     */
+    public function getBuilder()
+    {
+        return $this->builder;
+    }
+
+    /**
+     * Returns the controller debugger
      *
      * @return MyFusesDebugger
      */

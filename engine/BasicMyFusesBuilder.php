@@ -53,7 +53,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $this->application = null;
     }
 
-    public static function buildApplication(Application $application)
+    public function buildApplication(Application $application)
     {
         $data = &$application->getLoader()->getCachedApplicationData();
 
@@ -62,19 +62,19 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                 foreach ($data['application']['children'] as $child) {
                     switch($child['name' ]) {
                         case "circuits":
-                            self::buildCircuits($application, $child);
+                            $this->buildCircuits($application, $child);
                             break;
                         case "classes":
-                            self::buildClasses($application, $child);
+                            $this->buildClasses($application, $child);
                             break;
                         case "parameters":
-                            self::buildParameters($application, $child);
+                            $this->buildParameters($application, $child);
                             break;
                         case "globalfuseactions":
-                            self::buildGlobalFuseActions($application, $child);
+                            $this->buildGlobalFuseActions($application, $child);
                             break;
                         case "plugins":
-                            self::buildPlugins($application, $child);
+                            $this->buildPlugins($application, $child);
                             break;    
                     }            
                 }
@@ -88,7 +88,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                         switch($child['name']) {
                             case "globalfuseactions":
                                 #TODO: Are we going too brute force here!?
-                                self::buildGlobalFuseActions($application,
+                                $this->buildGlobalFuseActions($application,
                                     $child);
                                 break;    
                         }            
@@ -111,7 +111,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         }
     }
 
-    protected static function buildCircuits(Application $application, &$data)
+    protected function buildCircuits(Application $application, &$data)
     {
         if (count($data['children'] > 0)) {
             foreach ($data['children'] as $child) {
@@ -149,12 +149,12 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                 $circuit->unsetPreFuseAction();
                 $circuit->unsetPostFuseAction();
 
-                //self::buildCircuit( $circuit );
+                //$this->buildCircuit( $circuit );
             }
         }
     }
 
-    public static function buildCircuit(Circuit $circuit)
+    public function buildCircuit(Circuit $circuit)
     {
         $data = $circuit->getData();
 
@@ -206,11 +206,11 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                     switch ($child['name']) {
                         case "fuseaction":
                         case "action":
-                            self::buildAction($circuit, $child);
+                            $this->buildAction($circuit, $child);
                             break;
                         case "prefuseaction":
                         case "postfuseaction":
-                            self::buildGlobalAction($circuit, $child);
+                            $this->buildGlobalAction($circuit, $child);
                             break;
                     }
                 }
@@ -226,7 +226,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
      * @param Circuit $circuit
      * @param array $data
      */
-    public static function buildAction(Circuit $circuit, $data)
+    public function buildAction(Circuit $circuit, $data)
     {
         if (is_null($data)) {
             return false;
@@ -300,7 +300,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         if (isset($data['children'])) {
             if (count($data['children']) > 0) {
                 foreach ($data['children'] as $child) {
-                    self::buildVerb($action, $child);
+                    $this->buildVerb($action, $child);
                 }
             }
         }
@@ -321,7 +321,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         if (isset($data['children' ])) {
             if( count( $data[ 'children' ] ) > 0 ) {
 	            foreach( $data[ 'children' ] as $child ) {
-	                self::buildVerb( $action, $child );
+	                $this->buildVerb( $action, $child );
 	            }
 	        }
         }
@@ -365,13 +365,13 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         if (isset($data['children'])) {
             if (count($data['children'] > 0)) {
                 foreach( $data[ 'children' ] as $child ) {
-                    self::buildClass($application, $child);
+                    $this->buildClass($application, $child);
                 }
             }
         }
     }
 
-    protected static function buildClass(Application $application, &$data) {
+    protected function buildClass(Application $application, &$data) {
         $name = "";
         $path = "";
 
@@ -403,7 +403,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
      * @param Application $application
      * @param array $data
      */
-    protected static function buildParameters(Application $application, &$data)
+    protected function buildParameters(Application $application, &$data)
     {
         // Setting default parameters
         $application->setFuseactionVariable("fuseaction");
@@ -514,7 +514,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
      * @param Application $application
      * @param array $data
      */
-    protected static function buildGlobalFuseActions(
+    protected function buildGlobalFuseActions(
         Application $application,
         &$data
     ) {
@@ -539,7 +539,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
                 if (isset($child['children'])) {
                     if (count($child['children'])) {
                         foreach ($child['children'] as $actionChild) {
-                            self::buildVerb($action, $actionChild);
+                            $this->buildVerb($action, $actionChild);
                         }
                     }
                 }
@@ -559,7 +559,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $application->clearPlugins();
         if(count($data[ 'children'])) {
             foreach ($data[ 'children' ] as $child) {
-                self::buildFase($application, $child);
+                $this->buildFase($application, $child);
             }
         }
     }

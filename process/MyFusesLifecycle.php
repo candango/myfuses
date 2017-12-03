@@ -214,7 +214,8 @@ abstract class MyFusesLifecycle
         foreach (MyFuses::getInstance()->getApplications() as
             $key => $application) {
             if ($key != Application::DEFAULT_APPLICATION_NAME) {
-                BasicMyFusesBuilder::buildApplication($application);
+                MyFuses::getInstance()->getBuilder()->buildApplication(
+                    $application);
              }
          }
     }
@@ -229,7 +230,7 @@ abstract class MyFusesLifecycle
 
             self::loadApplication( MyFuses::getApplication("myfuses"));
 
-            BasicMyFusesBuilder::buildApplication(
+            MyFuses::getInstance()->getBuilder()->buildApplication(
                 MyFuses::getApplication("myfuses")
             );
         }
@@ -245,7 +246,8 @@ abstract class MyFusesLifecycle
                     $circuit->setLoaded(true);
                     $circuit->setData($circuit->getApplication()->getLoader()->
                         loadCircuit($circuit));
-                    BasicMyFusesBuilder::buildCircuit($circuit);
+                    MyFuses::getInstance()->getBuilder()->buildCircuit(
+                        $circuit);
                 }
             }
         }
