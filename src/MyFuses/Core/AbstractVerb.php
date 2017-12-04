@@ -323,13 +323,15 @@ abstract class AbstractVerb implements Verb
         return $params;
     }
 
-    protected function getVariableSetString($variable, $value, $identLevel=0)
+    protected function getVariableSetString($variable, $value, $identLevel=0,
+                                            $append = false)
     {
-        // TODO: prepare to concatenation here
+        $appendStr = $append ? "true" : "false";
+
         $strOut = str_repeat("\t", $identLevel);
         $contextClass = "Candango\\MyFuses\\Process\\Context";
-        $strOut .= $contextClass . "::setVariable( \"" . $variable . "\", \"" .
-            $value . "\" );\n";
+        $strOut .= $contextClass . "::setVariable(\"" . $variable . "\", \"" .
+            $value . "\", " . $appendStr . ");\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;

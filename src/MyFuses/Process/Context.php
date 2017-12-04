@@ -15,9 +15,12 @@ namespace Candango\MyFuses\Process;
 /**
  * MyFuses Context class - Context.php
  *
- * Utility to handle usual code operations.
+ * Controls the context of global variables and parameters that are set inside
+ * circuits and lost the global reference. Here we make sure the variable will
+ * be set to the global context.
  *
- * FIXME: Context is clearly part of the process. Should be removed from util!
+ * Context controls if the variable value, that commonly is a string, must be
+ * transformed to php during the build process when the value is enclosed by #.
  *
  * @category   controller
  * @package    myfuses.util.context
@@ -28,11 +31,29 @@ class Context
 {
     public static $context = array();
 
-    public static function setVariable($name, $value)
+    /**
+     * Set a variable by it's given value.
+     *
+     * If the append parameter is set to true, the variable value will appended
+     * to the variable if it was previously defined.
+     *
+     * @param $name The variable name
+     * @param $value The variable value
+     * @param bool $append If the variable value should be appended or not
+     */
+    public static function setVariable($name, $value, $append = false)
     {
         global $$name;
 
-        $$name = $value;
+        if ($append) {
+            if (isset($$name)) {
+                $$name .= $value;
+            } else {
+                $$name = $value;
+            }
+        } else {
+            $$name = $value;
+        }
         if (!in_array( $name, self::$context)) {
             self::$context[] = $name;
         }

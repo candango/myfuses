@@ -27,42 +27,120 @@ use Candango\MyFuses\Process\Context;
  */
 class SetVerb extends AbstractVerb
 {
+    /**
+     * Name to be carried by the variable being set by the verb
+     *
+     * @var string
+     */
     private $variableName;
 
+    /**
+     * Value to be set to the variable
+     *
+     * @var string
+     */
     private $value;
 
+    /**
+     * Flag indicating if the verb should evaluate the value or not.
+     *
+     * @var bool
+     */
     private $evaluate = false;
 
+    /**
+     * Flag indicating if the verb should append the variable value to the
+     * previous value.
+     *
+     * @var bool
+     */
+    private $append = false;
+
+    /**
+     * Returns the variable name being set by the verb
+     *
+     * @return string
+     */
     public function getVariableName()
     {
         return $this->variableName;
     }
 
+    /**
+     * Defines the variname to be set by the verb
+     *
+     * @param $variableName
+     */
     public function setVariableName($variableName)
     {
         $this->variableName = $variableName;
     }
 
+    /**
+     * Returns the value to be set to the variable by the verb
+     *
+     * @return string
+     */
     public function getValue()
     {
         return $this->value;
     }
 
+    /**
+     * Set the value to be set to the variable by the verb
+     *
+     * @param $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
     }
 
-    public function isEvaluate()
+    /**
+     * Returns true if the value should be evaluated
+     *
+     * @return bool
+     */
+    public function mustEvaluate()
     {
         return $this->evaluate;
     }
 
+    /**
+     * Set the verb to evaluate the value or not.
+     *
+     * @param bool $evaluate
+     */
     public function setEvaluate($evaluate)
     {
         $this->evaluate = $evaluate;
-    } 
+    }
 
+    /**
+     * Returns if the verb must append the value or not.
+     *
+     * @return bool
+     */
+    public function mustAppend()
+    {
+        return $this->append;
+    }
+
+    /**
+     * Set if the verb must append the value or not.
+     *
+     * @param bool $append
+     */
+    public function setAppend($append)
+    {
+        $this->append = $append;
+    }
+
+    /**
+     * Return the data representing this verb
+     *
+     * @return mixed
+     */
     public function getData()
     {
         $data = parent::getData();
@@ -71,13 +149,23 @@ class SetVerb extends AbstractVerb
             $data['attributes']['name'] = $this->getVariableName();
         }
 
-        if ($this->isEvaluate()) {
+        if ($this->mustEvaluate()) {
             $data['attributes']['evaluate'] = "true";
         }
+
+        if ($this->mustAppend()) {
+            $data['attributes']['append'] = "true";
+        }
+
         $data['attributes']['value'] = $this->getValue();
         return $data;
     }
-    
+
+    /**
+     * Set this verb with the data provided.
+     *
+     * @param array $data
+     */
     public function setData($data)
     {
         parent::setData($data);
@@ -89,6 +177,12 @@ class SetVerb extends AbstractVerb
         if (isset($data['attributes']['evaluate'])) {
             if ($data['attributes']['evaluate'] == 'true') {
                 $this->setEvaluate(true);
+            }
+        }
+
+        if (isset($data['attributes']['append'])) {
+            if ($data['attributes']['append'] == 'true') {
+                $this->setAppend(true);
             }
         }
 
@@ -116,7 +210,7 @@ class SetVerb extends AbstractVerb
         // resolving evaluate parameter
         $value = "";
 
-        if ($this->isEvaluate()) {
+        if ($this->mustEvaluate()) {
             $value = "#eval(\"" . $this->getValue() . "\")#";
         } else {
             $value = $this->getValue();
@@ -133,14 +227,12 @@ class SetVerb extends AbstractVerb
                 $strOut .= "$" . $this->getVariableName() . " = "  .
                     Context::sanitizeHashedString("\"" . $value . "\"") .
                     ";\n";
-                // TODO: prepare concatenation here
                 $strOut .= self::getVariableSetString($arrayName, "#$" .
-                    $arrayName . "#", $identLevel);
+                    $arrayName . "#", $identLevel, $this->mustAppend());
             }
             else{
-                // TODO: prepare concatenation here
                 $strOut .= self::getVariableSetString($this->getVariableName(),
-                    $value, $identLevel);
+                    $value, $identLevel, $this->mustAppend());
             }
         }
 
