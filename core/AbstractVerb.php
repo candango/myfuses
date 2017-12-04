@@ -17,8 +17,8 @@ require_once MYFUSES_ROOT_PATH . "core/CircuitAction.php";
  * AbstractVerb - AbstractVerb.php
  *
  * AbstractVerb implements various methods defined in Verb interface.
- * All Custom verbs must extend AbstractVerb to be in compliance with the 
- * framework. 
+ * All Custom verbs must extend AbstractVerb to be in compliance with the
+ * framework.
  *
  * @category   controller
  * @package    myfuses.core
@@ -65,7 +65,7 @@ abstract class AbstractVerb implements Verb
 
     /**
      * Verb parent
-     * 
+     *
      * @var Verb
      */
     private $parent;
@@ -132,7 +132,7 @@ abstract class AbstractVerb implements Verb
 
     /**
      * Return the verb parent
-     *	
+     *
      * @return Verb
      */
     public function getParent()
@@ -190,9 +190,9 @@ abstract class AbstractVerb implements Verb
                             getController()->getVerbPaths() as $vPath) {
                             if(file_exists($vPath . $path)) {
                                 $path = $vPath . $path;
-                            } 
+                            }
                         }
-                    }   
+                    }
                 }
 
                 $className = strtoupper(substr($data['namespace'], 0, 1)) .
@@ -232,7 +232,7 @@ abstract class AbstractVerb implements Verb
         $strOut = "array(";
         $comma = false;
         foreach($data as $key => $value) {
-            $strOut .= $comma ? ", " : "";    
+            $strOut .= $comma ? ", " : "";
             if(is_array($value)) {
                 $strOut .= "'" . $key . "' => " . $this->dataToString($value);
             }
@@ -299,7 +299,7 @@ abstract class AbstractVerb implements Verb
 	    }
 	    return $strTrace;
 	}
-	
+
 	/**
 	 * Return the parsed comments
 	 *
@@ -320,12 +320,15 @@ abstract class AbstractVerb implements Verb
 	    return $params;
 	}
 
-	protected function getVariableSetString($variable, $value, $identLevel=0)
+	protected function getVariableSetString($variable, $value, $identLevel=0,
+                                            $append = false)
     {
-        // TODO: prepare to concatenation here
+        $appendStr = $append ? "true" : "false";
+
+
         $strOut = str_repeat("\t", $identLevel);
-	    $strOut .= "MyFusesContext::setVariable( \"" .
-              $variable . "\", \"" . $value . "\" );\n";
+        $strOut .= "MyFusesContext::setVariable(\"" .
+              $variable . "\", \"" . $value . "\", " . $appendStr . ");\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "global $" . $variable  . ";\n\n";
         return $strOut;
@@ -352,14 +355,14 @@ abstract class AbstractVerb implements Verb
 	        $strOut .= "\$" . $contentVariable . " .= ob_get_contents();" .
                 "ob_end_clean();\n";
             $strOut .= str_repeat("\t", $identLevel+1);
-            $strOut .= "    MyFusesContext::setParameter( \"" . 
+            $strOut .= "    MyFusesContext::setParameter( \"" .
                 $contentVariable . "\", \$" . $contentVariable . " );\n";
         }
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "} else {\n";
         $strOut .= str_repeat("\t", $identLevel+1);
         $strOut .= "throw new MyFusesFileOperationException( " .
-        	$fileName . ", MyFusesFileOperationException::INCLUDE_FILE );\n";
+            $fileName . ", MyFusesFileOperationException::INCLUDE_FILE );\n";
         $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "}\n\n";
         return $strOut;

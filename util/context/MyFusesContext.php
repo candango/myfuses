@@ -26,11 +26,18 @@ class MyFusesContext
 {
     public static $context = array();
 
-    public static function setVariable($name, $value)
+    public static function setVariable($name, $value, $append = false)
     {
         global $$name;
-
-        $$name = $value;
+        if ($append) {
+            if (isset($$name)) {
+                $$name .= $value;
+            } else {
+                $$name = $value;
+            }
+        } else {
+            $$name = $value;
+        }
         if (!in_array( $name, self::$context)) {
             self::$context[] = $name;
         }
