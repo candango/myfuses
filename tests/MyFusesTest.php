@@ -10,6 +10,10 @@
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
+include_once "myfuses_test_vars.php";
+
+include_once MYFUSES_PATH . "/MyFuses.php";
+
 use PHPUnit\Framework\TestCase;
 
 /**
