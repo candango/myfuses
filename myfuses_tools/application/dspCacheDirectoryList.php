@@ -10,7 +10,11 @@ unset($_SESSION['file_message']);
 $cachedPath = $application->getController()->getParsedPath() . 
     $application->getName();
 ?>
-<h3>Current Path: <?php echo $cachedPath?></h3>
+<h3>Current Path: <?php echo $cachedPath?>
+    <a href="<?=MyFuses::getMySelfXfa("deletePath", true, false) .
+    "application=" . $application->getName() . "&file=" . urlencode($cachedPath)
+    ?>">delete</a>
+</h3>
 
 <?php
 $it = new RecursiveDirectoryIterator($cachedPath);
