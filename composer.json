@@ -24,6 +24,6 @@
         "ext-mbstring": "*"
     },
     "autoload": {
-        "psr-0": {"Candango\\MyFuses\\": "src"}
+        "psr-4": {"Candango\\MyFuses\\": "src/MyFuses/"}
     }
 }
