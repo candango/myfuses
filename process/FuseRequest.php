@@ -6,7 +6,7 @@
  * (http://www.fusebox.org/).
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 require_once MYFUSES_ROOT_PATH . "process/FuseQueue.php";
@@ -146,8 +146,13 @@ class FuseRequest
             $this->validFuseactionName = $defaultFuseaction;
         }
 
-        list($this->circuitName, $this->actionName) =
-            explode('.', $this->validFuseactionName);
+        $validFuseactionNameX = explode('.', $this->validFuseactionName);
+
+        $this->circuitName = $validFuseactionNameX[0];
+
+        if (sizeof($validFuseactionNameX ) > 1) {
+            $this->actionName = $validFuseactionNameX[1];
+        }
     }
 
     /**
@@ -171,7 +176,18 @@ class FuseRequest
 
         $circuit = $this->application->getCircuit($this->circuitName);
 
-        $action = $circuit->getAction($this->actionName);
+        if ($this->actionName == "") {
+            if ($circuit->hasDefaultAction()) {
+                $action = $circuit->getDefaultAction();
+                $this->actionName = $action->getName();
+                $this->validFuseactionName .= "." . $this->actionName;
+            }
+        }
+
+        if(!$action) {
+            $action = $circuit->getAction($this->actionName);
+        }
+
         return $action;
     }
 
@@ -230,7 +246,7 @@ class FuseRequest
      */
     public function &getFuseQueue()
     {
-        if(is_null($this->fuseQueue)) {
+        if (is_null($this->fuseQueue)) {
             $this->fuseQueue = new FuseQueue($this);
         }
         return $this->fuseQueue;
@@ -321,7 +337,7 @@ class FuseRequest
                 }
                 
             }
-            catch( MyFusesCircuitException $mfce ) {
+            catch (MyFusesCircuitException $mfce) {
                 try {
                     $application = MyFuses::getApplication($path[0]);
 

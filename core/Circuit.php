@@ -6,7 +6,7 @@
  * (http://www.fusebox.org/).
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -206,7 +206,7 @@ interface Circuit extends ICacheable
     public function addAction(Action $action);
 
     /**
-     * Return one Circuit by name
+     * Return one action by name
      *
      * @param string $name
      * @return FuseAction
@@ -215,9 +215,24 @@ interface Circuit extends ICacheable
     public function getAction($name);
 
     /**
+     * Returns the default action if it is defined
+     *
+     * @return FuseAction
+     * @throws MyFusesActionException
+     */
+    public function getDefaultAction();
+
+    /**
      * 
      */
     public function hasAction($name);
+
+    /**
+     * Returns true if the circuit has a default action
+     *
+     * @return bool
+     */
+    public function hasDefaultAction();
 
     public function getActions();
 
