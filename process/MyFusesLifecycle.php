@@ -6,7 +6,7 @@
  * (http://www.fusebox.org/).
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -190,9 +190,9 @@ abstract class MyFusesLifecycle
     {
         foreach (MyFuses::getInstance()->getApplications() as
             $key => $application) {
-             if ($key != Application::DEFAULT_APPLICATION_NAME) {
-                 self::loadApplication($application);
-             }
+            if ($key != Application::DEFAULT_APPLICATION_NAME) {
+                self::loadApplication($application);
+            }
          } 
     }
 
