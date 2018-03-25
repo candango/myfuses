@@ -284,21 +284,19 @@ class FuseRequest
             try {
                 $circuit = $this->getApplication()->getCircuit($path[0]);
 
-                $resolvedPath = $circuit->getName();
-
-                foreach ($circuit->getActions() as $action) {
-                    if ($action->isDefault()) {
-                        return $circuit->getApplication()->getName() . "." . 
-                            $resolvedPath . "." . $action->getName();
-                    }
-                    $params = array(
-                        'actionName' => "default",
-                        'circuit' => $circuit ,
-                        'application' => $this->getApplication()
-                    );
-                    throw new MyFusesActionException($params,
-                        MyFusesActionException::NON_EXISTENT_FUSEACTION);
+                $resolvedPath = $circuit->getApplication()->getName() . "." .
+                    $circuit->getName();
+                if ($circuit->hasDefaultAction()) {
+                    return $resolvedPath . "." .
+                        $circuit->getDefaultAction()->getName();
                 }
+                $params = array(
+                    'actionName' => "Default circuit action",
+                    'circuit' => $circuit ,
+                    'application' => $this->getApplication()
+                );
+                throw new MyFusesActionException($params,
+                    MyFusesActionException::NON_EXISTENT_FUSEACTION);
             } catch (MyFusesCircuitException $mfce) {
                 try {
                     $application = MyFuses::getApplication($path[0]);
