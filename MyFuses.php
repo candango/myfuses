@@ -401,7 +401,8 @@ class MyFuses
     public function createApplication(
         $name = Application::DEFAULT_APPLICATION_NAME,
         $config = null
-    ) {
+    )
+    {
         $appClass = $this->getApplicationClass();
         $application = new $appClass($name);
 
@@ -436,7 +437,8 @@ class MyFuses
      */
     public static function getApplication(
         $name = Application::DEFAULT_APPLICATION_NAME
-    ) {
+    )
+    {
         if (isset(self::getInstance()->applications[$name])) {
             return self::getInstance()->applications[$name];
         }
@@ -882,7 +884,7 @@ class MyFuses
 
         $rootDir = implode("/", $scriptNameX);
 
-        $rootUrl = $rootUrl . ($rootDir==""? "": $rootDir . "/");
+        $rootUrl = $rootUrl . ($rootDir == "" ? "" : $rootDir . "/");
 
         return $rootUrl;
     }
@@ -918,9 +920,18 @@ class MyFuses
     public static function getProcotol()
     {
         // TODO: get from the parameter
-        if(array_key_exists("REQUEST_SCHEME", $_SERVER)){
-            return $_SERVER['REQUEST_SCHEME'];
+        //if (array_key_exists("REQUEST_SCHEME", $_SERVER)) {
+        //  return $_SERVER['REQUEST_SCHEME'];
+        //}
+
+        if (@$_SERVER['HTTP_X_FORWARDED_PROTO'] === "https") {
+            return $_SERVER['HTTP_X_FORWARDED_PROTO'];
+        } else {
+            if (array_key_exists("REQUEST_SCHEME", $_SERVER)) {
+                return $_SERVER['REQUEST_SCHEME'];
+            }
         }
+
         return "http";
     }
 
@@ -932,7 +943,7 @@ class MyFuses
             // If ignoreFuseactionVariable is true, we always don't return it
             // with the url
             if (self::getInstance()->getApplication()->
-                ignoreFuseactionVariable()) {
+            ignoreFuseactionVariable()) {
                 $showFuseactionVariable = false;
             }
             $mySelf = self::getSelf();
@@ -954,7 +965,8 @@ class MyFuses
         $xfaName,
         $initQuery = false,
         $showFuseactionVariable = true
-    ) {
+    )
+    {
         // FIXME Fixing an error occurring with CGI.
         // FIXME Suppress redirect with CGI!!!
         if (MyFuses::isRewriting()) {
@@ -1128,7 +1140,8 @@ class MyFusesMemcacheServer
         $host = null,
         $port = "11211",
         $persistent = false
-    ) {
+    )
+    {
         $this->setHost($host);
         $this->setPort($port);
         $this->setPersistent($persistent);
