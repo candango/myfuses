@@ -6,7 +6,7 @@
  * (http://www.fusebox.org/).
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -401,8 +401,7 @@ class MyFuses
     public function createApplication(
         $name = Application::DEFAULT_APPLICATION_NAME,
         $config = null
-    )
-    {
+    ) {
         $appClass = $this->getApplicationClass();
         $application = new $appClass($name);
 
@@ -437,8 +436,7 @@ class MyFuses
      */
     public static function getApplication(
         $name = Application::DEFAULT_APPLICATION_NAME
-    )
-    {
+    ) {
         if (isset(self::getInstance()->applications[$name])) {
             return self::getInstance()->applications[$name];
         }
@@ -919,17 +917,20 @@ class MyFuses
 
     public static function getProcotol()
     {
-        // TODO: get from the parameter
-        //if (array_key_exists("REQUEST_SCHEME", $_SERVER)) {
-        //  return $_SERVER['REQUEST_SCHEME'];
-        //}
-
-        if (@$_SERVER['HTTP_X_FORWARDED_PROTO'] === "https") {
-            return $_SERVER['HTTP_X_FORWARDED_PROTO'];
-        } else {
-            if (array_key_exists("REQUEST_SCHEME", $_SERVER)) {
-                return $_SERVER['REQUEST_SCHEME'];
+        try {
+            $application = MyFuses::getApplication();
+            if ($application->isProtocolDefined()) {
+                return $application->getProtocol();
             }
+        } catch (MyFusesApplicationException $mfae) {
+        }
+
+        if (array_key_exists("HTTP_X_FORWARDED_PROTO", $_SERVER)) {
+            return $_SERVER['HTTP_X_FORWARDED_PROTO'];
+        }
+
+        if (array_key_exists("REQUEST_SCHEME", $_SERVER)) {
+            return $_SERVER['REQUEST_SCHEME'];
         }
 
         return "http";
@@ -965,8 +966,7 @@ class MyFuses
         $xfaName,
         $initQuery = false,
         $showFuseactionVariable = true
-    )
-    {
+    ) {
         // FIXME Fixing an error occurring with CGI.
         // FIXME Suppress redirect with CGI!!!
         if (MyFuses::isRewriting()) {
@@ -1140,8 +1140,7 @@ class MyFusesMemcacheServer
         $host = null,
         $port = "11211",
         $persistent = false
-    )
-    {
+    ) {
         $this->setHost($host);
         $this->setPort($port);
         $this->setPersistent($persistent);

@@ -6,7 +6,7 @@
  * (http://www.fusebox.org/).
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2017 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -436,6 +436,20 @@ interface Application extends ICacheable
     public function getCharacterEncoding();
 
     public function setCharacterEncoding($characterEncoding);
+
+    public function getProtocol();
+
+    public function setProtocol($protocol);
+
+    /**
+     * If the protocol was defined return true.
+     *
+     * This is forcing myfuses to user the forced protocol set in the
+     * config file.
+     *
+     * @return bool
+     */
+    public function isProtocolDefined();
 
     /**
      * Return security mode

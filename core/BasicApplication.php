@@ -250,6 +250,17 @@ class BasicApplication implements Application
     private $characterEncoding = "UTF-8";
 
     /**
+     * Protocol to be using while handling urls.
+     * This will be used automatically by the framework when the application is
+     * the default one.
+     *
+     * Possible values are http and https
+     *
+     * @var String
+     */
+    private $protocol = null;
+
+    /**
      * Security mode parameter
      *
      * @var string
@@ -335,8 +346,7 @@ class BasicApplication implements Application
     public function __construct(
         $name = Application::DEFAULT_APPLICATION_NAME,
         $loader = null
-    )
-    {
+    ) {
         $this->setName($name);
 
         if (is_null($loader)) {
@@ -1078,6 +1088,36 @@ class BasicApplication implements Application
         $this->characterEncoding = $characterEncoding;
     }
 
+    public function getProtocol()
+    {
+        if (!$this->isProtocolDefined()) {
+            return MyFuses::getProcotol();
+        }
+        return $this->protocol;
+    }
+
+    public function setProtocol($protocol)
+    {
+        $protocol = strtolower($protocol);
+
+        // TODO: Let's log a warning here
+        if (in_array($protocol, ["http", "https"])) {
+            $this->protocol = $protocol;
+        }
+    }
+
+    /**
+     * If the protocol was defined return true.
+     *
+     * This is forcing myfuses to user the forced protocol set in the
+     * config file.
+     *
+     * @return bool
+     */
+    public function isProtocolDefined() {
+        return !is_null($this->protocol);
+    }
+
     /**
      * Return security mode
      *
@@ -1386,7 +1426,10 @@ class BasicApplication implements Application
             ($this->isDebugAllowed() ? "true" : "false") . ");\n";
         $strOut .= "\$application->setTools(" .
             ($this->isToolsAllowed() ? "true" : "false") . ");\n";
-
+        if ($this->isProtocolDefined()) {
+            $strOut .= "\$application->setProtocol(\"" . $this->getProtocol()
+                . "\");\n";
+        }
         if (!is_null($this->getMaskedFileDelimiters())) {
             $strOut .= "\$application->setMaskedFileDelimiters(\"" .
                 implode(",", $this->getMaskedFileDelimiters()) . "\");\n";
