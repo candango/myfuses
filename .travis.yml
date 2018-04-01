@@ -4,4 +4,4 @@ php:
   - '5.6'
   - '7.1'
 script:
-  - "phpunit -v --no-configuration ./tests --teamcity"
+  - "phpunit -v --no-configuration ./tests"
