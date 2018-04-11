@@ -377,7 +377,7 @@ class BasicCircuit implements Circuit
     }
 
     /**
-     * Return one Circuit by name
+     * Return the action by name
      *
      * @param string $name
      * @return FuseAction
@@ -395,11 +395,48 @@ class BasicCircuit implements Circuit
     }
 
     /**
+     *
+     * Returns the default action if it is defined
+     *
+     * @return FuseAction
+     * @throws MyFusesActionException
+     */
+    public function getDefaultAction()
+    {
+        foreach ($this->actions as $name => $action) {
+            if ($action->isDefault()) {
+                return $this->actions[$name];
+            }
+        }
+
+        $params = array("actionName" => "Default circuit action",
+            "circuit" => &$this ,
+            "application" => $this->getApplication());
+        throw new MyFusesActionException($params,
+            MyFusesActionException::NON_EXISTENT_FUSEACTION);
+    }
+
+    /**
      * 
      */
     public function hasAction($name)
     {
        return isset($this->actions[$name]);
+    }
+
+    /**
+     * Returns true if the circuit has a default action
+     *
+     * @return bool
+     */
+    public function hasDefaultAction()
+    {
+        foreach ($this->actions as $action) {
+            if ($action->isDefault()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getActions()

@@ -423,6 +423,12 @@ class BasicApplication implements Application
      */
     public function setPath($path)
     {
+        if(file_exists($path . $_SERVER['SCRIPT_NAME'])) {
+            if(is_link($path . $_SERVER['SCRIPT_NAME'])) {
+                $path = dirname(readlink($path . $_SERVER['SCRIPT_NAME']));
+            }
+        }
+
         if (substr($path, -1) != DIRECTORY_SEPARATOR) {
             $path .= DIRECTORY_SEPARATOR;
         }
@@ -430,6 +436,12 @@ class BasicApplication implements Application
             $this->path = $path;    
         } else {
             $this->path = FileHandler::sanitizePath(getcwd()) . $path;
+        }
+
+        if (!in_array($this->path,
+            explode(PATH_SEPARATOR, get_include_path()))) {
+            set_include_path($this->path . PATH_SEPARATOR .
+                get_include_path());
         }
     }
 

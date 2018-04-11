@@ -196,9 +196,9 @@ abstract class Lifecycle
     {
         foreach (Controller::getInstance()->getApplications() as
                  $key => $application) {
-             if ($key != Application::DEFAULT_APPLICATION_NAME) {
-                 self::loadApplication($application);
-             }
+            if ($key != Application::DEFAULT_APPLICATION_NAME) {
+                self::loadApplication($application);
+            }
          } 
     }
 

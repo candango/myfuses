@@ -151,8 +151,13 @@ class FuseRequest
             $this->validFuseactionName = $defaultFuseaction;
         }
 
-        list($this->circuitName, $this->actionName) =
-            explode('.', $this->validFuseactionName);
+        $validFuseactionNameX = explode('.', $this->validFuseactionName);
+
+        $this->circuitName = $validFuseactionNameX[0];
+
+        if (sizeof($validFuseactionNameX ) > 1) {
+            $this->actionName = $validFuseactionNameX[1];
+        }
     }
 
     /**
@@ -176,7 +181,18 @@ class FuseRequest
 
         $circuit = $this->application->getCircuit($this->circuitName);
 
-        $action = $circuit->getAction($this->actionName);
+        if ($this->actionName == "") {
+            if ($circuit->hasDefaultAction()) {
+                $action = $circuit->getDefaultAction();
+                $this->actionName = $action->getName();
+                $this->validFuseactionName .= "." . $this->actionName;
+            }
+        }
+
+        if(!$action) {
+            $action = $circuit->getAction($this->actionName);
+        }
+
         return $action;
     }
 
@@ -235,7 +251,7 @@ class FuseRequest
      */
     public function &getFuseQueue()
     {
-        if(is_null($this->fuseQueue)) {
+        if (is_null($this->fuseQueue)) {
             $this->fuseQueue = new FuseQueue($this);
         }
         return $this->fuseQueue;

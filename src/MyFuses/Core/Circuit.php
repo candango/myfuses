@@ -202,7 +202,7 @@ interface Circuit extends ICacheable
     public function addAction(Action $action);
 
     /**
-     * Return one Circuit by name
+     * Return one action by name
      *
      * @param string $name
      * @return FuseAction
@@ -211,9 +211,25 @@ interface Circuit extends ICacheable
     public function getAction($name);
 
     /**
+     *
+     * Returns the default action if it is defined
+     *
+     * @return FuseAction
+     * @throws MyFusesActionException
+     */
+    public function getDefaultAction();
+
+    /**
      * 
      */
     public function hasAction($name);
+
+    /**
+     * Returns true if the circuit has a default action
+     *
+     * @return bool
+     */
+    public function hasDefaultAction();
 
     public function getActions();
 
