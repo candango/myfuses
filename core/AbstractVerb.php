@@ -255,11 +255,7 @@ abstract class AbstractVerb implements Verb
 
 	public function getData()
     {
-	    if($this->getNamespace() != "myfuses") {
-	        $data['name'] = $this->getName();
-	    } else {
-	        $data['name'] = $this->getName();
-	    }
+	    $data['name'] = $this->getName();
 	    $data['namespace'] = $this->getNamespace();
 	    return $data;
 	}
