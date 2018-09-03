@@ -23,7 +23,7 @@ use Candango\MyFuses\Util\FileHandler;
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c36c8ff941c440d0c01ea0341e03345dd9727b10
  */
-abstract class I18NHandler
+abstract class I18nHandler
 {
     /**
      * Native type constant

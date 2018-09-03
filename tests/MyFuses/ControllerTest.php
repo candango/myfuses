@@ -134,7 +134,7 @@ final class ControllerTest extends TestCase
     {
         $expectedProtocol = "http";
         $_SERVER['REQUEST_SCHEME'] = "http";
-        $this->assertEquals($expectedProtocol, Controller::getProcotol());
+        $this->assertEquals($expectedProtocol, Controller::getProtocol());
         unset($_SERVER['REQUEST_SCHEME']);
     }
 
@@ -142,13 +142,13 @@ final class ControllerTest extends TestCase
     {
         $expectedProtocol = "https";
         $_SERVER['REQUEST_SCHEME'] = "https";
-        $this->assertEquals($expectedProtocol, Controller::getProcotol());
+        $this->assertEquals($expectedProtocol, Controller::getProtocol());
         unset($_SERVER['REQUEST_SCHEME']);
     }
 
     public function testProtocolNoRequestScheme()
     {
         $expectedProtocol = "http";
-        $this->assertEquals($expectedProtocol, Controller::getProcotol());
+        $this->assertEquals($expectedProtocol, Controller::getProtocol());
     }
 }

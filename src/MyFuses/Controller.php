@@ -17,6 +17,7 @@ namespace Candango\MyFuses
     use Candango\MyFuses\Exceptions\ActionException;
     use Candango\MyFuses\Exceptions\ApplicationException;
     use Candango\MyFuses\Exceptions\CircuitException;
+    use Candango\MyFuses\I18n\I18nHandler;
     use Candango\MyFuses\Exceptions\Exception;
     use Candango\MyFuses\Process\Context;
     use Candango\MyFuses\Process\DebugEvent;
@@ -64,6 +65,14 @@ namespace Candango\MyFuses
         const MODE_PRODUCTION = "production";
 
         const ROOT_PATH = ROOT_PATH;
+
+
+        /**
+         * Controller builder
+         *
+         * @var Engine\BasicBuilder
+         */
+        private $builder;
 
         /**
          * Memcache enabled flag
@@ -177,7 +186,7 @@ namespace Candango\MyFuses
          *
          * @var string
          */
-        private static $i18nType = I18n\I18nHandler::NATIVE_TYPE;
+        private static $i18nType = I18nHandler::NATIVE_TYPE;
 
         /**
          * MyFuses Controller constructor
@@ -882,7 +891,7 @@ namespace Candango\MyFuses
 
         public static function getSelfPath()
         {
-            $self = self::getProcotol() . "://" . $_SERVER['HTTP_HOST'];
+            $self = self::getProtocol() . "://" . $_SERVER['HTTP_HOST'];
             $self .= "/";
 
             if (substr($self, -1) == "/") {
@@ -903,7 +912,7 @@ namespace Candango\MyFuses
             // TODO: It seems like request scheme isn't present all the time
             // TODO: We need to verify that
             // http://bit.ly/2yh6Yqo
-            $rootUrl = self::getProcotol() . "://" . $_SERVER['HTTP_HOST'];
+            $rootUrl = self::getProtocol() . "://" . $_SERVER['HTTP_HOST'];
 
             if (substr($rootUrl, -1) != "/") {
                 $rootUrl .= "/";
@@ -925,7 +934,7 @@ namespace Candango\MyFuses
 
         public static function getSelf()
         {
-            $self = self::getProcotol() . "://" . $_SERVER['HTTP_HOST'];
+            $self = self::getProtocol() . "://" . $_SERVER['HTTP_HOST'];
 
             if (substr($self, -1) != "/") {
                 $self .= "/";
@@ -951,7 +960,7 @@ namespace Candango\MyFuses
             return $self;
         }
 
-        public static function getProcotol()
+        public static function getProtocol()
         {
             // TODO: get from the parameter
             if(array_key_exists("REQUEST_SCHEME", $_SERVER)){
