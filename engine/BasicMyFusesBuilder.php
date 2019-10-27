@@ -113,7 +113,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
 
     protected function buildCircuits(Application $application, &$data)
     {
-        if (count($data['children'] > 0)) {
+        if (count($data['children']) > 0) {
             foreach ($data['children'] as $child) {
                 $name = "";
                 $path = "";
@@ -201,7 +201,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
 
         if (array_key_exists('children', $data)) {
             if (!is_null($data['children']) &&
-                count($data[ 'children'] > 0)) {
+                count($data[ 'children']) > 0) {
                 foreach ($data['children'] as $child) {
                     switch ($child['name']) {
                         case "fuseaction":
@@ -363,7 +363,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         );
 
         if (isset($data['children'])) {
-            if (count($data['children'] > 0)) {
+            if (count($data['children']) > 0) {
                 foreach( $data[ 'children' ] as $child ) {
                     $this->buildClass($application, $child);
                 }
@@ -415,7 +415,7 @@ class BasicMyFusesBuilder  implements MyFusesBuilder
         $application->setStrictMode(false);
         $application->setSecurity("optimistic");
 
-        if (count($data['children'] > 0)) {
+        if (count($data['children'])> 0) {
             foreach ($data['children'] as $child) {
                 $name = "";
                 $value = "";

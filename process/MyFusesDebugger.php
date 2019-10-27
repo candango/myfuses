@@ -34,7 +34,7 @@ class MyFusesDebugger
      *
      * @var array
      */
-    private $events;
+    private $events = array();
 
     public function __construct()
     {
