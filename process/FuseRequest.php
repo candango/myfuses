@@ -316,9 +316,9 @@ class FuseRequest
                 
                 try {
                     $action = $circuit->getAction( $path[ 1 ] );
-                    if( count( $path > 2 ) ) {
+                    if (count($path) > 2) {
                         $this->setExtraParams( array_slice( 
-                                $path, 2, count( $path ) ) );
+                                $path, 2, count($path)));
                     }
                     return $circuit->getApplication()->getName() . "." . 
                             $resolvedPath . "." . $action->getName();
@@ -351,7 +351,7 @@ class FuseRequest
                             try {
                                 $action = $circuit->getAction($path[2]);
 
-                                if( count( $path > 3 ) ) {
+                                if( count($path) > 3 ) {
                                     $this->setExtraParams(
                                         array_slice($path, 3, count($path))
                                     );
