@@ -57,7 +57,7 @@ class InstantiateVerb extends AbstractVerb
      * 
      * @var array
      */
-    private $childArguments;
+    private $childArguments = array();
 
     /**
      * Returnt the verb class
