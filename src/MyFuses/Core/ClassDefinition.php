@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -27,6 +27,13 @@ class ClassDefinition implements ICacheable
      * @var string
      */
     private $name;
+
+    /**
+     * Class namespace
+     *
+     * @var string
+     */
+    private $namespace;
 
     /**
      * Class path
@@ -60,6 +67,36 @@ class ClassDefinition implements ICacheable
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Return if the class definition has namespace
+     *
+     * @return boolean
+     */
+    public function hasNamespace()
+    {
+        return !is_null($this->namespace);
+    }
+
+    /**
+     * Return the class namespace
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * Set the class namespace
+     *
+     * @param string $namespace
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = $namespace;
     }
 
     /**
@@ -113,10 +150,17 @@ class ClassDefinition implements ICacheable
         $this->application = $application;
     }
 
-    public function getCachedCode() {
+    public function getCachedCode()
+    {
         $classDefinitionClass = "Candango\\MyFuses\\Core\\ClassDefinition";
         $strOut = "\$class = new " . $classDefinitionClass . "();\n";
-        $strOut .= "\$class->setName(\"" . $this->getName() . "\");\n";
+        if ($this->hasNamespace())
+        {
+            $strOut .= "\$class->setNamespace(\"" . $this->getNamespace() .
+                "\");\n";
+        } else {
+            $strOut .= "\$class->setName(\"" . $this->getName() . "\");\n";
+        }
         $strOut .= "\$class->setPath(\"" . addslashes($this->getPath()) .
             "\");\n";
         $strOut .= "\$application->addClass(\$class);\n";

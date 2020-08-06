@@ -379,12 +379,16 @@ class BasicBuilder implements Builder
         }
     }
 
-    protected function buildClass(Application $application, &$data) {
+    protected function buildClass(Application $application, &$data)
+    {
         $name = "";
-        $path = "";
+        $namespace = null;
+        $path = null;
 
-        foreach ($data['attributes'] as $attributeName => $attribute) {
-            switch ($attributeName) {
+        foreach ($data['attributes'] as $attributeName => $attribute)
+        {
+            switch ($attributeName)
+            {
                 case "name":
                 case "alias":
                     $name = "" . $attribute;
@@ -392,14 +396,26 @@ class BasicBuilder implements Builder
                 case "classpath":
                     $path = "" . $attribute;
                     break;
+                case "namespace":
+                    $namespace = "" . $attribute;
+                    break;
             }
         }
 
-        if (isset($name)) {
-            if ($name != "") {
+        if (isset($name))
+        {
+            if ($name != "")
+            {
                 $class = new ClassDefinition();
                 $class->setName($name);
-                $class->setPath($path);
+                if(!is_null($namespace))
+                {
+                    $class->setNamespace($namespace);
+                }
+                if(!is_null($path))
+                {
+                    $class->setPath($path);
+                }
                 $application->addClass($class);
             }
         }

@@ -260,26 +260,39 @@ class InstantiateVerb extends AbstractVerb
 	    $appName = $this->getAction()->getCircuit()->
 	        getApplication()->getName();
 
+	    $resolvedClass = $this->getAction()->getCircuit()->getApplication(
+            )->getClass($this->getClass());
+
 	    $controllerClass = $this->getAction()->getCircuit()->
 	        getApplication()->getControllerClass();
 
-	    $fileCall = $controllerClass . "::getInstance()->getApplication( \"" . 
-            $appName . "\" )->getClass( \"" . $this->getClass() . 
-	        "\" )->getCompletePath()";
+	    $classCall =  $controllerClass . "::getInstance()->getApplication(\"" .
+            $appName . "\")->getClass(\"" . $this->getClass() .
+            "\")";
 
+	    $fileCall = $classCall . "->getCompletePath()";
 	    $strOut = parent::getParsedCode($commented, $identLevel);
 	    $strOut .= str_repeat("\t", $identLevel);
         $contextClass = "Candango\\MyFuses\\Process\\Context";
-	    if (is_null($this->getWebservice())) {
-	        $strOut .= "if ( file_exists( " . $fileCall . " ) ) {\n";
-		    $strOut .= str_repeat("\t", $identLevel + 1);
-		    $strOut .= "require_once( " . $fileCall . " );\n";
-		    $strOut .= str_repeat("\t", $identLevel);
-		    $strOut .= "}\n";
-		    $strOut .= str_repeat("\t", $identLevel);
-		    $strOut .= $contextClass . "::setVariable( \"" .
-                $this->getObject() . "\", new " . $this->getClass() .
-                "( " . $this->getArgumentString() . " ) );\n\n";
+	    if (is_null($this->getWebservice()))
+	    {
+	        if($resolvedClass->hasNamespace())
+	        {
+                $strOut .= $contextClass . "::setVariable( \"" .
+                    $this->getObject() . "\", new " .
+                    $resolvedClass->getNamespace() . "(" .
+                    $this->getArgumentString() . "));\n\n";
+            } else {
+                $strOut .= "if (file_exists(" . $fileCall . " )) {\n";
+                $strOut .= str_repeat("\t", $identLevel + 1);
+                $strOut .= "require_once( " . $fileCall . " );\n";
+                $strOut .= str_repeat("\t", $identLevel);
+                $strOut .= "}\n";
+                $strOut .= str_repeat("\t", $identLevel);
+                $strOut .= $contextClass . "::setVariable( \"" .
+                    $this->getObject() . "\", new " . $this->getClass() .
+                    "( " . $this->getArgumentString() . " ) );\n\n";
+            }
             $strOut .= self::getContextRestoreString();
 	    } else {
 	        $strOut .= $contextClass . "::setVariable( \"" .

@@ -2,7 +2,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
 -->
 
@@ -31,7 +31,8 @@ Used within the fusebox.xml or myfuses.xml files to contain the elements that co
 <!ATTLIST class
         alias CDATA #REQUIRED
         type (component | java) "component"
-        classpath CDATA #REQUIRED
+        namespace CDATA #IMPLIED
+        classpath CDATA #IMPLIED
         constructor CDATA #IMPLIED
         >
 <!--
