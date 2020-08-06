@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -120,7 +120,7 @@ class BasicBuilder implements Builder
 
     protected function buildCircuits(Application $application, &$data)
     {
-        if (count($data['children'] > 0)) {
+        if (count($data['children']) > 0) {
             foreach ($data['children'] as $child) {
                 $name = "";
                 $path = "";
@@ -208,7 +208,7 @@ class BasicBuilder implements Builder
 
         if (array_key_exists('children', $data)) {
             if (!is_null($data['children']) &&
-                count($data[ 'children'] > 0)) {
+                count($data[ 'children']) > 0) {
                 foreach ($data['children'] as $child) {
                     switch ($child['name']) {
                         case "fuseaction":
@@ -371,7 +371,7 @@ class BasicBuilder implements Builder
         );
 
         if (isset($data['children'])) {
-            if (count($data['children'] > 0)) {
+            if (count($data['children']) > 0) {
                 foreach( $data[ 'children' ] as $child ) {
                     $this->buildClass($application, $child);
                 }
@@ -423,7 +423,7 @@ class BasicBuilder implements Builder
         $application->setStrictMode(false);
         $application->setSecurity("optimistic");
 
-        if (count($data['children'] > 0)) {
+        if (count($data['children']) > 0) {
             foreach ($data['children'] as $child) {
                 $name = "";
                 $value = "";

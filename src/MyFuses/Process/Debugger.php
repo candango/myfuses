@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -33,7 +33,7 @@ class Debugger
      *
      * @var array
      */
-    private $events;
+    private $events = array();
 
     public function __construct()
     {
@@ -48,7 +48,7 @@ class Debugger
     public function registerEvent(DebugEvent $event)
     {
         $event->setTime($this->getMicrotime() - $this->initTime);
-        $event->setCount(count( $this->events) + 1);
+        $event->setCount(count($this->events) + 1);
         $this->events[] = $event;
     }
 
