@@ -175,8 +175,12 @@ class InstantiateVerb extends AbstractVerb
             return $this->getArguments();
         }
         $strOut = "";
-        if (count($this->getChildArguments())) {
-            foreach ($this->getChildArguments() as $key => $argument) {
+        if (
+            !is_null($this->getChildArguments()) &&
+            count($this->getChildArguments())
+        ) {
+            foreach ($this->getChildArguments() as $key => $argument)
+            {
                 $strOut .= ($key == 0 ? "": " , ") . "\"" . $argument .  "\"";
             }
         }
