@@ -247,9 +247,12 @@ abstract class AbstractVerb implements Verb
 
     public function getCachedCode()
     {
+        $abstractVerbClass = "Candango\\MyFuses\\Core\\AbstractVerb";
+
         $data = $this->getData();
         $strOut = "\$data = " . $this->dataToString($data) . ";\n";
-        $strOut .= "\$verb = AbstractVerb::getInstance(\$data, \$action);\n";
+        $strOut .= "\$verb = " . $abstractVerbClass .
+            "::getInstance(\$data, \$action);\n";
         return $strOut;
     }
 
