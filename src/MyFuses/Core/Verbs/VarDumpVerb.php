@@ -9,6 +9,8 @@
 
 namespace Candango\MyFuses\Core\Verbs;
 
+use Candango\MyFuses\Core\AbstractVerb;
+
 /**
  * VarDumpVerb  - VarDumpVerb.php
  *
