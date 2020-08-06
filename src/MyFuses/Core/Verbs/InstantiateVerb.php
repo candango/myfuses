@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -51,14 +51,14 @@ class InstantiateVerb extends AbstractVerb
      *
      * @var array
      */
-    private $arguments = array();
+    private $arguments;
 
     /**
      * Child arguments used at object construction
      * 
      * @var array
      */
-    private $childArguments = array();
+    private $childArguments;
 
     /**
      * Returnt the verb class
