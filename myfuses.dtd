@@ -77,7 +77,8 @@ Used within the fusebox.xml or myfuses.xml files to contain the elements that co
         >
 <!ELEMENT plugin (parameter*)>
 <!ATTLIST plugin
-        name CDATA #REQUIRED
+        name CDATA #IMPLIED
+        namespace CDATA #IMPLIED
         template CDATA #IMPLIED
         path CDATA #IMPLIED
         >

@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -30,6 +30,13 @@ abstract class AbstractPlugin implements Plugin
      * @var string
      */
     private $name;
+
+    /**
+     * Plugin name
+     *
+     * @var string
+     */
+    private $namespace;
 
     /**
      * Plugin file
@@ -92,6 +99,26 @@ abstract class AbstractPlugin implements Plugin
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Return the plugin namespace
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * Set the plugin namespace
+     *
+     * @param string $namespace
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = $namespace;
     }
 
     /**
@@ -256,8 +283,10 @@ abstract class AbstractPlugin implements Plugin
 
     /**
      * Get one parameter by a given name
-     * 
-     * @return strin The paramter name
+     *
+     * $param string $name
+     *
+     * @return array The paramter name
      */
     public function getParameter($name)
     {
@@ -278,6 +307,7 @@ abstract class AbstractPlugin implements Plugin
      * @param Application $application
      * @param string $phase
      * @param string $name
+     * @param string $namespace
      * @param string $path
      * @param string $file
      * @param array $parameters
@@ -288,55 +318,70 @@ abstract class AbstractPlugin implements Plugin
         Application $application,
         $phase,
         $name,
+        $namespace,
         $path,
         $file,
         $parameters = array()
     ) {
+        $hasNamespace = false;
         $class = $name;
-
-        if(substr($name, -6) !== "Plugin") {
-            $class .= "Plugin";   
+        if ($namespace!=="") {
+            $hasNamespace = true;
+            $class = $namespace;
         }
 
-        if($file == "") {
-            if(substr($name, -6) === "Plugin") {
-                $file = $name . ".php";
-            } else {
-                $file = $name . "Plugin.php";
-            }
+        if(substr($class, -6) !== "Plugin")
+        {
+            $class .= "Plugin";
         }
 
-        // FIXME: handle missing included file exception
-        if($path == "") {
-            foreach ($application->getController()->getPluginPaths() as $path) {
-                $path = FileHandler::sanitizePath($path);
-
-                $tmpPath = "";
-
-                if (FileHandler::isAbsolutePath($path)) {
-                    $tmpPath = $path;
+        if(!$hasNamespace)
+        {
+            if($file == "")
+            {
+                if(substr($name, -6) === "Plugin") {
+                    $file = $name . ".php";
                 } else {
-                    $tmpPath = $application->getPath() . $path;
-                }
-                
-                if (file_exists($tmpPath . $file)) {
-                    $path = $tmpPath;
-                    break;
+                    $file = $name . "Plugin.php";
                 }
             }
-        }
 
-        require_once FileHandler::sanitizePath($path) . $file;
+            if($path == "")
+            {
+                foreach ($application->getController()->getPluginPaths()
+                         as $path)
+                {
+                    $path = FileHandler::sanitizePath($path);
+                    $tmpPath = "";
+                    if (FileHandler::isAbsolutePath($path))
+                    {
+                        $tmpPath = $path;
+                    } else {
+                        $tmpPath = $application->getPath() . $path;
+                    }
+                    if (file_exists($tmpPath . $file))
+                    {
+                        $path = $tmpPath;
+                        break;
+                    }
+                }
+            }
+            // FIXME: handle missing included file exception
+            require_once FileHandler::sanitizePath($path) . $file;
+        } else {
+            $xClass = explode("\\", $class);
+            $name = $xClass[sizeof($xClass)-1];
+        }
 
         $plugin = new $class();
         $plugin->setName($name);
+        $plugin->setNamespace($namespace);
         $plugin->setPath($path);
         $plugin->setFile($file);
         $plugin->setPhase($phase);
         $plugin->setParameters($parameters);
 
         $application->addPlugin($plugin);
-
         return $plugin;
     }
     
@@ -359,8 +404,8 @@ abstract class AbstractPlugin implements Plugin
         $abstractPluginClass = "Candango\\MyFuses\\Core\\AbstractPlugin";
         $strOut = "\$plugin = " . $abstractPluginClass .
             "::getInstance( \$application, \"" .
-            $this->phase . "\", \"" . $this->name . "\", \"" . 
-            addslashes( $this->path ) . 
+            $this->phase . "\", \"" . $this->name . "\", \"" .
+            $this->namespace . "\", \"" . addslashes( $this->path ) .
             "\", \"" . $this->file . "\" );\n";
 
         foreach($this->getParameters() as $parameter) {

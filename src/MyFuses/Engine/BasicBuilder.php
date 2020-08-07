@@ -590,28 +590,28 @@ class BasicBuilder implements Builder
 
     protected function buildFase(Application $application, &$data)
     {
-        // TODO: This is not being used, check if we can remove it
-        $faseParams = array(
-            'name' => 'name',
-            'path' => 'path',
-            'template' => 'file',
-            'file' => 'file'
-        );
-
         $phase = $data['attributes']['name'];
 
-        if (isset($data['children' ])) {
-            if (count($data['children'])) {
-                foreach ($data['children'] as $child) {
+        if (isset($data['children' ]))
+        {
+            if (count($data['children']))
+            {
+                foreach ($data['children'] as $child)
+                {
                     $name = "";
+                    $namespace = "";
                     $path = "";
                     $file = "";
 
                     foreach ($child['attributes'] as
-                        $attributeName => $attribute) {
+                             $attributeName => $attribute)
+                    {
                         switch ($attributeName) {
                             case "name":
                                 $name = $attribute;
+                                break;
+                            case "namespace":
+                                $namespace = $attribute;
                                 break;
                             case "path":
                                 $path = $attribute;
@@ -624,10 +624,12 @@ class BasicBuilder implements Builder
 
                     $parameters = array();
 
-                    if (isset($child['children'])) {
-                        foreach ($child['children'] as $key => $paramChild) {
-                            if (strtolower($paramChild['name']) ==
-                                "parameter") {
+                    if (isset($child['children']))
+                    {
+                        foreach ($child['children'] as $key => $paramChild)
+                        {
+                            if (strtolower($paramChild['name']) == "parameter")
+                            {
                                 $param = array (
                                     'name' => $paramChild[
                                         'attributes']['name'],
@@ -640,7 +642,7 @@ class BasicBuilder implements Builder
                     }
 
                     AbstractPlugin::getInstance($application, $phase, $name,
-                        $path, $file, $parameters);
+                        $namespace, $path, $file, $parameters);
                 }
             }
         }
