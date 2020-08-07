@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -17,8 +17,8 @@ namespace Candango\MyFuses
     use Candango\MyFuses\Exceptions\ActionException;
     use Candango\MyFuses\Exceptions\ApplicationException;
     use Candango\MyFuses\Exceptions\CircuitException;
+    use Candango\MyFuses\Exceptions\MyFusesException;
     use Candango\MyFuses\I18n\I18nHandler;
-    use Candango\MyFuses\Exceptions\Exception;
     use Candango\MyFuses\Process\Context;
     use Candango\MyFuses\Process\DebugEvent;
     use Candango\MyFuses\Process\Debugger;
@@ -862,7 +862,7 @@ namespace Candango\MyFuses
                 if ($this->getApplication()->isDebugAllowed()) {
                     print $this->getDebugger();
                 }
-            } catch (Exception $e) {
+            } catch (MyFusesException $e) {
                 $e->breakProcess();
             }
         }

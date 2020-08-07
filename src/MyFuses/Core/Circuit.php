@@ -3,11 +3,13 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
 namespace Candango\MyFuses\Core;
+
+use Candango\MyFuses\Exceptions\ActionException;
 
 /**
  * Circuit - Circuit.php
@@ -206,7 +208,7 @@ interface Circuit extends ICacheable
      *
      * @param string $name
      * @return FuseAction
-     * @throws MyFusesActionException
+     * @throws ActionException
      */
     public function getAction($name);
 
@@ -215,7 +217,7 @@ interface Circuit extends ICacheable
      * Returns the default action if it is defined
      *
      * @return FuseAction
-     * @throws MyFusesActionException
+     * @throws ActionException
      */
     public function getDefaultAction();
 

@@ -9,6 +9,8 @@
 
 namespace Candango\MyFuses\Core;
 
+use Candango\MyFuses\Exceptions\ActionException;
+
 /**
  * BasicCircuit - BasicCircuit.php
  *
@@ -381,17 +383,18 @@ class BasicCircuit implements Circuit
      *
      * @param string $name
      * @return FuseAction
-     * @throws MyFusesActionException
+     * @throws ActionException
      */
     public function getAction($name)
     {
-        if (isset($this->actions[$name])) {
+        if (isset($this->actions[$name]))
+        {
     		return $this->actions[$name];
     	}
     	$params = array("actionName" => $name, "circuit" => &$this ,
     	    "application" => $this->getApplication());
-    	throw new MyFusesActionException($params,
-    	    MyFusesActionException::NON_EXISTENT_FUSEACTION);
+        throw new ActionException($params,
+            ActionException::NON_EXISTENT_FUSEACTION);
     }
 
     /**
@@ -399,12 +402,14 @@ class BasicCircuit implements Circuit
      * Returns the default action if it is defined
      *
      * @return FuseAction
-     * @throws MyFusesActionException
+     * @throws ActionException
      */
     public function getDefaultAction()
     {
-        foreach ($this->actions as $name => $action) {
-            if ($action->isDefault()) {
+        foreach ($this->actions as $name => $action)
+        {
+            if ($action->isDefault())
+            {
                 return $this->actions[$name];
             }
         }
@@ -412,8 +417,8 @@ class BasicCircuit implements Circuit
         $params = array("actionName" => "Default circuit action",
             "circuit" => &$this ,
             "application" => $this->getApplication());
-        throw new MyFusesActionException($params,
-            MyFusesActionException::NON_EXISTENT_FUSEACTION);
+        throw new ActionException($params,
+            ActionException::NON_EXISTENT_FUSEACTION);
     }
 
     /**
