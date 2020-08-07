@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -19,7 +19,7 @@ namespace Candango\MyFuses\Exceptions;
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      cb9a309e40c6718286ac436d775513dc07f6fce4
  */
-class ClassException extends Exception
+class ClassException extends RuntimeException
 {
     /**
      * Non-existent class contant <br>

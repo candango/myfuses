@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -20,7 +20,7 @@ namespace Candango\MyFuses\Exceptions;
  * @author     Flavio Garcia <piraz at candango.org>
  * @since f06b361b3bc6909ebf21f108d42b79a17cfb3924
  */
-abstract class Exception extends \Exception
+abstract class MyFusesException extends \Exception
 {
     const CIRCUIT_XML_ERROR = 1;
     const ERROR_WRITING_PARSED_FILE = 2;
@@ -108,9 +108,9 @@ abstract class Exception extends \Exception
     /**
      * Sets the current instance
      *
-     * @param Exception instance
+     * @param MyFusesException instance
      */
-    static function setCurrentInstance(Exception $instance)
+    static function setCurrentInstance(MyFusesException $instance)
     {
         self::$currentInstance = $instance;
     }
@@ -118,7 +118,7 @@ abstract class Exception extends \Exception
     /**
      * Returns the current instance
      *
-     * @return Exception
+     * @return MyFusesException
      */
     static function getCurrentInstance()
     {
@@ -186,19 +186,4 @@ abstract class Exception extends \Exception
         $out .= ")" ;
         return $out;
     }
-}
-
-class RuntimeExeption extends Exception
-{
-
-}
-
-class ProcessException extends RuntimeExeption
-{
-
-}
-
-class FuseactionException extends RuntimeExeption
-{
-
 }

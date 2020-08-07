@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -19,7 +19,7 @@ namespace Candango\MyFuses\Exceptions;
  * @author     Flavio Garcia <piraz at candango.org>
  * @since      c5fec49e04ae09fefb514b4e47ed24d324b6231e
  */
-class ActionException extends Exception
+class ActionException extends RuntimeException
 {
     /**
      * Non-existent circuit contant <br>
