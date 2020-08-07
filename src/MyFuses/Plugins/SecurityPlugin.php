@@ -3,11 +3,16 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "plugins/MyFusesAbstractSecurityPlugin.php";
+namespace Candango\MyFuses\Plugins;
+
+
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\Plugin;
+use Candango\MyFuses\Process\DebugEvent;
 
 /**
  * MyFusesSecurityPlugin  - MyFusesSecurityPlugin.php
@@ -25,19 +30,19 @@ class SecurityPlugin extends AbstractSecurityPlugin
         public function run()
         {
             $this->checkSession();
-
+            $pluginReference = "Candango\\MyFuses\\Plugins\\Sercurity";
             switch($this->getPhase())
             {
                 case Plugin::PRE_PROCESS_PHASE:
-                    MyFuses::getInstance()->getDebugger()->registerEvent(
-                        new MyFusesDebugEvent("MyFusesSecurityPlugin",
+                    Controller::getInstance()->getDebugger()->registerEvent(
+                        new DebugEvent($pluginReference,
                             "Reached Pre Process Phase. Running pre process" .
                             "plugin action."));
                     $this->runPreProcess();
                     break;
                 case Plugin::PRE_FUSEACTION_PHASE:
-                    MyFuses::getInstance()->getDebugger()->registerEvent(
-                        new MyFusesDebugEvent("MyFusesSecurityPlugin",
+                    Controller::getInstance()->getDebugger()->registerEvent(
+                        new DebugEvent($pluginReference,
                             "Reached Pre Fuseaction Phase. Running pre process" .
                             "plugin action."));
                     $this->runPreFuseaction();

@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -68,7 +68,7 @@ abstract class AbstractSecurityManager implements SecurityManager
 
     public function isAuthorized()
     {
-        foreach ($this->getSecutiyListeners() as $listener) {
+        foreach ($this->getSecurityListeners() as $listener) {
             $listener->authorizationPerformed();
         }
     }
@@ -118,9 +118,9 @@ abstract class AbstractSecurityManager implements SecurityManager
     /**
      * Add one Authentication Listener
      *
-     * @param SecuriyListener $listener
+     * @param SecurityListener $listener
      */
-    public function addSecutiyListener(SecuriyListener $listener)
+    public function addSecurityListener(SecurityListener $listener)
     {
         $this->securityListeners[] = $listener;
     }
@@ -130,7 +130,7 @@ abstract class AbstractSecurityManager implements SecurityManager
      *
      * @return array Array of AuthenticationListeners
      */
-    public function getSecutiyListeners()
+    public function getSecurityListeners()
     {
         return $this->securityListeners;
     }
@@ -220,6 +220,6 @@ abstract class AbstractSecurityManager implements SecurityManager
     public function logout()
     {
         session_destroy();
-        Controller::sendToUrl(MyFuses::getMySelfXfa("goToIndexAction"));
+        Controller::sendToUrl(Controller::getMySelfXfa("goToIndexAction"));
     }
 }

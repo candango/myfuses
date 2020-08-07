@@ -10,15 +10,17 @@
 namespace Candango\MyFuses\Security;
 
 /**
- * MyFusesBasicCredential - MyFusesBasicCredential.php
+ * SecurityListener - SecurityManager.php
  *
- * MyFuses Basic Credential
+ * MyFuses Security Listener
  *
  * @category   security
  * @package    myfuses.util.security
  * @author     Flavio Goncalves Garcia <flavio.garcia at candango.org>
- * @since      7117f031f18f8fa583d344b573d3fbf574e42652
+ * @since      2e0c26a744b984d6463db487a51387bb4005488e
  */
-class BasicCredential extends AbstractCredential
+interface SecurityListener extends
+    AuthenticationListener,
+    AuthorizationListener
 {
 }

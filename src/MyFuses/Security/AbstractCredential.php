@@ -3,13 +3,11 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
 namespace Candango\MyFuses\Security;
-
-require_once MYFUSES_ROOT_PATH . "util/security/MyFusesCredential.php";
 
 /**
  * MyFusesAbstractCredential - MyFusesAbstractCredential.php
@@ -274,11 +272,12 @@ class AbstractCredential implements Credential
         $data['expires'] = $this->expirationTime;
         $data['authenticated'] = $this->authenticated;
 
-        return $data;
+        return json_encode($data, JSON_OBJECT_AS_ARRAY);
     }
 
     public function setData($data)
     {
+        $data = json_decode($data, JSON_OBJECT_AS_ARRAY);
         if (isset($data['attributes'])) {
             $this->attributes = $data['attributes'];
         }

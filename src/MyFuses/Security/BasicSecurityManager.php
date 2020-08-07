@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -11,10 +11,6 @@ namespace Candango\MyFuses\Security;
 
 use Candango\MyFuses\Controller;
 use Candango\MyFuses\Process\DebugEvent;
-
-require_once MYFUSES_ROOT_PATH . "util/security/" .
-    "MyFusesAbstractSecurityManager.php";
-require_once MYFUSES_ROOT_PATH . "util/data/MyFusesJsonUtil.php";
 
 /**
  * MyFusesBasicSecurityManager - MyFusesBasicSecurityManager.php

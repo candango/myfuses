@@ -3,12 +3,18 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
-require_once MYFUSES_ROOT_PATH . "util/security/" .
-    "MyFusesAbstractSecurityManager.php";
+namespace Candango\MyFuses\Plugins;
+
+use Candango\MyFuses\Controller;
+use Candango\MyFuses\Core\AbstractPlugin;
+use Candango\MyFuses\Security\AbstractSecurityManager;
+use Candango\MyFuses\Security\SecurityManager;
+use Candango\MyFuses\Process\DebugEvent;
+use Candango\MyFuses\Util\FileHandler;
 
 /**
  * MyFusesAbstractSecurityPlugin  - MyFusesAbstractSecurityPlugin.php
@@ -76,7 +82,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
     private static function setLoginAction($loginAction)
     {
         self::$loginAction = $loginAction;
-        MyFuses::getInstance()->getRequest()->getAction()->addXFA(
+        Controller::getInstance()->getRequest()->getAction()->addXFA(
                 "goToLoginAction", $loginAction);
     }
 
@@ -98,7 +104,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
     private static function setLogoutAction($logoutAction)
     {
         self::$logoutAction = $logoutAction;
-        MyFuses::getInstance()->getRequest()->getAction()->addXFA(
+        Controller::getInstance()->getRequest()->getAction()->addXFA(
                 "goToLogoutAction", $logoutAction);
     }
 
@@ -120,7 +126,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
     private static function setNextAction($nextAction)
     {
         self::$nextAction = $nextAction;
-        MyFuses::getInstance()->getRequest()->getAction()->addXFA(
+        Controller::getInstance()->getRequest()->getAction()->addXFA(
                 "goToNextAction", $nextAction);
     }
 
@@ -142,7 +148,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
     private static function setAuthenticationAction($authenticationAction)
     {
         self::$authenticationAction = $authenticationAction;
-        MyFuses::getInstance()->getRequest()->getAction()->addXFA(
+        Controller::getInstance()->getRequest()->getAction()->addXFA(
                 "goToAuthenticationAction", $authenticationAction);
     }
 
@@ -184,12 +190,12 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
 	 */
     protected function runPreProcess()
     {
-        MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent("MyFusesSecurityPlugin",
+        Controller::getInstance()->getDebugger()->registerEvent(
+            new DebugEvent("MyFusesSecurityPlugin",
                 "Getting security manager instance"));
         $manager = AbstractSecurityManager::getInstance();
-        MyFuses::getInstance()->getDebugger()->registerEvent(
-            new MyFusesDebugEvent("MyFusesSecurityPlugin",
+        Controller::getInstance()->getDebugger()->registerEvent(
+            new DebugEvent("MyFusesSecurityPlugin",
                 "Calling security manager to create a credention based on the" .
                 " session state."));
         $manager->createCredential();
@@ -234,7 +240,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
      * 
      * @param $manager
      */
-    public function configureSecurityManager(MyFusesSecurityManager $manager)
+    public function configureSecurityManager(SecurityManager $manager)
     {
         $this->configureParameters($manager);
 
@@ -243,7 +249,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
 
         $authorizationListeners = $this->getParameter("AuthorizationListener");
 
-        // TODO: This is too brute force. We need more taught here.
+        // TODO: This is too brute force. We need more tought here.
         foreach ($this->getListenersPaths() as $path) {
             if (!FileHandler::isAbsolutePath($path)) {
                 $path = $this->getApplication()->getPath() . $path;
@@ -272,7 +278,7 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
      * 
      * @param $manager
      */
-    public function configureParameters(MyFusesSecurityManager $manager)
+    public function configureParameters(SecurityManager $manager)
     {
     	// getting next action
         $nextAction = $this->getParameter("NextAction");
@@ -322,11 +328,11 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
     /**
      * Authenticating user
      *
-     * @param MyFusesSecurityManager $manager
+     * @param SecurityManager $manager
      */
-    public function authenticate(MyFusesSecurityManager $manager)
+    public function authenticate(SecurityManager $manager)
     {
-    	MyFuses::getInstance()->getRequest()->getAction()->addXFA(
+    	Controller::getInstance()->getRequest()->getAction()->addXFA(
     	    "goToIndexAction",
             $this->getApplication()->getDefaultFuseaction()
         );
@@ -343,55 +349,66 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
         // getting login action    
         $authenticationAction = self::getAuthenticationAction();
 
-        $currentAction = MyFuses::getInstance()->getRequest()->
+        $currentAction = Controller::getInstance()->getRequest()->
             getFuseActionName();
 
-        if ($logoutAction == $currentAction) {
-            if ($manager->isAuthenticated()) {
+        if ($logoutAction == $currentAction)
+        {
+            if ($manager->isAuthenticated())
+            {
                 $manager->logout();
             } else {
-                MyFuses::sendToUrl(MyFuses::getMySelfXfa("goToLoginAction"));
+                Controller::sendToUrl(
+                    Controller::getMySelfXfa("goToLoginAction"));
         	}
         }
 
         // TODO: This should be moved to the default attribute.
-        if ($this->mustAuthenticate()) {
+        if ($this->mustAuthenticate())
+        {
 
             if ($loginAction != $currentAction && $authenticationAction !=
-                $currentAction) {
-                if (!$manager->isAuthenticated()) {
-                    MyFuses::sendToUrl(MyFuses::getMySelfXfa(
+                $currentAction)
+            {
+                if (!$manager->isAuthenticated())
+                {
+                    Controller::sendToUrl(Controller::getMySelfXfa(
                         "goToLoginAction"));
                 }
             }
 
-            if(!$manager->isAuthenticated()) {
-                if (MyFuses::getInstance()->getRequest()->getFuseActionName()
-                    == $this->getAuthenticationAction()) {
+            if(!$manager->isAuthenticated())
+            {
+                if (Controller::getInstance()->getRequest()->getFuseActionName()
+                    == $this->getAuthenticationAction())
+                {
                     $manager->clearMessages();
 
                     $error = false;
 
                     foreach ($manager->getAuthenticationListeners() as
-                        $listener) {
+                             $listener)
+                    {
                         $listener->authenticate($manager);
                     }
 
-                    if(!$manager->isAuthenticated()) {
-                        MyFuses::sendToUrl( MyFuses::getMySelfXfa(
+                    if(!$manager->isAuthenticated())
+                    {
+                        Controller::sendToUrl( Controller::getMySelfXfa(
                             "goToLoginAction"));
                     } else {
-                        MyFuses::sendToUrl( MyFuses::getMySelfXfa(
+                        Controller::sendToUrl( Controller::getMySelfXfa(
                             "goToNextAction"));
                     }
                 }
             } else {
-            	$currentAction =
-            	   MyFuses::getInstance()->getRequest()->getFuseActionName();
+            	$currentAction = Controller::getInstance(
+                )->getRequest()->getFuseActionName();
 
             	if ($currentAction == $this->getAuthenticationAction() ||
-                    $currentAction == $this->getLoginAction()) {
-                    MyFuses::sendToUrl(MyFuses::getMySelfXfa(
+                    $currentAction == $this->getLoginAction())
+            	{
+                    Controller::sendToUrl(Controller::getMySelfXfa(
                         "goToNextAction"));
                 }
             }
@@ -405,12 +422,12 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
      */
     public function mustAuthenticate()
     {
-        $security = MyFuses::getInstance()->getCurrentAction()->getSecurity();
-        $circuitPermissions = MyFuses::getInstance()->getCurrentCircuit()->
-                        getPermissions();
-        $actionPermissions = MyFuses::getInstance()->getCurrentAction()->
-                        getPermissions();
-
+        $security = Controller::getInstance()->getCurrentAction(
+        )->getSecurity();
+        $circuitPermissions = Controller::getInstance(
+        )->getCurrentCircuit()->getPermissions();
+        $actionPermissions = Controller::getInstance(
+        )->getCurrentAction()->getPermissions();
         if ($security == "pessimistic") {
             return true;
         } else if ($security == "optimistic") {
@@ -424,5 +441,4 @@ abstract class AbstractSecurityPlugin extends AbstractPlugin
         // If not it is disabled
         return false;
     }
-
 }
