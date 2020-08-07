@@ -43,7 +43,7 @@ class Debugger
     /**
      * Register one event in debugger
      *
-     * @param MyFusesDebugEvent $event
+     * @param DebugEvent $event
      */
     public function registerEvent(DebugEvent $event)
     {
@@ -55,7 +55,7 @@ class Debugger
     /**
      * Return the Events registered
      *
-     * @return arrat
+     * @return array
      */
     public function getEvents()
     {
