@@ -3,7 +3,7 @@
  * MyFuses Framework (http://myfuses.candango.org)
  *
  * @link      http://github.com/candango/myfuses
- * @copyright Copyright (c) 2006 - 2018 Flavio Garcia
+ * @copyright Copyright (c) 2006 - 2020 Flavio Garcia
  * @license   https://www.apache.org/licenses/LICENSE-2.0  Apache-2.0
  */
 
@@ -306,7 +306,7 @@ class FuseRequest
                 }
             } catch (CircuitException $ce) {
                 try {
-                    $application = MyFuses::getApplication($path[0]);
+                    $application = Controller::getApplication($path[0]);
                     return $application->getName() . "." .
                         $application->getDefaultFuseaction();    
                 } catch (ApplicationException $ae) {
@@ -316,25 +316,29 @@ class FuseRequest
                 }
             }
         } elseif (count($path) > 1) {
-            try {
+            try
+            {
                 $circuit = $this->getApplication()->getCircuit( $path[ 0 ] );
             
                 $resolvedPath = $circuit->getName();
                 
-                try {
+                try
+                {
                     $action = $circuit->getAction( $path[ 1 ] );
-                    if( count( $path > 2 ) ) {
-                        $this->setExtraParams( array_slice( 
-                                $path, 2, count( $path ) ) );
+                    if(count( $path ) > 2)
+                    {
+                        $this->setExtraParams(array_slice(
+                            $path, 2, count($path)));
                     }
                     return $circuit->getApplication()->getName() . "." . 
                             $resolvedPath . "." . $action->getName();
-                }
-                catch (ActionException $ae) {
-                    foreach( $circuit->getActions() as $action ) {
-                        if( $action->isDefault() ) {
-                            $this->setExtraParams( array_slice( 
-                                $path, 1, count( $path ) ) );
+                } catch (ActionException $ae) {
+                    foreach($circuit->getActions() as $action)
+                    {
+                        if($action->isDefault())
+                        {
+                            $this->setExtraParams(
+                                array_slice($path, 1, count($path)));
                             return $circuit->getApplication()->getName() . "." . 
                                 $resolvedPath . "." . $action->getName();
                         }
@@ -343,7 +347,7 @@ class FuseRequest
                 
             } catch (CircuitException $ce) {
                 try {
-                    $application = MyFuses::getApplication($path[0]);
+                    $application = Controller::getApplication($path[0]);
 
                     $resolvedPath = $application->getName();
 

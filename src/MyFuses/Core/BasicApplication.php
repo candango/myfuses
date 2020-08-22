@@ -9,11 +9,12 @@
 
 namespace Candango\MyFuses\Core;
 
+use Candango\MyFuses\Controller;
 use Candango\MyFuses\Engine\AbstractLoader;
 use Candango\MyFuses\Engine\ApplicationBuilderListener;
 use Candango\MyFuses\Engine\ApplicationLoaderListener;
 use Candango\MyFuses\Engine\Loader;
-use Candango\MyFuses\Controller;
+use Candango\MyFuses\Exceptions\CircuitException;
 use Candango\MyFuses\Process\Lifecycle;
 use Candango\MyFuses\Util\FileHandler;
 

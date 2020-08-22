@@ -10,7 +10,7 @@
 namespace Candango\MyFuses\Exceptions;
 
 /**
- * MyFuses Circuit Exception - MyFusesCircuitException.php
+ * MyFuses Circuit Exception - CircuitException.php
  *
  * Exception thrown on errors while handling circuits.
  *
