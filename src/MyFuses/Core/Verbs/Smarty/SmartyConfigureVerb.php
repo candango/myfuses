@@ -57,13 +57,13 @@ class SmartyConfigureVerb extends AbstractVerb
      *
      */
     public function getPath() {
-        return str_replace("\\","/",$this->pathPath);
+        return str_replace("\\","/",$this->path);
     }
 
     /**
      *
      */
-    public function setPath( $path )
+    public function setPath($path)
     {
         if(substr( $path, -1 ) != DIRECTORY_SEPARATOR) {
             $path = $path . DIRECTORY_SEPARATOR;
@@ -176,12 +176,13 @@ class SmartyConfigureVerb extends AbstractVerb
                 "value" => addslashes($applicationParsedPath) ));
 
         $this->templateParameters[] = $property;
-        $strOut .= str_repeat( "\t", $identLevel );
+        $strOut .= str_repeat("\t", $identLevel);
         $strOut .= "\$parameters = array();\n";
 
         $strTemplateHandler = "Candango\MyFuses\Util\Template\TemplateHandler";
 
-        foreach( $this->templateParameters as $parameter ) {
+        foreach($this->templateParameters as $parameter)
+        {
             $strOut .= str_repeat( "\t", $identLevel );
             $strOut .= "\$parameters[] = " . $strTemplateHandler .
                 "::buildParameter" . "(\"" . $parameter['attributes']['name'] .
@@ -191,19 +192,6 @@ class SmartyConfigureVerb extends AbstractVerb
         $strOut .= $strTemplateHandler . "::" . "configureHandler(\"" .
             $this->type . "\", \$parameters" . $strName .
             ");\n\n";
-        return $strOut;
-    }
-
-    /**
-     * Return the parsed comments
-     *
-     * @return string
-     */
-    public function getComments( $identLevel ) {
-        $strOut = parent::getComments( $identLevel );
-        $strOut = str_replace( "__COMMENT__",
-            "MyFuses:request:action:iflux:templateConfigure name=\"" .
-            $this->getName() . "\"", $strOut );
         return $strOut;
     }
 
