@@ -24,6 +24,9 @@
         "phpunit/phpunit": ">=6.4.0",
         "ext-mbstring": "*"
     },
+    "suggest": {
+        "smarty/smarty": "Required for smarty template namespace."
+    },
     "autoload": {
         "psr-4": {"Candango\\MyFuses\\": "src/MyFuses/"}
     }
