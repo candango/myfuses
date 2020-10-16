@@ -151,7 +151,21 @@ class DoVerb extends ParameterizedVerb
             if (!file_exists($path)) {
                 FileHandler::createPath($path);
                 chmod($path, 0755);
-            }   
+            }
+            $applicationName = $action->getCircuit()->getApplication(
+            )->getName();
+
+            $strOut = "Candango\\MyFuses\\Controller::getInstance()->" .
+                "getApplication(\"" . $applicationName . "\")->" .
+                "getCircuit(\"" . $action->getCircuit()->getName() .
+                "\")->getAction(\"" . $action->getName() .
+            "\")->setCalledByDo(true);\n\n" . $strOut;
+
+            $strOut .= "Candango\\MyFuses\\Controller::getInstance()->" .
+            "getApplication(\"" . $applicationName . "\")->" .
+            "getCircuit(\"" . $action->getCircuit()->getName() .
+            "\")->getAction(\"" . $action->getName() .
+            "\")->setCalledByDo(false);";
 
             FileHandler::writeFile($actionFile, "<?php\n" .
                 Context::sanitizeHashedString($strOut));
@@ -201,8 +215,6 @@ class DoVerb extends ParameterizedVerb
         }
 
         $strOut .= str_repeat("\t", $identLevel);
-
-        $action->setCalledByDo(true);
 
         $strOut .=  $this->getAction()->getCircuit()->getApplication()->
             getControllerClass() . "::doAction( \"" . 
