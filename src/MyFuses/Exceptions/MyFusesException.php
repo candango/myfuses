@@ -157,12 +157,12 @@ abstract class MyFusesException extends \Exception
 
         $out .= $trace['function'] . "(" ;
 
-        if (count($trace['args'])) {
+        if (isset($trace['args']) && count($trace['args'])) {
             $out .= " ";
         }
 
         $traceX = array();
-        if (count($trace['args'])) {
+        if (isset($trace['args']) && count($trace['args'])) {
             foreach ($trace['args'] as $key => $value) {
                 if (is_object($value)) {
                     @$traceX[$key] = "<b>" . get_class($value) .
@@ -179,7 +179,7 @@ abstract class MyFusesException extends \Exception
         }
         $out .= implode(", ", $traceX);
 
-        if (count($trace['args'])) {
+        if (isset($trace['args']) && count($trace['args'])) {
             $out .= " ";
         }
 
