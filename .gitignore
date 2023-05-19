@@ -1,0 +1,18 @@
+# Bower
+bower_components
+
+# Composer
+composer.lock
+composer.phar
+vendor
+
+#MyFuses
+parsed
+
+# PyCharm
+.idea
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
